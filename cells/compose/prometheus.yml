@@ -1,0 +1,30 @@
+# Scrape the server roles. Ports are the PROMETHEUS_ENDPOINT values each role sets in cell.yml; targets are
+# compose service names on the cell network, so no per-role host port is needed.
+global:
+  scrape_interval: 5s
+  evaluation_interval: 5s
+
+scrape_configs:
+  - job_name: temporal-frontend
+    static_configs:
+      - targets: ["temporal-frontend:8002", "temporal-frontend2:8004"]
+  - job_name: temporal-history
+    static_configs:
+      - targets: ["temporal-history:8000"]
+  - job_name: temporal-matching
+    static_configs:
+      - targets: ["temporal-matching:8001"]
+  - job_name: temporal-worker
+    static_configs:
+      - targets: ["temporal-worker:8003"]
+  # SDK metrics from processes on the host. :9091 is internal/health's round trip (laug health loop); :9092 is the Omes
+  # Go worker and :9093 the Omes scenario client (load/run-omes.sh, --worker-prom-listen-address /
+  # --prom-listen-address, confirmed at omes f0de206). All three are down between runs; that is expected, not a fault.
+  - job_name: sdk-workers
+    static_configs:
+      - targets: ["host.docker.internal:9091"]
+        labels: { process: health }
+      - targets: ["host.docker.internal:9092"]
+        labels: { process: omes-worker }
+      - targets: ["host.docker.internal:9093"]
+        labels: { process: omes-client }

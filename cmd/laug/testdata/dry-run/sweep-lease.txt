@@ -1,0 +1,22 @@
+# make: make --no-print-directory -n sweep RUN_ID=r1
+# laug: laug sweep r1
+# lease: present
+# compare: resolved load/sweep.sh $addr=127.0.0.1:7243 $cutoff=2026-10-22T11:59:30Z
+[ "override" != file ] || { echo "laug · make sweep RUN_ID=<id>: name the run whose task queue to count" >&2; exit 2; }
+[[ 'r1' =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || { echo "laug · make sweep: RUN_ID="'r1'" is not one word of letters, digits, ., _ and -, from a letter or digit" >&2; exit 2; };                    
+addr=""; from=""; end=""; \
+for f in faults/results/r1.json load/results/r1.json; do \
+  [ -f "$f" ] || continue; \
+  case "$f" in \
+    faults/*) addr=$(jq -r '.address // empty' "$f"); end=$(jq -r '.after_end // empty' "$f") ;; \
+    *) addr=$(jq -r '.cell // empty' "$f"); end=$(jq -r '.end // empty' "$f"); [ -z "$end" ] || end=$(date -u -d "$end" +%s) ;; \
+  esac; \
+  [ -z "$addr" ] || from="recorded in $f"; \
+  break; \
+done; \
+ \
+[ -n "$addr" ] || { addr='127.0.0.1:7243'; from="the current lease in .last-lease.json: the run recorded no address"; }; \
+cutoff=''; \
+[ -n "$cutoff" ] || cutoff=$(date -u -d "@$(( ${end:-$(date +%s)} - ${SWEEP_MARGIN_S:-30} ))" +%Y-%m-%dT%H:%M:%SZ); \
+echo "laug · sweep omes-r1 on $addr ($from), workflows started before $cutoff" >&2; \
+NAMESPACE=default load/sweep.sh "$addr" omes-r1 "$cutoff"

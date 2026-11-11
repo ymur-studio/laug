@@ -1,0 +1,6 @@
+# make: make --no-print-directory -n pool-gate2 POOL_ADDR=http://127.0.0.1:7700
+# laug: laug pool bench 127.0.0.1:7700
+# lease: absent
+# passes: POOL_ADDR=http://127.0.0.1:7700
+# compare: line cells/pool-bench.sh
+cells/pool-bench.sh

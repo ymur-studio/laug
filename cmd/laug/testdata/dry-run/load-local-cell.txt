@@ -1,0 +1,11 @@
+# make: make --no-print-directory -n load DURATION=5m
+# laug: laug load -duration 5m
+# lease: absent
+# docker: laug temporalio/server:1.32.1
+# passes: DURATION=5m
+# compare: line load/run-omes.sh
+[ "file" = file ] || [ "file" != file ] || [ -z '' ] \
+  || { echo "laug · CELL_ADDRESS was given and PROM_URL was not, so the run would record the leased cell's Prometheus; pass PROM_URL for "'127.0.0.1:7233' >&2; exit 2; }
+:
+OMES_DIR='.upstream/omes' CELL_ADDRESS='127.0.0.1:7233' PROM_URL='http://127.0.0.1:9090' PROJECT=laug NAMESPACE=default RUN_ID=20261022-120000 \
+  SERVER_TAG=1.32.1 load/run-omes.sh workflow_with_single_noop_activity

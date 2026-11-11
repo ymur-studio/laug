@@ -1,0 +1,34 @@
+# Server persistence fault injection for one cell: a second compose file, laid over cell.yml.
+#
+#   docker compose -f cell.yml -f fi.yml ...       faults/run.sh serverfi recreates temporal-history this way
+#   laug cell up -server-fi                        a local cell with it from the start; LAUG_FI_* come from the shell
+#
+# Only temporal-history changes. It loads config/laug-server.yaml, the server image's own config template
+# (vendored at 1.31.0, laug cell fi-template-check) plus a faultInjection block driven by LAUG_FI_*, in place of the
+# template embedded in the binary. With every LAUG_FI_* unset it renders the same config as the embedded template.
+# A cell started without this file is unchanged.
+#
+# TEMPORAL_SERVER_CONFIG_FILE_PATH is always a real path here. Never write it as ${VAR:-}: the server's flag
+# library counts a variable that is set but empty as set (urfave/cli v2.27.7 flag.go:381), the server then takes
+# the config-file branch with an empty path (cmd/server/main.go:168-169), falls back to a config directory the
+# image does not have, and the role exits 1: "no config files found in directory: config" (seen 2026-10-14, 1.31.0).
+#
+# The LAUG_FI_* entries have no value, so each is passed from the shell when set there and left out when not. Seen
+# 2026-10-14: with all six unset, docker inspect lists them as bare names and temporal-server's /proc/1/environ holds
+# none of them. The server reads them once, when the role starts; changing one means recreating history.
+#
+# Compose merges a second file's volumes into the service's by container path, so the dynamic config mount that
+# temporal-history gets from the x-server anchor in cell.yml stays (seen 2026-10-14 in docker compose config and in the
+# running container's mounts). A volumes list on the service inside cell.yml would replace the anchor's instead.
+services:
+  temporal-history:
+    environment:
+      TEMPORAL_SERVER_CONFIG_FILE_PATH: /etc/temporal/laug-server.yaml
+      LAUG_FI_STORE:
+      LAUG_FI_METHOD:
+      LAUG_FI_ERROR:
+      LAUG_FI_RATE:
+      LAUG_FI_SEED:
+      LAUG_FI_PROFILE:
+    volumes:
+      - ./config/laug-server.yaml:/etc/temporal/laug-server.yaml:ro

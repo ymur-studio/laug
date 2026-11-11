@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# Fake docker for a fake gate (laug gate run -fake, GATE_FAKE=1): no daemon. Every call's arguments go to
+# $FAKE_GATE_DIR/docker.args, one line.
+#   compose ls [-a] --format json   the projects the fake backend made ($FAKE_GATE_DIR/projects/), and FAKE_GATE_PROJECTS
+#                                   (comma-separated) from call FAKE_GATE_EXTRA_FROM (1) of compose ls on, in the
+#                                   shape the real one prints (Name, Status, ConfigFiles); FAKE_GATE_DOCKER_FAIL set
+#                                   fails it; FAKE_GATE_DOCKER_WARN set prints a CLI warning on stderr and succeeds
+#   compose ... config --images     the 8 images cells/compose/cell.yml names, the two temporalio ones at SERVER_TAG (as
+#                                   docker compose 5.1.4 listed them, 2026-10-14)
+#   image inspect <image>           exits 0, or 1 for an image in FAKE_GATE_NO_IMAGE (comma-separated)
+# Anything else fails as a missing daemon would.
+d="${FAKE_GATE_DIR:?}"
+printf '%s\n' "$*" >> "$d/docker.args"
+nodaemon() { echo "fake docker: no daemon for a fake gate (GATE_FAKE=1): $*" >&2; exit 1; }
+case "${1:-}" in
+  compose)
+    if [[ " $* " == *" ls "* ]]; then
+      n=$(( $(cat "$d/ls.n" 2>/dev/null || echo 0) + 1 )); echo "$n" > "$d/ls.n"
+      [[ -z "${FAKE_GATE_DOCKER_FAIL:-}" ]] || { echo "fake docker: Cannot connect to the Docker daemon" >&2; exit 1; }
+      [[ -z "${FAKE_GATE_DOCKER_WARN:-}" ]] || echo 'WARNING: Plugin "/fake/cli-plugins/docker-x" is not valid: fake' >&2
+      extra=""; (( n < ${FAKE_GATE_EXTRA_FROM:-1} )) || extra="${FAKE_GATE_PROJECTS:-}"
+      { ls "$d/projects" 2>/dev/null; tr ',' '\n' <<<"$extra"; } | grep -v '^$' | sort -u \
+        | jq -Rcs 'split("\n") | map(select(. != "") | {Name: ., Status: "running(12)", ConfigFiles: "cells/compose/cell.yml"})'
+    elif [[ " $* " == *" config "* && " $* " == *" --images "* ]]; then
+      t="${SERVER_TAG:-1.31.0}"
+      printf '%s\n' grafana/grafana:11.1.0 "temporalio/admin-tools:$t" temporalio/ui:2.49.1 "temporalio/server:$t" "temporalio/server:$t" \
+        nginx:1.22.1 ghcr.io/shopify/toxiproxy:2.12.0 "temporalio/server:$t" postgres:16 prom/prometheus:v2.53.0
+    else nodaemon "$@"; fi ;;
+  image)
+    [[ "${2:-}" == inspect ]] || nodaemon "$@"
+    shift 2
+    for i in "$@"; do [[ ",${FAKE_GATE_NO_IMAGE:-}," != *",$i,"* ]] || { echo "Error: No such image: $i" >&2; exit 1; }; done
+    echo '[{}]' ;;
+  *) nodaemon "$@" ;;
+esac

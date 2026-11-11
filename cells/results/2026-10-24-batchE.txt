@@ -1,0 +1,535 @@
+laug · batch E on the lab host: the Firecracker rerun, microVM cells from a rebuilt image, through laug
+2026-10-24, 16:01:28 to 17:39:21 UTC by the box's clock (batch-log.txt: the batch's start line and its end line); the
+launcher's own lines begin at 16:01:23. Host: the lab host, an m8i.8xlarge (32 vCPU, 128 GiB), with nested
+virtualization: /dev/kvm present and the vmx flag in /proc/cpuinfo (batch-log.txt, launch; steps/H2.txt). bin/laug host
+type read 32 vCPU and 123 GiB (H1); up 44.58 s when the batch started, 121G free on /, nothing of laug's running: 0 on
+7700, 0 laug projects, 0 laugd, 0 pool serve, 0 cellstat, 0 dev servers, 0 firecracker, nothing listening on 7400 to
+7402, 8400 or 7700 to 7799 (batch-log.txt, host). Tree: dcfd385, pushed to the box, which commits a pushed tree itself:
+5823630, "tree 160117 from dcfd385", whose 5541 files hash as dcfd385's on the dev host, with no other file
+(batch-log.txt, launch and S1). Every laug command ran in a fresh clone of it, bin/laug stamped 5823630 (S6). Go:
+go1.26.0, already in /usr/local/go; apt's is go1.22.2 (batch-log.txt, launch). The batch ran as root; every step that
+needs no root ran as the box user through runuser, in a clone the box user owns (batch-log.txt, go; steps/S7.txt). The
+safety stop was set for 00:00 UTC; the boot's budget ended 224 min after 16:01:28 (batch-log.txt, safety stop).
+History. This was batch E's fifth attempt, all five on 2026-10-24. The first two stopped in the image build: the
+batch's TMPDIR reached the image recipe's chroot, and apt-get install failed there; fixed on main at 57dd029, which
+gives the chroot its own environment. The third stopped at the first snapshot's first HealthCheck, "Namespace default is
+not found"; fixed at f604081, which runs a failed HealthCheck again every 2 s. The fourth lost its rauns to the
+Firecracker pool's seed defaults, min 1 and max 2, under which the bench's cold lease was the third cell. This attempt
+served the pool with -min 2 -max 6; on main since, the bench checks for room and exits 2 at min 1 and max 2 (4270012,
+38987c2). Every number below is this attempt's, from its pack.
+What the batch asked (batch E of the lab plan, run as boot 5): every microVM number in the tree came from the first lab
+host, an m8i.2xlarge (8 vCPU, 32 GiB), on an image built before a cell's roles started one at a time; "Firecracker cells
+keep the old order until their image is built again" (STATUS.md:487-488). So the image is built again first, and on it:
+three cold boots to warm, each snapshotted, the third kept for the pool; twelve restores; disk copies, plain and
+reflink; the pool through laug pool serve -backend firecracker -min 2 -max 6, its bench, three resets, the idle VMMs'
+memory and a DNS lookup in a guest; a warm-up raun, not counted, then persistence-latency, kill-history,
+throttle-frontend and oom-history three times each on microVM cells; timers across a guest clock step; the pool down.
+No gate runs on microVM cells: a gate's own pool serves compose cells (gate/lib.sh:143, gate/run.sh:291-292; read in
+source). In order: the launcher's checks, then S, H, I, K, R, D, P, F, T, E (groups.txt).
+Files. faults/results/raun-lab5-*.json are the 13 raun JSONs the verbs wrote in the clone, at their tree path: the
+clone's git status after the batch lists these 13, untracked, and no other path (clone-status.txt); runs.tsv names the
+step that wrote each. No step wrote under gate/results, load/results or cells/results.
+cells/results/2026-10-24-batchE/ holds the batch's own records, scrubbed of the box's paths and name before they left it
+(a path shows as <clone> or <box tree>; FC_DIR, /opt/fc, and /run/laug stay):
+  batch-log.txt     the batch's log: one line a command, with its exit and seconds, a summary line a raun, UTC
+  steps/            each command's whole stdout and stderr, one file a step (61 files: the 58 of steps.tsv; S1.txt,
+                    the clone; L-build.txt, the launcher's make build in the box's tree; P1.txt, the pool's own log
+                    from its start to its stop)
+  steps.tsv         step, exit, seconds, ok or fail: the 58 commands
+  runs.tsv          step, run id, the file the step wrote, exit: the 13 rauns
+  readings.json     the 52 readings the batch took, each with its step, how it was read and when
+  groups.txt        the 10 step groups, in order
+  clone-status.txt  the clone's git status after the batch: the 13 raun JSONs, untracked, one line each
+  extra/            f-vmm-load.jsonl: the leased VMM's memory every 15 s beside the first counted raun, 26 lines
+Every table below is read from those files with jq, or quoted from them. Tags: a number with a file beside it is seen in
+that file; "computed" marks arithmetic on such numbers; "inference" marks reasoning; "verify" marks what comes from
+documentation or source not run here. "Replaces" names the number this run stands in for, the host it came from and
+the file and line in this tree, at 38987c2, that holds it. A step's file is steps/<step>.txt; a reading is
+readings.json's entry of that name, `jq '.[] | select(.name == "<name>") | .value'`. The guest's side of a cell's
+private network, its tap address, is named in words here: the records keep only 127.0.0.1, 0.0.0.0 and the
+10.254.<block>.2 veth addresses.
+The raun tables read each faults/results/raun-lab5-<label>.json: inject is .inject_at in UTC; landed .landed_at -
+.inject_at; ttr .time_to_recover_s, removal to recovered; end .after_end - .inject_at; failed .iterations_failed's
+before/during/drain/after; done, drain and after are .workflows_completed in .window_seconds of that window; sweep
+.sweep.Completed. Wall seconds, command to exit, are steps.tsv's.
+
+== The launcher's checks, 16:01:23 to 16:01:28
+As root, before the batch (batch-log.txt, its first line): /dev/kvm present; vmx on 64 CPUs; root's tools there, no
+install logged; 121 GB free on /; no firecracker process, no block dir, no laugfc link and no deny rule; FC_DIR's
+image and snap moved to /opt/fc/old-20261024-160123, not deleted. Then make build in the box's tree as the box user,
+exit 0 in 5 s, bin/laug 5823630 (batch-log.txt, launch; steps/L-build.txt), and the batch script installed root-owned
+and started as root.
+Shows: the image and the snapshots every later step used were this batch's own: the old ones were off FC_DIR's paths
+before I1.
+Does not show: what old-20261024-160123 holds. "vmx on 64 CPUs" counts lines of /proc/cpuinfo on a 32 vCPU host, the
+count boot 4's H3 read and explained (cells/results/2026-10-24-boot4.txt, H; inference there).
+
+== S and H: the start and the host, 16:01:28 to 16:07:18
+Every command here ran as the box user, through runuser, under the root batch (batch-log.txt, the go line).
+  S1   git clone -q <box tree> <clone> && git -C <clone> checkout -q -B main
+                                     5823630, 5541 files (steps/S1.txt)
+  S2   make build                    exit 0, 1.5 s (steps/S2.txt)
+  S3   bin/laug upstream -url <box tree>/.upstream/omes
+                                     exit 0, 2.3 s: Omes f0de206, its proto submodule at d96bd55 (steps/S3.txt)
+  S4   bin/laug deps -lab -json      exit 0, 1.2 s: 0 of 17 checks missing; go a note (1.26.0 here, Omes asks 1.26.5);
+                                     docker engine 29.1.3, compose 2.40.3, temporal 1.9.1, /dev/kvm ok (steps/S4.txt)
+  S5a  make test-go                  exit 0, 81.4 s: 14 Go packages ok (steps/S5a.txt; make_test_go_s)
+  S5b  make harness-test             exit 0, 261.1 s: 1195 passed, 0 failed (steps/S5b.txt; harness_s, harness_tally)
+  S5c  make lint                     exit 0, 0.7 s, its four lines clean (steps/S5c.txt; lint_s)
+  S6   bin/laug version -json        commit 5823630, go1.26.0, server_tag 1.31.0, Omes f0de206 (steps/S6.txt)
+  S7   git status, the owner         clean; the clone's owner the box user (steps/S7.txt)
+  H1   bin/laug host type -json      declared m8i.8xlarge, 32 vCPU, 123 GiB, passes true (steps/H1.txt; host_type)
+  H2   /dev/kvm, vmx, free space     /dev/kvm present; grep -cw vmx /proc/cpuinfo 64; 121 GB free on FC_DIR's
+                                     filesystem (steps/H2.txt; kvm)
+  H3   1.31.0's images               8 named, none absent: toxiproxy 2.12.0, grafana 11.1.0, nginx 1.22.1, postgres 16,
+                                     prometheus v2.53.0, admin-tools 1.31.0, server 1.31.0, ui 2.49.1; each id in
+                                     images_before (steps/H3.txt)
+  batch-log.txt names the images step H3 and does not log H2; steps.tsv and the step files hold both.
+Shows: make test by part on a fresh lab clone of dcfd385: 81.4 + 261.1 + 0.7 = 343.2 s (computed), against boot 4's
+316.9 s at 1188 harness checks (cells/results/2026-10-24-boot4.txt, S); here the harness counts 1195. The root batch
+kept the clone the box user's through S (S7). H3: the 8 images fc-image saves into the image were on the host before I1
+(cells/rootfs/build-image.sh:38-40, :97; read in source).
+Does not show: the clone's owner after the root steps; S7 is the batch's only owner check. clone-status.txt, read after
+E, lists the 13 raun JSONs and nothing else.
+Replaces nothing: batch E feeds no page from S or H.
+
+== I: the cell image, built again, 16:07:18 to 16:08:37
+I1, as root: make -C <clone> fc-image, exit 0 in 79.7 s (steps.tsv); the script's own "built in 79.65 s" (fc_image
+.built_s). Its lines (steps/I1.txt):
+  firecracker v1.17.0, kernel vmlinux-6.18.51, base firecracker-ci/20261008-40f3a4819490-0 ubuntu-24.04
+  images: 8
+  in the image: docker.io 29.1.3-0ubuntu3~24.04.2, compose 2.40.3+ds1-0ubuntu1~24.04.1, iptables v1.8.10 (legacy)
+  first boot: ssh after 3.02 s
+  docker load 27 s, 8 images, overlayfs, cgroup v2
+  laug · cell image /opt/fc/image/cell.ext4, 5.0G on disk, built in 79.65 s
+and on stderr "WARNING: DOCKER_INSECURE_NO_IPTABLES_RAW is set", the image's own dockerd setting
+(cells/rootfs/README.md:84-86). The pins match fc-lib.sh's, v1.17.0, the CI build and kernel 6.18.51 (fc_image .pins;
+cells/rootfs/fc-lib.sh:10-12).
+The chroot's own environment and its log: the "in the image:" line is the recipe's summary line. build-image.sh runs the
+chroot under env -i with PATH, HOME=/root, DEBIAN_FRONTEND=noninteractive and LANG=C, writes all its output to
+$FC_DIR/chroot.log, and prints that line from the log only after the chroot exited 0 (cells/rootfs/build-image.sh:68-81;
+read in source). So apt-get install passed in the chroot under its own environment, where the first two attempts
+failed. The log stayed on the box: its summary line is all of it the pack holds.
+Shows: the image built from cells/rootfs at dcfd385 in 79.7 s, with this tree's cell compose files, whose roles start
+one at a time (inference: build-image.sh:94 copies cells/compose into the image; the image's /etc/laug-image, which
+records cell.yml's sha256, was not read).
+Does not show: whether Firecracker, its kernel and the base rootfs were fetched. build-image.sh fetches each only when
+absent (:17-24), and the launcher moved only image/ and snap/ aside, so they were likely already in /opt/fc and 79.7 s
+holds no download (inference). chroot.log and /etc/laug-image themselves.
+Replaces: "New image and snapshot (fc-image 93.2 s ...)" (first lab host, an m8i.2xlarge,
+cells/results/2026-10-14-firecracker-lab.txt:14), the rebuild for the guest's nameserver: 79.7 s. "sudo make fc-image
+79.2 s ... docker load 27 s; cell.ext4 5.0 GB on disk" and "79.9 s ... docker load 27 s" (same host,
+cells/results/2026-10-13-firecracker.txt:77-78, :101): 79.7 s, docker load 27 s, 5.0G on disk.
+
+== K: three cold boots to warm, and snapshots, 16:08:37 to 16:13:56
+K1 to K3, as root: make -C <clone> fc-snapshot, three times; the third's snapshot is the one R and the pool restore
+(steps/K1.txt to K3.txt; cold_boot_1 to cold_boot_3):
+                                     K1       K2       K3
+  disk: copy of the image            2.41     32.09    2.05 s
+  boot to ssh                        3.89     2.85     2.87 s
+  dockerd ready                      4.54     3.54     3.60 s
+  from compose up:
+    compose up returned              12.61    12.63    12.64 s
+    cluster health                   12.79    12.68    12.68 s
+    shards owned                     13.32    13.14    13.13 s
+    namespace                        24.20    24.10    24.28 s
+    HealthCheck done                 27.52    25.31    25.50 s
+    its attempt                      2        1        1
+    the call that passed             1118     1122     1132 ms completed, visible 11, 9 and 8 ms
+  guest memory used                  955      961      924 MiB of 3938
+  paused                             0.06     0.01     0.01 s
+  snapshot/create                    47.72    33.90    47.49 s
+  vm.mem, vm.snap, golden disk       4.1G, 68K and 5.1G each (du -h)
+  the step                           103.4    115.8    99.6 s (steps.tsv)
+golden.ext4 after K3: 17179869184 bytes apparent, 16 GiB, and 5429293056 bytes allocated, 5.06 GiB (golden_size, read
+in D; computed). The image is copied to golden.ext4 plainly: the image sits outside the XFS volume, so no reflink
+(cells/rootfs/fc-lib.sh:173-176; read in source).
+Cold microVM to warm by the definition of cells/results/2026-10-13-firecracker.txt:112, dockerd ready plus compose up to
+HealthCheck: 32.06, 28.85 and 29.10 s (computed).
+Shows: the retry of f604081 at work. K1's first HealthCheck failed and the second passed, so K1 was warm 2.02 to 2.21 s
+after K3 and K2 on their first call (computed), and its snapshot went on. The namespace is the last check to pass: 24.10
+to 24.28 s after compose up, 10.88 to 11.15 s after every shard was owned (computed).
+Does not show: why K2's copy of the image took 32.09 s against 2.05 and 2.41 s; the pack keeps no reason. Why the
+namespace comes 24 s after compose up: cells/results/2026-10-14-firecracker-lab.txt:19-21 saw it at 23.4 and 30.0 s
+after the guest's nameserver changed, against 9.8 to 10.3 s before, and left it unexplained; the setup container's log
+is not in the pack.
+Replaces: "a cold microVM reaches warm in 15.1 to 18.5 s (3 runs)" (first lab host, an m8i.2xlarge,
+cells/rootfs/README.md:4; STATUS.md:74, and :617 with its parts "ssh 2.9 s, Docker 3.5 to 3.6 s, then compose up to
+HealthCheck 11.5 to 15.0 s"): 28.85 to 32.06 s; ssh 2.85 to 3.89 s, dockerd 3.54 to 4.54 s, compose up to HealthCheck
+25.31 to 27.52 s. The old three ran before the nameserver change, so not like for like (inference, from the namespace
+above). "snapshot/create, 4 GiB guest: 36.6 to 46.8 s; vm.mem 4.1 GB, vm.snap 68 KB" (same host, STATUS.md:618;
+cells/rootfs/README.md:55-56): 33.90 to 47.72 s; vm.mem 4.1G, vm.snap 68K.
+
+== R: twelve restores, 16:13:56 to 16:14:59
+R1, as root: make -C <clone> fc-restore RESTORES=12, exit 0 in 62.6 s, 12 of 12 (steps/R1.txt; restore_1 to
+restore_12). Each: a reflink copy of golden.ext4, snapshot/load with resume, ssh, the guest clock read and set, one more
+round trip, then the warm checks; in s from snapshot/load but disk, the copy's own time:
+  n   disk  load  ssh   behind  set at  after set  round trip  cluster health  namespace  shards  HC done  HC call
+  1   0.02  0.01  0.95  35.1    1.72    -0.246     0.240       2.04            2.09       2.89    4.38     1366 ms
+  2   0.01  0.01  1.32  40.2    1.99    -0.173     0.210       2.27            2.31       3.12    4.63     1382 ms
+  3   0.01  0.01  0.89  45.5    1.78    -0.255     0.237       2.09            2.13       2.88    4.38     1350 ms
+  4   0.01  0.02  1.19  50.6    1.92    -0.177     0.210       2.21            2.25       3.08    4.56     1356 ms
+  5   0.02  0.01  1.21  55.9    1.86    -0.140     0.210       2.14            2.18       2.97    4.46     1368 ms
+  6   0.01  0.01  1.21  61.0    1.88    -0.147     0.205       2.16            2.20       2.99    4.49     1365 ms
+  7   0.01  0.01  0.98  66.2    1.72    -0.222     0.249       2.05            2.10       2.88    4.39     1375 ms
+  8   0.01  0.01  1.09  71.4    1.88    -0.146     0.210       2.17            2.21       3.03    4.54     1378 ms
+  9   0.01  0.01  1.24  76.6    1.93    -0.158     0.206       2.22            2.27       3.04    4.53     1362 ms
+  10  0.02  0.01  1.25  81.8    1.90    -0.156     0.210       2.18            2.23       3.05    4.58     1379 ms
+  11  0.02  0.01  1.19  87.0    1.92    -0.170     0.208       2.21            2.25       3.11    4.61     1367 ms
+  12  0.02  0.02  1.25  92.4    1.93    -0.143     0.207       2.21            2.26       3.07    4.57     1372 ms
+  behind: the guest clock behind the host; set at: when the set returned; after set: the guest's offset after it; HC
+  done the HealthCheck that passed, attempt 1 in all 12; HC call its completed ms, visible 36 to 47 ms
+The clock behind grew 5.1 to 5.4 s from one restore to the next, about each restore's length: 62.6 s over 12 is 5.2 s
+(computed).
+How the clock is set after a restore: restore.sh reads the guest's date over ssh, runs date -u -s @<the host's now> in
+the guest over a second ssh call, then reads once more to measure what is left, half the round trip being the
+uncertainty (cells/rootfs/restore.sh:28-32; read in source). The pool's create sets it over one ssh session instead, so
+the host's time crosses an open channel (cells/rootfs/README.md:127-128): its 45 creates in P left -0.0018 to -0.0234 s
+after the set, round trip 0.0032 to 0.0101 s (steps/P1.txt; computed over its create lines). So the set through
+restore.sh lands 0.140 to 0.255 s behind, about the length of an ssh call, and the pool's within 24 ms (inference for
+the cause).
+Shows: a restore reaches warm in 4.38 to 4.63 s, every first HealthCheck passing; snapshot/load returns in 0.01 to 0.02
+s.
+Does not show: whether the clock behind is the time since the pause; the pause's own time is not in the pack.
+Replaces: "a restore in 4.0 to 4.5 s through make fc-restore (6 runs; 3.6 to 5.3 s in 3 scratch runs)" (first lab host,
+an m8i.2xlarge, cells/rootfs/README.md:5; STATUS.md:73, :619): 4.38 to 4.63 s in 12. "The first HealthCheck after a
+restore took 1.3 to 3.9 s (1.3 s in the make fc-restore runs ...)" (same host, cells/rootfs/README.md:61-62): 1.350 to
+1.382 s. "snapshot/load returns in 0.01 s" (same host, cells/rootfs/README.md:60): 0.01 to 0.02 s. "After 12 restores
+it ran 34 to 206 s behind the host ...; after the set, 0.12 to 0.21 s behind (one SSH round trip, 0.28 to 0.38 s)" (same
+host, cells/rootfs/README.md:67-68; STATUS.md:77-78, :620): 35.1 to 92.4 s behind over 12 restores 5.2 s apart; 0.140 to
+0.255 s behind after the set, round trip 0.205 to 0.249 s. "the guest clock after a Firecracker restore is the pause's
+(34 to 206 s behind the host)" (same host, docs/DESIGN.md:1002-1003): 35.1 to 92.4 s.
+
+== D: disk copies, plain and reflink, 16:14:59 to 16:17:38
+D1, three times as root: sync, echo 3 > /proc/sys/vm/drop_caches, then cp --reflink=never of
+/opt/fc/disks/golden.ext4, on the XFS volume, to /opt/fc/copy-plain.ext4, outside it, timed by $EPOCHREALTIME, then
+removed (steps/D1-1.txt to D1-3.txt; batch-log.txt): 51.10, 52.71 and 52.21 s (disk_copy_plain_s). D2, three times:
+cp --reflink=always of golden.ext4 to a file on the same volume, removed: 0.01, 0.00 and 0.00 s (disk_copy_reflink_s),
+0.0070, 0.0037 and 0.0033 s by the stamps (computed). golden.ext4 holds 5.06 GiB of its 16 GiB (golden_size).
+The filesystem's reflink: cp --reflink=always fails where the filesystem cannot share blocks (verify: GNU cp's manual),
+so D2's three exits 0 show the volume shares them, and disk_copy, which tries the same cp first, printed "reflink" for
+each of R's 12 restores (cells/rootfs/fc-lib.sh:173-176; steps/R1.txt). fc-lib.sh makes the volume as a sparse loop
+file with mkfs.xfs -m reflink=1 (cells/rootfs/fc-lib.sh:160-169; read in source). The pack holds no xfs_info of it.
+Shows: with the page cache dropped, a plain copy of a cell's disk took 51.10 to 52.71 s, 98.2 to 101.3 MiB/s over its
+5.06 GiB allocated (computed); a reflink 3 to 7 ms.
+Does not show: the volume type under /opt/fc, or which end of the copy set its pace.
+Replaces: "Three plain copies of the 5 GB disk on EBS gp3, one before each restore, took 41 to 58 s ... A reflink copy
+on XFS shares blocks and took 0.01 to 0.22 s" (first lab host, an m8i.2xlarge, cells/rootfs/README.md:64-66;
+STATUS.md:76-77, :637; cells/rootfs/fc-lib.sh:160-161): 51.10 to 52.71 s, and 0.00 to 0.01 s. Not like for like for the
+plain copy: the 2026-10-13 copies were of the snapshot's disk, cp --sparse on EBS gp3, with no cache drop named
+(cells/results/2026-10-13-firecracker.txt:58-62); D1 is cp --reflink=never from the XFS loop file to
+/opt/fc/copy-plain.ext4, outside the volume, after a cache drop.
+
+== P: the pool through laug, 16:17:38 to 16:21:04
+-- P1: laug pool serve -backend firecracker -min 2 -max 6
+As root, in the background from the clone, with FC_KEY_USER the box user (batch-log.txt, P1). Its log runs from its
+start to its stop after E (steps/P1.txt). Its first lines: the guest key installed for the box user at
+/run/laug/guest.key; prep's "laug · fc pool left: 0 firecracker, 0 laugfc links, 0 cell disks, 0 block dirs, 4 deny
+rules"; and "laug · pool serve: listening on 127.0.0.1:7700 (min 2, max 6, quota 2, max lease 2h0m0s, backend
+firecracker, server 1.31.0, visibility postgres, on host-only addresses)".
+Over the batch the pool logged 45 creates and 43 destroys, on blocks 0 to 4 (steps/P1.txt; computed with grep). The 45
+create lines: up in 2.10 to 3.20 s but the first, 7.78 s; reflink 0.01 s in all 45; load and resume 0.08 to 0.09 s; ssh
+0.97 to 2.11 s but the first's 6.54 s; the guest clock 256.4 to 4773.1 s behind before the set, rising with the time
+since K3's snapshot (inference), and -0.0018 to -0.0234 s after it, round trip 0.0032 to 0.0101 s (computed over the
+lines). Each destroy line gives the guest clock against the host and the cell's age: over the 13 cells held 170 to 2274
+s, the guest clock lost 6.9 to 11.2 ppm (computed: the destroy's offset less the create's, over the age). The timer's
+cell, 5b2a8daa, read -0.2121 s after 906 s: T stepped and set its clock by hand, twice each.
+-- P2: the bench, 16:17:38 to 16:20:39
+bin/laug pool bench 127.0.0.1:7700, as the box user: exit 0 in 180.6 s (steps/P2.txt; fc_bench). "min warm (2 cells)
+reached 18.3 s after this script started"; 20 lease cycles from warm, each 0 to 2 ms. Its table:
+  | What | Number |
+  | --- | --- |
+  | laug pool serve to 2 warm (serial replenish) | 18.3 s |
+  | lease from warm, p50 over 20 cycles | 0 ms |
+  | lease from warm, p95 | 1 ms |
+  | lease from warm, max | 2 ms |
+  | cold lease, pool drained (create + health) | 7.8 s |
+  | TTL 30 s: lease to cell gone from /status | 40.0 s |
+-- P3: three resets on one lease, 16:20:39 to 16:20:58
+bin/laug lease -ttl 30m -requester lab5-reset -json: 9da81712 on block 0, 10.254.0.2:7233 (steps/P3-lease.txt; lease).
+bin/laug reset -last -json three times: 6.6, 6.2 and 6.3 s (fc_reset_s; steps.tsv), each answer the same id, block and
+address, with a new leased_at and the same expires_at, 16:50:39 (steps/P3-reset-1.txt to -3.txt). In the pool's log
+each reset is a destroy and a create of 9da81712 on b0, up in 2.91, 2.34 and 2.70 s (steps/P1.txt). The release: 0.5 s.
+-- P4: the idle VMMs' memory, 16:20:58
+As root, /proc/<pid>/smaps_rollup of each idle pool VMM (steps/P4.txt; vmm_idle, kB; MiB computed over 1024):
+  block  Pss          Rss          private dirty
+  4      894.4 MiB    1233.6 MiB   537.9 MiB
+  1      861.0 MiB    1200.3 MiB   481.1 MiB
+Beside the first counted persistence-latency raun, its leased VMM (block 1, 71d6dbae) every 15 s from 16:22:59 to
+16:29:15, 26 samples (extra/f-vmm-load.jsonl; vmm_load): Pss 832.6 MiB at the first and 2249.8 MiB at the last, private
+dirty 585.2 to 2026.2 MiB, Rss up to 2656.1 MiB, each largest at the last sample, 3 s after the raun's after window
+ended (computed).
+-- P5: a missing name in a guest, 16:20:59 to 16:21:04
+bin/laug lease -ttl 30m -requester lab5-dns -json: 2cfd4697 on block 1 (steps/P5-lease.txt). In the guest, over the
+lease's ssh: getent hosts laug-no-such-name, timed by the guest's clock: exit 2, not found (verify: getent(1)), in
+5010805719 ns, 5.011 s (steps/P5.txt; fc_dns_s). The release: 0.5 s.
+Shows: laug pool serve, bench, lease, reset and release, run through laug on a KVM host. A lease from warm costs 0 to 2
+ms; a cold one 7.8 s. A reset keeps the cell's id, block and address and costs 6.2 to 6.6 s. An idle VMM holds 861.0
+to 894.4 MiB Pss.
+Does not show: the cold lease split into create and health; the bench's 18.3 s split into prep, the first create's 7.78
+s and health. Why the first create's ssh took 6.54 s against 0.97 to 2.11 s after it. Why the lookup took 5.0 s, not
+under 1 s as the batch expected: the guest's resolver config and the answer at the tap address were not read. 5 s is
+glibc's default wait for one try of a nameserver (verify: resolv.conf(5), timeout), so one query likely went
+unanswered (inference).
+Replaces: "create returns in 1.4 to 2.3 s (reflink 0.01 s, load and resume 0.08 s, ssh 0.8 to 1.1 s; 24 creates under
+laugd), and health passes 2.7 to 2.9 s later" (first lab host, an m8i.2xlarge, cells/rootfs/README.md:132-133;
+STATUS.md:81, :638): up in 2.10 to 3.20 s over 44 creates and 7.78 s for the first, reflink 0.01 s, load and resume
+0.08 to 0.09 s, ssh 0.97 to 2.11 s; health is not in the pool's lines. "under laugd: 1 warm 4.6 to 5.1 s after make
+fc-pool, a drained pool's cold lease 6.5 s" (same host, cells/rootfs/README.md:134; STATUS.md:82, :639): 2 warm 18.3 s
+after the bench started, not like for like (2 cells against 1, and the first create's 7.78 s); a cold lease 7.8 s at max
+6. "make reset 6.8 s with id, block and address unchanged" (same host, cells/rootfs/README.md:135; STATUS.md:82,
+:639): 6.2 to 6.6 s through laug reset, the three unchanged. "on the lab host create returns in 1.4 to 2.3 s, a drained
+pool's cold lease takes 6.5 s and make reset 6.8 s" (same host, which docs/DESIGN.md:40-41 calls the lab host, citing
+cells/rootfs/README.md, The pool): up in 2.10 to 3.20 s, a cold lease 7.8 s, a reset 6.2 to 6.6 s. "the guest clock
+after the set: 2 to 16 ms behind (round trip 5 ms); it then lost 1.4 ms in 171 s (8 ppm)" and "3 to 21 ms behind; 1.4 ms
+in 171 s (8 ppm)" (same host, cells/rootfs/README.md:145-146; STATUS.md:85, :642): 1.8 to 23.4 ms behind, round trip 3.2
+to 10.1 ms; 6.9 to 11.2 ppm over 13 cells held 170 to 2274 s. "an idle VMM's Pss is about 735 MiB, of which 716 MiB is
+vm.mem pages shared between clones (Rss 1.1 GB each, private dirty 340 to 360 MiB); after 5 minutes of load a cell's
+private dirty was 2 046 MiB (Pss 2 413 MiB)" (same host, cells/rootfs/README.md:147-149; STATUS.md:641): idle Pss 861.0
+and 894.4 MiB, Rss 1200.3 and 1233.6 MiB, private dirty 481.1 and 537.9 MiB; under a raun's load private dirty 2026.2
+MiB and Pss 2249.8 MiB at the last of 6 min 16 s of samples. The shared part was not read here. "a missing name inside
+the guest: 'bad address' after 0.40 s, ssh included" (same host, cells/results/2026-10-14-firecracker-lab.txt:15): 5.011
+s for getent alone, by the guest's clock. Not like for like: the 2026-10-14 line names no command, and "bad address" is
+not how getent reports a miss (inference). The "0.3 to 5.7 s" of cells/rootfs/README.md:177 and STATUS.md:645 is
+Prometheus's time to see a killed history, not a lookup; F's kill-history landings stand in for it.
+
+== F: the rauns on microVM cells, 16:21:04 to 17:32:55
+Each: bin/laug raun <fault> -run-id lab5-<fault>-<n> as the box user, at its defaults: 20 workflows/s, a 30 min lease
+(each step file's "load <n>s at 20/s" and lease line). Each leased a warm cell of the pool and gave it back, destroyed.
+Judged by load/steady-state.yaml, the base, unchanged for 1.31.0 (each JSON's .thresholds_note). The compose rows beside
+them are boot 2's, on the same host type through laug raun on compose cells (cells/results/2026-10-23-boot2.txt), and
+for kill-history, which boot 2 did not run, the lab host's three of 2026-10-17
+(cells/results/2026-10-17-lab-kill-history.txt:27-33, :40-51).
+-- The warm-up, 16:21:04 to 16:22:44, not counted
+bin/laug raun persistence-latency -run-id lab5-warmup on 56d72192, block 4, 10.254.4.2: BLOCK, exit 1 in 99.3 s,
+"never steady: workflow_task_schedule_to_start_p99_ms=40.99999999999954
+workflow_end_to_end_p95_ms=89.55696202531645", against maxima of 38 and 84 ms (load/steady-state.yaml:32, :40). It
+waited 5 s for one busy cell at laugd before its load; no fault was injected (steps/F-warmup.txt; raun_lab5_warmup).
+Why it is not counted: it is the batch's first raun, run to warm the host and the pool before the counted ones, as boot
+2's R0 was (cells/results/2026-10-23-boot2.txt:89-91); the plan counts it in no fault's tally, whatever its verdict.
+Its BLOCK has the shape of two counted oom-history BLOCKs below, never steady with end-to-end p95 over 84 ms, and it
+read workflow task schedule-to-start over its max too.
+-- persistence-latency x3, 16:22:44 to 16:42:26
+200 ms of latency, jitter 50, at the cell's toxiproxy on every Postgres round trip (faults/catalog.yaml:35); steady 90
+s, hold 120 s, budget 60 s, after 90 s; the signal persistence p99 against 23 ms (each step file's stderr).
+  run  cells                inject    verdict  landed  peak ms  ttr  end  failed b/d/dr/a  done       drain        sweep
+  1    microVM 71d6dbae     16:24:41  ADVANCE  5       9570.4   31   271  0/541/33/0       11 in 115  1200 in 61   4196
+       compose, boot 2      16:24:57  ADVANCE  10      9344.5   25   265  0/540/6/0        0 in 110   1056 in 55   4092
+  2    microVM b6a56cfd     16:31:14  ADVANCE  10      9920.8   30   271  0/546/21/0       0 in 110   1131 in 60   4202
+       compose, boot 2      16:31:32  ADVANCE  10      9829.2   25   266  0/538/7/0        0 in 110   1053 in 55   4123
+  3    microVM 2baf9c73     16:37:47  ADVANCE  10      9942.4   35   276  0/546/27/0       0 in 110   1231 in 65   4307
+       compose, boot 2      16:38:05  ADVANCE  5       9849.9   25   266  0/537/5/0        0 in 115   1096 in 55   4105
+  peak: .signal_peak; compose rows: cells/results/2026-10-23-boot2.txt:97-99
+  microVM: exit 0 in 392.1, 392.0 and 398.1 s; removed 120 s after inject each; after 1800 in 90, 91 and 91 s. Compose:
+  395.3, 393.6 and 397.8 s (boot2.txt:101).
+-- kill-history x3, 16:42:26 to 17:00:38
+docker kill of history in the guest (faults/catalog.yaml:67), held 120 s, then docker start; the signal 512 less the
+shards history owns, max 0; budget 120 s (stderr: "signal custom > 0 ... budget 120s").
+  run  cells                inject    verdict  landed  shards  ttr  end  failed b/d/dr/a  done       drain        sweep
+  1    microVM 068c04bc     16:44:20  ADVANCE  6       3.0     6    246  0/545/62/0       0 in 114   572 in 36    3567
+       compose, 2026-10-17  21:33:38  ADVANCE  5       0.5     6    -    0/545/66/0       0 in 115   458 in 36    3514
+  2    microVM b8f213db     16:50:21  ADVANCE  6       2.7     11   251  0/545/52/0       0 in 114   599 in 41    3655
+       compose, 2026-10-17  21:50:57  ADVANCE  5       0.5     5    -    0/545/63/0       0 in 115   463 in 35    3523
+  3    microVM 7c0d9a90     16:56:23  ADVANCE  6       2.6     11   251  0/545/58/0       0 in 114   627 in 41    3681
+       compose, 2026-10-17  22:07:15  ADVANCE  6       0.5     5    -    0/545/97/0       0 in 114   456 in 35    3462
+  shards: .history_shards_ready_s, the restart to the new history's "initial shards ready"; compose rows:
+  cells/results/2026-10-17-lab-kill-history.txt:27-33, :40-51, whose table gives no end
+  microVM: exit 0 in 363.2, 366.2 and 362.1 s; signal peak 512 in each; after 1800 in 90 s each.
+-- throttle-frontend x3, 17:00:38 to 17:22:07
+frontend.rps 10 in the leased cell's dynamic config copy, then the copy restored (faults/catalog.yaml:85); budget 180 s;
+the signal ResourceExhausted errors a second against 0.5 (stderr: "signal custom > 0.5 ... budget 180s").
+  run  cells                inject    verdict  landed  RE peak  ttr  end  failed b/d/dr/a  done       drain        sweep
+  1    microVM b72cc33a     17:02:24  ADVANCE  26       2.84/s  60   302  0/0/1/0          196 in 94  1263 in 90   4913
+       compose, boot 2      18:16:11  ADVANCE  35       3.08/s  50   291  0/0/0/0          181 in 85  1094 in 80   4855
+  2    microVM ca52dcaf     17:09:25  ADVANCE  31       4.36/s  61   301  0/0/0/0          185 in 89  1193 in 91   4930
+       compose, boot 2      18:23:14  ADVANCE  35       4.48/s  55   296  0/0/0/0          182 in 85  1227 in 85   4939
+  3    microVM c5ceffe4     17:16:07  BLOCK    41       3.88/s  116  357  0/0/8/0          151 in 79  1405 in 146  5309
+       compose, boot 2      18:30:23  ADVANCE  36       3.64/s  55   296  0/0/0/0          176 in 84  1165 in 85   4943
+  RE peak: .signal_peak; compose rows: cells/results/2026-10-23-boot2.txt:322-328
+  microVM: exit 0, 0 and 1 in 411.0, 420.2 and 457.9 s; removed 121, 120 and 121 s after inject; after 1799, 1800 and
+  1800 completed in 91, 90 and 90 s. Run 3: "after window not clean: workflow_end_to_end_p95_ms=85.14056224899599", max
+  84 (steps/F-throttle-frontend-3.txt). Over the during windows: the service error rate 0.042, 0.045 and 0.044, workflow
+  task schedule-to-start p99 48484.6, 48166.7 and 48725.0 ms; compose 0.039, 0.046 and 0.045, and 48235.6, 47375.0 and
+  48609.9 ms (boot2.txt:322-324).
+-- oom-history x3, 17:22:07 to 17:32:55
+history's memory limit set to 256 MiB, then lifted and history started (faults/catalog.yaml:103); budget 120 s;
+recovered after 30 s of up (stderr: "signal custom > 0 ... budget 120s").
+  run  cells                inject    verdict  landed  shards  ttr  end  failed b/d/dr/a  done       drain        sweep
+  1    microVM 6bc10310     -         BLOCK    -       -       -    -    0/-/-/-          -          -            -
+       compose, boot 2      18:37:31  ADVANCE  45      32.1    60   300  0/102/206/0      0 in 75    953 in 90    4810
+  2    microVM 0a6956f7     17:25:52  BLOCK    36      40.6    71   312  0/76/99/0        0 in 84    1080 in 101  4740
+       compose, boot 2      18:44:45  ADVANCE  50      35.1    61   301  0/107/206/0      0 in 70    842 in 91    4833
+  3    microVM cd71e75c     -         BLOCK    -       -       -    -    0/-/-/-          -          -            -
+       compose, boot 2      18:52:00  ADVANCE  50      29.7    61   301  0/103/153/0      0 in 70    1175 in 91   5046
+  compose rows: cells/results/2026-10-23-boot2.txt:345-349; "-": the window never opened (empty or null in the JSON)
+  microVM: exit 1 in 124.7, 415.5 and 107.3 s. Runs 1 and 3: "never steady: workflow_end_to_end_p95_ms=
+  90.51724137931036" and "=90.36697247706421", no fault injected. Run 2: "after window not clean:
+  workflow_end_to_end_p95_ms=89.7626112759644", after 1800 completed in 91 s (steps/F-oom-history-<n>.txt).
+-- The windows the four BLOCKs failed in
+Every counted BLOCK failed on one reading, end-to-end p95 against its 84 ms max (each reason line above); the warm-up
+on it and on workflow task schedule-to-start. The before window, 60 s of load before any fault, read end-to-end p95 as
+(.before.workflow_end_to_end_p95_ms, ms):
+  microVM, this batch    persistence-latency 73.56, 62.50, 75.00; kill-history 80.33, 75.28, 74.46; throttle-frontend
+                         80.09, 79.00, 80.34; oom-history 90.52, 80.67, 90.37; so 62.50 to 90.52 ms
+  compose, lab host      boot 2's persistence-latency, throttle-frontend and oom-history 49.27 to 49.77 ms; the
+                         2026-10-17 kill-history 49.47 to 50.85 ms (faults/results/raun-lab2-*.json,
+                         raun-lab-kill-history-*.json; computed)
+The after windows on microVM cells read 59.04 to 89.76 ms, against 49.21 to 56.19 ms on compose (the same files). The
+microVM cells' before windows read workflow task schedule-to-start p99 19.86 to 35.00 ms against its max of 38.
+Shows: the four faults keep their shapes on microVM cells. persistence-latency: 3 of 3 ADVANCE, landed 5 to 10 s,
+recovered 30 to 35 s, 541 to 546 starts failed in each hold, 0 after. kill-history: 3 of 3 ADVANCE, landed 6 s each,
+recovered 6 to 11 s, 545 failed in each hold, 0 after; history's shards ready 2.6 to 3.0 s after its restart against
+0.5 s on compose. throttle-frontend: landed 26 to 41 s, recovered 60 to 116 s, inside the 180 s budget each time; 2 of 3
+ADVANCE. oom-history: 0 of 3, two never steady and one landed 36 s, back 71 s after the limit lifted, its after window
+over the max. Every BLOCK here is end-to-end p95 over 84 ms, a reading that sits at 62.50 to 90.52 ms on microVM cells
+before any fault, against 49.27 to 50.85 ms on compose; so on these cells the load alone runs near the max, and
+whether a raun ADVANCEs turns on it (inference).
+Does not show: why end-to-end p95 runs higher on a microVM cell: the pack holds no per-container reading and no
+per-second reading of a window. When the frontend took up the new limit in throttle-frontend; how many times history was
+killed in oom-history's hold. The rauns' load run JSONs: the clone held none (clone-status.txt).
+Replaces: in faults/README.md, "On microVM cells, first lab host, 2026-10-13: 3 of 3 ADVANCE" for persistence-latency
+(first lab host, an m8i.2xlarge, faults/README.md:21): 3 of 3 on the lab host. "On microVM cells, first lab host: 3 of
+3 ADVANCE, landed 11 s, recovered 6 s" for kill-history (same host, faults/README.md:24): 3 of 3, landed 6 s, recovered
+6 to 11 s. "On microVM cells, first lab host, 2026-10-13: ... at 180 s, 3 of 3 ADVANCE (recovered 76, 121, 121 s)"
+(same host, faults/README.md:25): 2 of 3, recovered 60, 61 and 116 s, run 3 BLOCKed in its after window, not on the
+budget. "with 30 s of up, 3 of 3 ADVANCE, landed 46 to 71 s, recovered 71 to 76 s" for oom-history (same host,
+faults/README.md:26): 0 of 3; the one that ran its fault landed 36 s and recovered 71 s.
+In <...>: "at budget 180 s 3 of 3 ADVANCE, recovered 76, 121, 121 s" for throttle-frontend and "with 30 s of
+up 3 of 3 ADVANCE, landed 46 to 71 s, recovered 71 to 76 s" for oom-history, each "on microVM cells (lab host,
+2026-10-13)" (same host, <...>): 2 of 3, recovered 60, 61 and 116 s; 0 of 3, landed 36 s and recovered
+71 s.
+In STATUS.md and cells/rootfs/README.md: "make raun FAULT=persistence-latency 3 times: 3 ADVANCE, landed 5 to 10 s,
+recovered 30 to 31 s" (same host, cells/rootfs/README.md:136-137; STATUS.md:82-83, :640, "landed 5, 10, 10 s; recovered
+31, 30, 30 s"): landed 5, 10 and 10 s, recovered 31, 30 and 35 s. "kill-history 4 of 4 ADVANCE (recovered 6 to 11 s)"
+and "11 s / 2.4 to 2.6 s / 6 to 11 s" (same host, before the nameserver change, STATUS.md:90, :643): landed 6 s,
+history's shards 2.6 to 3.0 s, recovered 6 to 11 s; "the raun landed in 6 s" after the change (same host,
+cells/rootfs/README.md:177) and "with the tap address as nameserver, 6 s, as on compose" (STATUS.md:99): 6 s in all
+three. "throttle-frontend landed 44 to 69 s and recovered 58 to 123 s" (same host, STATUS.md:90-91, :644): landed 26 to
+41 s, recovered 60 to 116 s. "oom-history ... came back owning its shards 42.6 to 51.4 s after the limit lifted" and
+"landed / shards owned after the limit lifts | 6 to 71 s / 42.6 to 51.4 s" (same host, STATUS.md:92-94, :650): landed 36
+s and shards ready 40.6 s, one run.
+Stands beside: the first lab host's microVM rauns read end-to-end p95 79.31 to 93.31 ms in their before windows and
+ADVANCEd (faults/results/raun-fcp{1,2,3}.json, raun-fckill{1,2,3}.json, raun-fvthrottle{1,2,3}.json,
+raun-fwoom{1,2,3}.json; computed); their JSONs do not name the set that judged them (.thresholds_note null), so which
+max they met is not in these files.
+Also replaces: the Backends row's Firecracker status, "since 2026-10-14 the catalog has 18 rows, 4 of them run on
+microVM cells (persistence-latency, kill-history, throttle-frontend, oom-history)", its evidence the 2026-10-13 files
+(first lab host, an m8i.2xlarge, STATUS.md:30): the same 4 rows on microVM cells on the lab host, 8 of 12 ADVANCE,
+through laug raun on a pool that laug pool serve -backend firecracker served, where the row names sudo make fc-pool.
+The row's cache_type caveat stands: no step read or set the drive's setting. docs/DESIGN.md's microVM figures,
+kill-history "11 s on microVM cells" landed and "6 to 11 s" recovered, "4 of 4 on microVM cells"; throttle-frontend
+"44 to 69 s", "58 to 123 s", "4 ADVANCE, 2 BLOCK"; oom-history "6 to 71 s", "71 to 76 s with the 30 s signal",
+"5 ADVANCE, 1 BLOCK" (same host, docs/DESIGN.md:226-228): 6 s and 6 to 11 s, 3 of 3; 26 to 41 s, 60 to 116 s, 2 of 3;
+36 s, 71 s, 0 of 3.
+
+== T: timers across a guest clock step, 17:32:55 to 17:39:19
+bin/laug lease -ttl 30m -requester lab5-timer -json: 5b2a8daa on block 1, 10.254.1.2:7233 (steps/T-lease.txt). On it,
+bin/laug health timer, one durable timer each, its JSON on line 3 of each step file. The readings timer_control,
+timer_step and timer_set_30 to _60 hold null, and the end line prints "?" for them, so every number here is read from
+the step files' JSON or computed from it.
+  T1, the control: 60 s, no step. Late 0.415 s by host time; the server's view, fire less start on the server's clock,
+  60.349 s; the server's clock 0.010 s ahead (steps/T1.txt: late_s, server_timer_s, server_skew_s).
+  T2, a step: 60 s, armed at 17:33:56.016. At +5.21 s the guest's clock set to the host's less 120.9 s, never corrected
+  while the timer ran (steps/T2-step.txt: date -u -s @<the target>; computed against the arm). Fired at 17:36:57.179 by
+  host time: late 121.163 s; the server's view 60.021 s (steps/T2.txt). The guest was set to the host's time 0.048 s
+  after the fire (steps/T2-set.txt; computed).
+  T3, a step and a set: three timers armed together at 17:36:57.537 to 17:36:57.540, 30, 45 and 60 s; the same step at
+  +5.21 s; the guest set to the host's time at +90.54 s (steps/T3-step.txt, T3-set.txt; computed against the arms):
+    timer  late, host time  server's view  fired, host time  after the set  after the arm
+    30 s   100.972 s        130.911 s      17:39:08.510      40.427 s       130.972 s
+    45 s   85.989 s         130.911 s      17:39:08.527      40.445 s       130.989 s
+    60 s   70.970 s         130.911 s      17:39:08.510      40.427 s       130.970 s
+  The three fired within 17.8 ms of each other by host time and 20.0 ms by the server's (computed). T3-45's command
+  exited at 17:39:18, 10 s after its timer fired: 141.1 s against 131.1 s for the other two (steps.tsv; batch-log.txt).
+Each timer's stderr holds 2 to 6 warnings "Failed to poll for task ... unexpected HTTP status code received from server:
+204 (No Content); malformed header: missing HTTP content-type"; each timer fired and its command exited 0
+(steps/T1.txt, T2.txt, T3-30.txt to T3-60.txt). The release: 0.5 s.
+Shows: on a microVM cell from this batch's image, a timer armed before a 120.9 s step back of the guest's clock fired
+121.2 s late by host time while the server recorded 60.0 s. Setting the clock right did not fire the overdue timers
+at once: all three fired together 40.4 s after the set, 130.9 s by the server's clock.
+Does not show: the mechanism; cells/results/2026-10-14-firecracker-lab.txt:48-58 reads it in the server's source
+(verify there). Why T3-45's command took 10 s more. What answered the polls with 204.
+Replaces: "control, no step: 60 s timer, late 0.41 s, server's view 60.36 s" (first lab host, an m8i.2xlarge,
+cells/results/2026-10-14-firecracker-lab.txt:39): 0.415 s, 60.349 s. "step back 120.9 s at +5.2 s, never corrected: 60
+s timer, late 123.5 s by host time; the server's view 60.02 s" (same host and file, :40; STATUS.md:100-101 and :646,
+"123.5 s / 60.0 s"): 121.163 s, 60.021 s. The three timers, late 101.0, 86.0 and 71.0 s, the server's view 130.9 s,
+"All three fired within 10 ms of each other, 40.5 s after the clock was set (fired at +130.9 s)" (same host and file,
+:41-46; STATUS.md:101-102, "40.5 s later"): 100.972, 85.989 and 70.970 s; 130.911 s; within 17.8 ms, 40.43 to 40.45 s
+after the set, at +130.97 to +130.99 s.
+
+== E: the pool down, 17:39:19 to 17:39:21
+As root: bin/laug pool down -backend firecracker -remove-cells, exit 0 in 1.1 s (steps/E1-pool-down.txt): "laug · pool
+down: pool serve -backend firecracker, pid 621748; 2 microVM cells in /run/laug and 2 VMMs: each cell's disk, its data
+with it, its link and its dir; prep's deny rules and the guest key go"; "pool serve, pid 621748, stopped"; the sweep of
+b0 and b2, the guest clock -0.0107 and -0.0129 s against the host, 384 and 491 s after create; "laug · fc pool left: 0
+firecracker, 0 laugfc links, 0 cell disks, 0 block dirs, 0 deny rules". The pool's own last line: "stopped with 2 cells
+in its table, none destroyed" (steps/P1.txt). The batch's check after it: {"firecracker":0,"links":0,"block_dirs":0,
+"deny_rule":false} (steps/E1-check.txt; fc_pool_down). Then the end: 0 on 7700, 0 laugd, 0 pool serve, 0 firecracker,
+nothing listening on 7400 to 7402, 8400 or 7700 to 7799, cells left 0 (batch-log.txt, end).
+Shows: laug pool down swept a live Firecracker pool on a KVM host: 2 cells, nothing left of them.
+Does not show: tap0 and its MASQUERADE, which stay by design (cells/rootfs/README.md:47-49); no step read them.
+Replaces: "make fc-pool-down then left no process, link, disk, directory or deny rule" (first lab host, an m8i.2xlarge,
+cells/rootfs/README.md:151-152): the same through laug pool down. The stub "The Firecracker pool runs through laug: ...
+Tested on fakes only: neither has run on a KVM host, so the Backends row's evidence is still the make targets'"
+(STATUS.md:530-532): both ran on the lab host here, laug pool serve -backend firecracker from P1 to E and laug pool down
+-backend firecracker -remove-cells in E.
+
+== The end line
+The batch's last line (batch-log.txt, 17:39:21):
+  batch ended: image exit 0 in 79.7 s; cold boots 3 of 3 (warm 25.31 to 27.52 s); restores 12 of 12 (warm 4.38 to 4.63
+  s, clock behind 35.1 to 92.4 s); disk plain 51.10 to 52.71 s, reflink 0.00 to 0.01 s; bench exit 0; resets 3; rauns
+  12 of 12 counted (+ warm-up BLOCK, exit 1): persistence-latency 3/3, kill-history 3/3, throttle-frontend 2/3,
+  oom-history 0/3; timers control late ? s, step late ? s (server ? s), step and set ?, ?, ? s late; pool down left 0
+  processes, 0 links, 0 block dirs, deny rule false; harness failures 0; readings 52; skipped 0
+and before it: "end: on 7700 0, laug projects 0, laugd 0, pool serve 0, cellstat 0, dev servers 0, firecracker 0;
+listening of 7400 to 7402, 8400, 7700 to 7799: none; cells left 0; 339 min left, up 98 min".
+- "cold boots ... warm 25.31 to 27.52 s": HealthCheck done from compose up. From a cold microVM by the 2026-10-13
+  definition, 28.85 to 32.06 s (K).
+- "rauns 12 of 12 counted": 12 ran and count; "3/3" is ADVANCE of runs. 8 of 12 ADVANCE, 4 BLOCK (F).
+- "timers ... ?": the five timer readings hold null; the step files hold the numbers (T).
+- 0 harness failures: no raun exited other than 0 or 1 or met its cap. steps.tsv counts 58 ok and 0 fail: a raun's
+  BLOCK, exit 1, counts ok (F-warmup, F-throttle-frontend-3, F-oom-history-1 to -3).
+
+== The pages these numbers feed, by section
+Each number above sits with its "Replaces" line in its own section; this is the map from the page to the sections.
+  STATUS.md, Backends, the Firecracker row (:30)                 F: the same 4 catalog rows ran on microVM cells, 8 of
+                                                                 12 ADVANCE; P and E: laug pool serve and pool down in
+                                                                 place of make fc-pool. The cache_type caveat stands:
+                                                                 nothing here read or changed the drive's setting
+  STATUS.md, Since Gate 4 (:73-102), the table (:617-620,        K, R, D, P, F, T
+    :637-646, :650)
+  STATUS.md, Stubs still standing (:530-532)                     P, E: both commands ran on a KVM host
+  STATUS.md, Open questions (:487-488), "Firecracker cells keep  I: the image is built again from this tree's cell files
+    the old order until their image is built again"
+  cells/rootfs/README.md (:4-5, :55-68, :132-152, :177)          K, R, D, P, F, E
+  faults/README.md (:21, :24-26)                                 F
+  <...>                                                          F
+  cells/results/2026-10-14-firecracker-lab.txt (:14-15, :39-46)  I, P5, T: the file stands as the first host's record
+  docs/LEARNING.md, stops 6, 8 and 9, and laug report's restore   not in this tree at 38987c2: nothing to replace. The
+    and clock-step figures                                       numbers they would take are K, R and D (a warm cell as
+                                                                 a memory image), P5 and T (names and time in a clone),
+                                                                 and F's throttle-frontend and oom-history
+  gate/plan.yaml:55-57, a recorded input, not changed here       F: its comment's 3 of 3 on microVM cells is the first
+                                                                 lab host's raun-fcp1 to 3, and stands
+  docs/DESIGN.md (:40-41, :226-228, :1002-1003)                  P (:40-41), F (:226-228), R (:1002-1003)
+  cells/backend-firecracker.sh:210, :264, comments               D, R: 41 to 58 s and 34 to 206 s; not changed here
+  internal/orchestrator/gate.go:561, a comment                   T: 123.5 s, "seen 2026-10-14"; not changed here
+  <...>                                                          K, R, D, P, F, T: dated 2026-10-13 and 2026-10-14, the
+                                                                 first host's record; not changed here
+
+== What the pack lacks
+- The five timer readings: null in readings.json and "?" in the end line; T reads the step files' JSON.
+- chroot.log and the image's /etc/laug-image: only the chroot's summary line came off the box (I).
+- Whether I1 fetched Firecracker, the kernel and the base rootfs, or found them in /opt/fc (I).
+- Why K2's image copy took 32.09 s, and the setup container's log behind the namespace's 24 s (K).
+- The time of each snapshot's pause, to set beside the clock behind (R).
+- xfs_info of the reflink volume, and the volume type under /opt/fc (D).
+- The cold lease split into create and health, and the bench's time to 2 warm split into its parts (P).
+- The guest's resolver config and what answered at the tap address, behind the 5.0 s lookup (P5).
+- The shared part of an idle VMM's memory; only Pss, Rss and private dirty were read (P4).
+- Per-container and per-second readings in the rauns, behind end-to-end p95 at 62.50 to 90.52 ms on microVM cells (F).
+- The rauns' load run JSONs: the clone held none (clone-status.txt).
+- docker events in oom-history's hold: how many times history was killed (F).
+- The drive's cache_type: no step read it.
+- tap0 and its MASQUERADE after the pool down (E).
+- When the instance stopped: the pack ends with the batch.

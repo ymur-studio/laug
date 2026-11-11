@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# Fake sleep for make harness-test: moves the fake clock forward instead of waiting. With FAKE_WAIT_READY set, the
+# first call waits up to 10 s of real time for the fake Omes to finish writing its log. FAKE_WAIT_READY may instead
+# name a file under FAKE_DIR: the first call waits for it, then 0.5 s more, so a load that writes it and exits has
+# exited. With FAKE_POOL_BUSY or FAKE_SS_LISTEN set, a raun waits before it starts its load (on the fake laugd's busy
+# cells, or for its Omes ports), so a call made before the fake go has started (no go.args) does not wait: a later one
+# does.
+if [[ -n "${FAKE_WAIT_READY:-}" && ! -e "$FAKE_DIR/omes.ready" ]] && [[ -z "${FAKE_POOL_BUSY:-}${FAKE_SS_LISTEN:-}" || -e "$FAKE_DIR/go.args" ]]; then
+  ready="$FAKE_DIR/omes.ready"; [[ "$FAKE_WAIT_READY" == 1 ]] || ready="$FAKE_DIR/$FAKE_WAIT_READY"
+  for _ in $(seq 1 200); do [[ -e "$ready" ]] && break; "$REAL_SLEEP" 0.05; done
+  [[ "$ready" == "$FAKE_DIR/omes.ready" ]] || { "$REAL_SLEEP" 0.5; : > "$FAKE_DIR/omes.ready"; }
+fi
+s="${1:-0}"; s="${s%%.*}"
+# The fake date and go read the clock while a caller sleeps, so the write is a rename: `echo N > clock` empties the
+# file before it writes, and a reader in between read nothing (make harness-test failed 2 to 3 checks in about 1 run
+# in 2 that way, 2026-10-14).
+now="$(cat "$FAKE_CLOCK" 2>/dev/null)"
+printf '%s\n' "$(( ${now:-0} + ${s:-0} ))" > "$FAKE_CLOCK.$$" && mv -f "$FAKE_CLOCK.$$" "$FAKE_CLOCK"

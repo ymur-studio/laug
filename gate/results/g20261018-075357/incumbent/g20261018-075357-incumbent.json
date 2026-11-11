@@ -1,0 +1,22 @@
+{
+  "run_id": "g20261018-075357-incumbent",
+  "scenario": "workflow_with_single_noop_activity",
+  "cell": "127.0.0.1:7233",
+  "prometheus": "http://127.0.0.1:9090",
+  "project": "laug-d95b23dc",
+  "server_tag": "1.31.0",
+  "server_version": "1.31.0",
+  "namespace": "default",
+  "start": "2026-10-18T07:57:42Z",
+  "end": "2026-10-18T08:02:43Z",
+  "omes_commit": "f0de206",
+  "iterations": "1000",
+  "duration": "5m",
+  "rate": "20",
+  "max_concurrent": "50",
+  "timeout": "420s",
+  "task_queue": "omes-g20261018-075357-incumbent",
+  "omes_exit": 0,
+  "iterations_failed": 0,
+  "omes_tally": null
+}

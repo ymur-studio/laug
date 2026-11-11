@@ -1,0 +1,331 @@
+{
+  "gate_id": "g20261018-091444",
+  "verdict": "ADVANCE",
+  "class": null,
+  "rerun": false,
+  "class_if_quiet": null,
+  "refused": null,
+  "fake": false,
+  "server_tag": "1.32.1",
+  "incumbent": "1.31.0",
+  "laug_commit": "515e50e",
+  "tree_dirty": false,
+  "base": "515e50e",
+  "inputs": [
+    {
+      "path": "gate/plan.yaml",
+      "sha256": "ef34d8359084ad717c6e43f0f241de1f17b4e0c9b353ce14d479a0e9ab32b28c",
+      "changed_vs_base": false
+    },
+    {
+      "path": "gate/combine.sh",
+      "sha256": "33b4e89dc2ecef502e73ea88136a482fbf8694986789712fd5126e31f5faf6f0",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/steady-state.yaml",
+      "sha256": "10458cff6d61af7c6ee3e816c5862e145dc4cd2c8b981bdda3ef81ec61b6d27a",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/thresholds.sh",
+      "sha256": "d054c485bb3027a78945640c484910c2fca206573a6a9fcbf34d8c223ea4a48d",
+      "changed_vs_base": false
+    },
+    {
+      "path": "faults/catalog.yaml",
+      "sha256": "f0e73b887d68b2e28575b8146f430d3a98dbae09f96d1da8aed63404cf333a9e",
+      "changed_vs_base": false
+    },
+    {
+      "path": "cells/compose/dynamicconfig/laug.yaml",
+      "sha256": "6ecc1d5ae589a5f89049b4f15d23becb616252e567ffd6a862db7294c50e705a",
+      "changed_vs_base": false
+    },
+    {
+      "path": "cells/compose/cell.yml",
+      "sha256": "131e51d360a5808d3f4de2cbb36b0a7a1b64588f6a65d2052f9b46295d0c035d",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/releases/1.32.yaml",
+      "sha256": "d22200aedb8b3fdcaa2d7326338d7f553fcf4d002305938b225637524f23a02c",
+      "changed_vs_base": false
+    }
+  ],
+  "deadline_s": 780,
+  "items_in_plan": 3,
+  "items_limit": null,
+  "t0": {
+    "wall": 1792314884.343,
+    "mono": 10438.01
+  },
+  "t_post": {
+    "wall": 1792315471.769,
+    "mono": 11025.44
+  },
+  "elapsed_s": {
+    "wall": 587.426,
+    "mono": 587.43
+  },
+  "host": {
+    "type": "m8i.8xlarge",
+    "vcpu": 32,
+    "mem_gib": 123,
+    "mem_available_gib": 121.7
+  },
+  "rules": {
+    "R1": {
+      "name": "harness",
+      "pass": true,
+      "reasons": []
+    },
+    "R2": {
+      "name": "coverage",
+      "pass": true,
+      "reasons": []
+    },
+    "R3": {
+      "name": "contract",
+      "pass": true,
+      "reasons": []
+    },
+    "R4": {
+      "name": "outcome",
+      "pass": true,
+      "reasons": []
+    },
+    "R5": {
+      "name": "live control",
+      "pass": true,
+      "reasons": []
+    },
+    "R6": {
+      "name": "identity",
+      "pass": true,
+      "reasons": []
+    },
+    "R7": {
+      "name": "incumbent",
+      "pass": true,
+      "reasons": []
+    }
+  },
+  "reasons": [],
+  "items": [
+    {
+      "key": "incumbent",
+      "kind": "load",
+      "arm": "incumbent",
+      "expect": "ADVANCE",
+      "observed": "ADVANCE",
+      "class": null,
+      "reason": "",
+      "failed": [],
+      "run_id": "g20261018-091444-incumbent",
+      "cell": "df5f52a1",
+      "block": 0,
+      "exit": 0,
+      "stopped_by": null,
+      "pool_busy": null,
+      "evidence": [
+        "incumbent/g20261018-091444-incumbent.json",
+        "incumbent/g20261018-091444-incumbent.verdict.json"
+      ]
+    },
+    {
+      "key": "steady",
+      "kind": "load",
+      "arm": null,
+      "expect": "ADVANCE",
+      "observed": "ADVANCE",
+      "class": null,
+      "reason": "",
+      "failed": [],
+      "run_id": "g20261018-091444-steady",
+      "cell": "c2863dee",
+      "block": 1,
+      "exit": 0,
+      "stopped_by": null,
+      "pool_busy": null,
+      "evidence": [
+        "steady/g20261018-091444-steady.json",
+        "steady/g20261018-091444-steady.verdict.json"
+      ]
+    },
+    {
+      "key": "pl",
+      "kind": "fault",
+      "arm": null,
+      "expect": "ADVANCE",
+      "observed": "ADVANCE",
+      "class": null,
+      "reason": "",
+      "failed": [],
+      "run_id": "g20261018-091444-pl",
+      "cell": "5b59bfaa",
+      "block": 2,
+      "exit": 0,
+      "stopped_by": null,
+      "pool_busy": {
+        "before": 0,
+        "during": 0,
+        "drain": 0,
+        "after": 0
+      },
+      "evidence": [
+        "pl/g20261018-091444-pl.json"
+      ]
+    }
+  ],
+  "comparison": {
+    "incumbent": "incumbent",
+    "release": "steady",
+    "mode": "judging",
+    "wave": [
+      "load:incumbent workflow_with_single_noop_activity 20/s 50 5m",
+      "load workflow_with_single_noop_activity 20/s 50 5m",
+      "fault:persistence-latency workflow_with_single_noop_activity"
+    ],
+    "wave_measured": [
+      "load:incumbent workflow_with_single_noop_activity 20/s 50 5m",
+      "load workflow_with_single_noop_activity 20/s 50 5m",
+      "fault:persistence-latency workflow_with_single_noop_activity"
+    ],
+    "measured_with": "1.31.0",
+    "evidence": "cells/results/2026-10-17-lab-arm-calibration.txt",
+    "gates": 20,
+    "windows": {
+      "start_apart_s": 0,
+      "length_s": {
+        "release": 302,
+        "incumbent": 302
+      }
+    },
+    "notes": [],
+    "rows": [
+      {
+        "name": "workflow_task_schedule_to_start_p99_ms",
+        "scale": "ms",
+        "release": 17.053526970954394,
+        "incumbent": 16.858407079646014,
+        "d": 0.195,
+        "tolerance": 1.02,
+        "judged": true,
+        "result": "ok"
+      },
+      {
+        "name": "persistence_latency_p99_ms",
+        "scale": "ms",
+        "release": 8.409009862433884,
+        "incumbent": 8.26851410724527,
+        "d": 0.14,
+        "tolerance": 0.35,
+        "judged": true,
+        "result": "ok"
+      },
+      {
+        "name": "activity_schedule_to_start_over_10ms",
+        "scale": "share",
+        "release": null,
+        "incumbent": 0.010508474576271354,
+        "d": null,
+        "tolerance": 0.0072,
+        "judged": true,
+        "result": "not produced"
+      },
+      {
+        "name": "frontend_request_over_10ms",
+        "scale": "share",
+        "release": 0.010582227308890135,
+        "incumbent": 0.010581025330216876,
+        "d": 1e-06,
+        "tolerance": 0.0032,
+        "judged": true,
+        "result": "ok"
+      },
+      {
+        "name": "workflow_end_to_end_over_50ms",
+        "scale": "share",
+        "release": 0.015082189459413642,
+        "incumbent": 0.02610169491525427,
+        "d": -0.01102,
+        "tolerance": 0.0064,
+        "judged": true,
+        "result": "ok"
+      },
+      {
+        "name": "activity_schedule_to_start_p99_ms",
+        "scale": "ms",
+        "release": null,
+        "incumbent": 10.526315789473772,
+        "d": null,
+        "tolerance": null,
+        "judged": false,
+        "result": "recorded"
+      },
+      {
+        "name": "workflow_end_to_end_p95_ms",
+        "scale": "ms",
+        "release": 48.93642463867859,
+        "incumbent": 49.263835711799516,
+        "d": -0.327,
+        "tolerance": null,
+        "judged": false,
+        "result": "recorded"
+      },
+      {
+        "name": "service_error_rate",
+        "scale": "share",
+        "release": 0,
+        "incumbent": 0,
+        "d": 0,
+        "tolerance": null,
+        "judged": false,
+        "result": "recorded"
+      },
+      {
+        "name": "frontend_request_p99_ms",
+        "scale": "ms",
+        "release": 10.630248957033587,
+        "incumbent": 10.629369691247447,
+        "d": 0.001,
+        "tolerance": null,
+        "judged": false,
+        "result": "recorded"
+      },
+      {
+        "name": "workflow_task_schedule_to_start_over_20ms",
+        "scale": "share",
+        "release": 0.00398271332937894,
+        "incumbent": 0.003983050847457648,
+        "d": -0,
+        "tolerance": null,
+        "judged": false,
+        "result": "recorded"
+      },
+      {
+        "name": "persistence_latency_over_10ms",
+        "scale": "share",
+        "release": 0.0013008875352347182,
+        "incumbent": 0.0013318434923680345,
+        "d": -3.1e-05,
+        "tolerance": null,
+        "judged": false,
+        "result": "recorded"
+      },
+      {
+        "name": "workflows_completed",
+        "scale": "count",
+        "release": 5988,
+        "incumbent": 5990,
+        "d": -2,
+        "tolerance": null,
+        "judged": false,
+        "result": "recorded"
+      }
+    ]
+  },
+  "host_quiet": true,
+  "host_noise": []
+}

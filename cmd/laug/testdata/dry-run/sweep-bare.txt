@@ -1,0 +1,21 @@
+# make: make --no-print-directory -n sweep
+# laug: laug sweep
+# lease: absent
+# compare: refused
+[ "file" != file ] || { echo "laug · make sweep RUN_ID=<id>: name the run whose task queue to count" >&2; exit 2; }
+addr=""; from=""; end=""; \
+for f in faults/results/20261022-120000.json load/results/20261022-120000.json; do \
+  [ -f "$f" ] || continue; \
+  case "$f" in \
+    faults/*) addr=$(jq -r '.address // empty' "$f"); end=$(jq -r '.after_end // empty' "$f") ;; \
+    *) addr=$(jq -r '.cell // empty' "$f"); end=$(jq -r '.end // empty' "$f"); [ -z "$end" ] || end=$(date -u -d "$end" +%s) ;; \
+  esac; \
+  [ -z "$addr" ] || from="recorded in $f"; \
+  break; \
+done; \
+ \
+[ -n "$addr" ] || { addr='127.0.0.1:7233'; from="the default CELL_ADDRESS: the run recorded no address"; }; \
+cutoff=''; \
+[ -n "$cutoff" ] || cutoff=$(date -u -d "@$(( ${end:-$(date +%s)} - ${SWEEP_MARGIN_S:-30} ))" +%Y-%m-%dT%H:%M:%SZ); \
+echo "laug · sweep omes-20261022-120000 on $addr ($from), workflows started before $cutoff" >&2; \
+NAMESPACE=default load/sweep.sh "$addr" omes-20261022-120000 "$cutoff"

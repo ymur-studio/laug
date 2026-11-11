@@ -1,0 +1,56 @@
+{
+  "window": "5m",
+  "server_tag": "1.31.0",
+  "thresholds": [
+    {
+      "name": "workflow_task_schedule_to_start_p99_ms",
+      "query": "histogram_quantile(0.99, sum(rate(task_schedule_to_start_latency_bucket{task_type=\"Workflow\"}[1m])) by (le)) * 1000",
+      "max": 150,
+      "no_data": "exceeds"
+    },
+    {
+      "name": "activity_schedule_to_start_p99_ms",
+      "query": "histogram_quantile(0.99, sum(rate(task_schedule_to_start_latency_bucket{task_type=\"Activity\"}[1m])) by (le)) * 1000",
+      "max": 100,
+      "no_data": "exceeds"
+    },
+    {
+      "name": "workflow_end_to_end_p95_ms",
+      "query": "histogram_quantile(0.95, sum(rate(workflow_schedule_to_close_latency_bucket[1m])) by (le)) * 1000",
+      "max": 300,
+      "no_data": "exceeds"
+    },
+    {
+      "name": "persistence_latency_p99_ms",
+      "query": "histogram_quantile(0.99, sum(rate(persistence_latency_bucket[1m])) by (le)) * 1000",
+      "max": 50,
+      "no_data": "exceeds"
+    },
+    {
+      "name": "service_error_rate",
+      "query": "(sum(rate(service_error_with_type{error_type!=\"serviceerror_Canceled\"}[1m])) or vector(0)) / sum(rate(service_requests[1m]))",
+      "max": 0.001,
+      "no_data": "exceeds"
+    },
+    {
+      "name": "frontend_request_p99_ms",
+      "query": "histogram_quantile(0.99, sum(rate(service_latency_bucket{service_name=\"frontend\", operation!~\"Poll.*\"}[1m])) by (le)) * 1000",
+      "max": 100,
+      "no_data": "exceeds"
+    }
+  ],
+  "verdict": {
+    "block_if_any_exceeds": true,
+    "flaky_list": "load/flaky.txt"
+  },
+  "resolved": {
+    "base": "load/steady-state.yaml",
+    "base_server_tag": "1.31.0",
+    "server_tag": "1.31.0",
+    "release": "1.31",
+    "release_file": null,
+    "given": false,
+    "note": "load/steady-state.yaml, the base (1.31.0 baselines), unchanged: no load/releases/1.31.yaml for server 1.31.0",
+    "overrides": []
+  }
+}

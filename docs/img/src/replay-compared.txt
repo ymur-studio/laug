@@ -1,0 +1,23 @@
+# What the Go SDK compares when it replays a history, as HealthCheck's replay tests show it
+# (internal/health/changes_test.go, 9 of 9; internal/health/replay_test.go). Replaces replay-compared.png.
+# Change from the PNG: activity type is listed as checked after the IDs line up, as replay-swapped shows.
+name replay-compared
+size 800 360
+title | Replay checks which commands, in which order, never their values
+sub | Go SDK 1.49.0, as HealthCheck's replay tests show it: nine changes, each replayed against a recorded history
+desc | Left, what replay compares: the command type, the activity ID and the timer ID, command by command, and
+desc | the activity type once the whole history has replayed; under it, changes that fail replay. Right, what it
+desc | never compares: durations, inputs, options and results; under it, changes that replay clean. Of the nine
+desc | changes, five replay clean and four fail with TMPRL1100.
+source internal/health/changes_test.go
+source internal/health/replay_test.go
+box cmp 24 76 364 106 | compared on replay | command type, command by command | activity ID and timer ID
+  | activity type, once the whole history has replayed
+box notcmp 412 76 364 106 | not compared | durations | inputs and options | results
+box fails 24 200 364 64 fill=steam stroke=ember | fails replay, TMPRL1100 | remove a Sleep, drop a timer,
+  | or swap two activities
+box clean 412 200 364 64 fill=steam | replays clean | Sleep 1 s to 5 s, or Sum(19, 23) to Sum(1, 2):
+  | the replay still gets 42
+text 24 298 size=12 | Of nine changes to HealthCheck, five replay clean and four fail with TMPRL1100.
+text 24 318 size=11 | Values already in a running workflow's history stay: a 30 s timer already started stays 30 s.
+text 24 340 size=10 | The tests: TestReplayChanges in internal/health/changes_test.go; the type check: replay-swapped.

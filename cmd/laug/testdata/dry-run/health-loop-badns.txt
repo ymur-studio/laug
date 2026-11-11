@@ -1,0 +1,6 @@
+# make: make --no-print-directory -n health-loop NAMESPACE=a/b
+# laug: laug health loop -namespace a/b
+# lease: absent
+# compare: refused
+[[ 'a/b' =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || { echo "laug · make health-loop: NAMESPACE="'a/b'" is not one word of letters, digits, ., _ and -, from a letter or digit" >&2; exit 2; };                
+cd health && go run ./cmd/healthcheck -address '127.0.0.1:7233' -namespace a/b -loop 10s

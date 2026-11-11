@@ -1,0 +1,9 @@
+# The control arm-always-pass: a branch whose one changed file, its shell judge, binds R7's reasons by item to {}, so
+# R7 compares and records but never fails an item, which the harness must catch. gate.json records that judge's
+# sha256 (internal/judge/versions.txt names it v2-r7off), not what the change is for. On the lab host, an m8i.8xlarge
+# (32 vCPU). It BLOCKed class harness. _report, the renderer, reads this list.
+# 1 gate.
+# One gate id a line; a line starting with # is a comment. A line "# <file>:<lines>, ..." names the transcript lines
+# that record the ids after it (TestSets).
+# cells/results/2026-10-18-lab-arm-validation.txt:412, pass
+g20261018-080445

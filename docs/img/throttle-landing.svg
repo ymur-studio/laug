@@ -1,0 +1,169 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400" viewBox="0 0 800 400" role="img"
+    aria-labelledby="throttle-landing-title throttle-landing-desc" font-family="Inter, system-ui, sans-serif">
+<title id="throttle-landing-title">throttle-frontend: landed 35 to 36 s after the edit, back 50 to 55 s after the
+    restore</title>
+<desc id="throttle-landing-desc">A lane a raun of faults/catalog.yaml&#39;s throttle-frontend on a compose cell, which
+    sets frontend.rps 10 in the leased cell&#39;s copy of its dynamic config, then restores the copy; across, seconds
+    from the edit, the raun&#39;s inject_at. The first tick is the signal landing, ResourceExhausted errors a second
+    over 30 s past 0.5; the first dashed line is the restore, remove_at; the second tick the signal back under it; the
+    second dashed line the raun&#39;s budget, 180 s after the restore. Each bar is a window holding the workflows it
+    completed in its seconds, left to right: during, from the landing to the hold&#39;s end; drain, from the restore to
+    the after window; after. The before windows completed 1200 to 1201 in 60 s; failed client starts over every window:
+    0. Sources: docs/tables/fig-throttle-landing.jsonl, docs/tables/rauns.jsonl, docs/tables/src/hosts.tsv,
+    faults/catalog.yaml.</desc>
+<rect x="0" y="0" width="800" height="400" fill="#EEF3F2"/>
+<text x="24" y="30" font-size="14" fill="#163A44"
+    font-weight="600">throttle-frontend: landed 35 to 36 s after the edit, back 50 to 55 s after the restore</text>
+<text x="24" y="50" font-size="12"
+    fill="#163A44">3 rauns at 20 workflows/s on server 1.31.0, the lab host, an m8i.8xlarge; frontend.rps 10, held 120 s</text>
+<text x="24" y="76" font-size="11" fill="#163A44">In each bar: workflows completed</text>
+<text x="259.478" y="76" font-size="11" fill="#163A44" text-anchor="middle">edit</text>
+<text x="448.87" y="76" font-size="11" fill="#163A44" text-anchor="middle">restore</text>
+<line x1="259.478" y1="82" x2="259.478" y2="288" fill="none" stroke="#CFE3E4"/>
+<line x1="306.435" y1="82" x2="306.435" y2="288" fill="none" stroke="#CFE3E4"/>
+<line x1="353.391" y1="82" x2="353.391" y2="288" fill="none" stroke="#CFE3E4"/>
+<line x1="400.348" y1="82" x2="400.348" y2="288" fill="none" stroke="#CFE3E4"/>
+<line x1="447.304" y1="82" x2="447.304" y2="288" fill="none" stroke="#CFE3E4"/>
+<line x1="494.261" y1="82" x2="494.261" y2="288" fill="none" stroke="#CFE3E4"/>
+<line x1="541.217" y1="82" x2="541.217" y2="288" fill="none" stroke="#CFE3E4"/>
+<line x1="588.174" y1="82" x2="588.174" y2="288" fill="none" stroke="#CFE3E4"/>
+<line x1="635.13" y1="82" x2="635.13" y2="288" fill="none" stroke="#CFE3E4"/>
+<line x1="682.087" y1="82" x2="682.087" y2="288" fill="none" stroke="#CFE3E4"/>
+<line x1="729.043" y1="82" x2="729.043" y2="288" fill="none" stroke="#CFE3E4"/>
+<line x1="776" y1="82" x2="776" y2="288" fill="none" stroke="#CFE3E4"/>
+<g aria-label="raun-lab2-throttle-frontend-1: ADVANCE">
+  <text x="24" y="120" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">raun-lab2-throttle-frontend-1</text>
+  <text x="24" y="136" font-size="11" fill="#5B9B6A" font-weight="600">ADVANCE</text>
+  <rect x="314.261" y="106" width="133.043" height="20" fill="#D99A3A" stroke="#163A44"
+      stroke-width="0.5"><title>during, 35 to 120 s: 181 workflows completed in 85 s</title></rect>
+  <text x="380.783" y="120" font-size="11" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">181 in 85 s</text>
+  <rect x="448.87" y="106" width="125.217" height="20" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>drain, 121 to 201 s: 1094 workflows completed in 80 s</title></rect>
+  <text x="511.478" y="120" font-size="11" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">1094 in 80 s</text>
+  <rect x="574.087" y="106" width="140.87" height="20" fill="#CFE3E4" stroke="#163A44"
+      stroke-width="0.5"><title>after, 201 to 291 s: 1800 workflows completed in 90 s</title></rect>
+  <text x="644.522" y="120" font-size="11" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">1800 in 90 s</text>
+  <line x1="259.478" y1="100" x2="259.478" y2="132" fill="none" stroke="#10181C"
+      stroke-width="1.5"><title>the edit, inject_at</title></line>
+  <line x1="314.261" y1="98" x2="314.261" y2="105" fill="none" stroke="#10181C"
+      stroke-width="2"><title>landed +35 s</title></line>
+  <line x1="448.87" y1="98" x2="448.87" y2="132" fill="none" stroke="#10181C" stroke-width="1.5" stroke-dasharray="4
+      3"><title>the restore, remove_at, +121 s</title></line>
+  <line x1="527.13" y1="98" x2="527.13" y2="105" fill="none" stroke="#10181C"
+      stroke-width="2"><title>back under 0.5 50 s after the restore</title></line>
+  <line x1="730.609" y1="98" x2="730.609" y2="132" fill="none" stroke="#C44B32" stroke-width="1.5" stroke-dasharray="4
+      3"><title>the budget, 180 s after the restore</title></line>
+  <text x="236" y="143" font-size="10"
+      fill="#163A44">landed +35 s; restored +121 s, back 50 s after it, against a 180 s budget</text>
+</g>
+<g aria-label="raun-lab2-throttle-frontend-2: ADVANCE">
+  <text x="24" y="184" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">raun-lab2-throttle-frontend-2</text>
+  <text x="24" y="200" font-size="11" fill="#5B9B6A" font-weight="600">ADVANCE</text>
+  <rect x="314.261" y="170" width="133.043" height="20" fill="#D99A3A" stroke="#163A44"
+      stroke-width="0.5"><title>during, 35 to 120 s: 182 workflows completed in 85 s</title></rect>
+  <text x="380.783" y="184" font-size="11" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">182 in 85 s</text>
+  <rect x="448.87" y="170" width="133.043" height="20" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>drain, 121 to 206 s: 1227 workflows completed in 85 s</title></rect>
+  <text x="515.391" y="184" font-size="11" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">1227 in 85 s</text>
+  <rect x="581.913" y="170" width="140.87" height="20" fill="#CFE3E4" stroke="#163A44"
+      stroke-width="0.5"><title>after, 206 to 296 s: 1800 workflows completed in 90 s</title></rect>
+  <text x="652.348" y="184" font-size="11" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">1800 in 90 s</text>
+  <line x1="259.478" y1="164" x2="259.478" y2="196" fill="none" stroke="#10181C"
+      stroke-width="1.5"><title>the edit, inject_at</title></line>
+  <line x1="314.261" y1="162" x2="314.261" y2="169" fill="none" stroke="#10181C"
+      stroke-width="2"><title>landed +35 s</title></line>
+  <line x1="448.87" y1="162" x2="448.87" y2="196" fill="none" stroke="#10181C" stroke-width="1.5" stroke-dasharray="4
+      3"><title>the restore, remove_at, +121 s</title></line>
+  <line x1="534.957" y1="162" x2="534.957" y2="169" fill="none" stroke="#10181C"
+      stroke-width="2"><title>back under 0.5 55 s after the restore</title></line>
+  <line x1="730.609" y1="162" x2="730.609" y2="196" fill="none" stroke="#C44B32" stroke-width="1.5" stroke-dasharray="4
+      3"><title>the budget, 180 s after the restore</title></line>
+  <text x="236" y="207" font-size="10"
+      fill="#163A44">landed +35 s; restored +121 s, back 55 s after it, against a 180 s budget</text>
+</g>
+<g aria-label="raun-lab2-throttle-frontend-3: ADVANCE">
+  <text x="24" y="248" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">raun-lab2-throttle-frontend-3</text>
+  <text x="24" y="264" font-size="11" fill="#5B9B6A" font-weight="600">ADVANCE</text>
+  <rect x="315.826" y="234" width="131.478" height="20" fill="#D99A3A" stroke="#163A44"
+      stroke-width="0.5"><title>during, 36 to 120 s: 176 workflows completed in 84 s</title></rect>
+  <text x="381.565" y="248" font-size="11" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">176 in 84 s</text>
+  <rect x="447.304" y="234" width="133.043" height="20" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>drain, 120 to 205 s: 1165 workflows completed in 85 s</title></rect>
+  <text x="513.826" y="248" font-size="11" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">1165 in 85 s</text>
+  <rect x="580.348" y="234" width="142.435" height="20" fill="#CFE3E4" stroke="#163A44"
+      stroke-width="0.5"><title>after, 205 to 296 s: 1900 workflows completed in 91 s</title></rect>
+  <text x="651.565" y="248" font-size="11" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">1900 in 91 s</text>
+  <line x1="259.478" y1="228" x2="259.478" y2="260" fill="none" stroke="#10181C"
+      stroke-width="1.5"><title>the edit, inject_at</title></line>
+  <line x1="315.826" y1="226" x2="315.826" y2="233" fill="none" stroke="#10181C"
+      stroke-width="2"><title>landed +36 s</title></line>
+  <line x1="447.304" y1="226" x2="447.304" y2="260" fill="none" stroke="#10181C" stroke-width="1.5" stroke-dasharray="4
+      3"><title>the restore, remove_at, +120 s</title></line>
+  <line x1="533.391" y1="226" x2="533.391" y2="233" fill="none" stroke="#10181C"
+      stroke-width="2"><title>back under 0.5 55 s after the restore</title></line>
+  <line x1="729.043" y1="226" x2="729.043" y2="260" fill="none" stroke="#C44B32" stroke-width="1.5" stroke-dasharray="4
+      3"><title>the budget, 180 s after the restore</title></line>
+  <text x="236" y="271" font-size="10"
+      fill="#163A44">landed +36 s; restored +120 s, back 55 s after it, against a 180 s budget</text>
+</g>
+<line x1="236" y1="304" x2="776" y2="304" fill="none" stroke="#10181C"/>
+<line x1="259.478" y1="304" x2="259.478" y2="308" fill="none" stroke="#10181C"/>
+<text x="259.478" y="320" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+<line x1="306.435" y1="304" x2="306.435" y2="308" fill="none" stroke="#10181C"/>
+<text x="306.435" y="320" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">30</text>
+<line x1="353.391" y1="304" x2="353.391" y2="308" fill="none" stroke="#10181C"/>
+<text x="353.391" y="320" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">60</text>
+<line x1="400.348" y1="304" x2="400.348" y2="308" fill="none" stroke="#10181C"/>
+<text x="400.348" y="320" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">90</text>
+<line x1="447.304" y1="304" x2="447.304" y2="308" fill="none" stroke="#10181C"/>
+<text x="447.304" y="320" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">120</text>
+<line x1="494.261" y1="304" x2="494.261" y2="308" fill="none" stroke="#10181C"/>
+<text x="494.261" y="320" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">150</text>
+<line x1="541.217" y1="304" x2="541.217" y2="308" fill="none" stroke="#10181C"/>
+<text x="541.217" y="320" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">180</text>
+<line x1="588.174" y1="304" x2="588.174" y2="308" fill="none" stroke="#10181C"/>
+<text x="588.174" y="320" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">210</text>
+<line x1="635.13" y1="304" x2="635.13" y2="308" fill="none" stroke="#10181C"/>
+<text x="635.13" y="320" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">240</text>
+<line x1="682.087" y1="304" x2="682.087" y2="308" fill="none" stroke="#10181C"/>
+<text x="682.087" y="320" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">270</text>
+<line x1="729.043" y1="304" x2="729.043" y2="308" fill="none" stroke="#10181C"/>
+<text x="729.043" y="320" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">300</text>
+<line x1="776" y1="304" x2="776" y2="308" fill="none" stroke="#10181C"/>
+<text x="776" y="320" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">330</text>
+<text x="506" y="336" font-size="12" fill="#163A44" text-anchor="middle">seconds after the edit</text>
+<rect x="24" y="373" width="18" height="10" fill="#D99A3A"/>
+<text x="48" y="382" font-size="11" fill="#163A44">during: landed to hold&#39;s end</text>
+<rect x="238.48" y="373" width="18" height="10" fill="#5FB3BF"/>
+<text x="262.48" y="382" font-size="11" fill="#163A44">drain: restore to after window</text>
+<rect x="465.28" y="373" width="18" height="10" fill="#CFE3E4"/>
+<text x="489.28" y="382" font-size="11" fill="#163A44">after</text>
+<line x1="538.08" y1="378" x2="556.08" y2="378" fill="none" stroke="#10181C" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="562.08" y="382" font-size="11" fill="#163A44">restore</text>
+<line x1="623.2" y1="378" x2="641.2" y2="378" fill="none" stroke="#C44B32" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="647.2" y="382" font-size="11" fill="#163A44">budget</text>
+</svg>

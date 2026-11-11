@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="340" viewBox="0 0 480 340" role="img"
+    aria-labelledby="writer-test-title writer-test-desc" font-family="Inter, system-ui, sans-serif">
+<title id="writer-test-title">The writer&#39;s test figure: every mark once</title>
+<desc id="writer-test-desc">Invented values, not a run&#39;s: five dots against a band and a limit, then two boxes and
+    an arrow. Sources: _report/svg_test.go, docs/BRAND.md.</desc>
+<rect x="0" y="0" width="480" height="340" fill="#10181C"/>
+<line x1="80" y1="220" x2="450" y2="220" fill="none" stroke="#163A44"/>
+<line x1="80" y1="175" x2="450" y2="175" fill="none" stroke="#163A44"/>
+<line x1="80" y1="130" x2="450" y2="130" fill="none" stroke="#163A44"/>
+<line x1="80" y1="85" x2="450" y2="85" fill="none" stroke="#163A44"/>
+<line x1="80" y1="40" x2="450" y2="40" fill="none" stroke="#163A44"/>
+<line x1="80" y1="220" x2="80" y2="40" fill="none" stroke="#CFE3E4"/>
+<line x1="76" y1="220" x2="80" y2="220" fill="none" stroke="#CFE3E4"/>
+<text x="74" y="224" font-size="11" fill="#EEF3F2" text-anchor="end"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">-1</text>
+<line x1="76" y1="175" x2="80" y2="175" fill="none" stroke="#CFE3E4"/>
+<text x="74" y="179" font-size="11" fill="#EEF3F2" text-anchor="end"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">-0.5</text>
+<line x1="76" y1="130" x2="80" y2="130" fill="none" stroke="#CFE3E4"/>
+<text x="74" y="134" font-size="11" fill="#EEF3F2" text-anchor="end"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+<line x1="76" y1="85" x2="80" y2="85" fill="none" stroke="#CFE3E4"/>
+<text x="74" y="89" font-size="11" fill="#EEF3F2" text-anchor="end"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0.5</text>
+<line x1="76" y1="40" x2="80" y2="40" fill="none" stroke="#CFE3E4"/>
+<text x="74" y="44" font-size="11" fill="#EEF3F2" text-anchor="end"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">1</text>
+<text x="38" y="130" font-size="12" fill="#EEF3F2" text-anchor="middle" transform="rotate(-90 38 130)">d, ms</text>
+<line x1="80" y1="220" x2="450" y2="220" fill="none" stroke="#CFE3E4"/>
+<line x1="80" y1="220" x2="80" y2="224" fill="none" stroke="#CFE3E4"/>
+<text x="80" y="236" font-size="11" fill="#EEF3F2" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+<line x1="172.5" y1="220" x2="172.5" y2="224" fill="none" stroke="#CFE3E4"/>
+<text x="172.5" y="236" font-size="11" fill="#EEF3F2" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">1</text>
+<line x1="265" y1="220" x2="265" y2="224" fill="none" stroke="#CFE3E4"/>
+<text x="265" y="236" font-size="11" fill="#EEF3F2" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">2</text>
+<line x1="357.5" y1="220" x2="357.5" y2="224" fill="none" stroke="#CFE3E4"/>
+<text x="357.5" y="236" font-size="11" fill="#EEF3F2" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">3</text>
+<line x1="450" y1="220" x2="450" y2="224" fill="none" stroke="#CFE3E4"/>
+<text x="450" y="236" font-size="11" fill="#EEF3F2" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">4</text>
+<text x="265" y="252" font-size="12" fill="#EEF3F2" text-anchor="middle">run</text>
+<g aria-label="the A/A band, d from -0.25 to 0.25">
+  <polygon points="80,107.5 450,107.5 450,152.5 80,152.5" fill="#163A44" fill-opacity="0.25"/>
+</g>
+<line x1="80" y1="62.5" x2="450" y2="62.5" fill="none" stroke="#C44B32" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="450" y="58.5" font-size="11" fill="#C44B32" text-anchor="end"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">limit 0.75</text>
+<text x="276.562" y="104.125" font-size="11" fill="#EEF3F2" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">band 0.25</text>
+<polyline points="80,121 172.5,148 265,100 357.5,49 450,130.009" fill="none" stroke="#5FB3BF" stroke-width="2"/>
+<polyline points="80,163.75 90.278,152.5 100.556,141.25 110.833,130 121.111,118.75 131.389,107.5 141.667,96.25
+    151.944,163.75 162.222,152.5 172.5,141.25 182.778,130 193.056,118.75 203.333,107.5 213.611,96.25 223.889,163.75
+    234.167,152.5 244.444,141.25 254.722,130 265,118.75 275.278,107.5 285.556,96.25 295.833,163.75 306.111,152.5
+    316.389,141.25 326.667,130 336.944,118.75 347.222,107.5 357.5,96.25 367.778,163.75 378.056,152.5 388.333,141.25
+    398.611,130 408.889,118.75 419.167,107.5 429.444,96.25 439.722,163.75 450,152.5" fill="none" stroke="#D99A3A"
+    stroke-dasharray="2 2"><title>a series of 37 points, wrapped</title></polyline>
+<g aria-label="the runs">
+  <circle cx="80" cy="121" r="4" fill="#5B9B6A" stroke="#10181C"><title>run 0: d 0.1, ADVANCE</title></circle>
+  <circle cx="172.5" cy="148" r="4" fill="#5B9B6A" stroke="#10181C"><title>run 1: d -0.2, ADVANCE</title></circle>
+  <circle cx="265" cy="100" r="4" fill="#5B9B6A" stroke="#10181C"><title>run 2: d 0.333, ADVANCE</title></circle>
+  <circle cx="357.5" cy="49" r="4" fill="#C44B32" stroke="#10181C"><title>run 3: d 0.9, BLOCK</title></circle>
+  <text x="365.5" y="53" font-size="11" fill="#C44B32" font-weight="600">BLOCK</text>
+  <circle cx="450" cy="130.009" r="4" fill="#5B9B6A" stroke="#10181C"><title>run 4: d 0, ADVANCE</title></circle>
+</g>
+<rect x="80" y="280" width="120" height="36" fill="#CFE3E4" stroke="#163A44"/>
+<text x="140" y="302" font-size="12" fill="#EEF3F2" text-anchor="middle">lease &amp; load</text>
+<rect x="330" y="280" width="120" height="36" fill="#D99A3A"/>
+<text x="390" y="302" font-size="12" fill="#EEF3F2" text-anchor="middle">verdict</text>
+<line x1="200" y1="298" x2="322" y2="298" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="330,298 322,302 322,294" fill="#163A44"/>
+</svg>

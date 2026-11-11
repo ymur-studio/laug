@@ -1,0 +1,721 @@
+{
+  "uid": "laug-lint-fixture",
+  "title": "laug · lint fixture",
+  "description": "make obs-test's fixture for make lint's board rules: one board that keeps every rule of _obs/lint.sh. make obs-test lints it, then plants one fault at a time in a copy and expects exit 2. Not provisioned anywhere.",
+  "tags": ["laug", "test"],
+  "timezone": "utc",
+  "editable": false,
+  "graphTooltip": 1,
+  "refresh": "10s",
+  "schemaVersion": 39,
+  "version": 1,
+  "time": {"from": "now-15m", "to": "now"},
+  "links": [],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {"type": "grafana", "uid": "-- Grafana --"},
+        "enable": true,
+        "hide": true,
+        "iconColor": "#D99A3A",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      },
+      {
+        "datasource": {"type": "prometheus", "uid": "laug-store"},
+        "enable": true,
+        "iconColor": "#D99A3A",
+        "name": "Timeline",
+        "expr": "laug_gate_step_seconds{gate_id=\"$gate\"} * 1000",
+        "step": "5s",
+        "titleFormat": "{{step}} {{item}}",
+        "useValueForTime": true
+      },
+      {
+        "datasource": {"type": "prometheus", "uid": "laug-store"},
+        "enable": true,
+        "iconColor": "#D99A3A",
+        "name": "Fault marks",
+        "expr": "laug_fault_mark_seconds{gate_id=\"$gate\"} * 1000",
+        "step": "5s",
+        "titleFormat": "{{mark}} {{item}}",
+        "useValueForTime": true
+      },
+      {
+        "datasource": {"type": "prometheus", "uid": "laug-store"},
+        "enable": true,
+        "iconColor": "#D99A3A",
+        "name": "Role restarts",
+        "expr": "changes(restarts{gate_id=\"$gate\"}[30s]) > 0",
+        "step": "30s",
+        "titleFormat": "{{job}} restarted"
+      }
+    ]
+  },
+  "templating": {
+    "list": [
+      {
+        "name": "gate",
+        "type": "query",
+        "datasource": {"type": "prometheus", "uid": "laug-store"},
+        "query": {"query": "label_values(laug_gate_info, gate_id)", "refId": "v"},
+        "definition": "label_values(laug_gate_info, gate_id)",
+        "refresh": 2,
+        "multi": false,
+        "includeAll": false,
+        "hide": 0,
+        "current": {},
+        "options": [],
+        "sort": 0
+      },
+      {
+        "name": "rel_cell",
+        "type": "query",
+        "datasource": {"type": "prometheus", "uid": "laug-store"},
+        "query": {"query": "label_values(laug_item_info{gate_id=\"$gate\", arm=\"release\"}, cell)", "refId": "v"},
+        "definition": "label_values(laug_item_info{gate_id=\"$gate\", arm=\"release\"}, cell)",
+        "refresh": 2,
+        "multi": false,
+        "includeAll": false,
+        "hide": 2,
+        "current": {},
+        "options": [],
+        "sort": 0
+      },
+      {
+        "name": "fault",
+        "type": "query",
+        "datasource": {"type": "prometheus", "uid": "laug-store"},
+        "query": {"query": "label_values(laug_item_info{gate_id=\"$gate\", kind=\"fault\"}, item)", "refId": "v"},
+        "definition": "label_values(laug_item_info{gate_id=\"$gate\", kind=\"fault\"}, item)",
+        "refresh": 2,
+        "multi": false,
+        "includeAll": false,
+        "hide": 0,
+        "current": {},
+        "options": [],
+        "sort": 0
+      },
+      {
+        "name": "fault_cell",
+        "type": "query",
+        "datasource": {"type": "prometheus", "uid": "laug-store"},
+        "query": {"query": "label_values(laug_item_info{gate_id=\"$gate\", item=\"$fault\"}, cell)", "refId": "v"},
+        "definition": "label_values(laug_item_info{gate_id=\"$gate\", item=\"$fault\"}, cell)",
+        "refresh": 2,
+        "multi": false,
+        "includeAll": false,
+        "hide": 2,
+        "current": {},
+        "options": [],
+        "sort": 0
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "Verdict",
+      "description": "Copied from verdict.json once the judge wrote it: ADVANCE or BLOCK, and its class.",
+      "datasource": {"type": "prometheus", "uid": "laug-store"},
+      "gridPos": {"x": 0, "y": 0, "w": 6, "h": 4},
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "fixed", "fixedColor": "#CFE3E4"},
+          "thresholds": {"mode": "absolute", "steps": [{"color": "#CFE3E4", "value": null}]},
+          "mappings": [],
+          "noValue": "not written yet: the judge has not run"
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false},
+        "colorMode": "none",
+        "graphMode": "none",
+        "textMode": "name",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "wideLayout": true,
+        "showPercentChange": false
+      },
+      "targets": [
+        {
+          "datasource": {"type": "prometheus", "uid": "laug-store"},
+          "refId": "A",
+          "expr": "laug_gate_verdict{gate_id=\"$gate\"}",
+          "legendFormat": "{{verdict}} {{class}}",
+          "range": false,
+          "instant": true,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "bargauge",
+      "title": "Persistence p99 against its max (so far, store)",
+      "description": "The yaml's query with one cell selector, over the board's range; the max is the gate's own laug_threshold.",
+      "datasource": {"type": "prometheus", "uid": "laug-store"},
+      "gridPos": {"x": 6, "y": 0, "w": 9, "h": 4},
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "fixed", "fixedColor": "#5FB3BF"},
+          "unit": "ms",
+          "thresholds": {"mode": "absolute", "steps": [{"color": "#5FB3BF", "value": null}]},
+          "mappings": []
+        },
+        "overrides": [
+          {
+            "matcher": {"id": "byFrameRefID", "options": "max"},
+            "properties": [
+              {"id": "color", "value": {"mode": "fixed", "fixedColor": "#C44B32"}},
+              {"id": "custom.lineStyle", "value": {"fill": "dash", "dash": [10, 10]}}
+            ]
+          }
+        ]
+      },
+      "options": {
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false},
+        "orientation": "horizontal",
+        "displayMode": "basic",
+        "valueMode": "color",
+        "namePlacement": "auto",
+        "showUnfilled": true,
+        "sizing": "auto",
+        "minVizWidth": 8,
+        "minVizHeight": 16,
+        "maxVizHeight": 300
+      },
+      "targets": [
+        {
+          "datasource": {"type": "prometheus", "uid": "laug-store"},
+          "refId": "persistence_latency_p99_ms",
+          "expr": "histogram_quantile(0.99, sum(rate(persistence_latency_bucket{cell=~\"$rel_cell\"}[$__range])) by (le)) * 1000",
+          "legendFormat": "release",
+          "range": false,
+          "instant": true,
+          "editorMode": "code"
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "laug-store"},
+          "refId": "max",
+          "expr": "laug_threshold{gate_id=\"$gate\", reading=\"persistence_latency_p99_ms\"}",
+          "legendFormat": "max",
+          "range": false,
+          "instant": true,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "timeseries",
+      "title": "Persistence p99, 1 m rolling (store), per item",
+      "description": "Each item's cell; the max is the gate's own laug_threshold.",
+      "datasource": {"type": "prometheus", "uid": "laug-store"},
+      "gridPos": {"x": 15, "y": 0, "w": 9, "h": 8},
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "fixed", "fixedColor": "#5FB3BF"},
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "insertNulls": false,
+            "showPoints": "never",
+            "pointSize": 4,
+            "stacking": {"mode": "none", "group": "A"},
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "scaleDistribution": {"type": "linear"},
+            "hideFrom": {"tooltip": false, "viz": false, "legend": false},
+            "thresholdsStyle": {"mode": "off"}
+          },
+          "unit": "ms",
+          "thresholds": {"mode": "absolute", "steps": [{"color": "#5FB3BF", "value": null}]},
+          "mappings": []
+        },
+        "overrides": [
+          {
+            "matcher": {"id": "byFrameRefID", "options": "max"},
+            "properties": [
+              {"id": "color", "value": {"mode": "fixed", "fixedColor": "#C44B32"}},
+              {"id": "custom.lineStyle", "value": {"fill": "dash", "dash": [10, 10]}}
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {"showLegend": true, "displayMode": "list", "placement": "bottom", "calcs": []},
+        "tooltip": {"mode": "multi", "sort": "none"}
+      },
+      "targets": [
+        {
+          "datasource": {"type": "prometheus", "uid": "laug-store"},
+          "refId": "A",
+          "expr": "histogram_quantile(0.99, sum by (item, le) (rate(persistence_latency_bucket{gate_id=\"$gate\"}[1m]))) * 1000",
+          "legendFormat": "{{item}}",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "laug-store"},
+          "refId": "max",
+          "expr": "laug_threshold{gate_id=\"$gate\", reading=\"persistence_latency_p99_ms\"}",
+          "legendFormat": "max",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "timeseries",
+      "title": "Service error rate, 1 m rolling (store), per item",
+      "description": "Canceled excluded, as load/steady-state.yaml does; a run with no errors draws 0 and keeps its item label.",
+      "datasource": {"type": "prometheus", "uid": "laug-store"},
+      "gridPos": {"x": 0, "y": 8, "w": 12, "h": 8},
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "fixed", "fixedColor": "#5FB3BF"},
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "insertNulls": false,
+            "showPoints": "never",
+            "pointSize": 4,
+            "stacking": {"mode": "none", "group": "A"},
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "scaleDistribution": {"type": "linear"},
+            "hideFrom": {"tooltip": false, "viz": false, "legend": false},
+            "thresholdsStyle": {"mode": "off"}
+          },
+          "unit": "percentunit",
+          "thresholds": {"mode": "absolute", "steps": [{"color": "#5FB3BF", "value": null}]},
+          "mappings": []
+        },
+        "overrides": [
+          {
+            "matcher": {"id": "byFrameRefID", "options": "max"},
+            "properties": [
+              {"id": "color", "value": {"mode": "fixed", "fixedColor": "#C44B32"}},
+              {"id": "custom.lineStyle", "value": {"fill": "dash", "dash": [10, 10]}}
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {"showLegend": true, "displayMode": "list", "placement": "bottom", "calcs": []},
+        "tooltip": {"mode": "multi", "sort": "none"}
+      },
+      "targets": [
+        {
+          "datasource": {"type": "prometheus", "uid": "laug-store"},
+          "refId": "A",
+          "expr": "(sum by (item) (rate(service_error_with_type{gate_id=\"$gate\", error_type!=\"serviceerror_Canceled\"}[1m])) or 0 * sum by (item) (rate(service_requests{gate_id=\"$gate\"}[1m]))) / sum by (item) (rate(service_requests{gate_id=\"$gate\"}[1m]))",
+          "legendFormat": "{{item}}",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "laug-store"},
+          "refId": "max",
+          "expr": "laug_threshold{gate_id=\"$gate\", reading=\"service_error_rate\"}",
+          "legendFormat": "max",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "timeseries",
+      "title": "Kill-history's signal, shards missing (store)",
+      "description": "faults/catalog.yaml's signal with one cell selector: absence reads as 512 missing.",
+      "datasource": {"type": "prometheus", "uid": "laug-store"},
+      "gridPos": {"x": 12, "y": 8, "w": 12, "h": 8},
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "fixed", "fixedColor": "#5FB3BF"},
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "insertNulls": false,
+            "showPoints": "never",
+            "pointSize": 4,
+            "stacking": {"mode": "none", "group": "A"},
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "scaleDistribution": {"type": "linear"},
+            "hideFrom": {"tooltip": false, "viz": false, "legend": false},
+            "thresholdsStyle": {"mode": "off"}
+          },
+          "unit": "none",
+          "thresholds": {"mode": "absolute", "steps": [{"color": "#5FB3BF", "value": null}]},
+          "mappings": []
+        },
+        "overrides": [
+          {
+            "matcher": {"id": "byFrameRefID", "options": "max"},
+            "properties": [
+              {"id": "color", "value": {"mode": "fixed", "fixedColor": "#C44B32"}},
+              {"id": "custom.lineStyle", "value": {"fill": "dash", "dash": [10, 10]}}
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {"showLegend": true, "displayMode": "list", "placement": "bottom", "calcs": []},
+        "tooltip": {"mode": "multi", "sort": "none"}
+      },
+      "targets": [
+        {
+          "datasource": {"type": "prometheus", "uid": "laug-store"},
+          "refId": "kill-history",
+          "expr": "(512 - sum(numshards_gauge{cell=~\"$fault_cell\", job=\"temporal-history\"})) or vector(512)",
+          "legendFormat": "missing",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "laug-store"},
+          "refId": "max",
+          "expr": "laug_fault_signal{gate_id=\"$gate\", item=\"$fault\", field=\"max\"}",
+          "legendFormat": "max",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "type": "timeseries",
+      "title": "Persistence-latency's signal, 30 s (store)",
+      "description": "faults/catalog.yaml's signal with one cell selector; the max is the raun's own.",
+      "datasource": {"type": "prometheus", "uid": "laug-store"},
+      "gridPos": {"x": 0, "y": 16, "w": 12, "h": 8},
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "fixed", "fixedColor": "#5FB3BF"},
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "insertNulls": false,
+            "showPoints": "never",
+            "pointSize": 4,
+            "stacking": {"mode": "none", "group": "A"},
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "scaleDistribution": {"type": "linear"},
+            "hideFrom": {"tooltip": false, "viz": false, "legend": false},
+            "thresholdsStyle": {"mode": "off"}
+          },
+          "unit": "ms",
+          "thresholds": {"mode": "absolute", "steps": [{"color": "#5FB3BF", "value": null}]},
+          "mappings": []
+        },
+        "overrides": [
+          {
+            "matcher": {"id": "byFrameRefID", "options": "max"},
+            "properties": [
+              {"id": "color", "value": {"mode": "fixed", "fixedColor": "#C44B32"}},
+              {"id": "custom.lineStyle", "value": {"fill": "dash", "dash": [10, 10]}}
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {"showLegend": true, "displayMode": "list", "placement": "bottom", "calcs": []},
+        "tooltip": {"mode": "multi", "sort": "none"}
+      },
+      "targets": [
+        {
+          "datasource": {"type": "prometheus", "uid": "laug-store"},
+          "refId": "persistence-latency",
+          "expr": "histogram_quantile(0.99, sum(rate(persistence_latency_bucket{cell=~\"$fault_cell\"}[30s])) by (le)) * 1000",
+          "legendFormat": "p99",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "laug-store"},
+          "refId": "max",
+          "expr": "laug_fault_signal{gate_id=\"$gate\", item=\"$fault\", field=\"max\"}",
+          "legendFormat": "max",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "type": "timeseries",
+      "title": "Failed client starts (Omes)",
+      "description": "Omes's client counter, scraped by the stack's laug-omes job.",
+      "datasource": {"type": "prometheus", "uid": "laug-store"},
+      "gridPos": {"x": 12, "y": 16, "w": 12, "h": 8},
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "fixed", "fixedColor": "#5FB3BF"},
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "insertNulls": false,
+            "showPoints": "never",
+            "pointSize": 4,
+            "stacking": {"mode": "none", "group": "A"},
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "scaleDistribution": {"type": "linear"},
+            "hideFrom": {"tooltip": false, "viz": false, "legend": false},
+            "thresholdsStyle": {"mode": "off"}
+          },
+          "unit": "none",
+          "thresholds": {"mode": "absolute", "steps": [{"color": "#5FB3BF", "value": null}]},
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {"showLegend": true, "displayMode": "list", "placement": "bottom", "calcs": []},
+        "tooltip": {"mode": "multi", "sort": "none"}
+      },
+      "targets": [
+        {
+          "datasource": {"type": "prometheus", "uid": "laug-store"},
+          "refId": "A",
+          "expr": "sum by (item) (increase(temporal_request_failure{job=\"laug-omes\", gate_id=\"$gate\", role=\"client\", operation=\"StartWorkflowExecution\"}[30s]))",
+          "legendFormat": "{{item}}",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "type": "timeseries",
+      "title": "The orchestrator's queue, workflow task schedule-to-start p99",
+      "description": "The dev server's own series, job laug-orchestrator.",
+      "datasource": {"type": "prometheus", "uid": "laug-store"},
+      "gridPos": {"x": 0, "y": 24, "w": 12, "h": 8},
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "fixed", "fixedColor": "#5FB3BF"},
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "insertNulls": false,
+            "showPoints": "never",
+            "pointSize": 4,
+            "stacking": {"mode": "none", "group": "A"},
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "scaleDistribution": {"type": "linear"},
+            "hideFrom": {"tooltip": false, "viz": false, "legend": false},
+            "thresholdsStyle": {"mode": "off"}
+          },
+          "unit": "ms",
+          "thresholds": {"mode": "absolute", "steps": [{"color": "#5FB3BF", "value": null}]},
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {"showLegend": true, "displayMode": "list", "placement": "bottom", "calcs": []},
+        "tooltip": {"mode": "multi", "sort": "none"}
+      },
+      "targets": [
+        {
+          "datasource": {"type": "prometheus", "uid": "laug-store"},
+          "refId": "A",
+          "expr": "histogram_quantile(0.99, sum by (le) (rate(task_schedule_to_start_latency_bucket{job=\"laug-orchestrator\", task_queue=~\"laug-gate-.*\"}[1m]))) * 1000",
+          "legendFormat": "p99",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "type": "timeseries",
+      "title": "Federation: each cell up",
+      "description": "A gap here is the stack's, not the cell's.",
+      "datasource": {"type": "prometheus", "uid": "laug-store"},
+      "gridPos": {"x": 12, "y": 24, "w": 12, "h": 8},
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "fixed", "fixedColor": "#5FB3BF"},
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "insertNulls": false,
+            "showPoints": "never",
+            "pointSize": 4,
+            "stacking": {"mode": "none", "group": "A"},
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "scaleDistribution": {"type": "linear"},
+            "hideFrom": {"tooltip": false, "viz": false, "legend": false},
+            "thresholdsStyle": {"mode": "off"}
+          },
+          "unit": "none",
+          "thresholds": {"mode": "absolute", "steps": [{"color": "#5FB3BF", "value": null}]},
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {"showLegend": true, "displayMode": "list", "placement": "bottom", "calcs": []},
+        "tooltip": {"mode": "multi", "sort": "none"}
+      },
+      "targets": [
+        {
+          "datasource": {"type": "prometheus", "uid": "laug-store"},
+          "refId": "A",
+          "expr": "up{job=\"laug-cells\", gate_id=\"$gate\"}",
+          "legendFormat": "{{item}} {{cell}}",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "type": "row",
+      "title": "The instrument",
+      "collapsed": true,
+      "gridPos": {"x": 0, "y": 32, "w": 24, "h": 1},
+      "panels": [
+        {
+          "id": 11,
+          "type": "timeseries",
+          "title": "Activity schedule-to-start past 10 ms (store)",
+          "description": "The share past the edge the p99 sits on; the two warm lines are 1% (a p99) and 5% (a p95), references, not maxima.",
+          "datasource": {"type": "prometheus", "uid": "laug-store"},
+          "gridPos": {"x": 0, "y": 33, "w": 24, "h": 8},
+          "fieldConfig": {
+            "defaults": {
+              "color": {"mode": "fixed", "fixedColor": "#5FB3BF"},
+              "custom": {
+                "drawStyle": "line",
+                "lineInterpolation": "linear",
+                "barAlignment": 0,
+                "lineWidth": 1,
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "spanNulls": false,
+                "insertNulls": false,
+                "showPoints": "never",
+                "pointSize": 4,
+                "stacking": {"mode": "none", "group": "A"},
+                "axisPlacement": "auto",
+                "axisLabel": "",
+                "axisColorMode": "text",
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "scaleDistribution": {"type": "linear"},
+                "hideFrom": {"tooltip": false, "viz": false, "legend": false},
+                "thresholdsStyle": {"mode": "line"}
+              },
+              "unit": "percentunit",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {"color": "#5FB3BF", "value": null},
+                  {"color": "#D99A3A", "value": 0.01},
+                  {"color": "#D99A3A", "value": 0.05}
+                ]
+              },
+              "mappings": []
+            },
+            "overrides": []
+          },
+          "options": {
+            "legend": {"showLegend": true, "displayMode": "list", "placement": "bottom", "calcs": []},
+            "tooltip": {"mode": "multi", "sort": "none"}
+          },
+          "targets": [
+            {
+              "datasource": {"type": "prometheus", "uid": "laug-store"},
+              "refId": "activity_schedule_to_start_over_10ms",
+              "expr": "1 - sum(rate(task_schedule_to_start_latency_bucket{cell=~\"$rel_cell\", task_type=\"Activity\", le=\"0.01\"}[$__range])) / sum(rate(task_schedule_to_start_latency_bucket{cell=~\"$rel_cell\", task_type=\"Activity\", le=\"+Inf\"}[$__range]))",
+              "legendFormat": "release",
+              "range": true,
+              "instant": false,
+              "editorMode": "code"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

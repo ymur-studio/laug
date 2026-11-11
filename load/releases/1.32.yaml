@@ -1,0 +1,32 @@
+# Threshold overrides for server 1.32.x, applied over the base by load/thresholds.sh to every run whose server tag is
+# 1.32.<patch>. A threshold not named here is judged as the base says. Each override names a threshold of the base,
+# the rule that changes, why, and the result that shows it. The one kind so far is no_data: not_judged: the reading is
+# still judged against its max whenever it has data, and reads "not produced on this release" instead of EXCEEDS when
+# it has none.
+release: "1.32"
+# The base these overrides were written against. load/thresholds.sh refuses this file once the base's server_tag
+# changes: a base measured again on another release needs each override checked against it.
+base: load/steady-state.yaml
+base_server_tag: 1.31.0
+overrides:
+  # Seen: 1.32.1 under load (5 m at 20/s, 50 at once) records no data on this reading, in 3 of 3 runs on the lab host
+  # (lab1-v1321-1 to -3, cells/results/2026-10-23-boot1.txt, D); 1.31.0's 3 runs beside them read 9.98 to 9.99 ms.
+  # Read in source, not run: system.enableActivityEagerExecution defaults to false in 1.31.0 and true from 1.32.0 on
+  # (server v1.31.0 common/dynamicconfig/constants.go:194-195, v1.32.0 :204-205).
+  - name: activity_schedule_to_start_p99_ms
+    no_data: not_judged
+    reason: >-
+      1.32 runs activities eagerly (system.enableActivityEagerExecution is true by default, false in 1.31.0): an activity
+      on the worker's own task queue starts in the reply to its workflow task, so matching never queues it and records no
+      schedule-to-start for it
+    evidence: cells/results/2026-10-23-boot1.txt
+  # The same reading as a share past the 10 ms edge (load/steady-state.yaml): with no activity schedule-to-start in the
+  # window its share is 0 over 0 and reads null (load/read-thresholds.sh). Marked here, it reads "not produced" on
+  # 1.32, in load/verdict.sh and in R7 (docs/DESIGN.md section 7.1), as the p99 does; a null on any other release
+  # still fails R7 closed.
+  - name: activity_schedule_to_start_over_10ms
+    no_data: not_judged
+    reason: >-
+      1.32 runs activities eagerly (system.enableActivityEagerExecution is true by default, false in 1.31.0): matching
+      never queues them, so there is no activity schedule-to-start to take a share of
+    evidence: cells/results/2026-10-23-boot1.txt

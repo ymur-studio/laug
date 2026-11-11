@@ -1,0 +1,141 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="632" viewBox="0 0 800 632" role="img"
+    aria-labelledby="rootfs-title rootfs-desc" font-family="Inter, system-ui, sans-serif">
+<title id="rootfs-title">A microVM cell: one snapshot, then a clone for each cell, its disk a reflink</title>
+<desc id="rootfs-desc">Left, make fc-snapshot, once. It copies the image&#39;s disk to golden.ext4 and boots a microVM
+    from it, with the cell brought to warm inside. It freezes the cell&#39;s containers with docker pause unless
+    FREEZE=0, pauses the microVM and writes a full snapshot, vm.snap and vm.mem. Right, the pool&#39;s create, for each
+    cell. It reflinks golden.ext4 into a disk of its own that shares its blocks, and makes network and mount namespaces,
+    under the jailer by default. A veth pair to the host, tap0 and a DNAT let every clone keep one guest address. The
+    cell&#39;s disk is bound at the path the snapshot recorded, in its mount namespace only. Then snapshot/load, and
+    resume once the VM holds the cell&#39;s disk, not golden.ext4. The host sets the guest clock over one ssh session,
+    and the containers thaw only after the set. Then the pool&#39;s health check passes, and the cell is warm. A
+    snapshot taken with FREEZE=0 is not frozen, and no thaw runs. make fc-restore runs the same restore on one microVM
+    on the host&#39;s own network, with no pool, and times it to warm. Sources: cells/backend-firecracker.sh,
+    cells/rootfs/fc-lib.sh, cells/rootfs/restore.sh, cells/rootfs/snapshot.sh, docs/img/src/rootfs.txt,
+    internal/pool/pool.go.</desc>
+<rect x="0" y="0" width="800" height="632" fill="#EEF3F2"/>
+<text x="24" y="30" font-size="14" fill="#163A44"
+    font-weight="600">A microVM cell: one snapshot, then a clone for each cell, its disk a reflink</text>
+<text x="24" y="50" font-size="12"
+    fill="#163A44">make fc-snapshot takes the snapshot once; the pool&#39;s create clones it for every cell it builds</text>
+<text x="24" y="84" font-size="12" fill="#163A44" font-weight="600">snapshot, once</text>
+<text x="24" y="100" font-size="10" fill="#163A44">make fc-snapshot</text>
+<text x="264" y="84" font-size="12" fill="#163A44" font-weight="600">the snapshot</text>
+<text x="480" y="84" font-size="12" fill="#163A44" font-weight="600">clone, for each cell</text>
+<text x="480" y="100" font-size="10" fill="#163A44">the pool&#39;s create, cells/backend-firecracker.sh</text>
+<g aria-label="copy the image&#39;s disk, cell.ext4 to golden.ext4">
+  <rect x="24" y="112" width="208" height="44" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="128" y="130.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-weight="600">copy the image&#39;s disk</text>
+  <text x="128" y="145.5" font-size="12" fill="#163A44" text-anchor="middle">cell.ext4 to golden.ext4</text>
+</g>
+<g aria-label="boot the microVM, the cell warm inside it">
+  <rect x="24" y="172" width="208" height="44" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="128" y="190.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">boot the microVM</text>
+  <text x="128" y="205.5" font-size="12" fill="#163A44" text-anchor="middle">the cell warm inside it</text>
+</g>
+<g aria-label="freeze, then pause, docker pause, then the VM">
+  <rect x="24" y="232" width="208" height="44" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="128" y="250.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">freeze, then pause</text>
+  <text x="128" y="265.5" font-size="12" fill="#163A44" text-anchor="middle">docker pause, then the VM</text>
+</g>
+<g aria-label="snapshot/create, a full snapshot">
+  <rect x="24" y="292" width="208" height="44" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="128" y="310.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">snapshot/create</text>
+  <text x="128" y="325.5" font-size="12" fill="#163A44" text-anchor="middle">a full snapshot</text>
+</g>
+<line x1="128" y1="156" x2="128" y2="164" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="128,172 124,164 132,164" fill="#163A44"/>
+<line x1="128" y1="216" x2="128" y2="224" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="128,232 124,224 132,224" fill="#163A44"/>
+<line x1="128" y1="276" x2="128" y2="284" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="128,292 124,284 132,284" fill="#163A44"/>
+<g aria-label="golden.ext4, on XFS with reflink=1">
+  <rect x="264" y="112" width="168" height="44" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="348" y="130.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">golden.ext4</text>
+  <text x="348" y="145.5" font-size="12" fill="#163A44" text-anchor="middle">on XFS with reflink=1</text>
+</g>
+<g aria-label="vm.snap, vm.mem, device state, memory">
+  <rect x="264" y="322" width="168" height="44" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="348" y="340.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">vm.snap, vm.mem</text>
+  <text x="348" y="355.5" font-size="12" fill="#163A44" text-anchor="middle">device state, memory</text>
+</g>
+<line x1="232" y1="134" x2="256" y2="134" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="264,134 256,138 256,130" fill="#163A44"/>
+<line x1="232" y1="329" x2="256" y2="329" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="264,329 256,333 256,325" fill="#163A44"/>
+<g aria-label="a disk of its own, cp --reflink=always golden.ext4">
+  <rect x="480" y="112" width="296" height="44" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="628" y="130.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">a disk of its own</text>
+  <text x="628" y="145.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">cp --reflink=always golden.ext4</text>
+</g>
+<g aria-label="namespaces of its own, network and mount; the jailer inside">
+  <rect x="480" y="172" width="296" height="44" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="628" y="190.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-weight="600">namespaces of its own</text>
+  <text x="628" y="205.5" font-size="12" fill="#163A44" text-anchor="middle">network and mount; the jailer inside</text>
+</g>
+<g aria-label="its network, a veth pair to the host, tap0, DNAT">
+  <rect x="480" y="232" width="296" height="44" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="628" y="250.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">its network</text>
+  <text x="628" y="265.5" font-size="12" fill="#163A44" text-anchor="middle">a veth pair to the host, tap0, DNAT</text>
+</g>
+<g aria-label="its disk at the recorded path, a bind mount, in its mount namespace only">
+  <rect x="480" y="292" width="296" height="44" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="628" y="310.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-weight="600">its disk at the recorded path</text>
+  <text x="628" y="325.5" font-size="12" fill="#163A44"
+      text-anchor="middle">a bind mount, in its mount namespace only</text>
+</g>
+<g aria-label="snapshot/load, then resume, once it holds its disk, not golden.ext4">
+  <rect x="480" y="352" width="296" height="44" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="628" y="370.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-weight="600">snapshot/load, then resume</text>
+  <text x="628" y="385.5" font-size="12" fill="#163A44"
+      text-anchor="middle">once it holds its disk, not golden.ext4</text>
+</g>
+<g aria-label="the guest clock set, from the host, over one ssh session">
+  <rect x="480" y="412" width="296" height="44" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="628" y="430.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-weight="600">the guest clock set</text>
+  <text x="628" y="445.5" font-size="12" fill="#163A44" text-anchor="middle">from the host, over one ssh session</text>
+</g>
+<g aria-label="thaw, the containers, only after the set">
+  <rect x="480" y="472" width="296" height="44" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="628" y="490.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">thaw</text>
+  <text x="628" y="505.5" font-size="12" fill="#163A44" text-anchor="middle">the containers, only after the set</text>
+</g>
+<g aria-label="warm, the pool&#39;s health check passes">
+  <rect x="480" y="532" width="296" height="44" fill="#D99A3A" stroke="#163A44"/>
+  <text x="628" y="550.5" font-size="12" fill="#10181C" text-anchor="middle" font-weight="600">warm</text>
+  <text x="628" y="565.5" font-size="12" fill="#10181C" text-anchor="middle">the pool&#39;s health check passes</text>
+</g>
+<line x1="628" y1="156" x2="628" y2="164" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="628,172 624,164 632,164" fill="#163A44"/>
+<line x1="628" y1="216" x2="628" y2="224" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="628,232 624,224 632,224" fill="#163A44"/>
+<line x1="628" y1="276" x2="628" y2="284" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="628,292 624,284 632,284" fill="#163A44"/>
+<line x1="628" y1="336" x2="628" y2="344" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="628,352 624,344 632,344" fill="#163A44"/>
+<line x1="628" y1="396" x2="628" y2="404" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="628,412 624,404 632,404" fill="#163A44"/>
+<line x1="628" y1="456" x2="628" y2="464" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="628,472 624,464 632,464" fill="#163A44"/>
+<line x1="628" y1="516" x2="628" y2="524" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="628,532 624,524 632,524" fill="#163A44"/>
+<line x1="432" y1="134" x2="472" y2="134" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="480,134 472,138 472,130" fill="#163A44"/>
+<text x="436" y="128" font-size="11" fill="#163A44">reflink</text>
+<line x1="432" y1="359" x2="472" y2="359" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="480,359 472,363 472,355" fill="#163A44"/>
+<text x="24" y="392" font-size="12" fill="#163A44" font-weight="600">make fc-restore</text>
+<text x="24" y="410" font-size="11" fill="#163A44">The same restore on one microVM,</text>
+<text x="24" y="424" font-size="11" fill="#163A44">on the host&#39;s own network, with no</text>
+<text x="24" y="438" font-size="11" fill="#163A44">pool: a reflink, snapshot/load,</text>
+<text x="24" y="452" font-size="11" fill="#163A44">the clock set, the thaw; timed to warm.</text>
+<text x="24" y="604" font-size="10"
+    fill="#163A44">source: cells/rootfs/snapshot.sh, cells/rootfs/restore.sh, cells/rootfs/fc-lib.sh,</text>
+<text x="24" y="617" font-size="10" fill="#163A44">cells/backend-firecracker.sh and internal/pool/pool.go.</text>
+</svg>

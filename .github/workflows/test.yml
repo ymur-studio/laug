@@ -1,0 +1,154 @@
+name: test
+
+# The offline path on a fresh clone, on every push to main and every pull request: make build and bin/laug deps; make
+# test (test-go, harness-test with the offline runbooks, and lint), its Go tests of all three modules run with -race
+# -timeout 30m through GOTESTFLAGS; every committed gate run judged again; a gate on fakes, its verdict in the job
+# summary; make docs, then the committed figures, docs/EVIDENCE.md and docs/tables held to what it wrote, byte for
+# byte; and last, a table of each step's seconds. No Docker, no cell, no secret. A GitHub-hosted runner only, never a
+# self-hosted one: a pull request's workflow files run from its own merge commit, so a fork could send its code to any
+# runner a workflow names (GitHub docs, "Security hardening for GitHub Actions"). TestWorkflows, in make
+# test-go, holds this file to its rules before a push reaches GitHub.
+#
+# Each action is pinned by its commit, the tag beside it (each tag's commit on the action's releases page).
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: test-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    # A named bash runs with -eo pipefail (GitHub docs, workflow syntax, jobs.<job_id>.steps[*].shell).
+    shell: bash
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    env:
+      TZ: UTC
+      # Some tests hold Go to jq 1.7.x itself (internal/jsonx, internal/judge, internal/tolerance), and one holds the
+      # trap verdict to gate/lib.sh's own lines in bash (internal/judge's TestRerenderTrap). Without jq 1.7.x or bash
+      # they skip that check, saying why; so does a cmd/laug test that calls needTools (cmd/laug/main_test.go) when a
+      # tool it names is not on PATH. Here those skips fail. The image ships jq 1.7.1 and yq v4 (the image's
+      # software list).
+      LAUG_TEST_SHELL: require
+    steps:
+      - name: start the clock
+        run: |
+          date +%s%N >"$RUNNER_TEMP/t0"
+          cat >"$RUNNER_TEMP/step.sh" <<'EOF'
+          # step <name>: times the rest of a step. On the step's exit, its name, its milliseconds and its exit code go
+          # into times.tsv, a row of the job summary's table, and the step keeps its exit code.
+          step() { _step=$1 _t0=$(date +%s%N); trap _stepped EXIT; }
+          _stepped() {
+            local rc=$?
+            local ms=$(( ($(date +%s%N) - _t0) / 1000000 ))
+            printf '%s\t%s\t%s\n' "$_step" "$ms" "$rc" >>"$RUNNER_TEMP/times.tsv" || :
+          }
+          EOF
+
+      # Every branch, so origin/main is there for the gate's -base main, which takes it on a checkout with no local
+      # main (gate/lib.sh, base_pick); no token left in .git/config.
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
+        with:
+          go-version-file: go.mod
+          cache-dependency-path: go.sum
+      - name: the clone and Go, timed from the start
+        run: |
+          ms=$(( ($(date +%s%N) - $(cat "$RUNNER_TEMP/t0")) / 1000000 ))
+          printf 'the clone and Go\t%s\t0\n' "$ms" >>"$RUNNER_TEMP/times.tsv"
+
+      - name: make build
+        id: build
+        run: |
+          . "$RUNNER_TEMP/step.sh"; step 'make build'
+          make build
+
+      # Once bin/laug is built, each step runs whatever the one before it gave, so the table has a row for each.
+      - name: bin/laug deps
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: |
+          . "$RUNNER_TEMP/step.sh"; step 'bin/laug deps'
+          bin/laug deps
+
+      - name: make test
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: |
+          . "$RUNNER_TEMP/step.sh"; step "make test GOTESTFLAGS='-race -timeout 30m'"
+          make test GOTESTFLAGS='-race -timeout 30m'
+
+      - name: bin/laug gate rejudge -all
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: |
+          . "$RUNNER_TEMP/step.sh"; step 'bin/laug gate rejudge -all'
+          bin/laug gate rejudge -all | tee "$RUNNER_TEMP/rejudge.txt"
+
+      # verdict.md alone, as the judge wrote it: its heading, laug · verdict for raun <sha>, its tables, and the word in
+      # bold last (docs/BRAND.md, Surfaces, GitHub job summary). Plain, as the terminal color rule has it off a
+      # terminal.
+      - name: bin/laug gate run 1.31.0 -fake
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        env:
+          BASE_REF: ${{ github.base_ref || github.ref_name }}
+        run: |
+          . "$RUNNER_TEMP/step.sh"; step 'bin/laug gate run 1.31.0 -fake'
+          out="$RUNNER_TEMP/fake-gate"
+          mkdir -p "$out"
+          rc=0
+          bin/laug gate run 1.31.0 -fake -base "origin/$BASE_REF" -results "$out" || rc=$?
+          v=$(find "$out" -mindepth 2 -maxdepth 2 -name verdict.md | head -n 1)
+          if [[ -s "$v" ]]; then
+            cat "$v"
+          else
+            echo "laug · test.yml: bin/laug gate run 1.31.0 -fake wrote no verdict, exit $rc"
+          fi >>"$GITHUB_STEP_SUMMARY"
+          exit "$rc"
+
+      - name: make docs, then the committed copies byte for byte
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: |
+          . "$RUNNER_TEMP/step.sh"; step 'make docs, then git diff'
+          make docs
+          git diff --exit-code --stat -- docs/img docs/EVIDENCE.md docs/tables
+          new=$(git ls-files --others --exclude-standard -- docs/img docs/EVIDENCE.md docs/tables)
+          if [[ -n "$new" ]]; then
+            printf 'laug · test.yml: make docs wrote files not committed:\n%s\n' "$new" >&2
+            exit 1
+          fi
+
+      - name: the timing table
+        if: ${{ always() }}
+        run: |
+          t0=$(cat "$RUNNER_TEMP/t0" 2>/dev/null || date +%s%N)
+          mem=$(awk '$1 == "MemTotal:" { printf "%.1f", $2 / 1048576 }' /proc/meminfo)
+          sha=$(git rev-parse --short HEAD 2>/dev/null) || sha=unknown
+          gov=$(go version 2>/dev/null | cut -d' ' -f3) || gov=unknown
+          image="${ImageOS:-unknown}${ImageVersion:+ $ImageVersion}"
+          {
+            echo "## laug · test.yml on a fresh clone"
+            echo
+            echo "Commit $sha, $gov, on a GitHub-hosted runner, $image, $(nproc) vCPU, $mem GiB." \
+              "A step with no row did not run."
+            echo
+            echo "| Step | Seconds | Exit |"
+            echo "| --- | ---: | ---: |"
+            [[ ! -f "$RUNNER_TEMP/times.tsv" ]] ||
+              awk -F'\t' '{ printf "| %s | %.1f | %s |\n", $1, $2 / 1000, $3 }' "$RUNNER_TEMP/times.tsv"
+            echo "| the job, to this step | $(( ($(date +%s%N) - t0) / 1000000000 )) | |"
+            if [[ -s "$RUNNER_TEMP/rejudge.txt" ]]; then
+              echo
+              echo "\`$(tail -n 1 "$RUNNER_TEMP/rejudge.txt")\`"
+            fi
+          } >>"$GITHUB_STEP_SUMMARY"

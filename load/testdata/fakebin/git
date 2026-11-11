@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Fake git for make harness-test: the Omes commit run-omes.sh records; anything else goes to the real git.
+case " $* " in *" rev-parse "*) echo f0de206 ;; *) exec "$REAL_GIT" "$@" ;; esac

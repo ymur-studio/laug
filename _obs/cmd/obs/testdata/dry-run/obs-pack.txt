@@ -1,0 +1,5 @@
+# make: make --no-print-directory -n obs-pack
+# obs: bin/obs pack
+# lease: absent
+# compare: line obs/obs.sh
+obs/obs.sh pack

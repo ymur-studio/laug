@@ -1,0 +1,54 @@
+# The readings of a batch's readings.json kept whole in docs/tables/readings-<batch>.jsonl, one a line: the batch, a
+# space, then the reading's id there (<step>/<name>, #2 on a repeat). A scalar is always kept whole; an object or an
+# array not named here keeps its bytes, leaves and sha256 only. Named: what a page, a figure's spec or a figure
+# cites. Boot 1's ready_1 to ready_3 (docs/LEARNING.md, stop 3, and the warm-check spec); boot 4's kill_G4 and
+# kill_G5 (the adopted figure); boot 9's cold boots, restores, snapshot, copies and golden size (the restore-timing
+# figure); boot 11's vmm_<arm>_<n> (docs/CAPABILITIES.md, The pool).
+2026-10-23-boot1 A4/ready_1
+2026-10-23-boot1 A4/ready_2
+2026-10-23-boot1 A4/ready_3
+2026-10-24-boot4 G4/kill_G4
+2026-10-24-boot4 G5/kill_G5
+2026-10-29-boot9 K1/cold_boot_1
+2026-10-29-boot9 K2/cold_boot_2
+2026-10-29-boot9 K3/cold_boot_3
+2026-10-29-boot9 R1/restore_snapshot
+2026-10-29-boot9 R1/restore_1
+2026-10-29-boot9 R1/restore_2
+2026-10-29-boot9 R1/restore_3
+2026-10-29-boot9 R1/restore_4
+2026-10-29-boot9 R1/restore_5
+2026-10-29-boot9 R1/restore_6
+2026-10-29-boot9 R1/restore_7
+2026-10-29-boot9 R1/restore_8
+2026-10-29-boot9 R1/restore_9
+2026-10-29-boot9 R1/restore_10
+2026-10-29-boot9 R1/restore_11
+2026-10-29-boot9 R1/restore_12
+2026-10-29-boot9 D1/disk_copy_plain_s
+2026-10-29-boot9 D1/golden_size
+2026-10-29-boot9 D2/disk_copy_reflink_s
+2026-10-29-boot11 Fx1-2-vmm/vmm_Fx1_2
+2026-10-29-boot11 Fx1-30-vmm/vmm_Fx1_30
+2026-10-29-boot11 Fx1-60-vmm/vmm_Fx1_60
+2026-10-29-boot11 Fx2-2-vmm/vmm_Fx2_2
+2026-10-29-boot11 Fx2-30-vmm/vmm_Fx2_30
+2026-10-29-boot11 Fx2-60-vmm/vmm_Fx2_60
+2026-10-29-boot11 Fx0-2-vmm/vmm_Fx0_2
+2026-10-29-boot11 Fx0-30-vmm/vmm_Fx0_30
+2026-10-29-boot11 Fx0-60-vmm/vmm_Fx0_60
+2026-10-29-boot11 F8-1-vmm/vmm_F8_1
+2026-10-29-boot11 F8-2-vmm/vmm_F8_2
+2026-10-29-boot11 F-1-vmm/vmm_F_1
+2026-10-29-boot11 F8-3-vmm/vmm_F8_3
+2026-10-29-boot11 F-2-vmm/vmm_F_2
+2026-10-29-boot11 F8-4-vmm/vmm_F8_4
+2026-10-29-boot11 F8-5-vmm/vmm_F8_5
+2026-10-29-boot11 F8-6-vmm/vmm_F8_6
+2026-10-29-boot11 F-3-vmm/vmm_F_3
+2026-10-29-boot11 F8-7-vmm/vmm_F8_7
+2026-10-29-boot11 F-4-vmm/vmm_F_4
+2026-10-29-boot11 F8-8-vmm/vmm_F8_8
+2026-10-29-boot11 F8-9-vmm/vmm_F8_9
+2026-10-29-boot11 F8-10-vmm/vmm_F8_10
+2026-10-29-boot11 F-5-vmm/vmm_F_5

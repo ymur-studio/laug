@@ -1,0 +1,8 @@
+# make: make --no-print-directory -n orchestrator-record GATE=g20261016-120000 NAME=other
+# laug: laug orchestrator record g20261016-120000 other -overwrite-fixture
+# lease: absent
+# compare: refused
+cd orchestrator && go build -o bin/record ./cmd/record
+[[ 'g20261016-120000' =~ ^g[0-9]{8}-[0-9]{6}(-[0-9]+)?$ ]] || { echo "laug · make orchestrator-record GATE=<gate id>: a gate id, g<date>-<time>, as make orchestrator-gate printed it" >&2; exit 2; }
+ok=; for n in advance refused harness cancelled adopted real; do [[ 'other' != "$n" ]] || ok=1; done; [[ -n $ok ]] || { echo "laug · make orchestrator-record GATE=<gate id> NAME=<one of advance refused harness cancelled adopted real>" >&2; exit 2; }
+env $(compgen -e | sed -n -e 's/^TEMPORAL_SDK_FLAG_/-u &/p' -e 's/^TEMPORAL_DEBUG$/-u &/p' -e 's/^OTEL_/-u &/p') TEMPORAL_ADDRESS='127.0.0.1:7400' TEMPORAL_NAMESPACE='default' orchestrator/bin/record -repo '$ROOT' -gate 'g20261016-120000' -out 'orchestrator/testdata/histories/other.json' -denylist <the deny list>

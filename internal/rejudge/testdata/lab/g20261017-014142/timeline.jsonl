@@ -1,0 +1,18 @@
+{"step":"start","wall":1792201302.237,"mono":19085.96}
+{"step":"lock","wall":1792201302.257,"mono":19085.98}
+{"step":"plan","wall":1792201302.372,"mono":19086.09}
+{"step":"preflight","wall":1792201302.425,"mono":19086.15}
+{"step":"omes_build","wall":1792201303.004,"mono":19086.73}
+{"step":"laugd","wall":1792201304.090,"mono":19087.81}
+{"step":"harness","wall":1792201304.244,"mono":19087.97}
+{"step":"lease steady","wall":1792201304.399,"mono":19088.12}
+{"step":"leased steady","wall":1792201320.475,"mono":19104.20}
+{"step":"lease pl","wall":1792201320.623,"mono":19104.35}
+{"step":"leased pl","wall":1792201336.966,"mono":19120.69}
+{"step":"barrier","wall":1792201337.125,"mono":19120.85}
+{"step":"wave","wall":1792201493.026,"mono":19276.75}
+{"step":"watchdog TERM","wall":1792201555.631,"mono":19339.35}
+{"step":"ended steady","wall":1792201556.146,"mono":19339.87}
+{"step":"ended pl","wall":1792201556.158,"mono":19339.88}
+{"step":"release","wall":1792201556.722,"mono":19340.44}
+{"step":"laugd stopped","wall":1792201592.351,"mono":19376.07}

@@ -1,0 +1,42 @@
+# The incumbent arm's 30 validation gates: A/A gates of gate/plan.yaml's wave incumbent, steady and pl, all on server
+# 1.31.0, the plan's incumbent, with the tolerances judging (R7), on the lab host, an m8i.8xlarge (32 vCPU). The
+# transcript's Part 1's 10 ran on a fresh clone of the commit that set the tolerances, Part 2's 20 on one of that commit
+# and Part 1's results, every gate input the same. 0 R7 BLOCKs in 30 bounds R7's false-BLOCK rate at 9.5% (95%:
+# 1 - 0.05^(1/30); the transcript's pass rule). gate.json cannot tell them from g20261018-160941, the gate after Part
+# 2's cold first gate, or from the stack's 10 gates (cells/results/2026-10-18-lab-obs.txt), none counted here: each
+# ran the same plan, release and host with R7 judging and ADVANCEd. _report, the renderer, reads this list.
+# 30 gates, drivers run.sh and step.sh, 15 each.
+# One gate id a line; a line starting with # is a comment. A line "# <file>:<lines>, ..." names the transcript lines
+# that record the ids after it (TestSets).
+# cells/results/2026-10-18-lab-arm-validation.txt:403-417, Part 1's v1 to v10
+g20261018-062701
+g20261018-064905
+g20261018-071048
+g20261018-073238
+g20261018-075357
+g20261018-080919
+g20261018-082010
+g20261018-083103
+g20261018-084154
+g20261018-085245
+# cells/results/2026-10-18-lab-arm-validation.txt:866-888, Part 2's v1 to v20
+g20261018-162821
+g20261018-165015
+g20261018-171208
+g20261018-173348
+g20261018-174432
+g20261018-175523
+g20261018-180618
+g20261018-181716
+g20261018-182815
+g20261018-183909
+g20261018-185000
+g20261018-190056
+g20261018-191151
+g20261018-192249
+g20261018-193339
+g20261018-194431
+g20261018-195529
+g20261018-200626
+g20261018-201718
+g20261018-202807

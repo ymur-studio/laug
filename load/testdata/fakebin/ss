@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Fake ss for make harness-test: `ss -ltn` with no port in use, or with the ports in FAKE_SS_LISTEN, "<port>[:<until>]"
+# comma-separated, listening on 127.0.0.1 until the fake clock reaches until seconds past FAKE_T0, or throughout with no
+# until: an Omes from the last run, or from another gate item, holding a metrics port (faults/lib.sh, wait_omes_ports).
+echo "State  Recv-Q Send-Q Local Address:Port Peer Address:Port"
+[[ -n "${FAKE_SS_LISTEN:-}" ]] || exit 0
+now="$(cat "${FAKE_CLOCK:-}" 2>/dev/null)"
+IFS=, read -r -a held <<<"$FAKE_SS_LISTEN"
+for h in "${held[@]}"; do
+  IFS=: read -r port until <<<"$h"
+  [[ -z "$until" ]] || (( ${now:-0} < until )) || continue
+  printf 'LISTEN 0      4096       127.0.0.1:%s      0.0.0.0:*\n' "$port"
+done

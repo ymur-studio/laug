@@ -1,0 +1,161 @@
+#!/usr/bin/env bash
+# Fake docker for make harness-test: no daemon. Every call's arguments go to $FAKE_DIR/docker.args. A server role S
+# exists when $FAKE_DOCKER_LOGS/S.txt does; each line there is "<seconds past FAKE_T0><TAB><log line>".
+#   ps -aq --filter label=...project=P --filter label=...service=S   prints fake-S (P must be FAKE_DOCKER_PROJECT when set);
+#                                with no service filter, fake-S for every role S
+#   stats --no-stream --format <format> fake-S...   a row a role: P-S-1, 12.25%, 256MiB / 2GiB, tab-separated, P being
+#                                FAKE_DOCKER_PROJECT (laug)
+#   exec fake-S temporal-server validate-dynamic-config <file>   prints "validated"
+#   inspect -f <format> fake-S   prints FAKE_STARTED_AT (default FAKE_T0 - 60 s, RFC 3339), after "running " when
+#                                the format asks for .State.Status too
+#   exec fake-S cat /etc/temporal/config/dynamicconfig/cell-id   prints FAKE_EXEC_CELL_ID, else FAKE_CELL: the marker
+#                                the cell's dynamic config directory holds, as each role mounts it
+#   exec fake-postgresql psql ... -c <statement>   the three statements faults/run.sh's pg mechanism sends, against a
+#                                shards table in $FAKE_DIR/pg.yaml ({"<shard id>": range_id}); a shard it does not hold
+#                                has range_id FAKE_PG_RANGE_ID (5), shards 1 to 512 exist. FAKE_PG_MOVED=N makes a
+#                                restore find N instead of what the bump wrote, as a writer other than laug would.
+#                                FAKE_PSQL_BUMP_EXIT=N applies the bump, prints nothing and exits N, as a docker exec or
+#                                an ssh session that drops after the UPDATE committed would.
+#   inspect -f '{{json .NetworkSettings.Networks}}' fake-S   {"<FAKE_DOCKER_NETWORK, fake_cell>": {}}
+#   image inspect <image>        exits 0, or 1 when FAKE_DOCKER_NO_IMAGE is set
+#   run [--rm] [--pull P] [--network N] <image> sh -c <script> tdbg-close <id>...   tdbg close-shard for each id, as
+#                                the script in faults/run.sh prints it: "closed <id>", or "failed <id> <error>" for an id
+#                                in FAKE_TDBG_FAIL (space-separated); the closed ids go to $FAKE_DIR/closed.yaml, a list
+#   logs [-t] [--since T] [--until T] fake-S   the lines of S.txt whose time is in [since, until], both ends inclusive
+#                                as Docker's are; T is Unix seconds with up to 9 decimals, or RFC 3339. -t puts each
+#                                line's time in front, RFC 3339 with 9 decimals, as Docker does. It fails for role S
+#                                when FAKE_DOCKER_FAIL is S@T for the same --since T. FAKE_DOCKER_ROTATED=S@N drops the
+#                                lines of S before N seconds past FAKE_T0, as json-file rotation would.
+#   inspect -f '{{range .Config.Env}}...' fake-S   the container's environment, one VAR=value per line: what the last
+#                                compose up of S set, else ENABLE_ES=$FAKE_ENABLE_ES (false)
+#   inspect -f '{{.Config.Image}}' fake-S   temporalio/server:<tag>: the SERVER_TAG of the last compose up of S, else
+#                                FAKE_SERVER_TAG (1.31.0); FAKE_RECREATE_TAG, when set, is what a compose up gives instead
+#   compose ... up ... S          records its LAUG_FI_*, ENABLE_ES, DYNCONFIG_DIR and SERVER_TAG in $FAKE_DIR/compose.env, one
+#                                block per call, and becomes S's environment and image; while LAUG_FI_ERROR or LAUG_FI_PROFILE
+#                                is set the fault is on for the fake curl ($FAKE_DIR/toxic). Exits FAKE_COMPOSE_EXIT (0);
+#                                call number FAKE_COMPOSE_FAIL_CALL alone is recorded, changes nothing and exits 1;
+#                                call number FAKE_COMPOSE_BLOCK_CALL is recorded, creates $FAKE_DIR/compose.blocked and
+#                                waits up to 30 s of real time, changing nothing, for a signal to stop it (exit 1 after)
+# Anything else fails as a missing daemon would.
+printf '%s\n' "$@" '--' >> "$FAKE_DIR/docker.args"
+nodaemon() { echo "fake docker: no daemon in make harness-test" >&2; exit 1; }
+started="${FAKE_STARTED_AT:-$("$REAL_DATE" -u -d "@$(( FAKE_T0 - 60 ))" +%Y-%m-%dT%H:%M:%SZ)}"
+role_of() { [[ "$1" == fake-* && -f "${FAKE_DOCKER_LOGS:-/nonexistent}/${1#fake-}.txt" ]] && echo "${1#fake-}"; }
+epoch() { # epoch <T>: "seconds nanoseconds"
+  local t="$1"
+  [[ "$t" =~ ^[0-9]+(\.[0-9]+)?$ ]] || t="$("$REAL_DATE" -u -d "$t" +%s.%N)"
+  local s="${t%%.*}" f=0; [[ "$t" == *.* ]] && f="${t#*.}"
+  f="$(printf '%-9s' "$f" | tr ' ' 0)"; echo "$s $(( 10#${f:0:9} ))"
+}
+case "${1:-}" in
+  ps)
+    project="" service=""
+    while (( $# )); do
+      case "$1" in
+        label=com.docker.compose.project=*) project="${1#label=com.docker.compose.project=}" ;;
+        label=com.docker.compose.service=*) service="${1#label=com.docker.compose.service=}" ;;
+      esac
+      shift
+    done
+    [[ -n "${FAKE_DOCKER_PROJECT:-}" && "$project" != "$FAKE_DOCKER_PROJECT" ]] && exit 0
+    [[ -n "$service" && -f "${FAKE_DOCKER_LOGS:-/nonexistent}/$service.txt" ]] && echo "fake-$service"
+    if [[ -z "$service" ]]; then for f in "${FAKE_DOCKER_LOGS:-/nonexistent}"/*.txt; do [[ -f "$f" ]] && echo "fake-$(basename "$f" .txt)"; done; fi
+    exit 0 ;;
+  stats)
+    shift; while [[ "${1:-}" == -* ]]; do case "$1" in --format) shift 2 ;; *) shift ;; esac; done
+    for c in "$@"; do
+      role="$(role_of "$c")" || { echo "Error: No such container: $c" >&2; exit 1; }
+      printf '%s-%s-1\t12.25%%\t256MiB / 2GiB\n' "${FAKE_DOCKER_PROJECT:-laug}" "$role"
+    done ;;
+  exec)
+    role_of "${2:-}" >/dev/null || { echo "Error: No such container: ${2:-}" >&2; exit 1; }
+    if [[ "${2:-}" == fake-postgresql && "${3:-}" == psql ]]; then
+      sql=""; while (( $# )); do [[ "$1" == -c ]] && { sql="$2"; break; }; shift; done
+      pg="$FAKE_DIR/pg.yaml"; [[ -f "$pg" ]] || echo '{}' > "$pg"
+      cur() { (( $1 >= 1 && $1 <= 512 )) || return 1; local v; v="$(yq -r ".[\"$1\"] // \"\"" "$pg")"; echo "${v:-${FAKE_PG_RANGE_ID:-5}}"; }
+      if [[ "$sql" =~ ^UPDATE\ shards\ SET\ range_id\ =\ range_id\ \+\ ([0-9]+)\ WHERE\ shard_id\ =\ ([0-9]+)\ RETURNING\ range_id\ -\ ([0-9]+),\ range_id$ ]]; then
+        d="${BASH_REMATCH[1]}"; id="${BASH_REMATCH[2]}"; old="$(cur "$id")" || exit 0
+        yq -i ".[\"$id\"] = $(( old + d ))" "$pg"
+        [[ -z "${FAKE_PSQL_BUMP_EXIT:-}" ]] || exit "$FAKE_PSQL_BUMP_EXIT"
+        echo "$old|$(( old + d ))"
+      elif [[ "$sql" =~ ^UPDATE\ shards\ SET\ range_id\ =\ ([0-9]+)\ WHERE\ shard_id\ =\ ([0-9]+)\ AND\ range_id\ =\ ([0-9]+)\ RETURNING\ range_id$ ]]; then
+        v="${BASH_REMATCH[1]}"; id="${BASH_REMATCH[2]}"; want="${BASH_REMATCH[3]}"
+        [[ -z "${FAKE_PG_MOVED:-}" ]] || yq -i ".[\"$id\"] = $FAKE_PG_MOVED" "$pg"
+        [[ "$(cur "$id")" == "$want" ]] || exit 0
+        yq -i ".[\"$id\"] = $v" "$pg"; echo "$v"
+      elif [[ "$sql" =~ ^SELECT\ range_id\ FROM\ shards\ WHERE\ shard_id\ =\ ([0-9]+)$ ]]; then
+        cur "${BASH_REMATCH[1]}" || exit 0
+      else echo "fake psql: not a statement faults/run.sh sends: $sql" >&2; exit 3; fi
+      exit 0
+    fi
+    [[ "${3:-} ${4:-}" == "temporal-server validate-dynamic-config" ]] && { echo validated; exit 0; }
+    [[ "${3:-} ${4:-}" == "cat /etc/temporal/config/dynamicconfig/cell-id" ]] || nodaemon
+    echo "${FAKE_EXEC_CELL_ID:-$FAKE_CELL}" ;;
+  inspect)
+    fmt="$3"; role="$(role_of "$4")" || { echo "Error: No such object: $4" >&2; exit 1; }
+    if [[ "$fmt" == *.Config.Image* ]]; then
+      if [[ -f "$FAKE_DIR/$role.image" ]]; then cat "$FAKE_DIR/$role.image"; else echo "temporalio/server:${FAKE_SERVER_TAG:-1.31.0}"; fi
+      exit 0
+    fi
+    if [[ "$fmt" == *.Config.Env* ]]; then
+      if [[ -f "$FAKE_DIR/$role.env" ]]; then cat "$FAKE_DIR/$role.env"; else echo "ENABLE_ES=${FAKE_ENABLE_ES:-false}"; fi
+      exit 0
+    fi
+    if [[ "$fmt" == *NetworkSettings.Networks* ]]; then jq -cn --arg n "${FAKE_DOCKER_NETWORK:-fake_cell}" '{($n): {}}'
+    elif [[ "$fmt" == *State.Status* ]]; then echo "running $started"; else echo "$started"; fi ;;
+  image)
+    [[ "${2:-}" == inspect ]] || nodaemon
+    [[ -z "${FAKE_DOCKER_NO_IMAGE:-}" ]] || { echo "Error: No such image: ${3:-}" >&2; exit 1; }
+    echo '[{}]' ;;
+  run)
+    shift
+    while [[ "${1:-}" == -* ]]; do case "$1" in --rm) shift ;; --pull|--network) shift 2 ;; *) nodaemon ;; esac; done
+    [[ -z "${FAKE_DOCKER_NO_IMAGE:-}" ]] || { echo "docker: Error response from daemon: No such image: ${1:-}" >&2; exit 125; }
+    [[ "${2:-} ${3:-}" == "sh -c" && "${5:-}" == tdbg-close ]] || nodaemon
+    shift 5
+    for id in "$@"; do
+      if [[ " ${FAKE_TDBG_FAIL:-} " == *" $id "* ]]; then echo "failed $id unable to close Shard Task: fake"
+      else echo "closed $id"; echo "- $id" >> "$FAKE_DIR/closed.yaml"; fi
+    done ;;
+  logs)
+    shift; since="" until="" stamp=0
+    while [[ "${1:-}" == -* ]]; do
+      case "$1" in -t|--timestamps) stamp=1; shift; continue ;; --since) since="$2" ;; --until) until="$2" ;; esac
+      shift 2
+    done
+    role="$(role_of "${1:-}")" || { echo "Error: No such container: ${1:-}" >&2; exit 1; }
+    [[ "${FAKE_DOCKER_FAIL:-}" == "$role@$since" ]] && { echo "Error response from daemon: fake failure" >&2; exit 1; }
+    read -r ss sn <<<"$(epoch "${since:-0}")"
+    if [[ -n "$until" ]]; then read -r us un <<<"$(epoch "$until")"; else us=99999999999; un=0; fi
+    rot=""; [[ "${FAKE_DOCKER_ROTATED:-}" == "$role@"* ]] && rot="${FAKE_DOCKER_ROTATED#*@}"
+    awk -F '\t' -v t0="$FAKE_T0" -v ss="$ss" -v sn="$sn" -v us="$us" -v un="$un" -v stamp="$stamp" -v rot="$rot" '
+      function rfc3339(s, f,   z, era, doe, yoe, doy, mp, y, m, d) { # Unix seconds to UTC, without gawk strftime
+        z = int(s / 86400) + 719468; era = int(z / 146097); doe = z - era * 146097
+        yoe = int((doe - int(doe / 1460) + int(doe / 36524) - int(doe / 146096)) / 365)
+        doy = doe - (365 * yoe + int(yoe / 4) - int(yoe / 100)); mp = int((5 * doy + 2) / 153)
+        d = doy - int((153 * mp + 2) / 5) + 1; m = mp < 10 ? mp + 3 : mp - 9; y = yoe + era * 400 + (m <= 2)
+        return sprintf("%04d-%02d-%02dT%02d:%02d:%02d.%09dZ", y, m, d, int(s % 86400 / 3600), int(s % 3600 / 60), s % 60, f)
+      }
+      {
+        off = $1; s = int(off); f = 0
+        if (index(off, ".")) { f = substr(off, index(off, ".") + 1) "000000000"; f = substr(f, 1, 9) + 0 }
+        if (rot != "" && off + 0 < rot + 0) next
+        s += t0
+        if ((s > ss || (s == ss && f >= sn)) && (s < us || (s == us && f <= un)))
+          print (stamp ? rfc3339(s, f) " " : "") substr($0, length($1) + 2)
+      }' "$FAKE_DOCKER_LOGS/$role.txt" ;;
+  compose)
+    svc="${!#}"
+    { echo "call"; env | grep -E '^(LAUG_FI_[A-Z]+|ENABLE_ES|DYNCONFIG_DIR|SERVER_TAG)=' | sort; } >> "$FAKE_DIR/compose.env"
+    n="$(grep -c '^call$' "$FAKE_DIR/compose.env")"
+    [[ "$n" == "${FAKE_COMPOSE_FAIL_CALL:-0}" ]] && { echo "fake docker: compose failed" >&2; exit 1; }
+    if [[ "$n" == "${FAKE_COMPOSE_BLOCK_CALL:-0}" ]]; then
+      : > "$FAKE_DIR/compose.blocked"; "$REAL_SLEEP" 30; echo "fake docker: compose call $n was not stopped in 30 s" >&2; exit 1
+    fi
+    echo "temporalio/server:${FAKE_RECREATE_TAG:-${SERVER_TAG:-1.31.0}}" > "$FAKE_DIR/$svc.image"
+    { echo "ENABLE_ES=${ENABLE_ES:-false}"; env | grep -E '^LAUG_FI_[A-Z]+=' | sort
+      [[ " $* " == *" -f "*fi.yml* ]] && echo "TEMPORAL_SERVER_CONFIG_FILE_PATH=/etc/temporal/laug-server.yaml"; } > "$FAKE_DIR/$svc.env"
+    if [[ -n "${LAUG_FI_ERROR:-}${LAUG_FI_PROFILE:-}" ]]; then echo on > "$FAKE_DIR/toxic"; else echo off > "$FAKE_DIR/toxic"; fi
+    exit "${FAKE_COMPOSE_EXIT:-0}" ;;
+  *) nodaemon ;;
+esac

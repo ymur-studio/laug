@@ -1,0 +1,5 @@
+# make: make --no-print-directory -n obs-up
+# obs: bin/obs up
+# lease: absent
+# compare: line obs/obs.sh
+obs/obs.sh up

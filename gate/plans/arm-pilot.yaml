@@ -1,0 +1,50 @@
+# A pilot for the incumbent arm (docs/DESIGN.md section 7.1): steady and pl, the two items gate/plan.yaml had before the
+# arm, plus a second steady load keyed incumbent. It runs on three cells at once, leased one at a time in the order
+# the arm's wave leases them: incumbent, steady, pl.
+# laug gate run 1.31.0 -plan gate/plans/arm-pilot.yaml, 6 runs on the lab host, an m8i.8xlarge (32 vCPU, 128 GiB).
+# At the time, the gate ran one server tag a run. Here incumbent is a plain load under another key, not another release:
+# the same scenario, duration, rate and concurrency as steady, and SERVER_TAG on its cell too.
+# What the pilot was for. It ran before the arm and the judge's R7 (internal/judge) were built, to see one release on
+# three cells first. It asked four things (cells/results/2026-10-17-arm-pilot.txt, "What the pilot asked"). Do the
+# six maxima hold with two loads beside pl? Three steady loads at once had moved frontend p99 from 10 to 12 ms to 14
+# to 15 ms, against its max of 22 ms (cells/results/2026-10-15-lab-gates-4-5-noise.txt). Does each of the five
+# histograms export the le string its share in load/steady-state.yaml names? How close do two cells of one release
+# read? What does a third cell add to a gate's time?
+#
+# Its runs are controls, not evidence of a gate. The plan has a fault item and runs whole, so R2 and R5 can hold and a
+# run can ADVANCE. But it is not gate/plan.yaml, no Gates row counts it, and nothing compares incumbent with steady.
+# Here incumbent has no arm: or pair: key, so R7 finds no arm and passes, and verdict.json's comparison is null. The
+# plan's six recorded runs, g20261017-060633 to g20261017-070006 in docs/tables/gates.jsonl, were judged before R7
+# existed, so their rules end at R6. A run is read for its readings, its class and its times, as the noise
+# runs of noise.yaml were. The times are gate/plan.yaml's: the third lease ends inside make harness-test, which
+# decides when the wave starts (on the lab host 16.1 to 19.1 s a lease, against 172 to 178 s for the harness:
+# cells/results/2026-10-15-lab-gate-5.txt, 2026-10-16-gate6-runs.txt), and pl stays the long pole.
+deadline_s: 780
+kill_grace_s: 30
+lease_ttl_s: 1200
+quiet_s: 10
+barrier_timeout_s: 60
+poll_s: 5
+harness_timeout_s: 300
+wave_min_s: 386
+items:
+  # steady's load under another key, leased first, on block 0, where the arm puts the incumbent.
+  - key: incumbent
+    kind: load
+    scenario: workflow_with_single_noop_activity
+    duration: 5m
+    rate: 20
+    max_concurrent: 50
+    expect: ADVANCE
+  - key: steady
+    kind: load
+    scenario: workflow_with_single_noop_activity
+    duration: 5m
+    rate: 20
+    max_concurrent: 50
+    expect: ADVANCE
+  - key: pl
+    kind: fault
+    fault: persistence-latency
+    scenario: workflow_with_single_noop_activity
+    expect: ADVANCE

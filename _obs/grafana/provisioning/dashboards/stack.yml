@@ -1,0 +1,13 @@
+# The stack's boards, _obs/stack/*.json as bin/obs up copied them into OBS_DIR/conf/boards: folder laug,
+# read-only, so a board changes only by a commit and the next obs-up. They stay out of dashboards/provisioning/,
+# which every cell mounts.
+apiVersion: 1
+providers:
+  - name: laug-stack
+    folder: laug
+    type: file
+    disableDeletion: true
+    allowUiUpdates: false
+    options:
+      path: "@OBS_DIR@/conf/boards"
+      foldersFromFilesStructure: false

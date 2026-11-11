@@ -1,0 +1,6 @@
+# make: make --no-print-directory -n fi-template-check
+# laug: laug cell fi-template-check
+# lease: absent
+# compare: line cells/fi-template-check.sh
+[[ '1.31.0' =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "laug · SERVER_TAG must be a release tag, x.y.z; got '"'1.31.0'"'" >&2; exit 2; }
+cells/fi-template-check.sh 1.31.0

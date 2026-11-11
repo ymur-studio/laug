@@ -1,0 +1,180 @@
+{
+  "run_id": "g20261018-092540-pl",
+  "fault": "persistence-latency",
+  "cell": "3715ed51",
+  "address": "127.0.0.1:7253",
+  "server_tag": "1.32.1",
+  "scenario": "workflow_with_single_noop_activity",
+  "rate": 20,
+  "task_queue": "omes-g20261018-092540-pl",
+  "signal": "persistence_latency_p99_ms",
+  "signal_max": 23,
+  "signal_peak": 9245.85091420534,
+  "thresholds_release": "load/releases/1.32.yaml",
+  "thresholds_note": "load/steady-state.yaml, the base (1.31.0 baselines), with load/releases/1.32.yaml for server 1.32.1: 2 overrides",
+  "overrides_applied": [
+    {
+      "name": "activity_schedule_to_start_p99_ms",
+      "no_data": "not_judged",
+      "reason": "1.32 runs activities eagerly (system.enableActivityEagerExecution is true by default, false in 1.31.0): an activity on the worker's own task queue starts in the reply to its workflow task, so matching never queues it and records no schedule-to-start for it",
+      "evidence": "cells/results/2026-10-14-dev-1.32.1.txt"
+    },
+    {
+      "name": "activity_schedule_to_start_over_10ms",
+      "no_data": "not_judged",
+      "reason": "1.32 runs activities eagerly (system.enableActivityEagerExecution is true by default, false in 1.31.0): matching never queues them, so there is no activity schedule-to-start to take a share of",
+      "evidence": "cells/results/2026-10-14-dev-1.32.1.txt"
+    }
+  ],
+  "not_produced": {
+    "before": [
+      "activity_schedule_to_start_p99_ms"
+    ],
+    "after": [
+      "activity_schedule_to_start_p99_ms"
+    ]
+  },
+  "inject_at": "1792315856",
+  "landed_at": "1792315861",
+  "remove_at": "1792315976",
+  "recovered_at": "1792316006",
+  "time_to_recover_s": "30",
+  "remove_wait_s": 0,
+  "history_shards_ready_s": null,
+  "settle_s": 30,
+  "after_s": 90,
+  "after_start": "1792316036",
+  "after_end": "1792316127",
+  "before": {
+    "workflow_task_schedule_to_start_p99_ms": 17.600000000000065,
+    "activity_schedule_to_start_p99_ms": null,
+    "workflow_end_to_end_p95_ms": 49.05416666666667,
+    "persistence_latency_p99_ms": 8.354669464847852,
+    "service_error_rate": 0,
+    "frontend_request_p99_ms": 13.390566037735788,
+    "workflow_task_schedule_to_start_over_20ms": 0.00454545454545463,
+    "activity_schedule_to_start_over_10ms": null,
+    "persistence_latency_over_10ms": 0.0016506922257720769,
+    "frontend_request_over_10ms": 0.014081308198955256,
+    "workflow_end_to_end_over_50ms": 0.019073569482288666,
+    "workflows_completed": 1201,
+    "counter_resets": 0,
+    "window_seconds": 60
+  },
+  "during": {
+    "workflow_task_schedule_to_start_p99_ms": null,
+    "activity_schedule_to_start_p99_ms": null,
+    "workflow_end_to_end_p95_ms": null,
+    "persistence_latency_p99_ms": 9816.53364969802,
+    "service_error_rate": 0.21393438377505064,
+    "frontend_request_p99_ms": 98525.64102564102,
+    "workflow_task_schedule_to_start_over_20ms": null,
+    "activity_schedule_to_start_over_10ms": null,
+    "persistence_latency_over_10ms": 0.9421881354947418,
+    "frontend_request_over_10ms": 0.9652173913043478,
+    "workflow_end_to_end_over_50ms": null,
+    "workflows_completed": 0,
+    "counter_resets": 0,
+    "window_seconds": 115
+  },
+  "drain": {
+    "workflow_task_schedule_to_start_p99_ms": 19.050000000000015,
+    "activity_schedule_to_start_p99_ms": null,
+    "workflow_end_to_end_p95_ms": 49.2208672086721,
+    "persistence_latency_p99_ms": 8.347922192749712,
+    "service_error_rate": 0.016224564626459957,
+    "frontend_request_p99_ms": 375.3636363636368,
+    "workflow_task_schedule_to_start_over_20ms": 0.007488986784141005,
+    "activity_schedule_to_start_over_10ms": null,
+    "persistence_latency_over_10ms": 0.0010103439980752027,
+    "frontend_request_over_10ms": 0.03435448577680533,
+    "workflow_end_to_end_over_50ms": 0.0246696035242292,
+    "workflows_completed": 1211,
+    "counter_resets": 0,
+    "window_seconds": 60
+  },
+  "after": {
+    "workflow_task_schedule_to_start_p99_ms": 17.54237288135596,
+    "activity_schedule_to_start_p99_ms": null,
+    "workflow_end_to_end_p95_ms": 48.80499405469679,
+    "persistence_latency_p99_ms": 8.78511878081577,
+    "service_error_rate": 0,
+    "frontend_request_p99_ms": 9.975613556680951,
+    "workflow_task_schedule_to_start_over_20ms": 0.0014705882352942234,
+    "activity_schedule_to_start_over_10ms": null,
+    "persistence_latency_over_10ms": 0.0006389445327069643,
+    "frontend_request_over_10ms": 0.006319811875367565,
+    "workflow_end_to_end_over_50ms": 0.010588235294117565,
+    "workflows_completed": 1799,
+    "counter_resets": 0,
+    "window_seconds": 91
+  },
+  "iterations_failed": {
+    "before": 0,
+    "during": 548,
+    "drain": 22,
+    "after": 0,
+    "late": 0,
+    "unplaced": 0,
+    "not_found": 0,
+    "total": 570
+  },
+  "sweep": {
+    "Completed": 4214
+  },
+  "sweep_cutoff": "2026-10-18T09:34:57Z",
+  "sweep_margin_s": 30,
+  "sweep_error": null,
+  "softasserts": {
+    "before": {
+      "temporal-frontend": 0,
+      "temporal-frontend2": 0,
+      "temporal-history": 0,
+      "temporal-matching": 0,
+      "temporal-worker": 0,
+      "first": []
+    },
+    "during": {
+      "temporal-frontend": 0,
+      "temporal-frontend2": 0,
+      "temporal-history": 0,
+      "temporal-matching": 0,
+      "temporal-worker": 0,
+      "first": []
+    },
+    "drain": {
+      "temporal-frontend": 0,
+      "temporal-frontend2": 0,
+      "temporal-history": 0,
+      "temporal-matching": 0,
+      "temporal-worker": 0,
+      "first": []
+    },
+    "after": {
+      "temporal-frontend": 0,
+      "temporal-frontend2": 0,
+      "temporal-history": 0,
+      "temporal-matching": 0,
+      "temporal-worker": 0,
+      "first": []
+    }
+  },
+  "pool_quiet_wait_s": 0,
+  "pool_quiet_bound_s": 0,
+  "pool_busy": {
+    "before": 0,
+    "during": 0,
+    "drain": 0,
+    "after": 0
+  },
+  "signal_base": null,
+  "recover": "signal",
+  "mechanisms": [],
+  "shards_acquired": null,
+  "cleanup_error": null,
+  "inject_error": null,
+  "remove_error": null,
+  "self_test": null,
+  "result": "ADVANCE",
+  "reason": ""
+}

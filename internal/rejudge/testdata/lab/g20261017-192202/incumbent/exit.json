@@ -1,0 +1,22 @@
+{
+  "exit": 0,
+  "stopped_by": null,
+  "start": {
+    "wall": 1792265150.500,
+    "mono": 8624.43
+  },
+  "end": {
+    "wall": 1792265452.813,
+    "mono": 8926.74
+  },
+  "run_id": "g20261017-192202-incumbent",
+  "requester": "gate-g20261017-192202-incumbent",
+  "results_dir": "gate/results/g20261017-192202/incumbent",
+  "lease_file": "gate/results/g20261017-192202/incumbent/.lease.json",
+  "task_queue": "omes-g20261017-192202-incumbent",
+  "omes_metrics": {
+    "worker": "127.0.0.1:19100",
+    "client": "127.0.0.1:19101"
+  },
+  "load_exit": 0
+}

@@ -1,0 +1,8 @@
+# make: make --no-print-directory -n orchestrator-server ORCH_ADDRESS=10.0.0.1:7400
+# laug: laug orchestrator server -orchestrator 10.0.0.1:7400
+# lease: absent
+# compare: refused
+[ '10.0.0.1' = 127.0.0.1 ] || { echo "laug · the dev server has no auth: ORCH_ADDRESS must be 127.0.0.1:<port>" >&2; exit 2; }
+mkdir -p 'orchestrator/run'
+temporal server start-dev --ip 10.0.0.1 --port '7400' --http-port 7401 --metrics-port 7402 \
+  --ui-port 8400 --db-filename 'orchestrator/run/dev.db'

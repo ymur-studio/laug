@@ -1,0 +1,7 @@
+# make: make --no-print-directory -n gate SERVER_TAG=1.32.1 PLAN=gate/plans/noise.yaml ITEMS=2 BASE=HEAD GATE_POST=local GATE_RESULTS=results-x
+# laug: laug gate run 1.32.1 -plan gate/plans/noise.yaml -items 2 -base HEAD -post local -results results-x
+# lease: absent
+# compare: line gate/run.sh
+[ 'override' != file ] || { echo "laug · make gate SERVER_TAG=x.y.z: name the server release the gate judges" >&2; exit 2; }
+[[ '1.32.1' =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "laug · SERVER_TAG must be a release tag, x.y.z; got '"'1.32.1'"'" >&2; exit 2; }
+SERVER_TAG='1.32.1' PLAN='gate/plans/noise.yaml' ITEMS='2' BASE='HEAD' GATE_FAKE='' GATE_POST='local' GATE_RESULTS='results-x' OMES_DIR='.upstream/omes' gate/run.sh

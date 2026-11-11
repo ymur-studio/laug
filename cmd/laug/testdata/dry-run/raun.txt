@@ -1,0 +1,18 @@
+# make: make --no-print-directory -n raun FAULT=persistence-latency
+# laug: laug raun persistence-latency
+# lease: absent
+# compare: line faults/run.sh
+[[ 'persistence-latency' =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || { echo "laug · make raun: FAULT="'persistence-latency'" is not one word of letters, digits, ., _ and -, from a letter or digit" >&2; exit 2; };                  
+make lease
+[[ '1800' =~ ^(0|[1-9][0-9]*)$ ]] || { echo "laug · TTL="'1800'": a whole number of seconds" >&2; exit 2; }
+tmp=$(mktemp .lease.XXXXXX); \
+if curl -s --fail-with-body -X POST 'http://127.0.0.1:7700/lease' -H 'content-type: application/json' \
+     -d "$(jq -cn --argjson ttl 1800 --arg requester 'laug' '{ttl_seconds: $ttl, requester: $requester}')" -o "$tmp"; then \
+  mv "$tmp" .last-lease.json && jq . .last-lease.json; \
+else rc=$?; echo "laug · lease refused (curl exit $rc): $(cat "$tmp")" >&2; rm -f "$tmp"; exit 1; fi
+make fault RUN_ID=raun-20261022-120000 FAULT=persistence-latency; status=$?; make release; exit $status
+[[ 'raun-20261022-120000' =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || { echo "laug · make fault: RUN_ID="'raun-20261022-120000'" is not one word of letters, digits, ., _ and -, from a letter or digit" >&2; exit 2; };  [[ 'persistence-latency' =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || { echo "laug · make fault: FAULT="'persistence-latency'" is not one word of letters, digits, ., _ and -, from a letter or digit" >&2; exit 2; };                  
+RUN_ID=raun-20261022-120000 POOL_ADDR='http://127.0.0.1:7700' faults/run.sh workflow_with_single_noop_activity persistence-latency
+[ -s .last-lease.json ] || { echo "laug · no lease in .last-lease.json; make lease first" >&2; exit 2; }
+curl -s --fail-with-body -X POST 'http://127.0.0.1:7700/release' -H 'content-type: application/json' -d "$(jq '{id}' .last-lease.json)" | jq . \
+  && rm -f .last-lease.json

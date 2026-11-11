@@ -1,0 +1,7 @@
+# make: make --no-print-directory -n obs-down FORCE=1 ONLY=grafana
+# obs: bin/obs down -while-gate-runs -only grafana
+# lease: absent
+# file: bin/obs #!/bin/sh
+# passes: FORCE=1 ONLY=grafana
+# compare: resolved obs/obs.sh $build=ok
+build=ok; make -s --no-print-directory pool/follow || build=failed; OBS_FOLLOW_BUILD=$build obs/obs.sh down

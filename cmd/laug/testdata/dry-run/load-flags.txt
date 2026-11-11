@@ -1,0 +1,11 @@
+# make: make --no-print-directory -n load DURATION=10m RATE=50 MAX_CONCURRENT=20 CONTINUE_ON_FAILURE=1 SCENARIO=throughput_stress RUN_ID=r1 CELL_ADDRESS=127.0.0.1:17233 PROM_URL=http://127.0.0.1:19090 PROJECT=laug-x NAMESPACE=ns1 SERVER_TAG=1.32.1
+# laug: laug load -duration 10m -rate 50 -max-concurrent 20 -continue-on-failure -scenario throughput_stress -run-id r1 -address 127.0.0.1:17233 -prom http://127.0.0.1:19090 -project laug-x -namespace ns1 -server-tag 1.32.1
+# lease: absent
+# passes: DURATION=10m RATE=50 MAX_CONCURRENT=20 CONTINUE_ON_FAILURE=1
+# compare: line load/run-omes.sh
+[ "override" = file ] || [ "override" != file ] || [ -z '' ] \
+  || { echo "laug · CELL_ADDRESS was given and PROM_URL was not, so the run would record the leased cell's Prometheus; pass PROM_URL for "'127.0.0.1:17233' >&2; exit 2; }
+[[ '1.32.1' =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "laug · SERVER_TAG must be a release tag, x.y.z; got '"'1.32.1'"'" >&2; exit 2; }
+[[ 'r1' =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || { echo "laug · make load: RUN_ID="'r1'" is not one word of letters, digits, ., _ and -, from a letter or digit" >&2; exit 2; }; [[ 'throughput_stress' =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || { echo "laug · make load: SCENARIO="'throughput_stress'" is not one word of letters, digits, ., _ and -, from a letter or digit" >&2; exit 2; };  [[ 'laug-x' =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || { echo "laug · make load: PROJECT="'laug-x'" is not one word of letters, digits, ., _ and -, from a letter or digit" >&2; exit 2; }; [[ 'ns1' =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || { echo "laug · make load: NAMESPACE="'ns1'" is not one word of letters, digits, ., _ and -, from a letter or digit" >&2; exit 2; };                
+OMES_DIR='.upstream/omes' CELL_ADDRESS='127.0.0.1:17233' PROM_URL='http://127.0.0.1:19090' PROJECT=laug-x NAMESPACE=ns1 RUN_ID=r1 \
+  SERVER_TAG=1.32.1 load/run-omes.sh throughput_stress

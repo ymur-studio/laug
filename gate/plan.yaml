@@ -1,0 +1,61 @@
+# What one gate run runs: laug gate run x.y.z. Every item runs at once on this host, each on a cell of
+# its own, and bin/laug judge judges the run: ADVANCE only if every item's result is its expect and R1 to R7 hold.
+# This file is read from the checkout, as the thresholds are, and verdict.json records its sha256 and whether it changed
+# against BASE. gate/run.sh --plan gate/plan.yaml checks it and prints it as plan.json holds it.
+#
+# The times, wall clock. On the lab host (an m8i.8xlarge, the reference host from 2026-10-15;
+# cells/results/2026-10-15-gate6-noise.txt): make harness-test took 171.7 to 174.1 s inside the gate, which sets when
+# the wave starts, and the verdict was handed on 546.1 to 548.1 s after the gate start (609.2 s on a volume just
+# restored from a snapshot, whose Omes build cache was cold), 2:50 or more before the watchdog. Each gate run keeps
+# its own times (gate/results/<gate id>/timeline.jsonl). wave_min_s bounds the wave by pl, the long pole: in the 107
+# lab-host gates from g20261015-065429 to g20261019-005744 with a pl after window (gate/results), pl injected 89.6 to
+# 90.7 s into the wave, its after window ended 270 to 271 s later, and the wave ended 0.9 to 2.0 s after that: 360.7
+# to 362.6 s in all. 386 s, first set from the dev host's single rauns, keeps 23 s over the longest.
+# Three items (docs/DESIGN.md section 7). The third is the incumbent arm: incumbent runs the release SERVER_TAG
+# replaces on a cell of its own, leased first, beside steady, and the judge's R7 compares the two (docs/DESIGN.md
+# section 7.1). Three cells at once passed every max on the lab host in 9 of 9 items (gate/results/g20261015-144517,
+# -145418 and -150315), and in 18 of 18 in the pilot's six gates of this wave
+# (cells/results/2026-10-17-arm-pilot.txt). A third lease ends inside make harness-test (16.1 to 19.1 s a lease on
+# the lab host, cells/results/2026-10-15-lab-gate-5.txt), which still decides when the wave starts. kh, 3 of 3 ADVANCE
+# alone on the lab host (cells/results/2026-10-17-lab-kill-history.txt), joins after a four-cell calibration of its
+# own: the arm's tolerances are a three-item set's (docs/DESIGN.md section 7.1).
+# The release SERVER_TAG replaces: the item with arm incumbent runs it, and SERVER_TAG equal to it makes an A/A gate. A
+# commit bumps it when a release is promoted, so gate.json's inputs record which incumbent a verdict was judged against.
+incumbent: 1.31.0
+deadline_s: 780          # the watchdog: TERM to every item still running 13:00 after the gate start, wall clock
+kill_grace_s: 30         # then KILL; on TERM faults/run.sh's EXIT trap removes its fault and writes a partial raun JSON
+lease_ttl_s: 1200        # a cell outlives the deadline and the kill grace; the gate releases every cell after the post
+quiet_s: 10              # the barrier: laugd 0 busy and only the leased projects up, then the same again this much later
+barrier_timeout_s: 60    # refused when the host is not quiet this long after make harness-test passed
+poll_s: 5                # during the wave: laugd's busy cells, docker compose ls and /proc/pressure, to poll.jsonl
+harness_timeout_s: 300   # make harness-test on this tree, run while the cells are leased; stopped here, it fails R1
+wave_min_s: 386          # pl, the long pole, at its longest: refused at a lease or the barrier when less is left before
+                         # deadline_s, since an item started then is certain to meet the watchdog
+items:
+  # The incumbent's load: steady's scenario, duration, rate and concurrency, on the plan's incumbent (gate/lib.sh,
+  # item_tag), judged by its own release's six maxima, and the reference R7 compares steady with.
+  - key: incumbent
+    kind: load
+    arm: incumbent       # runs the plan's incumbent; an item with no arm runs SERVER_TAG
+    pair: steady         # compared with: a load item with no arm, the same scenario, duration, rate and max_concurrent
+    scenario: workflow_with_single_noop_activity
+    duration: 5m
+    rate: 20
+    max_concurrent: 50
+    expect: ADVANCE
+  # The load: 5 m at 20/s, 50 at once, judged by load/verdict.sh against the thresholds of SERVER_TAG.
+  - key: steady
+    kind: load
+    scenario: workflow_with_single_noop_activity
+    duration: 5m
+    rate: 20
+    max_concurrent: 50
+    expect: ADVANCE
+  # The fault alone: 3 of 3 ADVANCE through laug raun on the lab host (raun-lab2-persistence-latency-1 to 3,
+  # cells/results/2026-10-23-boot2.txt), and 3 of 3 on microVM cells on the first lab host, an m8i.2xlarge
+  # (raun-fcp1 to 3, cells/results/2026-10-13-firecracker-pool.txt).
+  - key: pl
+    kind: fault
+    fault: persistence-latency
+    scenario: workflow_with_single_noop_activity
+    expect: ADVANCE

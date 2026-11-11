@@ -1,0 +1,250 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="816" viewBox="0 0 800 816" role="img"
+    aria-labelledby="cancel-path-title cancel-path-desc" font-family="Inter, system-ui, sans-serif">
+<title id="cancel-path-title">A cancel to a running gate: each pending activity hears it at its next heartbeat</title>
+<desc id="cancel-path-desc">Top row: laug gate cancel asks the dev server to cancel workflow Gate, which records the
+    request; Gate&#39;s context is canceled, and with it its one child, the wave&#39;s. Second row: that sends a cancel
+    request for each activity and timer still pending there, the wave, each item&#39;s await and the backstop; an
+    activity learns of it only in the answer to its next heartbeat, sent every 2 s, and Step then returns without
+    stopping gate/step.sh. Bottom: the stop path, on a disconnected context a cancel cannot end: Stop stops the live
+    step by its record, then stopped writes the trap verdict, and post and release hand it on and give the cells back.
+    The dashed box under the second row, at the end of a dashed arrow, is what heartbeats sent on the canceled context
+    do to an activity that waits through the cancel: boot 6 saw the server time one out 10.136 s after the cancel
+    request, on the lab host&#39;s dev server, and the gate still gave its verdict. Below, boot 4&#39;s two cancels of a
+    fake gate through laug gate cancel, WaitForCancellation true as the tree sets it (F5), then false in a scratch
+    commit (F7): across, seconds from the workflow&#39;s cancel request event. A lane&#39;s upper bar runs from the
+    cancel requests to the pending activities to the last of them canceled, a tick at each cancellation; the bars under
+    it are the activities scheduled after the request, one at a time; the dashed line is the gate timeline&#39;s
+    watchdog TERM, the diamonds its items&#39; ended marks, and the thick line the workflow&#39;s completion. The events
+    keep types and times, not the activities&#39; names. Sources: cells/results/2026-10-27-boot6.txt,
+    docs/img/src/cancel-path.txt, docs/tables/fig-cancel-path.jsonl, docs/tables/gates.jsonl,
+    internal/orchestrator/gate.go, internal/orchestrator/steps.go.</desc>
+<rect x="0" y="0" width="800" height="816" fill="#EEF3F2"/>
+<text x="24" y="30" font-size="14" fill="#163A44"
+    font-weight="600">A cancel to a running gate: each pending activity hears it at its next heartbeat</text>
+<text x="24" y="50" font-size="12"
+    fill="#163A44">Mid-wave: workflow Gate on the orchestrator&#39;s dev server, its activities on this checkout&#39;s worker</text>
+<g aria-label="laug gate cancel, &lt;gate id&gt;">
+  <rect x="24" y="76" width="200" height="56" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="124" y="100.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">laug gate cancel</text>
+  <text x="124" y="115.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">&lt;gate id&gt;</text>
+</g>
+<g aria-label="the dev server, records the cancel request">
+  <rect x="262" y="76" width="236" height="56" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="380" y="100.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">the dev server</text>
+  <text x="380" y="115.5" font-size="12" fill="#163A44" text-anchor="middle">records the cancel request</text>
+</g>
+<g aria-label="workflow Gate, its context canceled,, the wave&#39;s child with it">
+  <rect x="536" y="76" width="240" height="64" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="656" y="97" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">workflow Gate</text>
+  <text x="656" y="112" font-size="12" fill="#163A44" text-anchor="middle">its context canceled,</text>
+  <text x="656" y="127" font-size="12" fill="#163A44" text-anchor="middle">the wave&#39;s child with it</text>
+</g>
+<line x1="224" y1="104" x2="254" y2="104" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="262,104 254,108 254,100" fill="#163A44"/>
+<line x1="498" y1="104" x2="528" y2="104" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="536,104 528,108 528,100" fill="#163A44"/>
+<g aria-label="a cancel request each, for the wave, each await, and the backstop timer">
+  <rect x="536" y="172" width="240" height="64" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="656" y="193" font-size="12" fill="#163A44" text-anchor="middle"
+      font-weight="600">a cancel request each</text>
+  <text x="656" y="208" font-size="12" fill="#163A44" text-anchor="middle">for the wave, each await</text>
+  <text x="656" y="223" font-size="12" fill="#163A44" text-anchor="middle">and the backstop timer</text>
+</g>
+<g aria-label="the activity hears it, in its next heartbeat&#39;s, answer, every 2 s">
+  <rect x="262" y="172" width="236" height="64" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="380" y="193" font-size="12" fill="#163A44" text-anchor="middle"
+      font-weight="600">the activity hears it</text>
+  <text x="380" y="208" font-size="12" fill="#163A44" text-anchor="middle">in its next heartbeat&#39;s</text>
+  <text x="380" y="223" font-size="12" fill="#163A44" text-anchor="middle">answer, every 2 s</text>
+</g>
+<g aria-label="Step returns, ctx.Err(); gate/step.sh, runs on in its session">
+  <rect x="24" y="172" width="200" height="64" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="124" y="193" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">Step returns</text>
+  <text x="124" y="208" font-size="12" fill="#163A44" text-anchor="middle">ctx.Err(); gate/step.sh</text>
+  <text x="124" y="223" font-size="12" fill="#163A44" text-anchor="middle">runs on in its session</text>
+</g>
+<line x1="656" y1="140" x2="656" y2="164" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="656,172 652,164 660,164" fill="#163A44"/>
+<line x1="536" y1="204" x2="506" y2="204" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="498,204 506,200 506,208" fill="#163A44"/>
+<line x1="262" y1="204" x2="232" y2="204" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="224,204 232,200 232,208" fill="#163A44"/>
+<g aria-label="if it waits through the cancel, and beats on the canceled, context: timed out 10 s later">
+  <rect x="262" y="268" width="236" height="64" fill="#EEF3F2" stroke="#C44B32" stroke-dasharray="4 3"/>
+  <text x="380" y="289" font-size="12" fill="#163A44" text-anchor="middle"
+      font-weight="600">if it waits through the cancel</text>
+  <text x="380" y="304" font-size="12" fill="#163A44" text-anchor="middle">and beats on the canceled</text>
+  <text x="380" y="319" font-size="12" fill="#163A44" text-anchor="middle">context: timed out 10 s later</text>
+</g>
+<line x1="380" y1="236" x2="380" y2="260" fill="none" stroke="#C44B32" stroke-width="1.5" stroke-dasharray="4 3"/>
+<polygon points="380,268 376,260 384,260" fill="#C44B32"/>
+<text x="262" y="348" font-size="10"
+    fill="#163A44">boot 6, the lab host: timed out 10.136 s after the cancel request</text>
+<rect x="16" y="360" width="768" height="124" fill="none" stroke="#163A44" stroke-dasharray="6 4"/>
+<text x="260" y="378" font-size="11" fill="#163A44"
+    font-weight="600">on a disconnected context: a cancel cannot cut these short</text>
+<g aria-label="Stop, stops the live step, by its record, TERM">
+  <rect x="24" y="396" width="200" height="72" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="124" y="421" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">Stop</text>
+  <text x="124" y="436" font-size="12" fill="#163A44" text-anchor="middle">stops the live step</text>
+  <text x="124" y="451" font-size="12" fill="#163A44" text-anchor="middle">by its record, TERM</text>
+</g>
+<g aria-label="stopped, writes the trap verdict, from the records">
+  <rect x="262" y="396" width="236" height="72" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="380" y="421" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">stopped</text>
+  <text x="380" y="436" font-size="12" fill="#163A44" text-anchor="middle">writes the trap verdict</text>
+  <text x="380" y="451" font-size="12" fill="#163A44" text-anchor="middle">from the records</text>
+</g>
+<g aria-label="post and release, hand the verdict on,, give the cells back">
+  <rect x="536" y="396" width="240" height="72" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="656" y="421" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">post and release</text>
+  <text x="656" y="436" font-size="12" fill="#163A44" text-anchor="middle">hand the verdict on,</text>
+  <text x="656" y="451" font-size="12" fill="#163A44" text-anchor="middle">give the cells back</text>
+</g>
+<line x1="124" y1="236" x2="124" y2="388" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="124,396 120,388 128,388" fill="#163A44"/>
+<text x="130" y="320" font-size="11" fill="#163A44">the stop path runs</text>
+<line x1="224" y1="432" x2="254" y2="432" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="262,432 254,436 254,428" fill="#163A44"/>
+<line x1="498" y1="432" x2="528" y2="432" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="536,432 528,436 528,428" fill="#163A44"/>
+<text x="24" y="508" font-size="11"
+    fill="#163A44">Every activity&#39;s options set WaitForCancellation true and a 10 s heartbeat timeout (StepOptions, steps.go).</text>
+<text x="24" y="524" font-size="11"
+    fill="#163A44">Step heartbeats through context.WithoutCancel(ctx), so a cancel never closes the context its beats go on.</text>
+<g aria-label="boot 4&#39;s two cancels">
+  <text x="28" y="562" font-size="11" fill="#163A44"
+      font-weight="600">Boot 4 on the lab host, an m8i.8xlarge: a fake gate canceled 30.05 s into its wave, in each mode</text>
+  <line x1="194" y1="576" x2="194" y2="620" fill="none" stroke="#CFE3E4"/>
+  <line x1="258.667" y1="576" x2="258.667" y2="620" fill="none" stroke="#CFE3E4"/>
+  <line x1="323.333" y1="576" x2="323.333" y2="620" fill="none" stroke="#CFE3E4"/>
+  <line x1="388" y1="576" x2="388" y2="620" fill="none" stroke="#CFE3E4"/>
+  <line x1="452.667" y1="576" x2="452.667" y2="620" fill="none" stroke="#CFE3E4"/>
+  <line x1="517.333" y1="576" x2="517.333" y2="620" fill="none" stroke="#CFE3E4"/>
+  <line x1="582" y1="576" x2="582" y2="620" fill="none" stroke="#CFE3E4"/>
+  <line x1="646.667" y1="576" x2="646.667" y2="620" fill="none" stroke="#CFE3E4"/>
+  <line x1="711.333" y1="576" x2="711.333" y2="620" fill="none" stroke="#CFE3E4"/>
+  <line x1="776" y1="576" x2="776" y2="620" fill="none" stroke="#CFE3E4"/>
+  <g aria-label="F5: WaitForCancellation true">
+    <text x="28" y="597" font-size="10" fill="#163A44"
+        font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">F5  g20261024-102139</text>
+    <text x="28" y="611" font-size="10" fill="#163A44" font-weight="600">WaitForCancellation true</text>
+    <rect x="208.972" y="588" width="51.246" height="12" fill="#5FB3BF" stroke="#163A44"
+        stroke-width="0.5"><title>the 4 pending activities: cancel requested +0.046 s, canceled +0.112 to 0.205 s</title></rect>
+    <line x1="230.142" y1="588" x2="230.142" y2="600" fill="none" stroke="#163A44" stroke-width="1.5"/>
+    <line x1="247.448" y1="588" x2="247.448" y2="600" fill="none" stroke="#163A44" stroke-width="1.5"/>
+    <line x1="253.82" y1="588" x2="253.82" y2="600" fill="none" stroke="#163A44" stroke-width="1.5"/>
+    <line x1="260.218" y1="588" x2="260.218" y2="600" fill="none" stroke="#163A44" stroke-width="1.5"/>
+    <rect x="274.163" y="604" width="253.687" height="12" fill="#D99A3A" stroke="#163A44"
+        stroke-width="0.5"><title>activity 1 of 4 scheduled after the request: +0.248 to +1.033 s</title></rect>
+    <rect x="542.281" y="604" width="59.421" height="12" fill="#D99A3A" stroke="#163A44"
+        stroke-width="0.5"><title>activity 2 of 4 scheduled after the request: +1.077 to +1.261 s</title></rect>
+    <rect x="615.417" y="604" width="26.354" height="12" fill="#D99A3A" stroke="#163A44"
+        stroke-width="0.5"><title>activity 3 of 4 scheduled after the request: +1.303 to +1.385 s</title></rect>
+    <rect x="655.412" y="604" width="54.811" height="12" fill="#D99A3A" stroke="#163A44"
+        stroke-width="0.5"><title>activity 4 of 4 scheduled after the request: +1.427 to +1.597 s</title></rect>
+    <polygon points="473.113,577 477.113,582 473.113,587 469.113,582"
+        fill="#163A44"><title>an item ended, +0.863 s</title></polygon>
+    <polygon points="476.67,577 480.67,582 476.67,587 472.67,582"
+        fill="#163A44"><title>an item ended, +0.874 s</title></polygon>
+    <polygon points="480.227,577 484.227,582 480.227,587 476.227,582"
+        fill="#163A44"><title>an item ended, +0.885 s</title></polygon>
+    <line x1="306.273" y1="584" x2="306.273" y2="620" fill="none" stroke="#10181C" stroke-width="1.5"
+        stroke-dasharray="4 3"><title>the timeline&#39;s watchdog TERM, +0.347 s</title></line>
+    <line x1="724.451" y1="584" x2="724.451" y2="620" fill="none" stroke="#10181C"
+        stroke-width="2.5"><title>WORKFLOW_EXECUTION_COMPLETED, +1.641 s</title></line>
+    <text x="28" y="634" font-size="10"
+        fill="#163A44">the next activity scheduled +0.248 s, after the 4 pending ones were canceled, +0.112 to 0.205 s</text>
+    <text x="28" y="647" font-size="10"
+        fill="#163A44">watchdog TERM +0.347 s; items ended +0.863 to 0.885 s; the workflow closed +1.641 s</text>
+  </g>
+  <line x1="194" y1="658" x2="194" y2="702" fill="none" stroke="#CFE3E4"/>
+  <line x1="258.667" y1="658" x2="258.667" y2="702" fill="none" stroke="#CFE3E4"/>
+  <line x1="323.333" y1="658" x2="323.333" y2="702" fill="none" stroke="#CFE3E4"/>
+  <line x1="388" y1="658" x2="388" y2="702" fill="none" stroke="#CFE3E4"/>
+  <line x1="452.667" y1="658" x2="452.667" y2="702" fill="none" stroke="#CFE3E4"/>
+  <line x1="517.333" y1="658" x2="517.333" y2="702" fill="none" stroke="#CFE3E4"/>
+  <line x1="582" y1="658" x2="582" y2="702" fill="none" stroke="#CFE3E4"/>
+  <line x1="646.667" y1="658" x2="646.667" y2="702" fill="none" stroke="#CFE3E4"/>
+  <line x1="711.333" y1="658" x2="711.333" y2="702" fill="none" stroke="#CFE3E4"/>
+  <line x1="776" y1="658" x2="776" y2="702" fill="none" stroke="#CFE3E4"/>
+  <g aria-label="F7: WaitForCancellation false">
+    <text x="28" y="679" font-size="10" fill="#163A44"
+        font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">F7  g20261024-102311</text>
+    <text x="28" y="693" font-size="10" fill="#163A44" font-weight="600">WaitForCancellation false</text>
+    <rect x="208.984" y="670" width="55.07" height="12" fill="#5FB3BF" stroke="#163A44"
+        stroke-width="0.5"><title>the 4 pending activities: cancel requested +0.046 s, canceled +0.141 to 0.217 s</title></rect>
+    <line x1="239.488" y1="670" x2="239.488" y2="682" fill="none" stroke="#163A44" stroke-width="1.5"/>
+    <line x1="248.317" y1="670" x2="248.317" y2="682" fill="none" stroke="#163A44" stroke-width="1.5"/>
+    <line x1="257.27" y1="670" x2="257.27" y2="682" fill="none" stroke="#163A44" stroke-width="1.5"/>
+    <line x1="264.054" y1="670" x2="264.054" y2="682" fill="none" stroke="#163A44" stroke-width="1.5"/>
+    <rect x="208.999" y="686" width="334.841" height="12" fill="#D99A3A" stroke="#163A44"
+        stroke-width="0.5"><title>activity 1 of 4 scheduled after the request: +0.046 to +1.082 s</title></rect>
+    <rect x="558.654" y="686" width="60.433" height="12" fill="#D99A3A" stroke="#163A44"
+        stroke-width="0.5"><title>activity 2 of 4 scheduled after the request: +1.128 to +1.315 s</title></rect>
+    <rect x="632.495" y="686" width="26.146" height="12" fill="#D99A3A" stroke="#163A44"
+        stroke-width="0.5"><title>activity 3 of 4 scheduled after the request: +1.356 to +1.437 s</title></rect>
+    <rect x="672.906" y="686" width="54.725" height="12" fill="#D99A3A" stroke="#163A44"
+        stroke-width="0.5"><title>activity 4 of 4 scheduled after the request: +1.481 to +1.65 s</title></rect>
+    <polygon points="473.211,659 477.211,664 473.211,669 469.211,664"
+        fill="#163A44"><title>an item ended, +0.864 s</title></polygon>
+    <polygon points="476.768,659 480.768,664 476.768,669 472.768,664"
+        fill="#163A44"><title>an item ended, +0.875 s</title></polygon>
+    <polygon points="480.324,659 484.324,664 480.324,669 476.324,664"
+        fill="#163A44"><title>an item ended, +0.886 s</title></polygon>
+    <line x1="306.694" y1="666" x2="306.694" y2="702" fill="none" stroke="#10181C" stroke-width="1.5"
+        stroke-dasharray="4 3"><title>the timeline&#39;s watchdog TERM, +0.349 s</title></line>
+    <line x1="741.748" y1="666" x2="741.748" y2="702" fill="none" stroke="#10181C"
+        stroke-width="2.5"><title>WORKFLOW_EXECUTION_COMPLETED, +1.694 s</title></line>
+    <text x="28" y="716" font-size="10"
+        fill="#163A44">the next activity scheduled +0.046 s, before the 4 pending ones were canceled, +0.141 to 0.217 s</text>
+    <text x="28" y="729" font-size="10"
+        fill="#163A44">watchdog TERM +0.349 s; items ended +0.864 to 0.886 s; the workflow closed +1.694 s</text>
+  </g>
+  <line x1="194" y1="742" x2="776" y2="742" fill="none" stroke="#10181C"/>
+  <line x1="194" y1="742" x2="194" y2="746" fill="none" stroke="#10181C"/>
+  <text x="194" y="758" font-size="11" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+  <line x1="258.667" y1="742" x2="258.667" y2="746" fill="none" stroke="#10181C"/>
+  <text x="258.667" y="758" font-size="11" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0.2</text>
+  <line x1="323.333" y1="742" x2="323.333" y2="746" fill="none" stroke="#10181C"/>
+  <text x="323.333" y="758" font-size="11" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0.4</text>
+  <line x1="388" y1="742" x2="388" y2="746" fill="none" stroke="#10181C"/>
+  <text x="388" y="758" font-size="11" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0.6</text>
+  <line x1="452.667" y1="742" x2="452.667" y2="746" fill="none" stroke="#10181C"/>
+  <text x="452.667" y="758" font-size="11" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0.8</text>
+  <line x1="517.333" y1="742" x2="517.333" y2="746" fill="none" stroke="#10181C"/>
+  <text x="517.333" y="758" font-size="11" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">1</text>
+  <line x1="582" y1="742" x2="582" y2="746" fill="none" stroke="#10181C"/>
+  <text x="582" y="758" font-size="11" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">1.2</text>
+  <line x1="646.667" y1="742" x2="646.667" y2="746" fill="none" stroke="#10181C"/>
+  <text x="646.667" y="758" font-size="11" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">1.4</text>
+  <line x1="711.333" y1="742" x2="711.333" y2="746" fill="none" stroke="#10181C"/>
+  <text x="711.333" y="758" font-size="11" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">1.6</text>
+  <line x1="776" y1="742" x2="776" y2="746" fill="none" stroke="#10181C"/>
+  <text x="776" y="758" font-size="11" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">1.8</text>
+  <text x="485" y="774" font-size="12" fill="#163A44"
+      text-anchor="middle">seconds after the workflow&#39;s cancel request</text>
+  <rect x="28" y="789" width="18" height="10" fill="#5FB3BF"/>
+  <text x="52" y="798" font-size="11" fill="#163A44">canceled activities</text>
+  <rect x="187.04" y="789" width="18" height="10" fill="#D99A3A"/>
+  <text x="211.04" y="798" font-size="11" fill="#163A44">scheduled after the request</text>
+  <line x1="395.36" y1="794" x2="413.36" y2="794" fill="none" stroke="#10181C" stroke-width="1.5" stroke-dasharray="4
+      3"/>
+  <text x="419.36" y="798" font-size="11" fill="#163A44">watchdog TERM</text>
+  <polygon points="526.44,789 530.44,794 526.44,799 522.44,794" fill="#163A44"/>
+  <text x="541.44" y="798" font-size="11" fill="#163A44">an item ended</text>
+  <line x1="639.52" y1="794" x2="657.52" y2="794" fill="none" stroke="#10181C" stroke-width="2.5"/>
+  <text x="663.52" y="798" font-size="11" fill="#163A44">closed</text>
+</g>
+</svg>

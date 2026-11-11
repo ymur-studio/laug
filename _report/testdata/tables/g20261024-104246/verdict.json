@@ -1,0 +1,150 @@
+{
+  "gate_id": "g20261024-104246",
+  "verdict": "BLOCK",
+  "class": "control",
+  "rerun": false,
+  "class_if_quiet": null,
+  "refused": null,
+  "fake": false,
+  "server_tag": "1.31.0",
+  "incumbent": null,
+  "laug_commit": "5fe3f15",
+  "tree_dirty": false,
+  "base": "5fe3f15",
+  "inputs": [
+    {
+      "path": "gate/plans/noise.yaml",
+      "sha256": "12b017b2404f44724b1445d695d5266cdc83cdf163ab019ea6ac249e63bc5904",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/steady-state.yaml",
+      "sha256": "b3f542321181015f4a4d35825f56ec8d13d063ac81e131e3c39a25b9bb1c0416",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/thresholds.sh",
+      "sha256": "63b15eca3a4a9508008a146096459d669f6a99259542339ca9ebd276731d4a9e",
+      "changed_vs_base": false
+    },
+    {
+      "path": "faults/catalog.yaml",
+      "sha256": "749c662f6edbe80f43b18501db14e8fd48163581a5e7cfe82677004d8c624f9a",
+      "changed_vs_base": false
+    },
+    {
+      "path": "cells/compose/dynamicconfig/laug.yaml",
+      "sha256": "6ecc1d5ae589a5f89049b4f15d23becb616252e567ffd6a862db7294c50e705a",
+      "changed_vs_base": false
+    },
+    {
+      "path": "cells/compose/cell.yml",
+      "sha256": "24e7cbac0d1cd57235740bfb0b0b5853baa075e9e8a1f6e73b0d66514754fe59",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/releases/1.32.yaml",
+      "sha256": "3b4b20d8015da70a75f77b768e5f8faf90f29692fdbbd6e810c7bac79c19b710",
+      "changed_vs_base": false
+    },
+    {
+      "path": "internal/judge",
+      "sha256": "eb37b18a8bbe78033fa1906917b4774c6463fa0a79983194abaec33e8878be55",
+      "changed_vs_base": false,
+      "version": "v3",
+      "go": "go1.26.0",
+      "tree_clean": true
+    }
+  ],
+  "deadline_s": 780,
+  "items_in_plan": 8,
+  "items_limit": 1,
+  "t0": {
+    "wall": 1792838566.170,
+    "mono": 7034.91
+  },
+  "t_post": {
+    "wall": 1792839116.756,
+    "mono": 7585.50
+  },
+  "elapsed_s": {
+    "wall": 550.586,
+    "mono": 550.59
+  },
+  "host": {
+    "type": "m8i.8xlarge",
+    "vcpu": 32,
+    "mem_gib": 123,
+    "mem_available_gib": 121.8
+  },
+  "rules": {
+    "R1": {
+      "name": "harness",
+      "pass": true,
+      "reasons": []
+    },
+    "R2": {
+      "name": "coverage",
+      "pass": false,
+      "reasons": [
+        "plan: cut to 1 of 8 items (ITEMS=1): 7 planned item(s) never ran"
+      ]
+    },
+    "R3": {
+      "name": "contract",
+      "pass": true,
+      "reasons": []
+    },
+    "R4": {
+      "name": "outcome",
+      "pass": true,
+      "reasons": []
+    },
+    "R5": {
+      "name": "live control",
+      "pass": false,
+      "reasons": [
+        "the plan has no fault item, so no live control ran"
+      ]
+    },
+    "R6": {
+      "name": "identity",
+      "pass": true,
+      "reasons": []
+    },
+    "R7": {
+      "name": "incumbent",
+      "pass": true,
+      "reasons": []
+    }
+  },
+  "reasons": [
+    "R2 plan: cut to 1 of 8 items (ITEMS=1): 7 planned item(s) never ran",
+    "R5 the plan has no fault item, so no live control ran"
+  ],
+  "items": [
+    {
+      "key": "s1",
+      "kind": "load",
+      "arm": null,
+      "expect": "ADVANCE",
+      "observed": "ADVANCE",
+      "class": null,
+      "reason": "",
+      "failed": [],
+      "run_id": "g20261024-104246-s1",
+      "cell": "9b5f95c6",
+      "block": 0,
+      "exit": 0,
+      "stopped_by": null,
+      "pool_busy": null,
+      "evidence": [
+        "s1/g20261024-104246-s1.json",
+        "s1/g20261024-104246-s1.verdict.json"
+      ]
+    }
+  ],
+  "comparison": null,
+  "host_quiet": true,
+  "host_noise": []
+}

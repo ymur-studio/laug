@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="520" viewBox="0 0 800 520" role="img"
+    aria-labelledby="eager-ab-title eager-ab-desc" font-family="Inter, system-ui, sans-serif">
+<title id="eager-ab-title">Server 1.32.1 runs activities eagerly: matching records no wait for them</title>
+<desc id="eager-ab-desc">Top, server 1.31.0: the worker completes a workflow task that schedules an activity, history
+    writes it, matching queues it, and the worker&#39;s poll takes it; the time it waits is activity schedule-to-start.
+    Middle, server 1.32.1, where system.enableActivityEagerExecution is true by default (source:
+    common/dynamicconfig/constants.go, :194 at v1.31.0 and :204 at v1.32.1): history returns the activity in its reply
+    to the workflow task and the worker starts it at once, the arrow under that row, so matching, its box dashed, never
+    queues it (load/releases/1.32.yaml). Bottom: the readings, a row a reading, from boot 1&#39;s loads on fresh cells
+    and the incumbent arm&#39;s A/B gates, 1.32.1 against 1.31.0 in one wave. Sources: docs/img/src/eager-ab.txt,
+    docs/tables/compare.jsonl, docs/tables/gates.jsonl, docs/tables/loads.jsonl, docs/tables/src/hosts.tsv,
+    load/releases/1.32.yaml.</desc>
+<rect x="0" y="0" width="800" height="520" fill="#EEF3F2"/>
+<text x="24" y="30" font-size="14" fill="#163A44"
+    font-weight="600">Server 1.32.1 runs activities eagerly: matching records no wait for them</text>
+<text x="24" y="50" font-size="12"
+    fill="#163A44">One activity on the worker&#39;s own task queue, on each release, then the readings on the lab host, an m8i.8xlarge</text>
+<text x="24" y="80" font-size="12" fill="#163A44" font-weight="600">server 1.31.0</text>
+<g aria-label="the worker, completes a workflow task">
+  <rect x="24" y="92" width="180" height="56" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="114" y="116.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">the worker</text>
+  <text x="114" y="131.5" font-size="12" fill="#163A44" text-anchor="middle">completes a workflow task</text>
+</g>
+<g aria-label="history, writes the activity">
+  <rect x="260" y="92" width="180" height="56" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="350" y="116.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">history</text>
+  <text x="350" y="131.5" font-size="12" fill="#163A44" text-anchor="middle">writes the activity</text>
+</g>
+<g aria-label="matching, queues it until a poll takes it">
+  <rect x="496" y="92" width="280" height="56" fill="#D99A3A" stroke="#163A44"/>
+  <text x="636" y="116.5" font-size="12" fill="#10181C" text-anchor="middle" font-weight="600">matching</text>
+  <text x="636" y="131.5" font-size="12" fill="#10181C" text-anchor="middle">queues it until a poll takes it</text>
+</g>
+<line x1="204" y1="120" x2="252" y2="120" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="260,120 252,124 252,116" fill="#163A44"/>
+<text x="232" y="114" font-size="11" fill="#163A44" text-anchor="middle">schedule</text>
+<line x1="440" y1="120" x2="488" y2="120" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="496,120 488,124 488,116" fill="#163A44"/>
+<polyline points="636,148 636,172 114,172" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<line x1="114" y1="172" x2="114" y2="156" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="114,148 118,156 110,156" fill="#163A44"/>
+<text x="250" y="188" font-size="11" fill="#163A44">the worker&#39;s poll: the wait is activity schedule-to-start</text>
+<text x="24" y="222" font-size="12" fill="#163A44" font-weight="600">server 1.32.1, eager</text>
+<g aria-label="the worker, completes a workflow task">
+  <rect x="24" y="234" width="180" height="56" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="114" y="258.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">the worker</text>
+  <text x="114" y="273.5" font-size="12" fill="#163A44" text-anchor="middle">completes a workflow task</text>
+</g>
+<g aria-label="history, writes the activity">
+  <rect x="260" y="234" width="180" height="56" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="350" y="258.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">history</text>
+  <text x="350" y="273.5" font-size="12" fill="#163A44" text-anchor="middle">writes the activity</text>
+</g>
+<g aria-label="matching, never sees it">
+  <rect x="496" y="234" width="280" height="56" fill="#EEF3F2" stroke="#163A44" stroke-dasharray="4 3"/>
+  <text x="636" y="258.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">matching</text>
+  <text x="636" y="273.5" font-size="12" fill="#163A44" text-anchor="middle">never sees it</text>
+</g>
+<line x1="204" y1="262" x2="252" y2="262" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="260,262 252,266 252,258" fill="#163A44"/>
+<text x="232" y="256" font-size="11" fill="#163A44" text-anchor="middle">schedule</text>
+<polyline points="350,290 350,314 114,314" fill="none" stroke="#5FB3BF" stroke-width="1.5"/>
+<line x1="114" y1="314" x2="114" y2="298" fill="none" stroke="#5FB3BF" stroke-width="1.5"/>
+<polygon points="114,290 118,298 110,298" fill="#5FB3BF"/>
+<text x="130" y="330" font-size="11" fill="#163A44">in the reply: the worker starts it at once, no wait recorded</text>
+<text x="24" y="368" font-size="12" fill="#163A44" font-weight="600">The readings on the lab host</text>
+<g aria-label="the readings by release">
+  <text x="400" y="391" font-size="11" fill="#163A44" font-weight="600">server 1.31.0</text>
+  <text x="595.52" y="391" font-size="11" fill="#163A44" font-weight="600">server 1.32.1</text>
+  <line x1="24" y1="398" x2="776" y2="398" fill="none" stroke="#CFE3E4"/>
+  <text x="28" y="413" font-size="11" fill="#163A44">activity schedule-to-start p99, boot 1&#39;s 6 loads</text>
+  <text x="400" y="413" font-size="11" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">9.984 to 9.993 ms</text>
+  <text x="595.52" y="413" font-size="11" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">none recorded, 3 of 3</text>
+  <line x1="24" y1="420" x2="776" y2="420" fill="none" stroke="#CFE3E4"/>
+  <text x="28" y="435" font-size="11" fill="#163A44">the same, the arm&#39;s 4 A/B gates</text>
+  <text x="400" y="435" font-size="11" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">9.984 to 10.526 ms</text>
+  <text x="595.52" y="435" font-size="11" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">none recorded, 4 of 4</text>
+  <line x1="24" y1="442" x2="776" y2="442" fill="none" stroke="#CFE3E4"/>
+  <text x="28" y="457" font-size="11" fill="#163A44">workflow end-to-end p95, boot 1&#39;s loads</text>
+  <text x="400" y="457" font-size="11" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">49.62 to 49.898 ms</text>
+  <text x="595.52" y="457" font-size="11" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">48.862 to 48.909 ms</text>
+  <line x1="24" y1="464" x2="776" y2="464" fill="none" stroke="#CFE3E4"/>
+  <text x="28" y="479" font-size="11" fill="#163A44">the same, the A/B gates</text>
+  <text x="400" y="479" font-size="11" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">49.264 to 49.326 ms</text>
+  <text x="595.52" y="479" font-size="11" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">48.893 to 48.951 ms</text>
+  <line x1="24" y1="486" x2="776" y2="486" fill="none" stroke="#CFE3E4"/>
+  <text x="28" y="501" font-size="11" fill="#163A44">d, end-to-end p95, the A/B gates</text>
+  <text x="595.52" y="501" font-size="11" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">-0.417 to -0.327 ms</text>
+</g>
+</svg>

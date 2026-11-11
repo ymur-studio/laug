@@ -1,0 +1,7 @@
+apiVersion: 1
+providers:
+  - name: laug
+    folder: laug
+    type: file
+    options:
+      path: /etc/grafana/provisioning/dashboards/boards

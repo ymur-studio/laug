@@ -1,0 +1,32 @@
+# The orchestrator beside the cells: the dev server's ports and state (cmd/laug/constants.go:42-46; cmd/laug/doc.go:617-
+# 630: its four ports pinned, since the CLI's own and the SDK's default, 7233, is block 0's cell frontend during a gate;
+# state in orchestrator/run/dev.db), the worker (cmd/laug/doc.go:632-637: the queue orchestrator/run/queue names, the
+# identity laug-worker@<commit>), the pool's listener (cmd/laug/doc.go:113), and a cell's ports by block
+# (cells/compose/cell.yml:8-10: 7233, 8080, 9090, 3000, 8474 on 127.0.0.1; block N adds 10N).
+name orchestrator
+size 800 470
+title | The orchestrator beside the cells it judges: its own dev server on 7400 to 7402 and 8400
+sub | One host during a workflow gate: laug orchestrator server and worker, laug pool serve, the gate's cells
+desc | Left, the gate's own Temporal: laug orchestrator server runs a dev server on 127.0.0.1:7400, its HTTP, metrics
+desc | and UI ports pinned to 7401, 7402 and 8400, its state one SQLite file; laug orchestrator worker polls it on this
+desc | checkout's task queue, as laug-worker@<commit>, and runs gate/step.sh a step at a time, which leases cells from
+desc | laug pool serve on 127.0.0.1:7700. Right, the cells the gate leased, each a Temporal deployment whose ports move
+desc | by 10 a block. Below, the dashed box and its dashed arrow, the trap the pinned ports avoid: the CLI's and the
+desc | SDK's default address, 7233, is block 0's cell frontend during a gate.
+source cmd/laug/constants.go
+source cmd/laug/doc.go
+source cells/compose/cell.yml
+region 16 70 384 286 | the gate's history: the orchestrator
+box dev 32 100 352 90 mono | laug orchestrator server | temporal server start-dev
+  | 127.0.0.1:7400; HTTP 7401, metrics 7402 | UI 8400; orchestrator/run/dev.db
+box worker 32 246 352 90 mono | laug orchestrator worker | laug-worker@<commit> | queue: orchestrator/run/queue
+  | runs gate/step.sh, a step at a time
+arrow worker dev | polls 127.0.0.1:7400
+box pool 440 100 336 56 mono | laug pool serve | 127.0.0.1:7700
+region 424 196 368 160 | the gate's cells: block b adds 10b
+box cell0 440 230 160 98 mono | block 0 | frontend 7233 | UI 8080 | Prometheus 9090
+box cell1 616 230 160 98 mono | block 1 | frontend 7243 | UI 8090 | Prometheus 9100
+path 384,270 412,270 412,128 440,128 head at=440,178 | its steps lease cells from the pool
+box default 32 384 352 56 fill=steam stroke=ember dash=4,3 | a client given no address
+  | the CLI's and the SDK's default: 7233
+arrow default cell0 colour=ember dash=4,3 at=440,378 | block 0's frontend during a gate

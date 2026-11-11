@@ -1,0 +1,143 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="396" viewBox="0 0 800 396" role="img"
+    aria-labelledby="staleness-title staleness-desc" font-family="Inter, system-ui, sans-serif">
+<title id="staleness-title">The store read the gauge gone 2.5 s after the cell; without staleness tracking, 294.7
+    s</title>
+<desc id="staleness-desc">Two lanes, each a fake cell test of make obs-test in boot 4: a canned exposition serves
+    numshards_gauge 512 to a Prometheus standing in for the cell&#39;s, which laug&#39;s store federates; then
+    numshards_gauge leaves the exposition, the solid line. Across, seconds from that moment. Each row is
+    kill-history&#39;s signal, faults/catalog.yaml&#39;s (512 - sum(numshards_gauge{job=&quot;temporal-history&quot;}))
+    or vector(512), read on the cell&#39;s Prometheus and in the store, its segments named by their reading: 0 missing
+    while the gauge serves 512; 512 missing once no sample of it is left. The top lane is TestFakeCellInTheStore, the
+    store&#39;s config the stack&#39;s, track_timestamps_staleness: true (_obs/prometheus.yml); the gauge came back at
+    the dashed line. The bottom lane is TestFakeCellStalenessControl, the same config with track_timestamps_staleness:
+    false (_obs/follow/fakecell_test.go): the store kept the gauge&#39;s last sample and read 0, drawn faint from the
+    cell&#39;s 512 on, until the diamond, its first read of 512. Each time is the tests&#39; own, to 0.1 s. Sources:
+    _obs/follow/fakecell_test.go, _obs/prometheus.yml, docs/tables/fig-staleness.jsonl, docs/tables/gates.jsonl,
+    faults/catalog.yaml.</desc>
+<rect x="0" y="0" width="800" height="396" fill="#EEF3F2"/>
+<text x="24" y="30" font-size="14" fill="#163A44"
+    font-weight="600">The store read the gauge gone 2.5 s after the cell; without staleness tracking, 294.7 s</text>
+<text x="24" y="50" font-size="12"
+    fill="#163A44">make obs-test&#39;s fake cell on the lab host, an m8i.8xlarge: kill-history&#39;s signal on the cell and in the store</text>
+<text x="24" y="102" font-size="11" fill="#163A44"
+    font-weight="600">TestFakeCellInTheStore, 340.82 s: the stack&#39;s config, track_timestamps_staleness: true</text>
+<line x1="236" y1="106" x2="236" y2="160" fill="none" stroke="#CFE3E4"/>
+<line x1="290" y1="106" x2="290" y2="160" fill="none" stroke="#CFE3E4"/>
+<line x1="344" y1="106" x2="344" y2="160" fill="none" stroke="#CFE3E4"/>
+<line x1="398" y1="106" x2="398" y2="160" fill="none" stroke="#CFE3E4"/>
+<line x1="452" y1="106" x2="452" y2="160" fill="none" stroke="#CFE3E4"/>
+<line x1="506" y1="106" x2="506" y2="160" fill="none" stroke="#CFE3E4"/>
+<line x1="560" y1="106" x2="560" y2="160" fill="none" stroke="#CFE3E4"/>
+<line x1="614" y1="106" x2="614" y2="160" fill="none" stroke="#CFE3E4"/>
+<line x1="668" y1="106" x2="668" y2="160" fill="none" stroke="#CFE3E4"/>
+<line x1="722" y1="106" x2="722" y2="160" fill="none" stroke="#CFE3E4"/>
+<line x1="776" y1="106" x2="776" y2="160" fill="none" stroke="#CFE3E4"/>
+<text x="24" y="174" font-size="10"
+    fill="#163A44">512 missing on the cell at +2.5 s, in the store at +5.0 s, 2.5 s after; the store read 512 at each of its 235 reads to +240.6 s</text>
+<text x="24" y="187" font-size="10"
+    fill="#163A44">the gauge back at +245 s: 0 on the cell 2.5 s after it, in the store 5.0 s after it, 2.5 s after the cell</text>
+<g aria-label="the stack&#39;s config">
+  <text x="228" y="125" font-size="11" fill="#163A44" text-anchor="end">the cell&#39;s Prometheus</text>
+  <rect x="236" y="112" width="4.5" height="18" fill="#CFE3E4" stroke="#163A44"
+      stroke-width="0.5"><title>0 missing, +0 to +2.5 s</title></rect>
+  <rect x="240.5" y="112" width="441" height="18" fill="#D99A3A" stroke="#163A44"
+      stroke-width="0.5"><title>512 missing, +2.5 to +247.5 s</title></rect>
+  <text x="244.5" y="125" font-size="11" fill="#163A44">512 missing</text>
+  <rect x="681.5" y="112" width="4.5" height="18" fill="#CFE3E4" stroke="#163A44"
+      stroke-width="0.5"><title>0 missing, +247.5 to +250 s</title></rect>
+  <text x="228" y="151" font-size="11" fill="#163A44" text-anchor="end">the store</text>
+  <rect x="236" y="138" width="9" height="18" fill="#CFE3E4" stroke="#163A44"
+      stroke-width="0.5"><title>0 missing, +0 to +5 s</title></rect>
+  <rect x="245" y="138" width="441" height="18" fill="#D99A3A" stroke="#163A44"
+      stroke-width="0.5"><title>512 missing, +5 to +250 s</title></rect>
+  <text x="249" y="151" font-size="11" fill="#163A44">512 missing</text>
+  <line x1="236" y1="106" x2="236" y2="162" fill="none" stroke="#10181C"
+      stroke-width="1.5"><title>numshards_gauge left the exposition, +0 s</title></line>
+  <line x1="677" y1="106" x2="677" y2="162" fill="none" stroke="#10181C" stroke-width="1.5" stroke-dasharray="4
+      3"><title>numshards_gauge back, +245 s</title></line>
+</g>
+<text x="24" y="218" font-size="11" fill="#163A44"
+    font-weight="600">TestFakeCellStalenessControl, 313.25 s: the negative control, track_timestamps_staleness: false</text>
+<line x1="236" y1="222" x2="236" y2="276" fill="none" stroke="#CFE3E4"/>
+<line x1="290" y1="222" x2="290" y2="276" fill="none" stroke="#CFE3E4"/>
+<line x1="344" y1="222" x2="344" y2="276" fill="none" stroke="#CFE3E4"/>
+<line x1="398" y1="222" x2="398" y2="276" fill="none" stroke="#CFE3E4"/>
+<line x1="452" y1="222" x2="452" y2="276" fill="none" stroke="#CFE3E4"/>
+<line x1="506" y1="222" x2="506" y2="276" fill="none" stroke="#CFE3E4"/>
+<line x1="560" y1="222" x2="560" y2="276" fill="none" stroke="#CFE3E4"/>
+<line x1="614" y1="222" x2="614" y2="276" fill="none" stroke="#CFE3E4"/>
+<line x1="668" y1="222" x2="668" y2="276" fill="none" stroke="#CFE3E4"/>
+<line x1="722" y1="222" x2="722" y2="276" fill="none" stroke="#CFE3E4"/>
+<line x1="776" y1="222" x2="776" y2="276" fill="none" stroke="#CFE3E4"/>
+<text x="24" y="290" font-size="10"
+    fill="#163A44">512 missing on the cell at +3.0 s; the store read 0, recovered, at each of its 297 reads to +296.7 s</text>
+<text x="24" y="303" font-size="10"
+    fill="#163A44">and first read 512 at +297.7 s, when the 5 m lookback let the last sample go</text>
+<g aria-label="the negative control">
+  <text x="228" y="241" font-size="11" fill="#163A44" text-anchor="end">the cell&#39;s Prometheus</text>
+  <rect x="236" y="228" width="5.4" height="18" fill="#CFE3E4" stroke="#163A44"
+      stroke-width="0.5"><title>0 missing, +0 to +3 s</title></rect>
+  <rect x="241.4" y="228" width="530.46" height="18" fill="#D99A3A" stroke="#163A44"
+      stroke-width="0.5"><title>512 missing, +3 to +297.7 s</title></rect>
+  <text x="245.4" y="241" font-size="11" fill="#163A44">512 missing</text>
+  <text x="228" y="267" font-size="11" fill="#163A44" text-anchor="end">the store</text>
+  <rect x="236" y="254" width="5.4" height="18" fill="#CFE3E4" stroke="#163A44"
+      stroke-width="0.5"><title>0 missing, +0 to +3 s</title></rect>
+  <rect x="241.4" y="254" width="530.46" height="18" fill="#CFE3E4" fill-opacity="0.45" stroke="#163A44"
+      stroke-width="0.5" stroke-dasharray="3 2"><title>0, the last sample kept, +3 to +297.7 s</title></rect>
+  <text x="245.4" y="267" font-size="11" fill="#163A44">0, the last sample kept</text>
+  <line x1="236" y1="222" x2="236" y2="278" fill="none" stroke="#10181C"
+      stroke-width="1.5"><title>numshards_gauge left the exposition again, 340.0 s after it first left</title></line>
+  <polygon points="771.86,244 775.86,249 771.86,254 767.86,249"
+      fill="#163A44"><title>the store&#39;s first read of 512, +297.7 s</title></polygon>
+</g>
+<line x1="236" y1="322" x2="776" y2="322" fill="none" stroke="#10181C"/>
+<line x1="236" y1="322" x2="236" y2="326" fill="none" stroke="#10181C"/>
+<text x="236" y="338" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+<line x1="290" y1="322" x2="290" y2="326" fill="none" stroke="#10181C"/>
+<text x="290" y="338" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">30</text>
+<line x1="344" y1="322" x2="344" y2="326" fill="none" stroke="#10181C"/>
+<text x="344" y="338" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">60</text>
+<line x1="398" y1="322" x2="398" y2="326" fill="none" stroke="#10181C"/>
+<text x="398" y="338" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">90</text>
+<line x1="452" y1="322" x2="452" y2="326" fill="none" stroke="#10181C"/>
+<text x="452" y="338" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">120</text>
+<line x1="506" y1="322" x2="506" y2="326" fill="none" stroke="#10181C"/>
+<text x="506" y="338" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">150</text>
+<line x1="560" y1="322" x2="560" y2="326" fill="none" stroke="#10181C"/>
+<text x="560" y="338" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">180</text>
+<line x1="614" y1="322" x2="614" y2="326" fill="none" stroke="#10181C"/>
+<text x="614" y="338" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">210</text>
+<line x1="668" y1="322" x2="668" y2="326" fill="none" stroke="#10181C"/>
+<text x="668" y="338" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">240</text>
+<line x1="722" y1="322" x2="722" y2="326" fill="none" stroke="#10181C"/>
+<text x="722" y="338" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">270</text>
+<line x1="776" y1="322" x2="776" y2="326" fill="none" stroke="#10181C"/>
+<text x="776" y="338" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">300</text>
+<text x="506" y="354" font-size="12" fill="#163A44"
+    text-anchor="middle">seconds after numshards_gauge left the exposition</text>
+<rect x="24" y="369" width="18" height="10" fill="#CFE3E4"/>
+<text x="48" y="378" font-size="11" fill="#163A44">0 missing</text>
+<rect x="121.44" y="369" width="18" height="10" fill="#D99A3A"/>
+<text x="145.44" y="378" font-size="11" fill="#163A44">512 missing</text>
+<rect x="231.2" y="369" width="18" height="10" fill="#CFE3E4" fill-opacity="0.45" stroke="#163A44" stroke-width="0.5"
+    stroke-dasharray="3 2"/>
+<text x="255.2" y="378" font-size="11" fill="#163A44">0 from the last sample</text>
+<line x1="408.72" y1="374" x2="426.72" y2="374" fill="none" stroke="#10181C" stroke-width="1.5"/>
+<text x="432.72" y="378" font-size="11" fill="#163A44">gauge left</text>
+<line x1="512.32" y1="374" x2="530.32" y2="374" fill="none" stroke="#10181C" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="536.32" y="378" font-size="11" fill="#163A44">gauge back</text>
+<polygon points="624.92,369 628.92,374 624.92,379 620.92,374" fill="#163A44"/>
+<text x="639.92" y="378" font-size="11" fill="#163A44">first 512</text>
+</svg>

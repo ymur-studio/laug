@@ -1,0 +1,147 @@
+{
+  "run_id": "g20261014-140000-kh",
+  "fault": "kill-history",
+  "cell": "9c0d1e2f",
+  "address": "127.0.0.1:7253",
+  "server_tag": "1.31.0",
+  "backend": "compose",
+  "firecracker_version": null,
+  "cache_type": null,
+  "host_virtualized": true,
+  "scenario": "workflow_with_single_noop_activity",
+  "rate": 20,
+  "task_queue": "omes-g20261014-140000-kh",
+  "signal": "custom",
+  "signal_max": 0,
+  "signal_peak": 512,
+  "thresholds_release": null,
+  "thresholds_note": "load/steady-state.yaml, the base (1.31.0 baselines), unchanged: no load/releases/1.31.yaml for server 1.31.0",
+  "overrides_applied": [],
+  "not_produced": {
+    "before": [],
+    "after": []
+  },
+  "inject_at": "1791986640",
+  "landed_at": "1791986646",
+  "remove_at": "1791986766",
+  "recovered_at": "1791986771",
+  "time_to_recover_s": "5",
+  "remove_wait_s": 0,
+  "history_shards_ready_s": 1.3,
+  "settle_s": 30,
+  "after_s": 90,
+  "after_start": "1791986803",
+  "after_end": "1791986897",
+  "before": {
+    "workflow_task_schedule_to_start_p99_ms": 49.48936170212766,
+    "activity_schedule_to_start_p99_ms": 40.01000000000003,
+    "workflow_end_to_end_p95_ms": 185.27243589743588,
+    "persistence_latency_p99_ms": 19.526546341516948,
+    "service_error_rate": 0,
+    "frontend_request_p99_ms": 45.63266331658299,
+    "workflows_completed": 1100,
+    "counter_resets": 0,
+    "window_seconds": 60
+  },
+  "during": {
+    "workflow_task_schedule_to_start_p99_ms": null,
+    "activity_schedule_to_start_p99_ms": null,
+    "workflow_end_to_end_p95_ms": null,
+    "persistence_latency_p99_ms": 1.9120941132579385,
+    "service_error_rate": 0.8969370373482053,
+    "frontend_request_p99_ms": 536.9230745930525,
+    "workflows_completed": 0,
+    "counter_resets": 0,
+    "window_seconds": 120
+  },
+  "drain": {
+    "workflow_task_schedule_to_start_p99_ms": 48.28472061737337,
+    "activity_schedule_to_start_p99_ms": 19.887035828097936,
+    "workflow_end_to_end_p95_ms": 98.533425009968,
+    "persistence_latency_p99_ms": 16.73238262399308,
+    "service_error_rate": 0.007379505852709562,
+    "frontend_request_p99_ms": 397.731343283582,
+    "workflows_completed": 523,
+    "counter_resets": 0,
+    "window_seconds": 37
+  },
+  "after": {
+    "workflow_task_schedule_to_start_p99_ms": 42.87985611510792,
+    "activity_schedule_to_start_p99_ms": 19.95898277276456,
+    "workflow_end_to_end_p95_ms": 98.06547619047619,
+    "persistence_latency_p99_ms": 14.6576543123248,
+    "service_error_rate": 0,
+    "frontend_request_p99_ms": 19.97585788035227,
+    "workflows_completed": 1800,
+    "counter_resets": 0,
+    "window_seconds": 94
+  },
+  "iterations_failed": {
+    "before": 0,
+    "during": 540,
+    "drain": 50,
+    "after": 0,
+    "late": 0,
+    "unplaced": 0,
+    "not_found": 0,
+    "total": 590
+  },
+  "sweep": {
+    "Completed": 3582
+  },
+  "sweep_cutoff": "2026-10-14T14:07:47Z",
+  "sweep_margin_s": 30,
+  "sweep_error": null,
+  "softasserts": {
+    "before": {
+      "temporal-frontend": 0,
+      "temporal-frontend2": 0,
+      "temporal-history": 0,
+      "temporal-matching": 0,
+      "temporal-worker": 0,
+      "first": []
+    },
+    "during": {
+      "temporal-frontend": 0,
+      "temporal-frontend2": 0,
+      "temporal-history": 0,
+      "temporal-matching": 0,
+      "temporal-worker": 0,
+      "first": []
+    },
+    "drain": {
+      "temporal-frontend": 0,
+      "temporal-frontend2": 0,
+      "temporal-history": 0,
+      "temporal-matching": 0,
+      "temporal-worker": 0,
+      "first": []
+    },
+    "after": {
+      "temporal-frontend": 0,
+      "temporal-frontend2": 0,
+      "temporal-history": 0,
+      "temporal-matching": 0,
+      "temporal-worker": 0,
+      "first": []
+    }
+  },
+  "pool_quiet_wait_s": 0,
+  "pool_quiet_bound_s": 0,
+  "pool_busy": {
+    "before": 0,
+    "during": 0,
+    "drain": 0,
+    "after": 0
+  },
+  "signal_base": null,
+  "recover": "signal",
+  "mechanisms": [],
+  "shards_acquired": null,
+  "cleanup_error": null,
+  "inject_error": null,
+  "remove_error": null,
+  "self_test": null,
+  "result": "ADVANCE",
+  "reason": ""
+}

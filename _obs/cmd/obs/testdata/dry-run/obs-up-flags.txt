@@ -1,0 +1,6 @@
+# make: make --no-print-directory -n obs-up ONLY=prometheus OBS_CELLSTAT=0
+# obs: bin/obs up -only prometheus -no-cellstat
+# lease: absent
+# passes: ONLY=prometheus OBS_CELLSTAT=0
+# compare: line obs/obs.sh
+obs/obs.sh up

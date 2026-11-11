@@ -1,0 +1,7 @@
+# make: make --no-print-directory -n gate-compare B=g20261018-080919
+# laug: laug gate compare g20261018-080919
+# lease: absent
+# compare: refused
+[[ '' =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ && 'g20261018-080919' =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] \
+  || { echo "laug · make gate-compare A=<id> B=<id>: name two gate runs in "'gate/results/' >&2; exit 2; }
+GATE_RESULTS='gate/results' gate/compare.sh '' 'g20261018-080919'

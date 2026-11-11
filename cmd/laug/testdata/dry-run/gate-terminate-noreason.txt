@@ -1,0 +1,8 @@
+# make: make --no-print-directory -n orchestrator-terminate WF=gate-g20261016-120000
+# laug: laug gate terminate g20261016-120000
+# lease: absent
+# compare: refused
+[[ 'gate-g20261016-120000' =~ ^gate-g[0-9]{8}-[0-9]{6}(-[0-9]+)?$ ]] || { echo "laug · make orchestrator-terminate WF=gate-<gate id> REASON=<why>: WF is a gate's workflow id, gate-<gate id>" >&2; exit 2; }
+re='^[A-Za-z0-9][A-Za-z0-9 ,.;:()/_=-]*$'; [[ '' =~ $re ]] || { echo "laug · make orchestrator-terminate WF=gate-g20261016-120000 REASON=<why>: say why, in letters, digits, blanks and ,.;:()/_=-; it goes into history as 'laug: <why>'" >&2; exit 2; }
+[[ '127.0.0.1:7400default' != *[\'[:space:]]* ]] || { echo "laug · make orchestrator-terminate: ORCH_ADDRESS and ORCH_NAMESPACE take no quote, blank or newline" >&2; exit 2; }
+temporal workflow terminate --address '127.0.0.1:7400' --namespace 'default' --env default --identity laug-cli --disable-config-file --disable-config-env --workflow-id 'gate-g20261016-120000' --reason 'laug: '

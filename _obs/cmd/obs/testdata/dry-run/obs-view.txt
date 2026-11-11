@@ -1,0 +1,6 @@
+# make: make --no-print-directory -n obs-view PACK=out/x.tar.gz
+# obs: bin/obs view out/x.tar.gz
+# lease: absent
+# passes: PACK=out/x.tar.gz
+# compare: line obs/obs.sh
+obs/obs.sh view

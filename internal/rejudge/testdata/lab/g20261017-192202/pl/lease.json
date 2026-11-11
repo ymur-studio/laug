@@ -1,0 +1,16 @@
+{
+  "id": "a19afc99",
+  "address": "127.0.0.1:7253",
+  "ui": "http://127.0.0.1:8100",
+  "grafana": "http://127.0.0.1:3020",
+  "prometheus": "http://127.0.0.1:9110",
+  "toxiproxy": "http://127.0.0.1:8494",
+  "project": "laug-a19afc99",
+  "dynconfig": "cells/run/laug-a19afc99/dynamicconfig/laug.yaml",
+  "server_tag": "1.31.0",
+  "block": 2,
+  "state": "leased",
+  "requester": "gate-g20261017-192202-pl",
+  "leased_at": "2026-10-17T19:22:55.025197658Z",
+  "expires_at": "2026-10-17T19:42:55.025197658Z"
+}

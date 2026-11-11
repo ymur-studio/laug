@@ -1,0 +1,8 @@
+# make: make --no-print-directory -n gate-rejudge
+# laug: laug gate rejudge
+# lease: absent
+# compare: refused
+[[ '' =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] \
+  || { echo "laug · make gate-rejudge GATE=<id>: name a gate run in "'gate/results/'", or GATE=all for every one" >&2; exit 2; }
+if [[ '' == all ]]; then GATE_RESULTS='gate/results' gate/compare.sh --rejudge-all; \
+  else GATE_RESULTS='gate/results' gate/compare.sh --rejudge ''; fi

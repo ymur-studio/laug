@@ -1,0 +1,171 @@
+{"id":"D1-1.txt/0001","value":"$ bash -c sync && echo 3 > \"$1\" && t=$EPOCHREALTIME && cp --reflink=never \"$2\" \"$3\" && echo \"cp $t $EPOCHREALTIME\"; e=$?; rm -f \"$3\"; exit \"$e\" d1 /proc/sys/vm/drop_caches /opt/fc/disks/golden.ext4 /opt/fc/copy-plain.ext4","from":"cells/results/2026-10-29-boot9/steps/D1-1.txt:1"}
+{"id":"D1-1.txt/0002","value":"cp 1793248079.014278 1793248125.807580","from":"cells/results/2026-10-29-boot9/steps/D1-1.txt:2"}
+{"id":"D1-1.txt/0003","value":"--- exit 0 in 48.2 s","from":"cells/results/2026-10-29-boot9/steps/D1-1.txt:3"}
+{"id":"D1-2.txt/0001","value":"$ bash -c sync && echo 3 > \"$1\" && t=$EPOCHREALTIME && cp --reflink=never \"$2\" \"$3\" && echo \"cp $t $EPOCHREALTIME\"; e=$?; rm -f \"$3\"; exit \"$e\" d1 /proc/sys/vm/drop_caches /opt/fc/disks/golden.ext4 /opt/fc/copy-plain.ext4","from":"cells/results/2026-10-29-boot9/steps/D1-2.txt:1"}
+{"id":"D1-2.txt/0002","value":"cp 1793248126.226026 1793248173.476834","from":"cells/results/2026-10-29-boot9/steps/D1-2.txt:2"}
+{"id":"D1-2.txt/0003","value":"--- exit 0 in 47.7 s","from":"cells/results/2026-10-29-boot9/steps/D1-2.txt:3"}
+{"id":"D1-3.txt/0001","value":"$ bash -c sync && echo 3 > \"$1\" && t=$EPOCHREALTIME && cp --reflink=never \"$2\" \"$3\" && echo \"cp $t $EPOCHREALTIME\"; e=$?; rm -f \"$3\"; exit \"$e\" d1 /proc/sys/vm/drop_caches /opt/fc/disks/golden.ext4 /opt/fc/copy-plain.ext4","from":"cells/results/2026-10-29-boot9/steps/D1-3.txt:1"}
+{"id":"D1-3.txt/0002","value":"cp 1793248173.935620 1793248221.083905","from":"cells/results/2026-10-29-boot9/steps/D1-3.txt:2"}
+{"id":"D1-3.txt/0003","value":"--- exit 0 in 47.6 s","from":"cells/results/2026-10-29-boot9/steps/D1-3.txt:3"}
+{"id":"D2-1.txt/0001","value":"$ bash -c t=$EPOCHREALTIME && cp --reflink=always \"$1\" \"$2\" && echo \"cp $t $EPOCHREALTIME\"; e=$?; rm -f \"$2\"; exit \"$e\" d2 /opt/fc/disks/golden.ext4 /opt/fc/disks/copy-reflink.ext4","from":"cells/results/2026-10-29-boot9/steps/D2-1.txt:1"}
+{"id":"D2-1.txt/0002","value":"cp 1793248221.449913 1793248221.457149","from":"cells/results/2026-10-29-boot9/steps/D2-1.txt:2"}
+{"id":"D2-1.txt/0003","value":"--- exit 0 in 0.0 s","from":"cells/results/2026-10-29-boot9/steps/D2-1.txt:3"}
+{"id":"D2-2.txt/0001","value":"$ bash -c t=$EPOCHREALTIME && cp --reflink=always \"$1\" \"$2\" && echo \"cp $t $EPOCHREALTIME\"; e=$?; rm -f \"$2\"; exit \"$e\" d2 /opt/fc/disks/golden.ext4 /opt/fc/disks/copy-reflink.ext4","from":"cells/results/2026-10-29-boot9/steps/D2-2.txt:1"}
+{"id":"D2-2.txt/0002","value":"cp 1793248221.474352 1793248221.477716","from":"cells/results/2026-10-29-boot9/steps/D2-2.txt:2"}
+{"id":"D2-2.txt/0003","value":"--- exit 0 in 0.0 s","from":"cells/results/2026-10-29-boot9/steps/D2-2.txt:3"}
+{"id":"D2-3.txt/0001","value":"$ bash -c t=$EPOCHREALTIME && cp --reflink=always \"$1\" \"$2\" && echo \"cp $t $EPOCHREALTIME\"; e=$?; rm -f \"$2\"; exit \"$e\" d2 /opt/fc/disks/golden.ext4 /opt/fc/disks/copy-reflink.ext4","from":"cells/results/2026-10-29-boot9/steps/D2-3.txt:1"}
+{"id":"D2-3.txt/0002","value":"cp 1793248221.494611 1793248221.497813","from":"cells/results/2026-10-29-boot9/steps/D2-3.txt:2"}
+{"id":"D2-3.txt/0003","value":"--- exit 0 in 0.0 s","from":"cells/results/2026-10-29-boot9/steps/D2-3.txt:3"}
+{"id":"K1.txt/0004","value":"disk: copy of the image, 22.14 s","from":"cells/results/2026-10-29-boot9/steps/K1.txt:4"}
+{"id":"K1.txt/0005","value":"boot to ssh 2.87 s","from":"cells/results/2026-10-29-boot9/steps/K1.txt:5"}
+{"id":"K1.txt/0006","value":"dockerd ready 3.55 s","from":"cells/results/2026-10-29-boot9/steps/K1.txt:6"}
+{"id":"K1.txt/0007","value":"compose up returned 12.60 s; from compose up:","from":"cells/results/2026-10-29-boot9/steps/K1.txt:7"}
+{"id":"K1.txt/0008","value":"cluster health 12.90 s, namespace 24.03 s, shards owned 13.60 s, HealthCheck done 27.36 s, attempt 2","from":"cells/results/2026-10-29-boot9/steps/K1.txt:8"}
+{"id":"K1.txt/0011","value":"froze 11 containers of project laug in 0.31 s","from":"cells/results/2026-10-29-boot9/steps/K1.txt:11"}
+{"id":"K1.txt/0012","value":"paused 0.01 s","from":"cells/results/2026-10-29-boot9/steps/K1.txt:12"}
+{"id":"K1.txt/0013","value":"snapshot/create 33.77 s","from":"cells/results/2026-10-29-boot9/steps/K1.txt:13"}
+{"id":"K1.txt/0014","value":"laug · snapshot in /opt/fc/snap: vm.mem 4.1G, vm.snap 68K; golden disk 5.1G; cache_type Unsafe; io_engine Sync; frozen","from":"cells/results/2026-10-29-boot9/steps/K1.txt:14"}
+{"id":"K1.txt/0018","value":"--- exit 0 in 108.1 s","from":"cells/results/2026-10-29-boot9/steps/K1.txt:18"}
+{"id":"K2.txt/0004","value":"disk: copy of the image, 37.04 s","from":"cells/results/2026-10-29-boot9/steps/K2.txt:4"}
+{"id":"K2.txt/0005","value":"boot to ssh 2.86 s","from":"cells/results/2026-10-29-boot9/steps/K2.txt:5"}
+{"id":"K2.txt/0006","value":"dockerd ready 3.54 s","from":"cells/results/2026-10-29-boot9/steps/K2.txt:6"}
+{"id":"K2.txt/0007","value":"compose up returned 12.65 s; from compose up:","from":"cells/results/2026-10-29-boot9/steps/K2.txt:7"}
+{"id":"K2.txt/0008","value":"cluster health 12.70 s, namespace 24.29 s, shards owned 13.17 s, HealthCheck done 25.51 s, attempt 1","from":"cells/results/2026-10-29-boot9/steps/K2.txt:8"}
+{"id":"K2.txt/0011","value":"froze 11 containers of project laug in 0.30 s","from":"cells/results/2026-10-29-boot9/steps/K2.txt:11"}
+{"id":"K2.txt/0012","value":"paused 0.01 s","from":"cells/results/2026-10-29-boot9/steps/K2.txt:12"}
+{"id":"K2.txt/0013","value":"snapshot/create 33.92 s","from":"cells/results/2026-10-29-boot9/steps/K2.txt:13"}
+{"id":"K2.txt/0014","value":"laug · snapshot in /opt/fc/snap: vm.mem 4.1G, vm.snap 68K; golden disk 5.1G; cache_type Unsafe; io_engine Sync; frozen","from":"cells/results/2026-10-29-boot9/steps/K2.txt:14"}
+{"id":"K2.txt/0018","value":"--- exit 0 in 121.3 s","from":"cells/results/2026-10-29-boot9/steps/K2.txt:18"}
+{"id":"K3.txt/0004","value":"disk: copy of the image, 2.18 s","from":"cells/results/2026-10-29-boot9/steps/K3.txt:4"}
+{"id":"K3.txt/0005","value":"boot to ssh 2.89 s","from":"cells/results/2026-10-29-boot9/steps/K3.txt:5"}
+{"id":"K3.txt/0006","value":"dockerd ready 3.62 s","from":"cells/results/2026-10-29-boot9/steps/K3.txt:6"}
+{"id":"K3.txt/0007","value":"compose up returned 12.63 s; from compose up:","from":"cells/results/2026-10-29-boot9/steps/K3.txt:7"}
+{"id":"K3.txt/0008","value":"cluster health 12.67 s, namespace 24.15 s, shards owned 13.15 s, HealthCheck done 25.37 s, attempt 1","from":"cells/results/2026-10-29-boot9/steps/K3.txt:8"}
+{"id":"K3.txt/0011","value":"froze 11 containers of project laug in 0.29 s","from":"cells/results/2026-10-29-boot9/steps/K3.txt:11"}
+{"id":"K3.txt/0012","value":"paused 0.01 s","from":"cells/results/2026-10-29-boot9/steps/K3.txt:12"}
+{"id":"K3.txt/0013","value":"snapshot/create 33.63 s","from":"cells/results/2026-10-29-boot9/steps/K3.txt:13"}
+{"id":"K3.txt/0014","value":"laug · snapshot in /opt/fc/snap: vm.mem 4.1G, vm.snap 68K; golden disk 5.1G; cache_type Unsafe; io_engine Sync; frozen","from":"cells/results/2026-10-29-boot9/steps/K3.txt:14"}
+{"id":"K3.txt/0018","value":"--- exit 0 in 86.1 s","from":"cells/results/2026-10-29-boot9/steps/K3.txt:18"}
+{"id":"R1.txt/0004","value":"snapshot cache_type Unsafe","from":"cells/results/2026-10-29-boot9/steps/R1.txt:4"}
+{"id":"R1.txt/0005","value":"snapshot frozen true","from":"cells/results/2026-10-29-boot9/steps/R1.txt:5"}
+{"id":"R1.txt/0006","value":"=== restore 1 of 12","from":"cells/results/2026-10-29-boot9/steps/R1.txt:6"}
+{"id":"R1.txt/0007","value":"disk: reflink, 0.01 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:7"}
+{"id":"R1.txt/0008","value":"snapshot/load returned 0.01 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:8"}
+{"id":"R1.txt/0009","value":"ssh 0.41 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:9"}
+{"id":"R1.txt/0010","value":"guest clock behind host by 35.2 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:10"}
+{"id":"R1.txt/0011","value":"clock set 0.85 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:11"}
+{"id":"R1.txt/0012","value":"thawed 11 containers in 1.27 s, 2.35 s from snapshot/load","from":"cells/results/2026-10-29-boot9/steps/R1.txt:12"}
+{"id":"R1.txt/0013","value":"guest clock offset after set -0.114 s (round trip 0.214 s); from snapshot/load:","from":"cells/results/2026-10-29-boot9/steps/R1.txt:13"}
+{"id":"R1.txt/0014","value":"cluster health 2.42 s, namespace 2.47 s, shards owned 3.01 s, HealthCheck done 4.71 s, attempt 1","from":"cells/results/2026-10-29-boot9/steps/R1.txt:14"}
+{"id":"R1.txt/0015","value":"  health-1793248016784  completed 1543 ms  visible 61 ms  echo=laug sum=42 signal=go","from":"cells/results/2026-10-29-boot9/steps/R1.txt:15"}
+{"id":"R1.txt/0016","value":"=== restore 2 of 12","from":"cells/results/2026-10-29-boot9/steps/R1.txt:16"}
+{"id":"R1.txt/0017","value":"disk: reflink, 0.02 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:17"}
+{"id":"R1.txt/0018","value":"snapshot/load returned 0.01 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:18"}
+{"id":"R1.txt/0019","value":"ssh 0.39 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:19"}
+{"id":"R1.txt/0020","value":"guest clock behind host by 40.6 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:20"}
+{"id":"R1.txt/0021","value":"clock set 0.83 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:21"}
+{"id":"R1.txt/0022","value":"thawed 11 containers in 1.18 s, 2.23 s from snapshot/load","from":"cells/results/2026-10-29-boot9/steps/R1.txt:22"}
+{"id":"R1.txt/0023","value":"guest clock offset after set -0.102 s (round trip 0.215 s); from snapshot/load:","from":"cells/results/2026-10-29-boot9/steps/R1.txt:23"}
+{"id":"R1.txt/0024","value":"cluster health 2.36 s, namespace 2.41 s, shards owned 2.95 s, HealthCheck done 4.60 s, attempt 1","from":"cells/results/2026-10-29-boot9/steps/R1.txt:24"}
+{"id":"R1.txt/0025","value":"  health-1793248022176  completed 1518 ms  visible 33 ms  echo=laug sum=42 signal=go","from":"cells/results/2026-10-29-boot9/steps/R1.txt:25"}
+{"id":"R1.txt/0026","value":"=== restore 3 of 12","from":"cells/results/2026-10-29-boot9/steps/R1.txt:26"}
+{"id":"R1.txt/0027","value":"disk: reflink, 0.02 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:27"}
+{"id":"R1.txt/0028","value":"snapshot/load returned 0.01 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:28"}
+{"id":"R1.txt/0029","value":"ssh 0.40 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:29"}
+{"id":"R1.txt/0030","value":"guest clock behind host by 45.9 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:30"}
+{"id":"R1.txt/0031","value":"clock set 0.84 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:31"}
+{"id":"R1.txt/0032","value":"thawed 11 containers in 1.25 s, 2.30 s from snapshot/load","from":"cells/results/2026-10-29-boot9/steps/R1.txt:32"}
+{"id":"R1.txt/0033","value":"guest clock offset after set -0.116 s (round trip 0.205 s); from snapshot/load:","from":"cells/results/2026-10-29-boot9/steps/R1.txt:33"}
+{"id":"R1.txt/0034","value":"cluster health 2.38 s, namespace 2.42 s, shards owned 2.97 s, HealthCheck done 4.64 s, attempt 1","from":"cells/results/2026-10-29-boot9/steps/R1.txt:34"}
+{"id":"R1.txt/0035","value":"  health-1793248027527  completed 1530 ms  visible 48 ms  echo=laug sum=42 signal=go","from":"cells/results/2026-10-29-boot9/steps/R1.txt:35"}
+{"id":"R1.txt/0036","value":"=== restore 4 of 12","from":"cells/results/2026-10-29-boot9/steps/R1.txt:36"}
+{"id":"R1.txt/0037","value":"disk: reflink, 0.01 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:37"}
+{"id":"R1.txt/0038","value":"snapshot/load returned 0.01 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:38"}
+{"id":"R1.txt/0039","value":"ssh 0.40 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:39"}
+{"id":"R1.txt/0040","value":"guest clock behind host by 51.3 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:40"}
+{"id":"R1.txt/0041","value":"clock set 0.84 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:41"}
+{"id":"R1.txt/0042","value":"thawed 11 containers in 1.24 s, 2.30 s from snapshot/load","from":"cells/results/2026-10-29-boot9/steps/R1.txt:42"}
+{"id":"R1.txt/0043","value":"guest clock offset after set -0.099 s (round trip 0.216 s); from snapshot/load:","from":"cells/results/2026-10-29-boot9/steps/R1.txt:43"}
+{"id":"R1.txt/0044","value":"cluster health 2.39 s, namespace 2.45 s, shards owned 3.00 s, HealthCheck done 4.67 s, attempt 1","from":"cells/results/2026-10-29-boot9/steps/R1.txt:44"}
+{"id":"R1.txt/0045","value":"  health-1793248032935  completed 1533 ms  visible 45 ms  echo=laug sum=42 signal=go","from":"cells/results/2026-10-29-boot9/steps/R1.txt:45"}
+{"id":"R1.txt/0046","value":"=== restore 5 of 12","from":"cells/results/2026-10-29-boot9/steps/R1.txt:46"}
+{"id":"R1.txt/0047","value":"disk: reflink, 0.01 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:47"}
+{"id":"R1.txt/0048","value":"snapshot/load returned 0.01 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:48"}
+{"id":"R1.txt/0049","value":"ssh 0.39 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:49"}
+{"id":"R1.txt/0050","value":"guest clock behind host by 56.7 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:50"}
+{"id":"R1.txt/0051","value":"clock set 0.84 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:51"}
+{"id":"R1.txt/0052","value":"thawed 11 containers in 1.22 s, 2.29 s from snapshot/load","from":"cells/results/2026-10-29-boot9/steps/R1.txt:52"}
+{"id":"R1.txt/0053","value":"guest clock offset after set -0.111 s (round trip 0.223 s); from snapshot/load:","from":"cells/results/2026-10-29-boot9/steps/R1.txt:53"}
+{"id":"R1.txt/0054","value":"cluster health 2.38 s, namespace 2.44 s, shards owned 2.98 s, HealthCheck done 4.63 s, attempt 1","from":"cells/results/2026-10-29-boot9/steps/R1.txt:54"}
+{"id":"R1.txt/0055","value":"  health-1793248038336  completed 1506 ms  visible 44 ms  echo=laug sum=42 signal=go","from":"cells/results/2026-10-29-boot9/steps/R1.txt:55"}
+{"id":"R1.txt/0056","value":"=== restore 6 of 12","from":"cells/results/2026-10-29-boot9/steps/R1.txt:56"}
+{"id":"R1.txt/0057","value":"disk: reflink, 0.01 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:57"}
+{"id":"R1.txt/0058","value":"snapshot/load returned 0.01 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:58"}
+{"id":"R1.txt/0059","value":"ssh 0.40 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:59"}
+{"id":"R1.txt/0060","value":"guest clock behind host by 62.1 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:60"}
+{"id":"R1.txt/0061","value":"clock set 0.84 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:61"}
+{"id":"R1.txt/0062","value":"thawed 11 containers in 1.22 s, 2.28 s from snapshot/load","from":"cells/results/2026-10-29-boot9/steps/R1.txt:62"}
+{"id":"R1.txt/0063","value":"guest clock offset after set -0.111 s (round trip 0.208 s); from snapshot/load:","from":"cells/results/2026-10-29-boot9/steps/R1.txt:63"}
+{"id":"R1.txt/0064","value":"cluster health 2.37 s, namespace 2.43 s, shards owned 2.97 s, HealthCheck done 4.63 s, attempt 1","from":"cells/results/2026-10-29-boot9/steps/R1.txt:64"}
+{"id":"R1.txt/0065","value":"  health-1793248043679  completed 1528 ms  visible 43 ms  echo=laug sum=42 signal=go","from":"cells/results/2026-10-29-boot9/steps/R1.txt:65"}
+{"id":"R1.txt/0066","value":"=== restore 7 of 12","from":"cells/results/2026-10-29-boot9/steps/R1.txt:66"}
+{"id":"R1.txt/0067","value":"disk: reflink, 0.02 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:67"}
+{"id":"R1.txt/0068","value":"snapshot/load returned 0.01 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:68"}
+{"id":"R1.txt/0069","value":"ssh 0.39 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:69"}
+{"id":"R1.txt/0070","value":"guest clock behind host by 67.5 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:70"}
+{"id":"R1.txt/0071","value":"clock set 0.85 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:71"}
+{"id":"R1.txt/0072","value":"thawed 11 containers in 1.32 s, 2.39 s from snapshot/load","from":"cells/results/2026-10-29-boot9/steps/R1.txt:72"}
+{"id":"R1.txt/0073","value":"guest clock offset after set -0.116 s (round trip 0.208 s); from snapshot/load:","from":"cells/results/2026-10-29-boot9/steps/R1.txt:73"}
+{"id":"R1.txt/0074","value":"cluster health 2.47 s, namespace 2.52 s, shards owned 3.05 s, HealthCheck done 4.68 s, attempt 1","from":"cells/results/2026-10-29-boot9/steps/R1.txt:74"}
+{"id":"R1.txt/0075","value":"  health-1793248049151  completed 1476 ms  visible 43 ms  echo=laug sum=42 signal=go","from":"cells/results/2026-10-29-boot9/steps/R1.txt:75"}
+{"id":"R1.txt/0076","value":"=== restore 8 of 12","from":"cells/results/2026-10-29-boot9/steps/R1.txt:76"}
+{"id":"R1.txt/0077","value":"disk: reflink, 0.01 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:77"}
+{"id":"R1.txt/0078","value":"snapshot/load returned 0.01 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:78"}
+{"id":"R1.txt/0079","value":"ssh 0.39 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:79"}
+{"id":"R1.txt/0080","value":"guest clock behind host by 72.9 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:80"}
+{"id":"R1.txt/0081","value":"clock set 0.84 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:81"}
+{"id":"R1.txt/0082","value":"thawed 11 containers in 1.22 s, 2.28 s from snapshot/load","from":"cells/results/2026-10-29-boot9/steps/R1.txt:82"}
+{"id":"R1.txt/0083","value":"guest clock offset after set -0.103 s (round trip 0.214 s); from snapshot/load:","from":"cells/results/2026-10-29-boot9/steps/R1.txt:83"}
+{"id":"R1.txt/0084","value":"cluster health 2.38 s, namespace 2.44 s, shards owned 3.05 s, HealthCheck done 4.67 s, attempt 1","from":"cells/results/2026-10-29-boot9/steps/R1.txt:84"}
+{"id":"R1.txt/0085","value":"  health-1793248054561  completed 1469 ms  visible 44 ms  echo=laug sum=42 signal=go","from":"cells/results/2026-10-29-boot9/steps/R1.txt:85"}
+{"id":"R1.txt/0086","value":"=== restore 9 of 12","from":"cells/results/2026-10-29-boot9/steps/R1.txt:86"}
+{"id":"R1.txt/0087","value":"disk: reflink, 0.01 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:87"}
+{"id":"R1.txt/0088","value":"snapshot/load returned 0.01 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:88"}
+{"id":"R1.txt/0089","value":"ssh 0.40 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:89"}
+{"id":"R1.txt/0090","value":"guest clock behind host by 78.3 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:90"}
+{"id":"R1.txt/0091","value":"clock set 0.83 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:91"}
+{"id":"R1.txt/0092","value":"thawed 11 containers in 1.25 s, 2.30 s from snapshot/load","from":"cells/results/2026-10-29-boot9/steps/R1.txt:92"}
+{"id":"R1.txt/0093","value":"guest clock offset after set -0.105 s (round trip 0.211 s); from snapshot/load:","from":"cells/results/2026-10-29-boot9/steps/R1.txt:93"}
+{"id":"R1.txt/0094","value":"cluster health 2.37 s, namespace 2.42 s, shards owned 2.99 s, HealthCheck done 4.66 s, attempt 1","from":"cells/results/2026-10-29-boot9/steps/R1.txt:94"}
+{"id":"R1.txt/0095","value":"  health-1793248059887  completed 1539 ms  visible 44 ms  echo=laug sum=42 signal=go","from":"cells/results/2026-10-29-boot9/steps/R1.txt:95"}
+{"id":"R1.txt/0096","value":"=== restore 10 of 12","from":"cells/results/2026-10-29-boot9/steps/R1.txt:96"}
+{"id":"R1.txt/0097","value":"disk: reflink, 0.02 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:97"}
+{"id":"R1.txt/0098","value":"snapshot/load returned 0.01 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:98"}
+{"id":"R1.txt/0099","value":"ssh 0.39 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:99"}
+{"id":"R1.txt/0100","value":"guest clock behind host by 83.7 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:100"}
+{"id":"R1.txt/0101","value":"clock set 0.84 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:101"}
+{"id":"R1.txt/0102","value":"thawed 11 containers in 1.25 s, 2.31 s from snapshot/load","from":"cells/results/2026-10-29-boot9/steps/R1.txt:102"}
+{"id":"R1.txt/0103","value":"guest clock offset after set -0.109 s (round trip 0.204 s); from snapshot/load:","from":"cells/results/2026-10-29-boot9/steps/R1.txt:103"}
+{"id":"R1.txt/0104","value":"cluster health 2.38 s, namespace 2.43 s, shards owned 2.99 s, HealthCheck done 4.67 s, attempt 1","from":"cells/results/2026-10-29-boot9/steps/R1.txt:104"}
+{"id":"R1.txt/0105","value":"  health-1793248065299  completed 1532 ms  visible 45 ms  echo=laug sum=42 signal=go","from":"cells/results/2026-10-29-boot9/steps/R1.txt:105"}
+{"id":"R1.txt/0106","value":"=== restore 11 of 12","from":"cells/results/2026-10-29-boot9/steps/R1.txt:106"}
+{"id":"R1.txt/0107","value":"disk: reflink, 0.02 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:107"}
+{"id":"R1.txt/0108","value":"snapshot/load returned 0.01 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:108"}
+{"id":"R1.txt/0109","value":"ssh 0.40 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:109"}
+{"id":"R1.txt/0110","value":"guest clock behind host by 89.1 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:110"}
+{"id":"R1.txt/0111","value":"clock set 0.84 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:111"}
+{"id":"R1.txt/0112","value":"thawed 11 containers in 1.26 s, 2.33 s from snapshot/load","from":"cells/results/2026-10-29-boot9/steps/R1.txt:112"}
+{"id":"R1.txt/0113","value":"guest clock offset after set -0.110 s (round trip 0.212 s); from snapshot/load:","from":"cells/results/2026-10-29-boot9/steps/R1.txt:113"}
+{"id":"R1.txt/0114","value":"cluster health 2.40 s, namespace 2.45 s, shards owned 2.97 s, HealthCheck done 4.64 s, attempt 1","from":"cells/results/2026-10-29-boot9/steps/R1.txt:114"}
+{"id":"R1.txt/0115","value":"  health-1793248070701  completed 1518 ms  visible 50 ms  echo=laug sum=42 signal=go","from":"cells/results/2026-10-29-boot9/steps/R1.txt:115"}
+{"id":"R1.txt/0116","value":"=== restore 12 of 12","from":"cells/results/2026-10-29-boot9/steps/R1.txt:116"}
+{"id":"R1.txt/0117","value":"disk: reflink, 0.01 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:117"}
+{"id":"R1.txt/0118","value":"snapshot/load returned 0.01 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:118"}
+{"id":"R1.txt/0119","value":"ssh 0.39 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:119"}
+{"id":"R1.txt/0120","value":"guest clock behind host by 94.5 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:120"}
+{"id":"R1.txt/0121","value":"clock set 0.84 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:121"}
+{"id":"R1.txt/0122","value":"thawed 11 containers in 1.26 s, 2.32 s from snapshot/load","from":"cells/results/2026-10-29-boot9/steps/R1.txt:122"}
+{"id":"R1.txt/0123","value":"guest clock offset after set -0.100 s (round trip 0.216 s); from snapshot/load:","from":"cells/results/2026-10-29-boot9/steps/R1.txt:123"}
+{"id":"R1.txt/0124","value":"cluster health 2.41 s, namespace 2.46 s, shards owned 3.02 s, HealthCheck done 4.72 s, attempt 1","from":"cells/results/2026-10-29-boot9/steps/R1.txt:124"}
+{"id":"R1.txt/0125","value":"  health-1793248076122  completed 1544 ms  visible 54 ms  echo=laug sum=42 signal=go","from":"cells/results/2026-10-29-boot9/steps/R1.txt:125"}
+{"id":"R1.txt/0128","value":"--- exit 0 in 64.8 s","from":"cells/results/2026-10-29-boot9/steps/R1.txt:128"}

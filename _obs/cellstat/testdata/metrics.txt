@@ -1,0 +1,175 @@
+# HELP laug_cell_cpu_seconds_total CPU time of the container's group, cpu.stat usage_usec.
+# TYPE laug_cell_cpu_seconds_total counter
+laug_cell_cpu_seconds_total{project="laug-1dafb33b",service="postgresql"} 2.490087
+laug_cell_cpu_seconds_total{project="laug-1dafb33b",service="temporal-history"} 29.797165
+laug_cell_cpu_seconds_total{project="laug-1dafb33b",service="temporal-matching"} 3433.220485
+laug_cell_cpu_seconds_total{project="laug-1dafb33b",service="temporal-ui"} 224.237867
+# HELP laug_cell_cpu_user_seconds_total User CPU time, cpu.stat user_usec.
+# TYPE laug_cell_cpu_user_seconds_total counter
+laug_cell_cpu_user_seconds_total{project="laug-1dafb33b",service="postgresql"} 1.219699
+laug_cell_cpu_user_seconds_total{project="laug-1dafb33b",service="temporal-history"} 23.088209
+laug_cell_cpu_user_seconds_total{project="laug-1dafb33b",service="temporal-matching"} 2127.067588
+laug_cell_cpu_user_seconds_total{project="laug-1dafb33b",service="temporal-ui"} 84.056262
+# HELP laug_cell_cpu_system_seconds_total System CPU time, cpu.stat system_usec.
+# TYPE laug_cell_cpu_system_seconds_total counter
+laug_cell_cpu_system_seconds_total{project="laug-1dafb33b",service="postgresql"} 1.270387
+laug_cell_cpu_system_seconds_total{project="laug-1dafb33b",service="temporal-history"} 6.708955
+laug_cell_cpu_system_seconds_total{project="laug-1dafb33b",service="temporal-matching"} 1306.152896
+laug_cell_cpu_system_seconds_total{project="laug-1dafb33b",service="temporal-ui"} 140.181604
+# HELP laug_cell_cpu_throttled_periods_total Periods throttled by cpu.max, cpu.stat nr_throttled.
+# TYPE laug_cell_cpu_throttled_periods_total counter
+laug_cell_cpu_throttled_periods_total{project="laug-1dafb33b",service="postgresql"} 0
+laug_cell_cpu_throttled_periods_total{project="laug-1dafb33b",service="temporal-history"} 0
+laug_cell_cpu_throttled_periods_total{project="laug-1dafb33b",service="temporal-matching"} 0
+# HELP laug_cell_cpu_throttled_seconds_total Time throttled by cpu.max, cpu.stat throttled_usec.
+# TYPE laug_cell_cpu_throttled_seconds_total counter
+laug_cell_cpu_throttled_seconds_total{project="laug-1dafb33b",service="postgresql"} 0
+laug_cell_cpu_throttled_seconds_total{project="laug-1dafb33b",service="temporal-history"} 0
+laug_cell_cpu_throttled_seconds_total{project="laug-1dafb33b",service="temporal-matching"} 0
+# HELP laug_cell_memory_anon_bytes memory.stat anon.
+# TYPE laug_cell_memory_anon_bytes gauge
+laug_cell_memory_anon_bytes{project="laug-1dafb33b",service="postgresql"} 33857536
+laug_cell_memory_anon_bytes{project="laug-1dafb33b",service="temporal-history"} 231313408
+laug_cell_memory_anon_bytes{project="laug-1dafb33b",service="temporal-matching"} 16539648
+# HELP laug_cell_memory_file_bytes memory.stat file, the page cache charged to the group.
+# TYPE laug_cell_memory_file_bytes gauge
+laug_cell_memory_file_bytes{project="laug-1dafb33b",service="postgresql"} 0
+laug_cell_memory_file_bytes{project="laug-1dafb33b",service="temporal-history"} 6881280
+laug_cell_memory_file_bytes{project="laug-1dafb33b",service="temporal-matching"} 41648128
+# HELP laug_cell_oom_kills_total memory.events oom_kill.
+# TYPE laug_cell_oom_kills_total counter
+laug_cell_oom_kills_total{project="laug-1dafb33b",service="postgresql"} 0
+laug_cell_oom_kills_total{project="laug-1dafb33b",service="temporal-history"} 0
+laug_cell_oom_kills_total{project="laug-1dafb33b",service="temporal-matching"} 0
+# HELP laug_cell_io_devices Devices listed in io.stat.
+# TYPE laug_cell_io_devices gauge
+laug_cell_io_devices{project="laug-1dafb33b",service="postgresql"} 0
+laug_cell_io_devices{project="laug-1dafb33b",service="temporal-history"} 1
+laug_cell_io_devices{project="laug-1dafb33b",service="temporal-matching"} 2
+# HELP laug_cell_io_read_bytes_total io.stat rbytes, summed over devices.
+# TYPE laug_cell_io_read_bytes_total counter
+laug_cell_io_read_bytes_total{project="laug-1dafb33b",service="temporal-history"} 6852608
+laug_cell_io_read_bytes_total{project="laug-1dafb33b",service="temporal-matching"} 975941632
+# HELP laug_cell_io_write_bytes_total io.stat wbytes, summed over devices.
+# TYPE laug_cell_io_write_bytes_total counter
+laug_cell_io_write_bytes_total{project="laug-1dafb33b",service="temporal-history"} 0
+laug_cell_io_write_bytes_total{project="laug-1dafb33b",service="temporal-matching"} 21889019904
+# HELP laug_cell_io_reads_total io.stat rios, summed over devices.
+# TYPE laug_cell_io_reads_total counter
+laug_cell_io_reads_total{project="laug-1dafb33b",service="temporal-history"} 81
+laug_cell_io_reads_total{project="laug-1dafb33b",service="temporal-matching"} 17469
+# HELP laug_cell_io_writes_total io.stat wios, summed over devices.
+# TYPE laug_cell_io_writes_total counter
+laug_cell_io_writes_total{project="laug-1dafb33b",service="temporal-history"} 0
+laug_cell_io_writes_total{project="laug-1dafb33b",service="temporal-matching"} 433331
+# HELP laug_cell_cpu_some_seconds_total cpu.pressure some total.
+# TYPE laug_cell_cpu_some_seconds_total counter
+laug_cell_cpu_some_seconds_total{project="laug-1dafb33b",service="postgresql"} 0.013223
+laug_cell_cpu_some_seconds_total{project="laug-1dafb33b",service="temporal-history"} 0.025951
+laug_cell_cpu_some_seconds_total{project="laug-1dafb33b",service="temporal-matching"} 14.576217
+laug_cell_cpu_some_seconds_total{project="laug-1dafb33b",service="temporal-ui"} 1.001214
+# HELP laug_cell_cpu_full_seconds_total cpu.pressure full total.
+# TYPE laug_cell_cpu_full_seconds_total counter
+laug_cell_cpu_full_seconds_total{project="laug-1dafb33b",service="postgresql"} 0.01315
+laug_cell_cpu_full_seconds_total{project="laug-1dafb33b",service="temporal-history"} 0.024596
+laug_cell_cpu_full_seconds_total{project="laug-1dafb33b",service="temporal-matching"} 14.204796
+laug_cell_cpu_full_seconds_total{project="laug-1dafb33b",service="temporal-ui"} 0.992089
+# HELP laug_cell_io_some_seconds_total io.pressure some total.
+# TYPE laug_cell_io_some_seconds_total counter
+laug_cell_io_some_seconds_total{project="laug-1dafb33b",service="postgresql"} 0
+laug_cell_io_some_seconds_total{project="laug-1dafb33b",service="temporal-history"} 0.022583
+laug_cell_io_some_seconds_total{project="laug-1dafb33b",service="temporal-matching"} 34.812608
+laug_cell_io_some_seconds_total{project="laug-1dafb33b",service="temporal-ui"} 1.266074
+# HELP laug_cell_io_full_seconds_total io.pressure full total.
+# TYPE laug_cell_io_full_seconds_total counter
+laug_cell_io_full_seconds_total{project="laug-1dafb33b",service="postgresql"} 0
+laug_cell_io_full_seconds_total{project="laug-1dafb33b",service="temporal-history"} 0.022583
+laug_cell_io_full_seconds_total{project="laug-1dafb33b",service="temporal-matching"} 34.578646
+laug_cell_io_full_seconds_total{project="laug-1dafb33b",service="temporal-ui"} 1.265892
+# HELP laug_cell_memory_some_seconds_total memory.pressure some total.
+# TYPE laug_cell_memory_some_seconds_total counter
+laug_cell_memory_some_seconds_total{project="laug-1dafb33b",service="postgresql"} 0
+laug_cell_memory_some_seconds_total{project="laug-1dafb33b",service="temporal-history"} 0.022747
+laug_cell_memory_some_seconds_total{project="laug-1dafb33b",service="temporal-matching"} 0.066389
+laug_cell_memory_some_seconds_total{project="laug-1dafb33b",service="temporal-ui"} 0.000071
+# HELP laug_cell_memory_full_seconds_total memory.pressure full total.
+# TYPE laug_cell_memory_full_seconds_total counter
+laug_cell_memory_full_seconds_total{project="laug-1dafb33b",service="postgresql"} 0
+laug_cell_memory_full_seconds_total{project="laug-1dafb33b",service="temporal-history"} 0.022747
+laug_cell_memory_full_seconds_total{project="laug-1dafb33b",service="temporal-matching"} 0.066373
+laug_cell_memory_full_seconds_total{project="laug-1dafb33b",service="temporal-ui"} 0.000071
+# HELP laug_host_vcpu cpuN lines in the host's stat file.
+# TYPE laug_host_vcpu gauge
+laug_host_vcpu 24
+# HELP laug_host_cpu_seconds_total The host's CPU time by mode, summed over CPUs.
+# TYPE laug_host_cpu_seconds_total counter
+laug_host_cpu_seconds_total{mode="user"} 166581.98
+laug_host_cpu_seconds_total{mode="nice"} 25.59
+laug_host_cpu_seconds_total{mode="system"} 135720.47
+laug_host_cpu_seconds_total{mode="idle"} 15900033.49
+laug_host_cpu_seconds_total{mode="iowait"} 27129.41
+laug_host_cpu_seconds_total{mode="irq"} 0
+laug_host_cpu_seconds_total{mode="softirq"} 29807.43
+laug_host_cpu_seconds_total{mode="steal"} 0
+# HELP laug_host_runq_wait_seconds_total Time tasks waited on a run queue, summed over CPUs (schedstat).
+# TYPE laug_host_runq_wait_seconds_total counter
+laug_host_runq_wait_seconds_total 8473.82887863
+# HELP laug_host_cpu_some_seconds_total The host's cpu pressure some total.
+# TYPE laug_host_cpu_some_seconds_total counter
+laug_host_cpu_some_seconds_total 974.82433
+# HELP laug_host_io_some_seconds_total The host's io pressure some total.
+# TYPE laug_host_io_some_seconds_total counter
+laug_host_io_some_seconds_total 1991.755255
+# HELP laug_host_io_full_seconds_total The host's io pressure full total.
+# TYPE laug_host_io_full_seconds_total counter
+laug_host_io_full_seconds_total 1824.063773
+# HELP laug_host_memory_some_seconds_total The host's memory pressure some total.
+# TYPE laug_host_memory_some_seconds_total counter
+laug_host_memory_some_seconds_total 2.084482
+# HELP laug_host_memory_full_seconds_total The host's memory pressure full total.
+# TYPE laug_host_memory_full_seconds_total counter
+laug_host_memory_full_seconds_total 2.070749
+# HELP laug_proc_cpu_seconds_total utime plus stime of the whole process, exited threads included.
+# TYPE laug_proc_cpu_seconds_total counter
+laug_proc_cpu_seconds_total{role="omes-client",run_id="g20261015-144517-s1",pid="4241"} 6.33
+laug_proc_cpu_seconds_total{role="omes-worker",run_id="g20261015-144517-s1",pid="4242"} 10.27
+# HELP laug_proc_run_seconds_total Time on a CPU, summed over its live threads.
+# TYPE laug_proc_run_seconds_total counter
+laug_proc_run_seconds_total{role="omes-client",run_id="g20261015-144517-s1",pid="4241"} 6.330284084
+laug_proc_run_seconds_total{role="omes-worker",run_id="g20261015-144517-s1",pid="4242"} 10.264204943
+# HELP laug_proc_wait_seconds_total Time runnable and waiting on a run queue, summed over its live threads.
+# TYPE laug_proc_wait_seconds_total counter
+laug_proc_wait_seconds_total{role="omes-client",run_id="g20261015-144517-s1",pid="4241"} 0.295546293
+laug_proc_wait_seconds_total{role="omes-worker",run_id="g20261015-144517-s1",pid="4242"} 0.068287063
+# HELP laug_proc_runs_total Times on a CPU, summed over its live threads.
+# TYPE laug_proc_runs_total counter
+laug_proc_runs_total{role="omes-client",run_id="g20261015-144517-s1",pid="4241"} 124899
+laug_proc_runs_total{role="omes-worker",run_id="g20261015-144517-s1",pid="4242"} 333356
+# HELP laug_proc_threads Threads whose schedstat was read.
+# TYPE laug_proc_threads gauge
+laug_proc_threads{role="omes-client",run_id="g20261015-144517-s1",pid="4241"} 4
+laug_proc_threads{role="omes-worker",run_id="g20261015-144517-s1",pid="4242"} 2
+# HELP laug_cellstat_samples_total Samples taken since cellstat started; this body is the last.
+# TYPE laug_cellstat_samples_total counter
+laug_cellstat_samples_total 1
+# HELP laug_cellstat_sample_time_seconds The last sample's wall clock, Unix seconds.
+# TYPE laug_cellstat_sample_time_seconds gauge
+laug_cellstat_sample_time_seconds 1792075705.778
+# HELP laug_cellstat_cpu_seconds_total cellstat's own CPU time.
+# TYPE laug_cellstat_cpu_seconds_total counter
+laug_cellstat_cpu_seconds_total 0.041
+# HELP laug_cellstat_children_cpu_seconds_total The CPU time of the container CLI calls it waited for.
+# TYPE laug_cellstat_children_cpu_seconds_total counter
+laug_cellstat_children_cpu_seconds_total 0.03
+# HELP laug_cellstat_other_containers Containers of other compose projects in the last list, never named.
+# TYPE laug_cellstat_other_containers gauge
+laug_cellstat_other_containers 1
+# HELP laug_cellstat_other_procs Omes processes of a run id it does not read, never named.
+# TYPE laug_cellstat_other_procs gauge
+laug_cellstat_other_procs 0
+# HELP laug_cellstat_errors Errors the last sample met.
+# TYPE laug_cellstat_errors gauge
+laug_cellstat_errors 0
+# HELP laug_cellstat_containers laug containers in the last line, by state.
+# TYPE laug_cellstat_containers gauge
+laug_cellstat_containers{state="ok"} 4

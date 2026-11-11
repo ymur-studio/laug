@@ -1,0 +1,6 @@
+# make: make --no-print-directory -n reset
+# laug: laug reset -last
+# lease: present
+# compare: request POST /reset
+[ -s .last-lease.json ] || { echo "laug · no lease in .last-lease.json; make lease first" >&2; exit 2; }
+curl -s --fail-with-body -X POST 'http://127.0.0.1:7700/reset' -H 'content-type: application/json' -d "$(jq '{id}' .last-lease.json)" | jq .

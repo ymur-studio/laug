@@ -1,0 +1,7 @@
+# The runs in testdata/runs, the copy of 7 dev host gate runs (runs/README.md), that the Go judge does not give back
+# byte for byte as a clone holds them, each with its kind, as expected.txt says for gate/results. TestDevRuns proves
+# each line, and fails on a line a run no longer needs.
+g20261014-212013  empty-dirs  steady
+g20261014-212526  empty-dirs  steady
+g20261014-213037  trap        T1
+g20261014-214041  trap        T1

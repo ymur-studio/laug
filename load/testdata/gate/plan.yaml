@@ -1,0 +1,49 @@
+# Test fixture: gate/plan.yaml as built (e4540a8), three items at once, which the fake gate runs in make harness-test
+# use so that every case has a load item and two fault items. The real plan dropped kh after the noise runs: three
+# loads at once BLOCKed 9 of 9 on the dev host, and on the lab host three items do not pass the strict check
+# (cells/results/2026-10-15-lab-gates-4-5-noise.txt:27-31). Kept apart so the real plan can change without moving the
+# fake cases.
+#
+# What one gate run of this plan runs: every item at once on this host, each on a cell of its own, and bin/laug judge
+# judges the run: ADVANCE only if every item's result is its expect and every rule holds. This file is read from the
+# checkout, as the thresholds are, and verdict.json records its sha256 and whether it changed against BASE. gate/run.sh
+# --plan gate/plan.yaml checks it and prints it as plan.json holds it.
+#
+# The times, wall clock, on the dev host, a Linux VM with 24 vCPU and 47 GiB running Docker, as single rauns estimated
+# them: pl is the long pole, 90 s steady + 271 to 281 s from inject to after_end (the dev host's rauns) + about 15 s for
+# its sweep and JSON = 376 to 386 s; kh 360 to 366 s; steady a 322 s window + about 12 s = 334 s. Before the wave:
+# preflight and the Omes build (about 20 s), then three cold leases of 22.4 s each
+# (cells/results/2026-10-23-boot1.txt:405) under make harness-test, 190 to 193 s in 3 runs with the gate's own cases
+# (dev host, 2026-10-14), then the 10 s barrier: the wave starts at about 3:40 after the gate start, and the verdict is
+# handed on at about 10:10, 2:50 before the watchdog. The noise runs (gate/plans/noise.yaml) measure what items at once
+# do to these figures.
+deadline_s: 780          # the watchdog: TERM to every item still running 13:00 after the gate start, wall clock
+kill_grace_s: 30         # then KILL; on TERM faults/run.sh's EXIT trap removes its fault and writes a partial raun JSON
+lease_ttl_s: 1200        # a cell outlives the deadline and the kill grace; the gate releases every cell after the post
+quiet_s: 10              # the barrier: laugd 0 busy and only the leased projects up, then the same again this much later
+barrier_timeout_s: 60    # refused when the host is not quiet this long after make harness-test passed
+poll_s: 5                # during the wave: laugd's busy cells, docker compose ls and /proc/pressure, to poll.jsonl
+harness_timeout_s: 300   # make harness-test on this tree, run while the cells are leased; stopped here, it fails R1
+wave_min_s: 386          # pl, the long pole, at its longest: refused at a lease or the barrier when less is left before
+                         # deadline_s, since an item started then is certain to meet the watchdog
+items:
+  # The load: 5 m at 20/s, 50 at once, judged by load/verdict.sh against the thresholds of SERVER_TAG.
+  - key: steady
+    kind: load
+    scenario: workflow_with_single_noop_activity
+    duration: 5m
+    rate: 20
+    max_concurrent: 50
+    expect: ADVANCE
+  # The fault alone: 3 of 3 ADVANCE on compose cells on the dev host, and 3 of 3 on microVM cells (faults/catalog.yaml).
+  - key: pl
+    kind: fault
+    fault: persistence-latency
+    scenario: workflow_with_single_noop_activity
+    expect: ADVANCE
+  # 3 of 3 ADVANCE on dev-host compose cells, 3 of 3 on microVM cells (faults/catalog.yaml).
+  - key: kh
+    kind: fault
+    fault: kill-history
+    scenario: workflow_with_single_noop_activity
+    expect: ADVANCE

@@ -1,0 +1,9 @@
+# make: make --no-print-directory -n orchestrator-worker ORCH_OTLP=10.0.0.1:7751
+# laug: laug orchestrator worker -otlp 10.0.0.1:7751
+# lease: absent
+# compare: refused
+rev=$(git rev-parse HEAD) && mod=$([ -z "$(git status --porcelain)" ] || echo true) && \
+echo "cd orchestrator && go build -ldflags '-X main.commit=$rev -X main.modified=$mod' -o bin/worker ./cmd/worker" && \
+cd orchestrator && go build -ldflags "-X main.commit=$rev -X main.modified=$mod" -o bin/worker ./cmd/worker
+[[ -z '10.0.0.1:7751' || '10.0.0.1:7751' =~ ^127\.0\.0\.1:[1-9][0-9]{0,4}$ ]] || { echo "laug · make orchestrator-worker: ORCH_OTLP is 127.0.0.1:<port>, the stack's Collector, 127.0.0.1:7751, or empty: it has no auth" >&2; exit 2; }
+env $(compgen -e | sed -n -e 's/^TEMPORAL_SDK_FLAG_/-u &/p' -e 's/^TEMPORAL_DEBUG$/-u &/p' -e 's/^OTEL_/-u &/p') TEMPORAL_ADDRESS='127.0.0.1:7400' TEMPORAL_NAMESPACE='default' orchestrator/bin/worker -repo '$ROOT' -otlp '10.0.0.1:7751'

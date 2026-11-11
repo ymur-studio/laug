@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+# Fake go for make harness-test: `go run ./cmd/omes ...` prints FAKE_OMES_LOG as Omes would, writes its arguments to
+# $FAKE_DIR/go.args, then exits FAKE_OMES_EXIT; with FAKE_OMES_BLOCK=1 it marks the log written and runs until
+# killed, as a fault run's load does. With FAKE_OMES_UNTIL=<seconds past FAKE_T0> it marks the log written and runs
+# until the fake clock reaches that time (20 s of real time at most), then exits FAKE_OMES_EXIT: a load that lasts
+# its DURATION on the fake clock while the caller sleeps through it. FAKE_OMES_COPY=<src>:<dst> copies src to dst as
+# it starts: what a file held while the load ran.
+# A run whose --run-id ends in -before (faults/candidate.sh's before window) never blocks: it runs until
+# FAKE_OMES_BEFORE_UNTIL, else FAKE_OMES_UNTIL, and exits FAKE_OMES_BEFORE_EXIT (0). With FAKE_OMES_CHILD=1 it runs a
+# child, as go run runs omes: it waits for the child through an INT, and dies of a TERM without passing it on, as go
+# run does. The child makes a build dir, workers/go/omes-temp-<n>, and runs a worker in a process group of its own, as
+# omes f0de206 does (internal/workerctl/run.go:146), which a signal to go run's group misses; the worker holds the
+# output open. On INT the child sends INT to its worker, removes the dir and exits 1, as omes cancels its run; with
+# FAKE_OMES_STUCK=1 it ignores INT. A TERM ends it at once. It writes its own pid, its process group's, the child's and
+# the worker's to $FAKE_DIR/omes.pids. FAKE_OMES_BUILD=1 puts 2 s of go run's build of omes first, which keeps INT as
+# go run got it: ignored, it waits on; at its default, an INT ends it.
+printf '%s\n' "$@" > "$FAKE_DIR/go.args"
+run_id="$(awk 'p { print; exit } $0 == "--run-id" { p = 1 }' "$FAKE_DIR/go.args")"
+until="${FAKE_OMES_UNTIL:-}"; block="${FAKE_OMES_BLOCK:-0}"; rc="${FAKE_OMES_EXIT:-0}"
+if [[ "$run_id" == *-before ]]; then until="${FAKE_OMES_BEFORE_UNTIL:-$until}"; block=0; rc="${FAKE_OMES_BEFORE_EXIT:-0}"; fi
+[[ -z "${FAKE_OMES_COPY:-}" ]] || cp "${FAKE_OMES_COPY%%:*}" "${FAKE_OMES_COPY#*:}"
+cat "$FAKE_OMES_LOG"
+if [[ "${FAKE_OMES_CHILD:-0}" == 1 ]]; then
+  if [[ "${FAKE_OMES_BUILD:-0}" == 1 ]]; then : > "$FAKE_DIR/omes.building"; for _ in $(seq 1 40); do "$REAL_SLEEP" 0.05; done; fi
+  trap : INT
+  # The child gets INT at its default, as go run's program does, so its trap takes; set -m gives the worker, a
+  # background job, a process group of its own; the child stays in this one.
+  env --default-signal=INT "$BASH" --noprofile --norc -c '
+    mkdir -p workers/go; tmp="$(mktemp -d "$PWD/workers/go/omes-temp-XXXXXX")"; w=""
+    cancel() { [[ -z "$w" ]] || kill -INT "$w" 2>/dev/null; rm -rf "$tmp"; exit 1; }
+    if [[ "${FAKE_OMES_STUCK:-0}" == 1 ]]; then trap "" INT; else trap cancel INT; fi
+    set -m; "$REAL_SLEEP" 120 & w=$!; echo "$w" > "$FAKE_DIR/omes.worker"; wait' &
+  child=$!
+  for _ in $(seq 1 100); do [[ -s "$FAKE_DIR/omes.worker" ]] && break; "$REAL_SLEEP" 0.02; done
+  echo "$$ $(ps -o pgid= -p $$ | tr -d ' ') $child $(cat "$FAKE_DIR/omes.worker")" > "$FAKE_DIR/omes.pids"
+  : > "$FAKE_DIR/omes.ready"
+  while kill -0 "$child" 2>/dev/null; do "$REAL_SLEEP" 0.05; done
+  wait "$child"; exit $?
+fi
+if [[ "$block" == 1 ]]; then
+  "$REAL_SLEEP" 0.3; : > "$FAKE_DIR/omes.ready"
+  exec "$REAL_SLEEP" 120
+fi
+if [[ -n "$until" ]]; then
+  : > "$FAKE_DIR/omes.ready"
+  for _ in $(seq 1 1000); do
+    now="$(cat "$FAKE_CLOCK" 2>/dev/null)"
+    (( ${now:-0} >= until )) && break
+    "$REAL_SLEEP" 0.02
+  done
+fi
+exit "$rc"

@@ -1,0 +1,69 @@
+# The map, the root README's figure: laug in one picture. The verbs: cmd/laug/main.go:82-109 (pool serve, lease, load,
+# fault, raun, gate run, judge). The pool: internal/pool/pool.go:323-354 (a cell built, health waited for, then warm or
+# leased), :403 (release destroys; replenish builds a fresh warm one) and :538 (until -min is met), cmd/laug/pool.go:125
+# (-min). The cell: cells/compose/cell.yml:22-23 (every role reaches Postgres through toxiproxy). The windows:
+# faults/README.md:12-20. The gate's own pool, which builds each cell for its lease: gate/run.sh:27 (laug pool serve
+# -min 0 -max N). The gate's three items: gate/plan.yaml:34-59 (incumbent on the plan's incumbent release, steady, pl
+# the persistence-latency fault, faults/catalog.yaml:34-39). The judge and its rules: docs/DESIGN.md section 7; the
+# deciding rule is docs/EVIDENCE.md's last column.
+name map
+size 800 632
+title | laug's map: cells from a warm pool, a load and a fault on them, a judge and its verdict
+sub | Above, one lease: a cell taken, run and given back. Below, a gate: three leases, one wave, one verdict
+desc | Above, one lease. A requester, a person with laug lease or laug raun, asks laug pool serve for a cell. The pool
+desc | builds cells warm before anyone asks and hands one over. The leased cell is a Temporal server of its own: every
+desc | role, and its own Postgres behind toxiproxy. laug load runs Omes on it. laug fault holds a fault on it and reads
+desc | it before, during and after. Released, the cell is destroyed, and the pool builds warm cells back up to its -min.
+desc | Below, one gate. laug gate run starts a pool of its own, which builds a fresh cell for each of its three leases.
+desc | Three items run at once: incumbent, the release the tag replaces, under the load; steady, the release under the
+desc | same load; pl, the release with Postgres slowed by a fault. Each writes its files under gate/results/<gate id>/.
+desc | The judge, laug judge, reads them: ADVANCE only when every rule from R1 to R7 holds, else BLOCK, naming the rule
+desc | that decided.
+source cmd/laug/main.go
+source cmd/laug/pool.go
+source internal/pool/pool.go
+source cells/compose/cell.yml
+source faults/README.md
+source faults/catalog.yaml
+source gate/plan.yaml
+source docs/DESIGN.md
+source gate/run.sh
+text 24 84 bold size=12 | one lease
+box req 24 132 132 76 | a requester | laug lease, | laug raun
+region 196 100 148 168 | laug pool serve
+box warm1 208 128 124 28 fill=warm | a warm cell
+box warm2 208 164 124 28 fill=warm | a warm cell
+box warm3 208 200 124 28 fill=warm | a warm cell
+text 208 252 size=10 | built before a lease
+arrow req warm2 at=160,170 | lease
+path 332,178 372,178 head
+region 372 100 240 168 | the leased cell
+box roles 384 128 216 60 | Temporal server | frontend, history, | matching, worker
+box pg 384 204 216 44 | Postgres | behind toxiproxy
+link roles pg
+box load 640 116 136 60 | load | laug load: Omes | starts workflows
+box fault 640 192 136 68 | a fault | laug fault, read | before, during | and after
+arrow load roles
+path 640,226 612,226 head
+path 492,268 492,288 270,288 270,268 head dash=4,3 at=196,306
+  | release: the cell is destroyed, and the pool builds warm cells back up to its -min
+text 24 340 bold size=12 | one gate
+box gate 24 386 124 64 | a gate | laug gate run | <release tag>
+region 196 356 420 136 | one wave: three items at once, each on a fresh cell
+box inc 208 384 128 92 | incumbent | the release the | tag replaces, | under the load
+box steady 344 384 128 92 | steady | the release, | under the same | load
+box pl 480 384 128 92 | pl | the release, | Postgres slowed | by a fault
+path 148,418 196,418 head at=154,410 | leases
+box files 640 384 136 92 mono | the run's files | gate/results/ | <gate id>/
+path 616,430 640,430 head
+box judge 640 516 136 64 | the judge | laug judge, | rules R1 to R7
+arrow files judge | reads
+box adv 480 516 128 28 fill=moss | ADVANCE
+box blk 480 552 128 28 fill=ember | BLOCK
+arrow judge adv
+arrow judge blk
+text 208 534 | ADVANCE only when every rule holds;
+  | else BLOCK, naming the rule that decided.
+text 24 604 size=10
+  | source: cmd/laug/main.go, cmd/laug/pool.go, internal/pool/pool.go, cells/compose/cell.yml, faults/README.md,
+  | faults/catalog.yaml, gate/plan.yaml, gate/run.sh and docs/DESIGN.md.

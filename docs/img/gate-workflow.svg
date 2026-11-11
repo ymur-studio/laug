@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="570" viewBox="0 0 800 570" role="img"
+    aria-labelledby="gate-workflow-title gate-workflow-desc" font-family="Inter, system-ui, sans-serif">
+<title id="gate-workflow-title">Workflow Gate, simplified: each step an activity, each wait a timer, one
+    Selector</title>
+<desc id="gate-workflow-desc">Workflow Gate, top to bottom. Left: the steps before the wave, each an activity of type
+    Step with an id of its own, the leases one an item in plan order, and the barrier, whose quiet checks are activities
+    with a timer, a Sleep, between them. Right: the wave, on the wave&#39;s context, Gate&#39;s one WithCancel child:
+    the wave step, an AwaitItem an item, and the backstop timer, scheduled together, under one Selector that takes
+    whichever answers first. The wave&#39;s answer or the backstop ends it, and what still pends is canceled in the
+    order it was scheduled. Bottom: judge, post and release on a disconnected context; on an error, the backstop or a
+    cancel, the stop path instead. Each activity and timer is a command history records, so each must replay the same
+    way. Sources: docs/img/src/gate-workflow.txt, internal/orchestrator/gate.go.</desc>
+<rect x="0" y="0" width="800" height="570" fill="#EEF3F2"/>
+<text x="24" y="30" font-size="14" fill="#163A44"
+    font-weight="600">Workflow Gate, simplified: each step an activity, each wait a timer, one Selector</text>
+<text x="24" y="50" font-size="12"
+    fill="#163A44">internal/orchestrator/gate.go: gate/run.sh&#39;s order, every step gate/step.sh on this checkout&#39;s worker</text>
+<g aria-label="open, preflight, omes, laugd, harness, an activity each, of type Step">
+  <rect x="24" y="76" width="348" height="56" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="198" y="100.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-weight="600">open, preflight, omes, laugd, harness</text>
+  <text x="198" y="115.5" font-size="12" fill="#163A44" text-anchor="middle">an activity each, of type Step</text>
+</g>
+<g aria-label="lease-&lt;k&gt;, an item at a time, in plan order; incumbent first">
+  <rect x="24" y="160" width="348" height="56" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="198" y="184.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-weight="600">lease-&lt;k&gt;, an item at a time</text>
+  <text x="198" y="199.5" font-size="12" fill="#163A44" text-anchor="middle">in plan order; incumbent first</text>
+</g>
+<g aria-label="barrier, then quiet-&lt;i&gt;, two quiet checks quiet_s apart,, a Sleep timer between them">
+  <rect x="24" y="244" width="348" height="76" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="198" y="271" font-size="12" fill="#163A44" text-anchor="middle"
+      font-weight="600">barrier, then quiet-&lt;i&gt;</text>
+  <text x="198" y="286" font-size="12" fill="#163A44" text-anchor="middle">two quiet checks quiet_s apart,</text>
+  <text x="198" y="301" font-size="12" fill="#163A44" text-anchor="middle">a Sleep timer between them</text>
+</g>
+<g aria-label="wave-time">
+  <rect x="24" y="348" width="348" height="44" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="198" y="374" font-size="12" fill="#163A44" text-anchor="middle">wave-time</text>
+</g>
+<line x1="198" y1="132" x2="198" y2="152" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="198,160 194,152 202,152" fill="#163A44"/>
+<line x1="198" y1="216" x2="198" y2="236" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="198,244 194,236 202,236" fill="#163A44"/>
+<line x1="198" y1="320" x2="198" y2="340" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="198,348 194,340 202,340" fill="#163A44"/>
+<rect x="404" y="70" width="388" height="334" fill="none" stroke="#163A44" stroke-dasharray="6 4"/>
+<text x="412" y="86" font-size="11" fill="#163A44"
+    font-weight="600">the wave: waveCtx, Gate&#39;s one WithCancel child</text>
+<g aria-label="Step wave, every item, at once">
+  <rect x="420" y="100" width="116" height="84" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="478" y="131" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">Step wave</text>
+  <text x="478" y="146" font-size="12" fill="#163A44" text-anchor="middle">every item</text>
+  <text x="478" y="161" font-size="12" fill="#163A44" text-anchor="middle">at once</text>
+</g>
+<g aria-label="AwaitItem &lt;k&gt;, an activity, an item">
+  <rect x="540" y="100" width="116" height="84" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="598" y="131" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">AwaitItem &lt;k&gt;</text>
+  <text x="598" y="146" font-size="12" fill="#163A44" text-anchor="middle">an activity</text>
+  <text x="598" y="161" font-size="12" fill="#163A44" text-anchor="middle">an item</text>
+</g>
+<g aria-label="the backstop, a timer: t0 +, deadline_s +, kill_grace_s +, 120 s">
+  <rect x="660" y="100" width="116" height="84" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="718" y="116" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">the backstop</text>
+  <text x="718" y="131" font-size="12" fill="#163A44" text-anchor="middle">a timer: t0 +</text>
+  <text x="718" y="146" font-size="12" fill="#163A44" text-anchor="middle">deadline_s +</text>
+  <text x="718" y="161" font-size="12" fill="#163A44" text-anchor="middle">kill_grace_s +</text>
+  <text x="718" y="176" font-size="12" fill="#163A44" text-anchor="middle">120 s</text>
+</g>
+<g aria-label="one Selector, takes the first answer; the, wave&#39;s or the backstop&#39;s ends it">
+  <rect x="420" y="230" width="356" height="66" fill="#163A44" stroke="#163A44"/>
+  <text x="598" y="252" font-size="12" fill="#EEF3F2" text-anchor="middle" font-weight="600">one Selector</text>
+  <text x="598" y="267" font-size="12" fill="#EEF3F2" text-anchor="middle">takes the first answer; the</text>
+  <text x="598" y="282" font-size="12" fill="#EEF3F2"
+      text-anchor="middle">wave&#39;s or the backstop&#39;s ends it</text>
+</g>
+<line x1="478" y1="184" x2="478" y2="222" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="478,230 474,222 482,222" fill="#163A44"/>
+<line x1="598" y1="184" x2="598" y2="222" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="598,230 594,222 602,222" fill="#163A44"/>
+<line x1="718" y1="184" x2="718" y2="222" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="718,230 714,222 722,222" fill="#163A44"/>
+<polyline points="372,370 388,370 388,142" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<line x1="388" y1="142" x2="412" y2="142" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="420,142 412,146 412,138" fill="#163A44"/>
+<text x="420" y="330" font-size="10" fill="#163A44">Then cancelWave cancels what still pends,</text>
+<text x="420" y="344" font-size="10" fill="#163A44">in the order it was scheduled.</text>
+<rect x="16" y="420" width="776" height="132" fill="none" stroke="#163A44" stroke-dasharray="6 4"/>
+<text x="24" y="544" font-size="11" fill="#163A44"
+    font-weight="600">on a disconnected context: a cancel cannot cut these short</text>
+<g aria-label="the stop path, on an error or a cancel, Stop the live step, stopped,, post stopped, release stopped">
+  <rect x="32" y="436" width="360" height="66" fill="#EEF3F2" stroke="#C44B32"/>
+  <text x="212" y="458" font-size="12" fill="#163A44" text-anchor="middle"
+      font-weight="600">the stop path, on an error or a cancel</text>
+  <text x="212" y="473" font-size="12" fill="#163A44" text-anchor="middle">Stop the live step, stopped,</text>
+  <text x="212" y="488" font-size="12" fill="#163A44" text-anchor="middle">post stopped, release stopped</text>
+</g>
+<g aria-label="judge, post, release, Step combine, post, release">
+  <rect x="420" y="436" width="356" height="66" fill="#5B9B6A" stroke="#163A44"/>
+  <text x="598" y="465.5" font-size="12" fill="#10181C" text-anchor="middle"
+      font-weight="600">judge, post, release</text>
+  <text x="598" y="480.5" font-size="12" fill="#10181C" text-anchor="middle">Step combine, post, release</text>
+</g>
+<line x1="598" y1="296" x2="598" y2="428" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="598,436 594,428 602,428" fill="#163A44"/>
+<text x="604" y="370" font-size="11" fill="#163A44">answered</text>
+<line x1="536.165" y1="296" x2="280.893" y2="432.233" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+<polygon points="273.835,436 279.009,428.704 282.776,435.762" fill="#C44B32"/>
+<text x="140" y="410" font-size="11" fill="#C44B32">error, backstop or cancel</text>
+</svg>

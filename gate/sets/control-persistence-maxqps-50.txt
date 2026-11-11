@@ -1,0 +1,10 @@
+# The control persistence-maxqps-50: gate/controls/persistence-maxqps-50.diff applied in a clone, its one changed line
+# history.persistenceMaxQPS 50 in every cell's dynamic config, cells/compose/dynamicconfig/laug.yaml. gate.json records
+# that file's own sha256, not what the change is for. On the lab host, an m8i.8xlarge (32 vCPU). Each BLOCKed class
+# refused: no cell got healthy, so the first lease was refused and no item ran. _report, the renderer, reads this list.
+# 2 gates.
+# One gate id a line; a line starting with # is a comment. A line "# <file>:<lines>, ..." names the transcript lines
+# that record the ids after it (TestSets).
+# cells/results/2026-10-24-boot4.txt:64-65, C1 and C2, each with the persistence sampler beside it
+g20261024-100229
+g20261024-100751

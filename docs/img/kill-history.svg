@@ -1,0 +1,463 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="472" viewBox="0 0 800 472" role="img"
+    aria-labelledby="kill-history-title kill-history-desc" font-family="Inter, system-ui, sans-serif">
+<title id="kill-history-title">kill-history: 545 to 551 failed starts in the outage, 44 to 51 after the restart</title>
+<desc id="kill-history-desc">A lane a raun of faults/catalog.yaml&#39;s kill-history; across, seconds from the kill, the
+    raun&#39;s inject_at. Each lane&#39;s bars are the raun&#39;s windows, left to right, each holding its failed client
+    starts: during, from the signal landing to the hold&#39;s end; drain, from the restart to the after window; after.
+    The dashed line is the restart, remove_at; the first tick the signal landing, the diamond history&#39;s own
+    &quot;initial shards ready&quot;, the second tick the signal recovered. Shards back 0.5 to 0.6 s after the restart,
+    the signal 5 to 10 s after it, the drain 35 to 40 s long. The 60 s before window, read before the kill, failed 0.
+    Under each lane, its failed starts a second: every failed iteration in the raun&#39;s Omes log, by its second from
+    the restart, floored, a bar a second, the tallest 20. From the restart on, 44 to 51 failed, the last 4 to 11 s after
+    it. Sources: docs/tables/fig-kill-history.jsonl, docs/tables/rauns.jsonl, docs/tables/src/hosts.tsv.</desc>
+<rect x="0" y="0" width="800" height="472" fill="#EEF3F2"/>
+<text x="24" y="30" font-size="14" fill="#163A44"
+    font-weight="600">kill-history: 545 to 551 failed starts in the outage, 44 to 51 after the restart</text>
+<text x="24" y="50" font-size="12"
+    fill="#163A44">3 rauns at 20 workflows/s on server 1.31.0, the lab host, an m8i.8xlarge; history held down 120 to 121 s</text>
+<line x1="264.421" y1="82" x2="264.421" y2="360" fill="none" stroke="#CFE3E4"/>
+<line x1="321.263" y1="82" x2="321.263" y2="360" fill="none" stroke="#CFE3E4"/>
+<line x1="378.105" y1="82" x2="378.105" y2="360" fill="none" stroke="#CFE3E4"/>
+<line x1="434.947" y1="82" x2="434.947" y2="360" fill="none" stroke="#CFE3E4"/>
+<line x1="491.789" y1="82" x2="491.789" y2="360" fill="none" stroke="#CFE3E4"/>
+<line x1="548.632" y1="82" x2="548.632" y2="360" fill="none" stroke="#CFE3E4"/>
+<line x1="605.474" y1="82" x2="605.474" y2="360" fill="none" stroke="#CFE3E4"/>
+<line x1="662.316" y1="82" x2="662.316" y2="360" fill="none" stroke="#CFE3E4"/>
+<line x1="719.158" y1="82" x2="719.158" y2="360" fill="none" stroke="#CFE3E4"/>
+<line x1="776" y1="82" x2="776" y2="360" fill="none" stroke="#CFE3E4"/>
+<text x="264.421" y="76" font-size="11" fill="#163A44" text-anchor="middle">killed</text>
+<text x="491.789" y="76" font-size="11" fill="#163A44" text-anchor="middle">restarted</text>
+<g aria-label="raun-lab6-kill-history-1: ADVANCE">
+  <text x="24" y="120" font-size="11" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">raun-lab6-kill-history-1</text>
+  <text x="24" y="136" font-size="11" fill="#5B9B6A" font-weight="600">ADVANCE</text>
+  <rect x="273.895" y="106" width="217.895" height="20" fill="#D99A3A" stroke="#163A44"
+      stroke-width="0.5"><title>during, 5 to 120 s: 545 failed starts</title></rect>
+  <text x="382.842" y="120" font-size="11" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">545</text>
+  <rect x="491.789" y="106" width="66.316" height="20" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>drain, 120 to 155 s: 50 failed starts</title></rect>
+  <text x="524.947" y="120" font-size="11" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">50</text>
+  <rect x="558.105" y="106" width="172.421" height="20" fill="#CFE3E4" stroke="#163A44"
+      stroke-width="0.5"><title>after, 155 to 246 s: 0 failed starts</title></rect>
+  <text x="644.316" y="120" font-size="11" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+  <line x1="264.421" y1="100" x2="264.421" y2="132" fill="none" stroke="#10181C" stroke-width="1.5"/>
+  <line x1="491.789" y1="98" x2="491.789" y2="148" fill="none" stroke="#10181C" stroke-width="1.5" stroke-dasharray="4
+      3"/>
+  <line x1="273.895" y1="98" x2="273.895" y2="105" fill="none" stroke="#10181C" stroke-width="2"/>
+  <line x1="501.263" y1="98" x2="501.263" y2="105" fill="none" stroke="#10181C" stroke-width="2"/>
+  <polygon points="492.737,96 496.737,101 492.737,106 488.737,101"
+      fill="#163A44"><title>initial shards ready 0.5 s after the restart</title></polygon>
+  <line x1="236" y1="148" x2="730.526" y2="148" fill="none" stroke="#CFE3E4"/>
+  <rect x="283.368" y="137.2" width="1.895" height="10.8"
+      fill="#163A44"><title>-110 s from the restart: 12 failed starts</title></rect>
+  <rect x="285.263" y="130" width="1.895" height="18"
+      fill="#163A44"><title>-109 s from the restart: 20 failed starts</title></rect>
+  <rect x="287.158" y="132.7" width="1.895" height="15.3"
+      fill="#163A44"><title>-108 s from the restart: 17 failed starts</title></rect>
+  <rect x="302.316" y="137.2" width="1.895" height="10.8"
+      fill="#163A44"><title>-100 s from the restart: 12 failed starts</title></rect>
+  <rect x="304.211" y="130" width="1.895" height="18"
+      fill="#163A44"><title>-99 s from the restart: 20 failed starts</title></rect>
+  <rect x="306.105" y="132.7" width="1.895" height="15.3"
+      fill="#163A44"><title>-98 s from the restart: 17 failed starts</title></rect>
+  <rect x="321.263" y="137.2" width="1.895" height="10.8"
+      fill="#163A44"><title>-90 s from the restart: 12 failed starts</title></rect>
+  <rect x="323.158" y="130" width="1.895" height="18"
+      fill="#163A44"><title>-89 s from the restart: 20 failed starts</title></rect>
+  <rect x="325.053" y="132.7" width="1.895" height="15.3"
+      fill="#163A44"><title>-88 s from the restart: 17 failed starts</title></rect>
+  <rect x="340.211" y="137.2" width="1.895" height="10.8"
+      fill="#163A44"><title>-80 s from the restart: 12 failed starts</title></rect>
+  <rect x="342.105" y="130" width="1.895" height="18"
+      fill="#163A44"><title>-79 s from the restart: 20 failed starts</title></rect>
+  <rect x="344" y="132.7" width="1.895" height="15.3"
+      fill="#163A44"><title>-78 s from the restart: 17 failed starts</title></rect>
+  <rect x="359.158" y="137.2" width="1.895" height="10.8"
+      fill="#163A44"><title>-70 s from the restart: 12 failed starts</title></rect>
+  <rect x="361.053" y="130" width="1.895" height="18"
+      fill="#163A44"><title>-69 s from the restart: 20 failed starts</title></rect>
+  <rect x="362.947" y="132.7" width="1.895" height="15.3"
+      fill="#163A44"><title>-68 s from the restart: 17 failed starts</title></rect>
+  <rect x="378.105" y="137.2" width="1.895" height="10.8"
+      fill="#163A44"><title>-60 s from the restart: 12 failed starts</title></rect>
+  <rect x="380" y="130" width="1.895" height="18"
+      fill="#163A44"><title>-59 s from the restart: 20 failed starts</title></rect>
+  <rect x="381.895" y="132.7" width="1.895" height="15.3"
+      fill="#163A44"><title>-58 s from the restart: 17 failed starts</title></rect>
+  <rect x="387.579" y="147.1" width="1.895" height="0.9"
+      fill="#163A44"><title>-55 s from the restart: 1 failed start</title></rect>
+  <rect x="397.053" y="137.2" width="1.895" height="10.8"
+      fill="#163A44"><title>-50 s from the restart: 12 failed starts</title></rect>
+  <rect x="398.947" y="130" width="1.895" height="18"
+      fill="#163A44"><title>-49 s from the restart: 20 failed starts</title></rect>
+  <rect x="400.842" y="132.7" width="1.895" height="15.3"
+      fill="#163A44"><title>-48 s from the restart: 17 failed starts</title></rect>
+  <rect x="406.526" y="147.1" width="1.895" height="0.9"
+      fill="#163A44"><title>-45 s from the restart: 1 failed start</title></rect>
+  <rect x="416" y="137.2" width="1.895" height="10.8"
+      fill="#163A44"><title>-40 s from the restart: 12 failed starts</title></rect>
+  <rect x="417.895" y="130" width="1.895" height="18"
+      fill="#163A44"><title>-39 s from the restart: 20 failed starts</title></rect>
+  <rect x="419.789" y="132.7" width="1.895" height="15.3"
+      fill="#163A44"><title>-38 s from the restart: 17 failed starts</title></rect>
+  <rect x="425.474" y="147.1" width="1.895" height="0.9"
+      fill="#163A44"><title>-35 s from the restart: 1 failed start</title></rect>
+  <rect x="434.947" y="137.2" width="1.895" height="10.8"
+      fill="#163A44"><title>-30 s from the restart: 12 failed starts</title></rect>
+  <rect x="436.842" y="130" width="1.895" height="18"
+      fill="#163A44"><title>-29 s from the restart: 20 failed starts</title></rect>
+  <rect x="438.737" y="132.7" width="1.895" height="15.3"
+      fill="#163A44"><title>-28 s from the restart: 17 failed starts</title></rect>
+  <rect x="444.421" y="147.1" width="1.895" height="0.9"
+      fill="#163A44"><title>-25 s from the restart: 1 failed start</title></rect>
+  <rect x="453.895" y="137.2" width="1.895" height="10.8"
+      fill="#163A44"><title>-20 s from the restart: 12 failed starts</title></rect>
+  <rect x="455.789" y="130" width="1.895" height="18"
+      fill="#163A44"><title>-19 s from the restart: 20 failed starts</title></rect>
+  <rect x="457.684" y="132.7" width="1.895" height="15.3"
+      fill="#163A44"><title>-18 s from the restart: 17 failed starts</title></rect>
+  <rect x="463.368" y="147.1" width="1.895" height="0.9"
+      fill="#163A44"><title>-15 s from the restart: 1 failed start</title></rect>
+  <rect x="472.842" y="137.2" width="1.895" height="10.8"
+      fill="#163A44"><title>-10 s from the restart: 12 failed starts</title></rect>
+  <rect x="474.737" y="130" width="1.895" height="18"
+      fill="#163A44"><title>-9 s from the restart: 20 failed starts</title></rect>
+  <rect x="476.632" y="132.7" width="1.895" height="15.3"
+      fill="#163A44"><title>-8 s from the restart: 17 failed starts</title></rect>
+  <rect x="482.316" y="147.1" width="1.895" height="0.9"
+      fill="#163A44"><title>-5 s from the restart: 1 failed start</title></rect>
+  <rect x="491.789" y="137.2" width="1.895" height="10.8"
+      fill="#163A44"><title>+0 s from the restart: 12 failed starts</title></rect>
+  <rect x="493.684" y="130" width="1.895" height="18"
+      fill="#163A44"><title>+1 s from the restart: 20 failed starts</title></rect>
+  <rect x="495.579" y="132.7" width="1.895" height="15.3"
+      fill="#163A44"><title>+2 s from the restart: 17 failed starts</title></rect>
+  <rect x="501.263" y="147.1" width="1.895" height="0.9"
+      fill="#163A44"><title>+5 s from the restart: 1 failed start</title></rect>
+  <text x="24" y="163" font-size="10"
+      fill="#163A44">landed +5 s; after the restart: shards ready 0.5 s, signal recovered 5 s, last failed start 5 s; drain 35 s</text>
+</g>
+<g aria-label="raun-lab6-kill-history-2: ADVANCE">
+  <text x="24" y="208" font-size="11" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">raun-lab6-kill-history-2</text>
+  <text x="24" y="224" font-size="11" fill="#5B9B6A" font-weight="600">ADVANCE</text>
+  <rect x="275.789" y="194" width="216" height="20" fill="#D99A3A" stroke="#163A44"
+      stroke-width="0.5"><title>during, 6 to 120 s: 545 failed starts</title></rect>
+  <text x="383.789" y="208" font-size="11" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">545</text>
+  <rect x="491.789" y="194" width="75.789" height="20" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>drain, 120 to 160 s: 51 failed starts</title></rect>
+  <text x="529.684" y="208" font-size="11" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">51</text>
+  <rect x="567.579" y="194" width="170.526" height="20" fill="#CFE3E4" stroke="#163A44"
+      stroke-width="0.5"><title>after, 160 to 250 s: 0 failed starts</title></rect>
+  <text x="652.842" y="208" font-size="11" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+  <line x1="264.421" y1="188" x2="264.421" y2="220" fill="none" stroke="#10181C" stroke-width="1.5"/>
+  <line x1="491.789" y1="186" x2="491.789" y2="236" fill="none" stroke="#10181C" stroke-width="1.5" stroke-dasharray="4
+      3"/>
+  <line x1="275.789" y1="186" x2="275.789" y2="193" fill="none" stroke="#10181C" stroke-width="2"/>
+  <line x1="510.737" y1="186" x2="510.737" y2="193" fill="none" stroke="#10181C" stroke-width="2"/>
+  <polygon points="492.737,184 496.737,189 492.737,194 488.737,189"
+      fill="#163A44"><title>initial shards ready 0.5 s after the restart</title></polygon>
+  <line x1="236" y1="236" x2="738.105" y2="236" fill="none" stroke="#CFE3E4"/>
+  <rect x="283.368" y="235.1" width="1.895" height="0.9"
+      fill="#163A44"><title>-110 s from the restart: 1 failed start</title></rect>
+  <rect x="285.263" y="218" width="1.895" height="18"
+      fill="#163A44"><title>-109 s from the restart: 20 failed starts</title></rect>
+  <rect x="287.158" y="218" width="1.895" height="18"
+      fill="#163A44"><title>-108 s from the restart: 20 failed starts</title></rect>
+  <rect x="289.053" y="228.8" width="1.895" height="7.2"
+      fill="#163A44"><title>-107 s from the restart: 8 failed starts</title></rect>
+  <rect x="302.316" y="235.1" width="1.895" height="0.9"
+      fill="#163A44"><title>-100 s from the restart: 1 failed start</title></rect>
+  <rect x="304.211" y="218" width="1.895" height="18"
+      fill="#163A44"><title>-99 s from the restart: 20 failed starts</title></rect>
+  <rect x="306.105" y="218" width="1.895" height="18"
+      fill="#163A44"><title>-98 s from the restart: 20 failed starts</title></rect>
+  <rect x="308" y="228.8" width="1.895" height="7.2"
+      fill="#163A44"><title>-97 s from the restart: 8 failed starts</title></rect>
+  <rect x="321.263" y="235.1" width="1.895" height="0.9"
+      fill="#163A44"><title>-90 s from the restart: 1 failed start</title></rect>
+  <rect x="323.158" y="218" width="1.895" height="18"
+      fill="#163A44"><title>-89 s from the restart: 20 failed starts</title></rect>
+  <rect x="325.053" y="218" width="1.895" height="18"
+      fill="#163A44"><title>-88 s from the restart: 20 failed starts</title></rect>
+  <rect x="326.947" y="228.8" width="1.895" height="7.2"
+      fill="#163A44"><title>-87 s from the restart: 8 failed starts</title></rect>
+  <rect x="340.211" y="235.1" width="1.895" height="0.9"
+      fill="#163A44"><title>-80 s from the restart: 1 failed start</title></rect>
+  <rect x="342.105" y="218" width="1.895" height="18"
+      fill="#163A44"><title>-79 s from the restart: 20 failed starts</title></rect>
+  <rect x="344" y="218" width="1.895" height="18"
+      fill="#163A44"><title>-78 s from the restart: 20 failed starts</title></rect>
+  <rect x="345.895" y="228.8" width="1.895" height="7.2"
+      fill="#163A44"><title>-77 s from the restart: 8 failed starts</title></rect>
+  <rect x="359.158" y="235.1" width="1.895" height="0.9"
+      fill="#163A44"><title>-70 s from the restart: 1 failed start</title></rect>
+  <rect x="361.053" y="218" width="1.895" height="18"
+      fill="#163A44"><title>-69 s from the restart: 20 failed starts</title></rect>
+  <rect x="362.947" y="218" width="1.895" height="18"
+      fill="#163A44"><title>-68 s from the restart: 20 failed starts</title></rect>
+  <rect x="364.842" y="228.8" width="1.895" height="7.2"
+      fill="#163A44"><title>-67 s from the restart: 8 failed starts</title></rect>
+  <rect x="378.105" y="235.1" width="1.895" height="0.9"
+      fill="#163A44"><title>-60 s from the restart: 1 failed start</title></rect>
+  <rect x="380" y="218" width="1.895" height="18"
+      fill="#163A44"><title>-59 s from the restart: 20 failed starts</title></rect>
+  <rect x="381.895" y="218" width="1.895" height="18"
+      fill="#163A44"><title>-58 s from the restart: 20 failed starts</title></rect>
+  <rect x="383.789" y="228.8" width="1.895" height="7.2"
+      fill="#163A44"><title>-57 s from the restart: 8 failed starts</title></rect>
+  <rect x="387.579" y="235.1" width="1.895" height="0.9"
+      fill="#163A44"><title>-55 s from the restart: 1 failed start</title></rect>
+  <rect x="397.053" y="235.1" width="1.895" height="0.9"
+      fill="#163A44"><title>-50 s from the restart: 1 failed start</title></rect>
+  <rect x="398.947" y="218" width="1.895" height="18"
+      fill="#163A44"><title>-49 s from the restart: 20 failed starts</title></rect>
+  <rect x="400.842" y="218" width="1.895" height="18"
+      fill="#163A44"><title>-48 s from the restart: 20 failed starts</title></rect>
+  <rect x="402.737" y="228.8" width="1.895" height="7.2"
+      fill="#163A44"><title>-47 s from the restart: 8 failed starts</title></rect>
+  <rect x="406.526" y="235.1" width="1.895" height="0.9"
+      fill="#163A44"><title>-45 s from the restart: 1 failed start</title></rect>
+  <rect x="416" y="235.1" width="1.895" height="0.9"
+      fill="#163A44"><title>-40 s from the restart: 1 failed start</title></rect>
+  <rect x="417.895" y="218" width="1.895" height="18"
+      fill="#163A44"><title>-39 s from the restart: 20 failed starts</title></rect>
+  <rect x="419.789" y="218" width="1.895" height="18"
+      fill="#163A44"><title>-38 s from the restart: 20 failed starts</title></rect>
+  <rect x="421.684" y="228.8" width="1.895" height="7.2"
+      fill="#163A44"><title>-37 s from the restart: 8 failed starts</title></rect>
+  <rect x="425.474" y="235.1" width="1.895" height="0.9"
+      fill="#163A44"><title>-35 s from the restart: 1 failed start</title></rect>
+  <rect x="434.947" y="235.1" width="1.895" height="0.9"
+      fill="#163A44"><title>-30 s from the restart: 1 failed start</title></rect>
+  <rect x="436.842" y="218" width="1.895" height="18"
+      fill="#163A44"><title>-29 s from the restart: 20 failed starts</title></rect>
+  <rect x="438.737" y="218" width="1.895" height="18"
+      fill="#163A44"><title>-28 s from the restart: 20 failed starts</title></rect>
+  <rect x="440.632" y="228.8" width="1.895" height="7.2"
+      fill="#163A44"><title>-27 s from the restart: 8 failed starts</title></rect>
+  <rect x="444.421" y="235.1" width="1.895" height="0.9"
+      fill="#163A44"><title>-25 s from the restart: 1 failed start</title></rect>
+  <rect x="453.895" y="235.1" width="1.895" height="0.9"
+      fill="#163A44"><title>-20 s from the restart: 1 failed start</title></rect>
+  <rect x="455.789" y="218" width="1.895" height="18"
+      fill="#163A44"><title>-19 s from the restart: 20 failed starts</title></rect>
+  <rect x="457.684" y="218" width="1.895" height="18"
+      fill="#163A44"><title>-18 s from the restart: 20 failed starts</title></rect>
+  <rect x="459.579" y="228.8" width="1.895" height="7.2"
+      fill="#163A44"><title>-17 s from the restart: 8 failed starts</title></rect>
+  <rect x="463.368" y="235.1" width="1.895" height="0.9"
+      fill="#163A44"><title>-15 s from the restart: 1 failed start</title></rect>
+  <rect x="472.842" y="235.1" width="1.895" height="0.9"
+      fill="#163A44"><title>-10 s from the restart: 1 failed start</title></rect>
+  <rect x="474.737" y="218" width="1.895" height="18"
+      fill="#163A44"><title>-9 s from the restart: 20 failed starts</title></rect>
+  <rect x="476.632" y="218" width="1.895" height="18"
+      fill="#163A44"><title>-8 s from the restart: 20 failed starts</title></rect>
+  <rect x="478.526" y="228.8" width="1.895" height="7.2"
+      fill="#163A44"><title>-7 s from the restart: 8 failed starts</title></rect>
+  <rect x="482.316" y="235.1" width="1.895" height="0.9"
+      fill="#163A44"><title>-5 s from the restart: 1 failed start</title></rect>
+  <rect x="491.789" y="235.1" width="1.895" height="0.9"
+      fill="#163A44"><title>+0 s from the restart: 1 failed start</title></rect>
+  <rect x="493.684" y="218" width="1.895" height="18"
+      fill="#163A44"><title>+1 s from the restart: 20 failed starts</title></rect>
+  <rect x="495.579" y="218" width="1.895" height="18"
+      fill="#163A44"><title>+2 s from the restart: 20 failed starts</title></rect>
+  <rect x="497.474" y="228.8" width="1.895" height="7.2"
+      fill="#163A44"><title>+3 s from the restart: 8 failed starts</title></rect>
+  <rect x="501.263" y="235.1" width="1.895" height="0.9"
+      fill="#163A44"><title>+5 s from the restart: 1 failed start</title></rect>
+  <rect x="512.632" y="235.1" width="1.895" height="0.9"
+      fill="#163A44"><title>+11 s from the restart: 1 failed start</title></rect>
+  <text x="24" y="251" font-size="10"
+      fill="#163A44">landed +6 s; after the restart: shards ready 0.5 s, signal recovered 10 s, last failed start 11 s; drain 40 s</text>
+</g>
+<g aria-label="raun-lab6-kill-history-3: ADVANCE">
+  <text x="24" y="296" font-size="11" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">raun-lab6-kill-history-3</text>
+  <text x="24" y="312" font-size="11" fill="#5B9B6A" font-weight="600">ADVANCE</text>
+  <rect x="273.895" y="282" width="217.895" height="20" fill="#D99A3A" stroke="#163A44"
+      stroke-width="0.5"><title>during, 5 to 120 s: 551 failed starts</title></rect>
+  <text x="382.842" y="296" font-size="11" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">551</text>
+  <rect x="493.684" y="282" width="66.316" height="20" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>drain, 121 to 156 s: 44 failed starts</title></rect>
+  <text x="526.842" y="296" font-size="11" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">44</text>
+  <rect x="560" y="282" width="170.526" height="20" fill="#CFE3E4" stroke="#163A44"
+      stroke-width="0.5"><title>after, 156 to 246 s: 0 failed starts</title></rect>
+  <text x="645.263" y="296" font-size="11" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+  <line x1="264.421" y1="276" x2="264.421" y2="308" fill="none" stroke="#10181C" stroke-width="1.5"/>
+  <line x1="493.684" y1="274" x2="493.684" y2="324" fill="none" stroke="#10181C" stroke-width="1.5" stroke-dasharray="4
+      3"/>
+  <line x1="273.895" y1="274" x2="273.895" y2="281" fill="none" stroke="#10181C" stroke-width="2"/>
+  <line x1="503.158" y1="274" x2="503.158" y2="281" fill="none" stroke="#10181C" stroke-width="2"/>
+  <polygon points="494.821,272 498.821,277 494.821,282 490.821,277"
+      fill="#163A44"><title>initial shards ready 0.6 s after the restart</title></polygon>
+  <line x1="236" y1="324" x2="730.526" y2="324" fill="none" stroke="#CFE3E4"/>
+  <rect x="283.368" y="318.6" width="1.895" height="5.4"
+      fill="#163A44"><title>-111 s from the restart: 6 failed starts</title></rect>
+  <rect x="285.263" y="306" width="1.895" height="18"
+      fill="#163A44"><title>-110 s from the restart: 20 failed starts</title></rect>
+  <rect x="287.158" y="306" width="1.895" height="18"
+      fill="#163A44"><title>-109 s from the restart: 20 failed starts</title></rect>
+  <rect x="289.053" y="321.3" width="1.895" height="2.7"
+      fill="#163A44"><title>-108 s from the restart: 3 failed starts</title></rect>
+  <rect x="302.316" y="318.6" width="1.895" height="5.4"
+      fill="#163A44"><title>-101 s from the restart: 6 failed starts</title></rect>
+  <rect x="304.211" y="306" width="1.895" height="18"
+      fill="#163A44"><title>-100 s from the restart: 20 failed starts</title></rect>
+  <rect x="306.105" y="306" width="1.895" height="18"
+      fill="#163A44"><title>-99 s from the restart: 20 failed starts</title></rect>
+  <rect x="308" y="321.3" width="1.895" height="2.7"
+      fill="#163A44"><title>-98 s from the restart: 3 failed starts</title></rect>
+  <rect x="321.263" y="318.6" width="1.895" height="5.4"
+      fill="#163A44"><title>-91 s from the restart: 6 failed starts</title></rect>
+  <rect x="323.158" y="306" width="1.895" height="18"
+      fill="#163A44"><title>-90 s from the restart: 20 failed starts</title></rect>
+  <rect x="325.053" y="306" width="1.895" height="18"
+      fill="#163A44"><title>-89 s from the restart: 20 failed starts</title></rect>
+  <rect x="326.947" y="321.3" width="1.895" height="2.7"
+      fill="#163A44"><title>-88 s from the restart: 3 failed starts</title></rect>
+  <rect x="340.211" y="318.6" width="1.895" height="5.4"
+      fill="#163A44"><title>-81 s from the restart: 6 failed starts</title></rect>
+  <rect x="342.105" y="306" width="1.895" height="18"
+      fill="#163A44"><title>-80 s from the restart: 20 failed starts</title></rect>
+  <rect x="344" y="306" width="1.895" height="18"
+      fill="#163A44"><title>-79 s from the restart: 20 failed starts</title></rect>
+  <rect x="345.895" y="321.3" width="1.895" height="2.7"
+      fill="#163A44"><title>-78 s from the restart: 3 failed starts</title></rect>
+  <rect x="359.158" y="318.6" width="1.895" height="5.4"
+      fill="#163A44"><title>-71 s from the restart: 6 failed starts</title></rect>
+  <rect x="361.053" y="306" width="1.895" height="18"
+      fill="#163A44"><title>-70 s from the restart: 20 failed starts</title></rect>
+  <rect x="362.947" y="306" width="1.895" height="18"
+      fill="#163A44"><title>-69 s from the restart: 20 failed starts</title></rect>
+  <rect x="364.842" y="321.3" width="1.895" height="2.7"
+      fill="#163A44"><title>-68 s from the restart: 3 failed starts</title></rect>
+  <rect x="378.105" y="318.6" width="1.895" height="5.4"
+      fill="#163A44"><title>-61 s from the restart: 6 failed starts</title></rect>
+  <rect x="380" y="306" width="1.895" height="18"
+      fill="#163A44"><title>-60 s from the restart: 20 failed starts</title></rect>
+  <rect x="381.895" y="306" width="1.895" height="18"
+      fill="#163A44"><title>-59 s from the restart: 20 failed starts</title></rect>
+  <rect x="383.789" y="321.3" width="1.895" height="2.7"
+      fill="#163A44"><title>-58 s from the restart: 3 failed starts</title></rect>
+  <rect x="387.579" y="323.1" width="1.895" height="0.9"
+      fill="#163A44"><title>-56 s from the restart: 1 failed start</title></rect>
+  <rect x="397.053" y="318.6" width="1.895" height="5.4"
+      fill="#163A44"><title>-51 s from the restart: 6 failed starts</title></rect>
+  <rect x="398.947" y="306" width="1.895" height="18"
+      fill="#163A44"><title>-50 s from the restart: 20 failed starts</title></rect>
+  <rect x="400.842" y="306" width="1.895" height="18"
+      fill="#163A44"><title>-49 s from the restart: 20 failed starts</title></rect>
+  <rect x="402.737" y="321.3" width="1.895" height="2.7"
+      fill="#163A44"><title>-48 s from the restart: 3 failed starts</title></rect>
+  <rect x="406.526" y="323.1" width="1.895" height="0.9"
+      fill="#163A44"><title>-46 s from the restart: 1 failed start</title></rect>
+  <rect x="416" y="318.6" width="1.895" height="5.4"
+      fill="#163A44"><title>-41 s from the restart: 6 failed starts</title></rect>
+  <rect x="417.895" y="306" width="1.895" height="18"
+      fill="#163A44"><title>-40 s from the restart: 20 failed starts</title></rect>
+  <rect x="419.789" y="306" width="1.895" height="18"
+      fill="#163A44"><title>-39 s from the restart: 20 failed starts</title></rect>
+  <rect x="421.684" y="321.3" width="1.895" height="2.7"
+      fill="#163A44"><title>-38 s from the restart: 3 failed starts</title></rect>
+  <rect x="425.474" y="323.1" width="1.895" height="0.9"
+      fill="#163A44"><title>-36 s from the restart: 1 failed start</title></rect>
+  <rect x="434.947" y="318.6" width="1.895" height="5.4"
+      fill="#163A44"><title>-31 s from the restart: 6 failed starts</title></rect>
+  <rect x="436.842" y="306" width="1.895" height="18"
+      fill="#163A44"><title>-30 s from the restart: 20 failed starts</title></rect>
+  <rect x="438.737" y="306" width="1.895" height="18"
+      fill="#163A44"><title>-29 s from the restart: 20 failed starts</title></rect>
+  <rect x="440.632" y="321.3" width="1.895" height="2.7"
+      fill="#163A44"><title>-28 s from the restart: 3 failed starts</title></rect>
+  <rect x="444.421" y="323.1" width="1.895" height="0.9"
+      fill="#163A44"><title>-26 s from the restart: 1 failed start</title></rect>
+  <rect x="453.895" y="318.6" width="1.895" height="5.4"
+      fill="#163A44"><title>-21 s from the restart: 6 failed starts</title></rect>
+  <rect x="455.789" y="306" width="1.895" height="18"
+      fill="#163A44"><title>-20 s from the restart: 20 failed starts</title></rect>
+  <rect x="457.684" y="306" width="1.895" height="18"
+      fill="#163A44"><title>-19 s from the restart: 20 failed starts</title></rect>
+  <rect x="459.579" y="321.3" width="1.895" height="2.7"
+      fill="#163A44"><title>-18 s from the restart: 3 failed starts</title></rect>
+  <rect x="463.368" y="323.1" width="1.895" height="0.9"
+      fill="#163A44"><title>-16 s from the restart: 1 failed start</title></rect>
+  <rect x="472.842" y="318.6" width="1.895" height="5.4"
+      fill="#163A44"><title>-11 s from the restart: 6 failed starts</title></rect>
+  <rect x="474.737" y="306" width="1.895" height="18"
+      fill="#163A44"><title>-10 s from the restart: 20 failed starts</title></rect>
+  <rect x="476.632" y="306" width="1.895" height="18"
+      fill="#163A44"><title>-9 s from the restart: 20 failed starts</title></rect>
+  <rect x="478.526" y="321.3" width="1.895" height="2.7"
+      fill="#163A44"><title>-8 s from the restart: 3 failed starts</title></rect>
+  <rect x="482.316" y="323.1" width="1.895" height="0.9"
+      fill="#163A44"><title>-6 s from the restart: 1 failed start</title></rect>
+  <rect x="491.789" y="318.6" width="1.895" height="5.4"
+      fill="#163A44"><title>-1 s from the restart: 6 failed starts</title></rect>
+  <rect x="493.684" y="306" width="1.895" height="18"
+      fill="#163A44"><title>+0 s from the restart: 20 failed starts</title></rect>
+  <rect x="495.579" y="306" width="1.895" height="18"
+      fill="#163A44"><title>+1 s from the restart: 20 failed starts</title></rect>
+  <rect x="497.474" y="321.3" width="1.895" height="2.7"
+      fill="#163A44"><title>+2 s from the restart: 3 failed starts</title></rect>
+  <rect x="501.263" y="323.1" width="1.895" height="0.9"
+      fill="#163A44"><title>+4 s from the restart: 1 failed start</title></rect>
+  <text x="24" y="339" font-size="10"
+      fill="#163A44">landed +5 s; after the restart: shards ready 0.6 s, signal recovered 5 s, last failed start 4 s; drain 35 s</text>
+</g>
+<line x1="236" y1="376" x2="776" y2="376" fill="none" stroke="#10181C"/>
+<line x1="264.421" y1="376" x2="264.421" y2="380" fill="none" stroke="#10181C"/>
+<text x="264.421" y="392" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+<line x1="321.263" y1="376" x2="321.263" y2="380" fill="none" stroke="#10181C"/>
+<text x="321.263" y="392" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">30</text>
+<line x1="378.105" y1="376" x2="378.105" y2="380" fill="none" stroke="#10181C"/>
+<text x="378.105" y="392" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">60</text>
+<line x1="434.947" y1="376" x2="434.947" y2="380" fill="none" stroke="#10181C"/>
+<text x="434.947" y="392" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">90</text>
+<line x1="491.789" y1="376" x2="491.789" y2="380" fill="none" stroke="#10181C"/>
+<text x="491.789" y="392" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">120</text>
+<line x1="548.632" y1="376" x2="548.632" y2="380" fill="none" stroke="#10181C"/>
+<text x="548.632" y="392" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">150</text>
+<line x1="605.474" y1="376" x2="605.474" y2="380" fill="none" stroke="#10181C"/>
+<text x="605.474" y="392" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">180</text>
+<line x1="662.316" y1="376" x2="662.316" y2="380" fill="none" stroke="#10181C"/>
+<text x="662.316" y="392" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">210</text>
+<line x1="719.158" y1="376" x2="719.158" y2="380" fill="none" stroke="#10181C"/>
+<text x="719.158" y="392" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">240</text>
+<line x1="776" y1="376" x2="776" y2="380" fill="none" stroke="#10181C"/>
+<text x="776" y="392" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">270</text>
+<text x="506" y="408" font-size="12" fill="#163A44" text-anchor="middle">seconds after history was killed</text>
+<rect x="24" y="445" width="18" height="10" fill="#CFE3E4"/>
+<text x="48" y="454" font-size="11" fill="#163A44">after</text>
+<rect x="96.8" y="445" width="18" height="10" fill="#D99A3A"/>
+<text x="120.8" y="454" font-size="11" fill="#163A44">during: held down</text>
+<rect x="243.52" y="445" width="18" height="10" fill="#5FB3BF"/>
+<text x="267.52" y="454" font-size="11" fill="#163A44">drain: restart to after window</text>
+<line x1="470.32" y1="450" x2="488.32" y2="450" fill="none" stroke="#10181C" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="494.32" y="454" font-size="11" fill="#163A44">restart</text>
+<polygon points="564.44,445 568.44,450 564.44,455 560.44,450" fill="#163A44"/>
+<text x="579.44" y="454" font-size="11" fill="#163A44">shards ready</text>
+<text x="24" y="76" font-size="11" fill="#163A44">In each bar: failed client starts;</text>
+<text x="24" y="90" font-size="11" fill="#163A44">under it, the same a second at a time</text>
+</svg>

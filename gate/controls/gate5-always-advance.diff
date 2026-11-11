@@ -1,0 +1,13 @@
+# gate5-always-advance: load/verdict.sh prints ADVANCE and exits 0 before it reads a run. make harness-test fails on that tree, so the gate must BLOCK, class harness, on R1, before any load, as g20261017-225512 did on cells; on fakes too.
+diff --git a/load/verdict.sh b/load/verdict.sh
+index bd7b299..b42acb2 100755
+--- a/load/verdict.sh
++++ b/load/verdict.sh
+@@ -31,6 +31,7 @@
+ # not_produced, true when the reading was read and had no data. Written on exit 0, 1 and 3 only; an exit 2 or a reading
+ # that failed writes nothing. Set or unset, VERDICT_JSON does not change what the script prints.
+ set -euo pipefail
++echo "ADVANCE"; exit 0   # gate5-always-advance: a broken verdict, which the gate must BLOCK on R1 (make harness-test)
+ 
+ RUN_ID="${1:?run id}"
+ RESULTS_DIR="${RESULTS_DIR:-load/results}"

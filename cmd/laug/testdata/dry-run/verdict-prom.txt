@@ -1,0 +1,7 @@
+# make: make --no-print-directory -n verdict RUN_ID=r1 PROM_URL=http://127.0.0.1:19090
+# laug: laug verdict r1 -prom http://127.0.0.1:19090
+# lease: present
+# adds: VERDICT_JSON=load/results/r1.verdict.json
+# compare: line load/verdict.sh
+[[ 'r1' =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || { echo "laug · make verdict: RUN_ID="'r1'" is not one word of letters, digits, ., _ and -, from a letter or digit" >&2; exit 2; };                    
+PROM_URL='http://127.0.0.1:19090' FALLBACK_PROM_URL='http://127.0.0.1:19090' load/verdict.sh r1

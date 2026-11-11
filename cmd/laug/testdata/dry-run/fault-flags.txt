@@ -1,0 +1,7 @@
+# make: make --no-print-directory -n fault FAULT=kill-history SCENARIO=throughput_stress RUN_ID=r1 POOL_ADDR=http://127.0.0.1:17700 POOL_QUIET_WAIT_S=0 THRESHOLDS=load/steady-state.yaml
+# laug: laug fault kill-history -scenario throughput_stress -run-id r1 -pool 127.0.0.1:17700 -quiet-wait 0s -thresholds load/steady-state.yaml
+# lease: present
+# passes: POOL_QUIET_WAIT_S=0 THRESHOLDS=load/steady-state.yaml
+# compare: line faults/run.sh
+[[ 'r1' =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || { echo "laug · make fault: RUN_ID="'r1'" is not one word of letters, digits, ., _ and -, from a letter or digit" >&2; exit 2; }; [[ 'throughput_stress' =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || { echo "laug · make fault: SCENARIO="'throughput_stress'" is not one word of letters, digits, ., _ and -, from a letter or digit" >&2; exit 2; }; [[ 'kill-history' =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || { echo "laug · make fault: FAULT="'kill-history'" is not one word of letters, digits, ., _ and -, from a letter or digit" >&2; exit 2; };                  
+RUN_ID=r1 POOL_ADDR='http://127.0.0.1:17700' faults/run.sh throughput_stress kill-history

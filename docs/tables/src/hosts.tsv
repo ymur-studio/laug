@@ -1,0 +1,35 @@
+# The host each family of rauns and loads ran on, which a raun's or a load's JSON does not record: a glob of run
+# ids (a docs/tables rauns or loads row's id, a candidate's load copy by its file name), a TAB, one of docs/RECORDS.md's
+# four host phrases, a TAB, then the transcript's file:line that says it. report -tables checks each glob matches a
+# row, no run falls under two lines, and the cited lines name the phrase's machine. A run no line names has no host
+# here: the dev host's early runs, whose transcripts left the tree, and runs a transcript names only in a listing.
+raun-fc[kot]*	the first lab host, an m8i.2xlarge (8 vCPU, 32 GiB)	cells/results/2026-10-13-firecracker-faults.txt:2
+raun-fv*	the first lab host, an m8i.2xlarge (8 vCPU, 32 GiB)	cells/results/2026-10-13-firecracker-faults.txt:2
+raun-fw*	the first lab host, an m8i.2xlarge (8 vCPU, 32 GiB)	cells/results/2026-10-13-firecracker-faults.txt:2
+# raun-v132-* has no line: cells/results/2026-10-14-lab-1.32.1.txt:2 infers its host from that day's other files.
+lab131-*	the first lab host, an m8i.2xlarge (8 vCPU, 32 GiB)	cells/results/2026-10-14-lab-host-131.txt:2
+boot-[abc]	the first lab host, an m8i.2xlarge (8 vCPU, 32 GiB)	cells/results/2026-10-14-lab-host-131.txt:2
+after-fc-d	the first lab host, an m8i.2xlarge (8 vCPU, 32 GiB)	cells/results/2026-10-14-lab-host-131.txt:2
+labbase[12]-*	the lab host, an m8i.8xlarge (32 vCPU, 128 GiB)	cells/results/2026-10-15-lab-gates-1-3.txt:2
+raun-labpl[123]-*	the lab host, an m8i.8xlarge (32 vCPU, 128 GiB)	cells/results/2026-10-15-lab-gates-4-5-noise.txt:2
+raun-lab-kill-history-*	the lab host, an m8i.8xlarge (32 vCPU, 128 GiB)	cells/results/2026-10-17-lab-kill-history.txt:2
+lab1-*	the lab host, an m8i.8xlarge (32 vCPU, 128 GiB)	cells/results/2026-10-23-boot1.txt:3
+raun-lab1-*	the lab host, an m8i.8xlarge (32 vCPU, 128 GiB)	cells/results/2026-10-23-boot1.txt:3
+raun-lab2-*	the lab host, an m8i.8xlarge (32 vCPU, 128 GiB)	cells/results/2026-10-23-boot2.txt:3
+candidate-*-lab3-*	the lab host, an m8i.8xlarge (32 vCPU, 128 GiB)	cells/results/2026-10-23-boot3.txt:3
+raun-lab5-*	the lab host, an m8i.8xlarge (32 vCPU, 128 GiB)	cells/results/2026-10-24-batchE.txt:3
+raun-lab6-*	the lab host, an m8i.8xlarge (32 vCPU, 128 GiB)	cells/results/2026-10-27-boot6.txt:3
+raun-20261027-*	the lab host, an m8i.8xlarge (32 vCPU, 128 GiB)	cells/results/2026-10-27-boot6.txt:3
+raun-lab7-*	the lab host, an m8i.8xlarge (32 vCPU, 128 GiB)	cells/results/2026-10-29-boot7.txt:3
+lab7-*	the lab host, an m8i.8xlarge (32 vCPU, 128 GiB)	cells/results/2026-10-29-boot7.txt:3
+raun-lab8-*	the lab host, an m8i.8xlarge (32 vCPU, 128 GiB)	cells/results/2026-10-29-boot8.txt:3
+lab8-*	the lab host, an m8i.8xlarge (32 vCPU, 128 GiB)	cells/results/2026-10-29-boot8.txt:3
+raun-lab9-*	the lab host, an m8i.8xlarge (32 vCPU, 128 GiB)	cells/results/2026-10-29-boot9.txt:3
+lab9-*	the lab host, an m8i.8xlarge (32 vCPU, 128 GiB)	cells/results/2026-10-29-boot9.txt:3
+raun-lab10-*	the lab host, an m8i.8xlarge (32 vCPU, 128 GiB)	cells/results/2026-10-29-boot10.txt:3
+lab10-*	the lab host, an m8i.8xlarge (32 vCPU, 128 GiB)	cells/results/2026-10-29-boot10.txt:3
+lab11-*	the lab host, an m8i.8xlarge (32 vCPU, 128 GiB)	cells/results/2026-10-29-boot11.txt:3-4
+lab12-*	the metal host, an m8id.metal-48xl (192 vCPU, 768 GiB)	cells/results/2026-10-30-boot12.txt:3-4
+lab13-*	the metal host, an m8id.metal-48xl (192 vCPU, 768 GiB)	cells/results/2026-11-01-boot13.txt:3
+# cells/results/2026-11-02-frontend1.txt:2 names the lab host, an m8i.8xlarge (32 vCPU, 128 GiB), for its 41 cells; they
+# ran no raun or load, so no glob here matches them.

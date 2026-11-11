@@ -1,0 +1,6 @@
+# make: make --no-print-directory -n fault FAULT=persistence-latency
+# laug: laug fault persistence-latency
+# lease: present
+# compare: line faults/run.sh
+[[ 'persistence-latency' =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || { echo "laug · make fault: FAULT="'persistence-latency'" is not one word of letters, digits, ., _ and -, from a letter or digit" >&2; exit 2; };                  
+RUN_ID=20261022-120000 POOL_ADDR='http://127.0.0.1:7700' faults/run.sh workflow_with_single_noop_activity persistence-latency

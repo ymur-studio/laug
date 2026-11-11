@@ -1,0 +1,752 @@
+laug · boot 4 on the lab host: the gates of record, two controls, the dev server, the stack, README's block, density
+2026-10-24, 08:46:10 to 12:41:08 UTC by the box's clock (batch-log.txt, its first and last lines); the batch itself
+started at 08:46:16. Host: the lab host, an m8i.8xlarge (32 vCPU, 128 GiB; bin/laug host type read 32 vCPU and 123
+GiB, H1), up 44.88 s when the batch started, 146G free on /, nothing of laug's running: 0 on 7700, 0 laug projects, 0
+laugd, 0 pool serve, 0 cellstat, 0 dev servers, 0 firecracker, nothing listening on 7400 to 7402, 8400 or 7700 to
+7799 (batch-log.txt, host). Tree: 5eef519, pushed to the box, which commits a pushed tree itself: 5fe3f15, "tree 084602
+from 5eef519", whose 4683 files hash as 5eef519's on the dev host, with no other file (batch-log.txt, launch and S1).
+Every laug command ran in fresh clones of it, bin/laug stamped 5fe3f15 (S6), but for three scratch clones of it made on
+the box: the two controls' and F7's (below). Go: go1.26.0, already in /usr/local/go; apt's is go1.22.2 (batch-log.txt,
+launch). The safety stop was set for 16:45 UTC; the boot's budget was 314 min from 08:46:16 (batch-log.txt, safety
+stop).
+What the batch asked (boot 4 of the lab boots): the gates of record, Gate 5 through laug gate run and Gate 6 through
+laug gate run -workflow, the two equal by S2; the gate5-known-bad control; a workflow gate whose worker is killed 60 s
+into the wave, and one killed 300 s in (G5, optional, run last); the workflow gate's history recorded as a fixture.
+Then the second control, history.persistenceMaxQPS 50, twice, with a sampler beside each; the eager counter on 1.32.1
+and 1.31.0; the dev server and the stack with no cell: the probe, a stopped worker's poller list, a server restart,
+start-dev's own ports, gate cancel in both cancellation modes, a terminate and a stop, cancels of ended gates, a worker
+killed in a fake wave, laug obs up with its fetched releases, three traced fake gates, make obs-test and laug obs
+purge; and the density ladder, gate/plans/noise.yaml at 1, 2, 3, 4, 5, 5, 6, 6, 8 and 8 items, laug usage record
+beside each. Before them: README's offline block, run verbatim from a fresh clone (P), and a warm-up gate, never
+counted, with a second one when the first BLOCKs class invalid (W). In order: pre, S, H, P, W, G, C, E1, F, N, G5
+(groups.txt).
+Files. gate/results/g20261024-085719 to g20261024-122949 are the 19 gate runs the batch made on cells, 599 files, at
+their tree paths: the clone's git status after the batch lists these 19 directories, untracked, and no other path
+(clone-status.txt); runs.tsv names the step that wrote each. G3, C1 and C2 ran in their control clones, and each run
+was copied into the clone's gate/results (batch-log.txt). The fake gates, P3's and F's 7, wrote under the batch's
+TMPDIR, outside the clone, so none is in gate/results; their verdict.json, gate.json and timeline.jsonl are in
+extra/. No step wrote under load/results, faults/results or cells/results.
+cells/results/2026-10-24-boot4/ holds the batch's own records, scrubbed of the box's paths and name before they left it
+(a path shows as <clone>, <out> or <box tree>):
+  batch-log.txt     the batch's log: one line a command, with its exit and seconds, a summary line a gate, UTC
+  steps/            each command's whole stdout and stderr, one file a step (172 files: the 146 of steps.tsv; S1.txt,
+                    the clone; 24 of processes the batch ran in the background, the dev server, the workers,
+                    start-dev and the 10 usage recorders; L-build.txt, the launcher's make build in the box's tree)
+  steps.tsv         step, exit, seconds, ok or fail: the 146 commands
+  runs.tsv          step, gate id, the run's directory, exit: the 19 gates on cells
+  readings.json     the 101 readings the batch took, each with its step, how it was read and when
+  groups.txt        the 11 step groups, in order
+  clone-status.txt  the clone's git status after the batch: the 19 run directories, untracked, one line each
+  extra/            the hand readings' raw files (56): the README block as run; the fake gates' three files each (8
+                    gates); the two samplers; the probe's samples; start-dev's listeners; the describe loop; the two
+                    cancels' events; two signatures; the two killed workers' attempts; the stack's status and
+                    listeners; the three trace answers; the 10 usage reports; the two eager answers; the two fixtures
+                    the recorder was asked to write
+Every table below is read from those files with jq, or quoted from them. Tags: a number with a file beside it is seen in
+that file; "computed" marks arithmetic on such numbers; "inference" marks reasoning; "verify" marks what comes from
+documentation or source not run here. "replaces" names the number this run stands in for, the host it came from and
+the file and line in this tree, at 52f5867, that holds it. A step's file is steps/<step>.txt; a reading is
+readings.json's entry of that name, `jq '.[] | select(.name == "<name>") | .value'`.
+The gate rows read readings.json's gate_<step> (the batch's reading of each run's files): handed on is timeline.jsonl's
+post less its start, done its done less its start; harness harness.json's .seconds; Omes the laugd mark less
+omes_build; lease the first "leased" mark less the first "lease" mark; wave "wave end" less "wave"; all in s. Failed
+rules are verdict.json's rules whose pass is not true. Recomputed for G1 from its timeline.jsonl: post less start,
+612.458 s (computed).
+
+The 19 gates on cells (readings.json, gate_<step>; runs.tsv; each run's verdict.json and gate.json):
+  step  gate id           plan        n  verdict  class       failed rules  handed  done   harness  Omes  lease  wave
+  W1    g20261024-085719  plan.yaml   3  BLOCK    invalid     R4 R5         558.4   608.8  236.9    5.3   22.9   305.0
+  W2    g20261024-090728  plan.yaml   3  BLOCK    invalid     R4 R5         552.8   607.4  237.9    1.0   16.7   302.5
+  G1    g20261024-091739  plan.yaml   3  ADVANCE                            612.5   674.0  237.7    1.0   16.8   362.4
+  G2    g20261024-092853  -workflow   3  ADVANCE                            614.3   677.3  238.2    1.1   16.7   362.4
+  G3    g20261024-094016  plan.yaml   3  BLOCK    regression  R4 R5 R7      592.0   649.2  238.2    2.0   21.4   340.2
+  G4    g20261024-095106  -workflow   3  ADVANCE                            612.8   678.0  238.0    1.1   16.1   361.4
+  C1    g20261024-100229  plan.yaml   3  BLOCK    refused     R2 to R7      320.7   320.9  237.3    2.0   none   none
+  C2    g20261024-100751  plan.yaml   3  BLOCK    refused     R2 to R7      319.3   319.5  237.6    1.0   none   none
+  N1-1  g20261024-104246  noise.yaml  1  BLOCK    control     R2 R5         550.6   568.6  236.4    1.0   16.7   302.0
+  N2-1  g20261024-105215  noise.yaml  2  BLOCK    control     R2 R5         552.0   588.5  237.5    1.0   16.7   302.5
+  N3-1  g20261024-110203  noise.yaml  3  BLOCK    control     R2 R5         552.8   606.7  238.0    1.0   16.7   302.5
+  N4-1  g20261024-111210  noise.yaml  4  BLOCK    control     R2 R5         554.5   630.8  239.4    1.0   16.3   302.6
+  N5-1  g20261024-112242  noise.yaml  5  BLOCK    control     R2 R5         554.8   643.2  239.7    1.0   16.3   302.7
+  N5-2  g20261024-113325  noise.yaml  5  BLOCK    control     R2 R5         554.9   637.2  239.8    1.0   16.3   302.7
+  N6-1  g20261024-114403  noise.yaml  6  BLOCK    regression  R2 R4 R5      555.8   666.6  240.6    1.0   16.8   302.8
+  N6-2  g20261024-115510  noise.yaml  6  BLOCK    regression  R2 R4 R5      554.9   658.4  240.2    1.0   16.8   302.4
+  N8-1  g20261024-120609  noise.yaml  8  BLOCK    regression  R4 R5         557.4   711.3  242.1    1.0   16.7   302.6
+  N8-2  g20261024-121800  noise.yaml  8  BLOCK    regression  R4 R5         557.3   705.6  242.0    1.0   16.2   302.7
+  G5    g20261024-122949  -workflow   3  ADVANCE                            614.2   676.5  238.3    1.2   16.3   362.5
+  n: items; plan.yaml: gate/plan.yaml through laug gate run (gate/run.sh); -workflow: the same plan through laug gate
+  run -workflow (gate/step.sh, gate.json .driver); noise.yaml: gate/plans/noise.yaml -items N
+In all 19: harness "1187 passed, 0 failed", not timed out (harness.json); tree_dirty false and the judge v3, the
+internal/judge entry (gate.json); host_quiet true but in C1 and C2, refused before the wave: "poll.jsonl is missing, so
+the host was not seen quiet" (verdict.md). gate.json's laug_commit is 5fe3f15 in 16, and the controls' own scratch
+commits in G3 (016595d) and C1 and C2 (4f708dd). bin/laug gate rejudge -all on this tree with the 19 added: "176 runs:
+170 identical, 2 known, 4 re-rendered, 0 unexplained, 0 not judged", each of the 19 identical; before them, "157 runs:
+151 identical, 2 known, 4 re-rendered, 0 unexplained, 0 not judged".
+Every laug gate run after the first in its checkout printed "laug · gate run: the tree has changes not committed, and
+bin/laug was built from HEAD without them" on stderr (steps/<step>.txt, 22 files), while gate.json recorded tree_dirty
+false each time. The line comes from a plain git status --porcelain (cmd/laug/gate.go:469-482), which lists the earlier
+runs' untracked directories; tree_dirty leaves gate/results out (gate/run.sh:131; gate/step.sh:191 for the -workflow
+gates). The first gate in a checkout, W1, G3, C1, F7 and P's fake gate g20261024-085144, has no such line
+(steps/W1.txt, G3.txt, C1.txt, F7.txt, P3.txt; seen; the cause read in source).
+
+== pre and S: the start, 08:46:16 to 08:51:39
+  pre  the box tree's own checks     load/steady-state.yaml's sha256 b3f542321181, SECURITY.md present, README's block
+                                     the 8 command parts asked for (steps/pre.txt)
+  S1   git clone -q <box tree> <clone> && git -C <clone> checkout -q -B main
+                                     5fe3f15, 4683 files (steps/S1.txt)
+  S2   make build                    exit 0, 1.8 s (steps/S2.txt; launch's make build in the box's tree 5 s,
+                                     steps/L-build.txt and batch-log.txt)
+  S3   bin/laug upstream -url <box tree>/.upstream/omes
+                                     exit 0, 2.4 s: Omes f0de206 from the box's own copy, its proto submodule at d96bd55
+                                     (steps/S3.txt)
+  S4   bin/laug deps -lab -json      exit 0, 1.2 s: 0 of 17 checks missing; go a note (1.26.0 here, Omes asks 1.26.5);
+                                     docker engine 29.1.3, compose 2.40.3, temporal 1.9.1, jq 1.7, yq 4.54.1, /dev/kvm
+                                     ok; "this host" ok, "32 vCPU and 121.7 GiB available" (steps/S4.txt)
+  S5a  make test-go                  exit 0, 81.4 s: 14 Go packages ok, the slowest internal/orchestrator, 78.785 s
+                                     (steps/S5a.txt; readings.json, make_test_go_s)
+  S5b  make harness-test             exit 0, 234.8 s: 1188 passed, 0 failed (steps/S5b.txt; harness_s, harness_tally)
+  S5c  make lint                     exit 0, 0.7 s, its four lines clean (steps/S5c.txt; lint_s)
+  S6   bin/laug version -json        commit 5fe3f15, go1.26.0, server_tag 1.31.0, Omes f0de206 (steps/S6.txt)
+  S7   git status --porcelain        clean; the clone's owner the box user (steps/S7.txt)
+Shows: make test by part on a fresh lab clone for the first time: 81.4 + 234.8 + 0.7 = 316.9 s (computed), against
+the totals 307.3, 305.6 and 316.3 s of boots 1 to 3 (cells/results/2026-10-23-boot1.txt to -boot3.txt, S5).
+Inside each of the 19 gates, R1 ran the same harness: 1187 passed, 236.4 to 242.1 s (harness.json). It counts one check
+fewer: inside a gate, README's case skips make build and checks only that bin/laug is there, one check in place of two
+(load/testdata/harness-test.sh:3537-3546; read in source).
+Replaces: "212 to 217 s on the lab host's fresh clones at 1 105 checks" for make harness-test (lab host,
+STATUS.md:37): 234.8 s at 1188 checks on a fresh clone, 236.4 to 242.1 s at 1187 inside a gate. "make test took 307.3 s
+on a fresh clone on the lab host" (lab host, README.md:30-31): 316.9 s here by its three parts, and 322.3 s inside the
+block (P).
+
+== H: the host, 08:51:39 to 08:51:40
+  H1  bin/laug host type -declare m8i.8xlarge -json
+                                     declared m8i.8xlarge, 32 vCPU, 123 GiB, passes true (steps/H1.txt)
+  H2  images                         10 named, none absent for 1.31.0 or 1.32.1, each id in readings.json,
+                                     images_before (steps/H2.txt)
+  H3  /dev/kvm, vmx, ports, CLI      /dev/kvm present (crw-rw----, root kvm); grep -cw vmx /proc/cpuinfo 64;
+                                     ip_local_port_range 32768 60999; temporal 1.9.1 (Server 1.32.0, UI 2.54.1)
+                                     (steps/H3.txt)
+Shows: the 10 ids are boot 3's 11 less elasticsearch:7.17.27, image for image (computed against
+cells/results/2026-10-23-boot3/readings.json, images_before). /dev/kvm is there for the Firecracker batch.
+Does not show: vmx on 64 CPUs. grep -cw counts lines, and the host has 32 vCPU (H1); /proc/cpuinfo has a flags line
+and a vmx flags line for each, which would give 64 (inference). No clock was read.
+
+== P: README's offline block, verbatim from a fresh clone, 08:51:40 to 08:57:19
+  P0  nothing on 7700, 0 laug projects, no cells/run/pool.pid in the clone (steps/P0.txt)
+  P1  git clone -q of the box tree into a second clone, checkout -B main: exit 0, 0.3 s (steps/P1.txt; p4_clone_s)
+  P2  the lines between the first ```sh after "## Try it offline" and the next ```, byte for byte, into
+      extra/p4-block.sh: 8 lines, sha256 c100be6aa818, its 8 command parts the ones asked for (steps/P2.txt;
+      p4_block_sha256, p4_block_commands)
+  P3  bash extra/p4-block.sh in that clone, each output line stamped with its UTC time to 0.1 s: exit 0 in 339.0 s,
+      1510 lines (steps/P3.txt; p4_exit, p4_block_s, p4_lines)
+  P4  after it: 0 on 7700, git status --porcelain empty in the clone, one fake gate run under TMPDIR,
+      g20261024-085144, ADVANCE (steps/P4.txt; p4_after)
+The block, as run (extra/p4-block.sh; README.md:34-41 at 52f5867 holds the same 8 lines, computed with diff):
+  make build && bin/laug deps            # the binary, then every tool checked
+  bin/laug pool serve & sleep 2           # a pool of fake cells on loopback port 7700
+  bin/laug lease && bin/laug pool status && bin/laug release -last
+  kill $! && wait $!                      # a gate starts its own pool on that port
+  bin/laug thresholds -server-tag 1.32.1  # the set a release is judged by, and why
+  bin/laug gate run 1.31.0 -fake          # a whole gate on fakes: ADVANCE, exit 0
+  bin/laug gate rejudge g20261018-092540  # the 1.32.1 BLOCK, judged again, byte for byte
+  make test                               # unit, replay and harness suites, about 5 min
+What each line printed (steps/P3.txt, by its stamps):
+  08:51:40.6 to 42.5  make build, then "laug · deps: 0 of 14 missing, 0 of the offline path's 9: the tools laug's
+                      scripts call" (line 4)
+  08:51:42.5          pool serve "listening on 127.0.0.1:7700 (min 3, max 6, quota 2, max lease 2h0m0s, backend fake)"
+  08:51:44.5          a lease, c2587c14 on block 1; pool status 4 cells, 3 warm and 1 leased; the release; then pool
+                      serve "stopped with 3 cells in its table": the kill and wait inside the same tenth of a second
+  08:51:44.6          thresholds: "load/steady-state.yaml, the base (1.31.0 baselines), with load/releases/1.32.yaml
+                      for server 1.32.1: 2 overrides"
+  08:51:44.7 to 56.4  the fake gate g20261024-085144: R1 to R7 pass, host quiet yes, "VERDICT: ADVANCE (GATE_FAKE=1:
+                      fixtures, no cell ran)" at 08:51:56.2; its own harness "1 passed, 0 failed", a fake one
+  08:51:56.4          rejudge g20261018-092540: "verdict.json  identical", "verdict.md    identical", judge v2 by its
+                      gate/combine.sh 33b4e89dc2ec
+  08:51:56.4 to       make test: the 14 Go packages ok, then the harness, "1188 passed, 0 failed" at 08:57:18.7,
+  08:57:19.4          then make lint's four lines, the last at 08:57:19.4
+The first verdict: 16.0 s after the clone's start (p4_first_verdict_s, to the VERDICT line). make test inside the block:
+322.3 s, from the rejudge's last line at 08:51:56.4 to the tally at 08:57:18.7 (computed from the stamps, P3.txt:97
+and :1507).
+The batch's own checks of the lines (p4_expected): pool listening, thresholds naming 1.32, the fake VERDICT line and
+"1188 passed, 0 failed" each found. Two of p4_expected read false, deps_none_missing and report_line; its
+rejudge_identical_lines counts 3 where the rejudge printed 2; and p4_make_test_s, a reading of its own, starts at the
+wrong line. The transcript holds why:
+- deps_none_missing false. The deps line reads "0 of 14 missing, 0 of the offline path's 9: the tools ..."
+  (P3.txt:4), the form the harness's README case asserts (load/testdata/harness-test.sh:3563-3564); the batch looked
+  for other words. Nothing was missing.
+- report_line false: the block has no bin/laug report line, by design (8 lines).
+- rejudge_identical_lines 3. The rejudge printed two "identical" lines, verdict.json's and verdict.md's (P3.txt:95-96),
+  the two the README case asserts (load/testdata/harness-test.sh:3610-3612). P3.txt holds 3 lines with "verdict" and
+  "identical", :95, :96 and :1027 (computed with grep), so the third is likely :1027, the line p4_make_test_s starts
+  from (inference).
+- p4_make_test_s 88.7 s. It counts from 08:55:50.0, P3.txt:1027, a harness line that holds "verdict.json and
+  verdict.md identical", not from the rejudge's, to the tally (computed: 08:57:18.7 less 88.7 s). The 322.3 s above
+  is make test's.
+Shows: README's block runs as a reader would paste it, from a fresh clone of the pushed tree, with exit 0 and a clean
+clone after; the first verdict 16.0 s after the clone, the whole block 339.0 s.
+Does not show: a clone from a remote (there is none); a host other than the lab host.
+Replaces: "make test ... about 5 min" (lab host, README.md:41, from boot 1's 307.3 s, README.md:30-31): 322.3 s here,
+5.4 min (computed). Until now README's block had run only as the harness's README case on fakes
+(load/testdata/harness-test.sh:3494 on): this is its first run verbatim on a fresh clone.
+
+== W: the warm-up gates, 08:57:19 to 09:17:36, never counted
+W1, bin/laug gate run 1.31.0, the box's first gate since its start: BLOCK, class invalid, exit 1 in 608.8 s
+(steps/W1.txt). incumbent and steady ADVANCEd; pl BLOCKed class invalid, "never steady:
+workflow_task_schedule_to_start_p99_ms=155.555555555557" (g20261024-085719/verdict.md). R4 failed on that outcome, and
+R5, the live control, on "pl: control: service_error_rate read null in the during window": pl never injected (.inject_at
+empty in pl/<gate id>-pl.json), so it had no during window. W2, the same command once more because W1 BLOCKed class
+invalid: BLOCK, class invalid, exit 1 in 607.5 s, pl "never steady:
+workflow_task_schedule_to_start_p99_ms=110.00000000000234 frontend_request_p99_ms=31.089490277237093"
+(g20261024-090728/verdict.md), R4 and R5 again.
+pl's before window, the last 60 s of the raun's load before the inject would have come (pl/<gate id>-pl.json,
+.before), against the maxima and against the same window in the four counted A/A gates below:
+  reading                         W1        W2        max     G1, G2, G4, G5
+  workflow task s2s p99 ms        155.56    110.00    38      17.31 to 31.48
+  activity s2s p99 ms             16.15     19.23     20      9.99 to 19.60
+  end-to-end p95 ms               67.07     67.07     84      49.43 to 81.27
+  persistence p99 ms              8.78      8.97      23      8.10 to 11.53
+  frontend p99 ms                 19.47     31.09     22      14.39 to 19.64
+  service error rate              0         0         0.001   0
+  completed in the 60 s           1200      1200              1199 to 1200
+The pl raun ran 91.2 s in each warm-up gate, against 362.2 s in G1 (pl/exit.json, end less start, computed). W1 built
+Omes in 5.3 s and waited 22.9 s for its first lease; W2 1.0 s and 16.7 s (gate_W1, gate_W2).
+STATUS's rule (STATUS.md:443-450, Open): a box's first gate after a start BLOCKed class invalid on R4 and R5 in 3 of 4
+boots, pl never steady in its before window each time, and the gate after it ADVANCEd 3 of 3 times; a warm-up gate
+opens every batch, and since 2026-10-18 a warm-up gate that BLOCKs class invalid gets a second one, not counted either.
+Shows: the batch kept the rule: W2 ran because W1 BLOCKed class invalid, and neither counts. W1 BLOCKed as the first
+gate had in 3 of 4 earlier boots. W2, the gate after a first, BLOCKed the same way, which none of the 3 before it had:
+with boot 4, a box's first gate BLOCKed class invalid in 4 of 5 boots and the gate after it ADVANCEd in 3 of 4
+(computed). G1, the box's third gate, ADVANCEd. W2's Omes build and first lease were a later gate's figures, 1.0 to 2.2
+s and 15.8 to 19.1 s (STATUS.md:634), and pl still never got steady, so those two figures do not mark the gates that
+fail this way (inference). W1's 5.3 s is inside a first gate's 5.1 to 5.3 s; its 22.9 s is 0.5 s under the 23.4 to 24.5
+s of STATUS.md:396 (computed). W1's pl failed on workflow task schedule-to-start alone, at 4.09 times its max. W2's
+failed on it at 2.89 times, and on frontend p99 at 31.09 of 22 ms, 1.41 times (computed; each verdict.md's never steady
+line, thresholds.json's maxima). The incumbent and steady items beside them ADVANCEd.
+Does not show: why. The pack holds no per-second reading of pl's before window and no per-container reading in W.
+Whether a third warm-up would have been needed on another boot; the rule as written gives none.
+Replaces: "a box's first gate after a start BLOCKed class invalid in 3 of 4 boots" (lab host, STATUS.md:38 and
+:443-445) and "the gate after it ADVANCEd 3 of 3 times" (lab host, STATUS.md:445): 4 of 5, and 3 of 4. "5.1 to 5.3 s in
+3 boots ... / 23.4 to 29.8 s ... pl never steady in 3 of 4" (lab host, STATUS.md:634): 5.3 s / 22.9 s for boot 4's
+first gate, pl never steady in 4 of 5, and in the second gate once. gate/sets/warm-up-m8i.8xlarge.txt:5-9 lists 1 gate
+(lab host): W1 and W2 are boot 4's two warm-up gates; this commit does not add them to the set.
+
+== G: the gates of record, 09:17:36 to 10:02:24, and G5 at 12:29:46 to 12:41:06
+-- G0: the dev server and its worker
+bin/laug orchestrator server: "Gate 6's dev server on 127.0.0.1:7400, HTTP 7401, metrics 7402, UI 8400, its state in
+orchestrator/run/dev.db", its health call answering 2.1 s after the start (steps/G0a1.txt; orch_server). bin/laug
+orchestrator worker: laug-worker@5fe3f15 polls laug-gate-95f69246 (steps/G0b1.txt; orch_worker), listed as a poller
+0.0 s after its line (G0c1.txt; poller_wait_G0c1).
+
+-- G1, Gate 5: bin/laug gate run 1.31.0, 09:17:39 to 09:28:53
+ADVANCE, exit 0 in 674.0 s, class none, R1 to R7 pass, host quiet, handed on 612.5 s after the start (steps/G1.txt;
+gate_G1); bin/laug gate rejudge g20261024-091739: "verdict.json  identical", "verdict.md    identical"
+(steps/G1-rejudge.txt). What decided it: every item ADVANCEd on its maxima, and R7 compared steady with the
+incumbent, each d inside its tolerance T from the 20 calibration gates (g20261024-091739/verdict.json, .comparison):
+  reading                                     G1 d        G2 d        G4 d        G5 d        T
+  workflow task s2s p99 ms                    +0.561      +0.013      +0.217      +0.097      1.02
+  persistence p99 ms                          -0.093      -0.047      -0.094      -0.143      0.35
+  activity s2s share over 10 ms               -0.000844   +0.001006   -0.003557   -0.000904   0.0072
+  frontend share over 10 ms                   -0.000484   -0.000124   +0.000122   +0.000660   0.0032
+  end-to-end share over 50 ms                 +0.001682   +0.000754   +0.000832   -0.000367   0.0064
+  each gate's .comparison.rows, judged rows only; the largest |d| a share of T: G1's workflow task row, 0.55 (computed)
+The items, G1: steady's and the incumbent's highest reading against a max, end-to-end p95 49.422 and 49.371 of 84 ms,
+0.59 (steady/ and incumbent/<id>-<key>.verdict.json, .rows; computed); completed 5932 and 5923 against >= 5700; pl
+landed 5 s after the inject, persistence p99 peaked at 9892.8 ms against 23, recovered 30 s after removal, 546 failed
+iterations during the fault and 0 after, the sweep 4174 Completed (pl/g20261024-091739-pl.json).
+The wave began 250.0 s after the start, 10.5 s after the harness ended (timeline.jsonl less harness.json's seconds,
+computed): the harness still decides when the wave starts, and at 1187 checks it ran 237.7 s.
+Replaces: Gate 5's evidence, "make gate SERVER_TAG=1.31.0 on a fresh clone, g20261015-230856 ADVANCE ... verdict handed
+on 547.7 s after the gate start" with two items, "13 min from clone to verdict" (lab host, STATUS.md:18): laug gate run
+1.31.0 on a fresh clone, g20261024-091739 ADVANCE with three items, handed on 612.5 s, the command's 674.0 s inside the
+done-when's 15 min; from the clone, 08:46:16, to G1's verdict, 09:28:53, is 42.6 min, the suites, P and two warm-up
+gates among them (computed). "Dev-host history: fresh clone of 3a3a970 ADVANCE in 588.9 s" (dev host, STATUS.md:18)
+stands as history. "handed on in about 9.8 min (586.2 to 596.2 s in the arm's 50 counted A/A gates ... at 1 105 harness
+checks)" (lab host, STATUS.md:38; README.md:22; docs/DESIGN.md:288-291 and :951-952): 612.5 to 614.3 s in boot 4's 4
+counted A/A gates at 1187 checks, about 10.2 min (computed), the wave at +250.0 to +251.6 s against +224.8 to +233.4 s
+(docs/DESIGN.md:291).
+
+-- G2, Gate 6: bin/laug gate run 1.31.0 -workflow, 09:28:54 to 09:40:11
+ADVANCE, exit 0 in 677.5 s, handed on 614.3 s, the driver gate/step.sh (steps/G2.txt; gate_G2). S1: "the workflow's
+verdict equals gate/results/g20261024-092853/verdict.json byte for byte (8263 bytes, sha256 979892ddd06c)", and
+"rejudge: g20261024-092853  identical" (steps/G2.txt). S2: bin/laug gate compare g20261024-091739 g20261024-092853:
+"equal", exit 0 (steps/G2-compare.txt; s2_G1_G2, 0 fields differing). The two signatures, extra/g1-signature.json and
+g2-signature.json, are the same 16 fields byte for byte (computed with cmp), set_sha256 b3f542321181 and judge v3 in
+each; set_sha256 equals the sha256 of the clone's load/steady-state.yaml (s2_anchor, equal true).
+The 30 gates of the validation set record set_sha256 10458cff6d61 (bin/laug gate signature on each id of
+gate/sets/validation-arm-3item-m8i.8xlarge.txt, computed), the bytes before the recorded-input fixup; the 9 boot 4 runs
+of gate/plan.yaml record b3f542321181, and the 10 of noise.yaml's signatures hold set_sha256 null. So boot 4's A/A
+gates compare equal with each other, and not with the validation set's: bin/laug gate compare of each of the 30 with
+G1, G2, G4 and G5, 120 pairs, exits 1 with "2 of 16 fields differ" in each, judge v2 against v3 and set_sha256
+10458cff6d61 against b3f542321181 (computed with bin/laug gate compare on the committed runs).
+G2's pl before window read 19.60 of 20 ms for activity schedule-to-start and 81.27 of 84 ms end to end, 0.98 and 0.97 of
+their maxima, the nearest any reading of a counted gate came (computed from the table in W); its load items' highest
+reading was steady's activity schedule-to-start p99, 15.862 of 20 ms, 0.79
+(steady/g20261024-092853-steady.verdict.json).
+Replaces: Gate 6's evidence, "make orchestrator-gate SERVER_TAG=1.31.0 on a fresh clone of 877a58f, g20261017-020417
+ADVANCE with tree_dirty false, the workflow's verdict byte for byte the file's, handed on 552.4 s after t0, the
+signature equal to ... Gate 5's green run" (lab host, STATUS.md:19): laug gate run 1.31.0 -workflow on a fresh clone,
+g20261024-092853 ADVANCE with tree_dirty false, S1 byte for byte, handed on 614.3 s, S2 equal to G1. "Clean gate runs
+under Gate 6 on the lab host: 17 in a row, 0 false BLOCKs" (lab host, STATUS.md:19): 3 more here, G2, G4 and G5, all
+ADVANCE. "0 of the 50 counted gates (150 items) passed a max ... the highest reading 0.82 of its max" (lab host,
+STATUS.md:394-395, :627; docs/DESIGN.md:511-512): 0 of 4 counted gates (12 items) here, the highest reading 0.98 of its
+max (G2's pl before window). Whether STATUS's 0.82 counts the before windows is not in this pack (inference: not like
+for like until it is).
+
+-- G2r: the workflow gate's history as a fixture, 09:40:11
+bin/laug orchestrator record g20261024-092853 real -overwrite-fixture: exit 2 in 0.0 s, nothing written
+(steps/G2r-record.txt):
+  leak user: event 107, events[106].activityTaskCompletedEventAttributes.result.payloads[0].data:$.verdict
+  leak user: event 123, events[122].workflowExecutionCompletedEventAttributes.result.payloads[0].data:$.verdict
+  laug · orchestrator record: gate-g20261024-092853: 2 leak(s) after the scrub; nothing written
+Why: the recorder matches the user name as a word anywhere in a payload's strings, a byte other than [A-Za-z0-9_] on
+each side (internal/orchestrator/record.go:274-281). The box user is lab (steps/S7.txt). The verdict, which S1 found
+byte for byte in the workflow's result, holds .comparison.evidence "cells/results/2026-10-17-lab-arm-calibration.txt"
+(g20261024-092853/verdict.json:199), and "-lab-" in it is the box user's name as a word: the only such string in the
+file (computed with jq over every string of verdict.json). Event 107 is an activity's result, event 123 the workflow's
+(the paths above). So the refusal is the leak check doing as it is written, on a repository path, not on a home path:
+the scrubbed pack shows no home path in the verdict (seen), and the check would refuse any gate whose verdict cites
+that calibration file, recorded as the user lab (inference).
+The replay of the existing fixtures passed: go test ./internal/orchestrator -run ^TestReplayGateHistories$ -count=1, ok
+(steps/G2r-replay.txt), and the clone was clean after (steps/G2r-check.txt). extra/g2r-real.json is the committed
+internal/orchestrator/testdata/histories/real.json, the same bytes (computed with cmp): record_G2's 115 events and 17
+activities are that fixture's, not G2's.
+Does not show: the activity count of a three-item gate's history; it was not recorded.
+Replaces nothing: real.json's 17 activity ids stand (internal/orchestrator/testdata/histories/real.json, 115 events,
+computed).
+
+-- G3, the gate5-known-bad control, 09:40:11 to 09:51:06
+A control clone: git apply of gate/controls/gate5-known-bad.diff (sha256 5203310c6cf8, control_G3), git diff
+--numstat "1 1 cells/compose/dynamicconfig/laug.yaml", committed on the box as 016595d (steps/G3-clone.txt):
+frontend.rps 5 in every cell's dynamic config. gate.json records that file's sha256 b4eedf81c7d7, the one
+g20261018-074337 records (gate.json .inputs, computed). bin/laug gate run 1.31.0 in it: BLOCK, class regression, exit
+1 in 649.2 s, handed on 592.0 s (steps/G3.txt; gate_G3). R4, R5 and R7 failed, R1 to R3 and R6 passed (verdict.json
+.rules):
+  item       observed  class       reason (g20261024-094016/verdict.md)
+  incumbent  BLOCK     invalid     workflow task s2s p99 97450.528 ms, activity s2s p99 94614.485 ms, end-to-end p95
+                                   99428.808 ms, error rate 0.074 EXCEEDS; 275 completed, BELOW the 5700 floor
+  steady     BLOCK     regression  183806.310, 46325.026, 178205.182 ms, error rate 0.074 EXCEEDS; 285 completed, BELOW
+  pl         BLOCK     invalid     never steady: workflow task s2s p99 96041.67 ms ... error rate 0.087
+The deciding rule: R4 on steady's own maxima, class regression; R7 "not compared: incumbent did not ADVANCE"; and the
+verdict's note, "The incumbent BLOCKed too ...: the host, or the cell config both arms share, is the likelier cause".
+Shows: on the lab host the gate BLOCKs a release whose cells refuse calls over 5/s, as the diff says it must
+(gate/controls/gate5-known-bad.diff:1: "BLOCK, class regression, steady and the incumbent each BLOCKing on its maxima,
+as g20261018-074337 did (R4, R5 and R7)"), and laug gate run is the command that ran it.
+Stands beside: g20261018-074337, the same file's bytes: steady 283 and the incumbent 280 completed, error rates 0.075
+and 0.065 (its <key>/<id>-<key>.verdict.json, .readings): 285 and 275, 0.074 and 0.074 here.
+Replaces: "a branch with frontend.rps 5 BLOCKs 3 of 3, class regression, its steady load deciding" (lab host,
+STATUS.md:18) and "a known-bad change BLOCKs" (lab host, README.md:23): the same through laug gate run, 1 of 1.
+gate/sets/control-gate5-known-bad.txt:5 counts 7 gates (lab host): G3 would be the 8th; this commit does not add it.
+
+-- G4, Gate 6 with its worker KILLed 60 s into the wave, 09:51:07 to 10:02:24
+bin/laug gate run 1.31.0 -workflow; at the wave mark, 09:55:17.285, plus 60.06 s, at 09:56:17.347, KILL to the worker's
+process group (kill_G4; times computed from its Unix seconds). A new worker logged "Started Worker" at 09:56:47.461,
+30.1 s after the KILL (steps/G4-worker.txt; computed). kill_G4's restarted_at, 09:56:48.394, 31.05 s after the KILL,
+is when the batch logged that worker's polls line (batch-log.txt:69, 09:56:48; inference). The new worker: "replayed
+1 open gate(s) on laug-gate-95f69246 on this build: gate-g20261024-095106" (steps/G4-worker.txt).
+ADVANCE, exit 0 in 678.2 s, handed on 612.8 s, S1 byte for byte (8262 bytes, sha256 bd6b739ef49b) and identical on
+rejudge (steps/G4.txt; gate_G4); S2 against G1 equal (steps/G4-compare.txt). Attempt 2 for wave, await-steady,
+await-incumbent and await-pl, attempt 1 for the 15 other activities (extra/g4-attempts.json); the largest gap between
+poll.jsonl's lines 5.146 s (kill_G4). The starter printed one "progress: no answer (context deadline exceeded)" in the
+wave (steps/G4.txt): the query had no worker to answer it while none ran (inference).
+-- G5, the same with the KILL 300 s into the wave, 12:29:46 to 12:41:06, after N
+The dev server and a worker started again first (steps/G5-server.txt, health answering 1.1 s after; G5-worker0.txt;
+G5-c.txt, listed 0.0 s after). Wave 12:34:00.574; KILL at +300.10 s, 12:39:00.672; "Started Worker" 30.1 s later,
+12:39:30.785 (steps/G5-worker.txt), and restarted_at 12:39:31.719, the batch's mark as in G4 (batch-log.txt:218,
+12:39:31; kill_G5; computed). ADVANCE, exit 0 in 676.8 s, handed on 614.2 s, S1 byte for byte (8267 bytes, sha256
+a798194d6d5f), rejudge identical, S2 against G1 equal; attempt 2 for the same four activities (extra/g5-attempts.json);
+the largest poll gap 5.147 s (kill_G5). pl landed 10 s after the inject, peaked at 9724.6 ms, recovered 30 s after
+removal, 550 failed iterations during, 0 after; the incumbent's and steady's highest reading end-to-end p95 49.415 and
+49.403 of 84 ms (G5's verdict JSONs).
+Shows: a killed worker costs a gate nothing it records: G4 and G5 handed on 612.8 and 614.2 s, against G1's 612.5 and
+G2's 614.3, with the signature of G1.
+Replaces: "the worker KILLed 60 s and 300 s into the wave ... ADVANCE at 552.3 to 553.3 s after t0, the wave adopted on
+attempt 2" with two items (lab host, STATUS.md:300-302 and :622): ADVANCE at 612.8 and 614.2 s with three items, the
+wave and three awaits on attempt 2; "no poll gap over 5.2 s" (lab host, STATUS.md:302): 5.146 and 5.147 s. "workflow
+Gate's verdict held with its worker killed 60 s and 300 s into the wave" (lab host, README.md:26): the same through
+laug gate run -workflow.
+
+== C: the persistenceMaxQPS-50 control, twice, with the sampler, 10:02:24 to 10:13:10
+A control clone of gate/controls/persistence-maxqps-50.diff (sha256 78904bfa37e4), one line changed, committed as
+4f708dd (steps/C0.txt): history.persistenceMaxQPS 50 in every cell's dynamic config. bin/laug gate run 1.31.0 in it,
+twice (steps/C1.txt, C2.txt; gate_C1, gate_C2):
+  run  gate id           exit  s      refused (verdict.json .refused)
+  C1   g20261024-100229  1     320.9  lease incumbent: laugd refused it (curl exit 22): cell 35c802a7 not healthy before
+                                      deadline: context deadline exceeded
+  C2   g20261024-100751  1     319.6  the same for cell 7abfaa52
+Both BLOCK, class refused, R2 to R7 failed: no item ran, so no exit record, no JSON, no identity, no comparison
+(verdict.md). The lease was asked for 2.8 s after the start and the refusal came 317.8 s after the ask (C1's
+timeline.jsonl, "lease incumbent" to "combine", computed); laugd's create waits 300 s for health
+(cells/results/2026-10-14-gate-runs.txt:41).
+The sampler, every 15 s beside each gate, on each laug-<8 hex> project's Prometheus (extra/c1-sampler.jsonl and
+c2-sampler.jsonl, 22 samples each; maxqps_C1, maxqps_C2):
+                                         C1                 C2
+  cells seen                             1, 35c802a7        1, 7abfaa52
+  first sample with the cell             30.2 s             30.2 s
+  numshards_gauge 512 first read         45.3 s             45.4 s
+  persistence calls/s, median, peak      76.36, 205.50      79.04, 208.99
+  errors/s, median, ResourceExhausted    23.24              26.28
+  "Error refreshing namespace cache"     171 by 288.7 s     161 by 288.7 s, 35.5 and 33.5 a minute (the reading's)
+  "Persistence Max QPS Reached" lines    12382 by 288.7 s   11997 by 288.7 s
+  calls/s by operation at the median: GetOutboundTasks 15, GetTimerTasks 15, RangeCompleteTimerTasks 15.64,
+  RangeCompleteReplicationTasks 12.08, GetArchivalTasks 7.48 in C1; UpdateShard 0 (maxqps_C1
+  .calls_s_by_operation_median); 202.3 to 209.0 calls/s in the samples at 60.5 and 75.7 s, the peak in each
+Shows: history held to 50 persistence calls a second owned its 512 shards within 45.4 s and still never let the cell
+pass its health check, so laugd refused the first lease and the gate BLOCKed refused, as the diff says
+(persistence-maxqps-50.diff:1: "On cells no cell gets healthy, a lease is refused, and the gate must BLOCK, class
+refused"). Its registry kept failing to load namespaces, 161 to 171 times in 288.7 s, under ResourceExhausted errors
+at a median 23.24 to 26.28 a second.
+Does not show: which namespace each refresh asked for, or the health check's own error; the sampler kept counts.
+Replaces: "no run of this form is recorded yet" (gate/controls/persistence-maxqps-50.diff:1): 2 runs, g20261024-100229
+and g20261024-100751. The dev host's hand-booted cell, "numshards_gauge read 512 within 45 s", "about 130 persistence
+calls a second: UpdateShard 37.7, the RangeComplete task deletions about 42, the queue readers' Get*Tasks about 44",
+"78 times from 23:02:03 to 23:03:20, about once a second" (dev host, cells/results/2026-10-14-gate-runs.txt:43-49):
+512 at 45.3 and 45.4 s; 76.36 and 79.04 calls/s at the median, 205.50 and 208.99 at the peak, UpdateShard 0 at the
+median; 171 and 161 refresh errors in 288.7 s, 0.59 and 0.56 a second (computed). The dev host's refused gate,
+g20261014-212013, "+312 s" on lease steady (cells/results/2026-10-14-gate-runs.txt:33): +320.7 and +319.3 s here on
+lease incumbent. Not like for like: the dev host read [1m] rates on one cell by hand, the sampler [30s] beside a gate.
+
+== E1: the eager counter, 1.32.1 then 1.31.0, 10:13:10 to 10:15:00
+For each tag: bin/laug cell up -server-tag <tag>, bin/laug cell health, 15 s, then the cell's Prometheus: series named
+like eager, activity_eager_execution by service and operation, task_schedule_to_start_latency_count by task_type; then
+bin/laug cell down -remove-volumes (readings.json, eager_<tag>, its how).
+  1.32.1  cell up exit 0 in 16.2 s, SERVING after 17 s (steps/E1-1.32.1.txt). cell health exit 1 in 0.1 s: the
+          CLI's health call SERVING, then the HealthCheck "Namespace default is not found"; no target was read, and
+          "5 server targets up" in its header line names a check still to run (steps/E1-1.32.1-health.txt:2).
+          All three answers empty (extra/e1-1.32.1.json). Down: 13 containers, 2 volumes, 1 network; 0 left.
+  1.31.0  cell up exit 0 in 15.2 s, SERVING after 15 s. cell health exit 0 in 9.3 s: completed 1115 ms, visible 8 ms.
+          No eager series; task_schedule_to_start_latency_count Activity 2, Workflow 4 (extra/e1-1.31.0.json). Down
+          the same, 0 left.
+Shows: on 1.31.0, one HealthCheck read 2 Activity and 4 Workflow schedule-to-starts and no eager series, half the dev
+host's 4 and 8 after two HealthChecks (cells/results/2026-10-14-server-1.32.1.txt:65-66).
+Does not show: the eager counter on 1.32.1. No workflow ran there: the HealthCheck failed within cell health's 0.1 s,
+right after the cell said SERVING, namespace default registered: the shape boot 1's A4 saw on every fresh cell's first
+HealthCheck (cells/results/2026-10-23-boot1.txt, A4). So the empty answers say nothing about eager execution
+(inference).
+Replaces nothing: boot 1's four empty answers (cells/results/2026-10-23-boot1.txt:346-358) and the dev host's 2 eager
+on 1.32.1 (cells/results/2026-10-14-server-1.32.1.txt:38-40) stand.
+
+== F: the dev server and the stack, no cell, 10:15:00 to 10:42:43
+-- F1: the probe, 10:15:00 to 10:16:01
+bin/laug orchestrator probe -idle 60s: exit 0 in 60.3 s, "idle 60 s, 29 heartbeat calls"; host wall against
+workflow.Now +50.1 ms after before and +33.9 ms before after at the start, +44.3 and +22.8 ms at the end; server 14
+readings, RSS 191.7 to 192.5 MiB, 0.71% of one CPU; worker RSS 44.2 to 46.1 MiB, 0.08% (steps/F1.txt; probe;
+extra/f1-probe-20261024-101500.944.jsonl, 28 samples). The frontend's RecordActivityTaskHeartbeat requests on 7402,
+after less before: 58 (probe .heartbeat_requests).
+Shows: 58 requests for 29 calls, 2.0 a call (computed). With laug's 2 s throttle cap, one request per 2 s would be at
+most 30 in 60 s (<...>; computed), so the counter holds more than the calls' requests.
+Does not show: why 2 a call; the pack keeps the difference, not the two metric answers, and not their labels.
+Replaces: "29 RecordHeartbeat calls; frontend service_requests RecordActivityTaskHeartbeat 8" (dev host,
+cells/results/2026-10-15-gate6-step1.txt:101; <...>), read before the 2 s cap
+(<...>): 29 calls and 58 requests here, with the cap. Server RSS 203.4 to 205.1 MiB and worker 31.7 to
+32.8 MiB over 80.2 s (dev host, cells/results/2026-10-15-gate6-step1.txt:107-108): 191.7 to 192.5 and 44.2 to 46.1.
+-- F2: a stopped worker in the poller list, 10:16:01 to 10:21:06
+INT to the worker's group at 10:16:01; at once bin/laug orchestrator probe -idle 0s: exit 2, "no worker runs for this
+checkout (no process holds orchestrator/run/worker.lock)" (steps/F2-probe.txt). temporal task-queue describe every 5 s
+(extra/f2-describe.jsonl, 60 lines, 0 failed): both pollers listed at 290.0 s; the workflow poller gone at 295.1 s, the
+activity poller still listed; both gone at 300.2 s (pollers_after_sigint). A worker started again at 10:21:01, listed
+4.2 s later (steps/F2-worker.txt, F2-c.txt).
+Replaces: "the activity poller gone at 03:42:06; the workflow poller listed at 03:42:11 and gone at 03:42:17" after a
+SIGINT at 03:37:28.611, 277.4 and 288.4 s (dev host, cells/results/2026-10-15-gate6-step1.txt:182, :189-190; computed),
+"about 5 min after its last poll" (dev host, <...>): workflow 295.1 s and activity 300.2 s after the
+INT here, to the 5.1 s of the describe loop, the workflow poller first.
+-- F3: a dev server restart, 10:21:06 to 10:21:14
+INT to the server's group: it exited 1.5 s later; bin/laug orchestrator server again: its health call answered 1.1 s
+after the start (steps/F3-server.txt); the worker listed again 5.2 s after (G0c, steps/F3-c.txt), 6.3 s by the
+reading's own count (server_restart .poller_back_s). temporal workflow list: 3 workflows, all Completed, before and
+after; the worker logged 4 "Failed to poll for task." lines at 10:21:07 and went on polling (steps/F2-worker.txt;
+server_restart .warnings). bin/laug orchestrator probe -idle 0s after it: exit 0 (steps/F3-probe.txt).
+Replaces: "SIGINT to the server at 02:50:32; stopped within 1 s", "4 'Failed to poll for task.' warnings", 12
+workflows all Completed (dev host, cells/results/2026-10-15-gate6-step1.txt:112-117) and "13 s after the restart the
+queue listed the worker again, and 11 s after a second restart" (dev host, <...>): stopped in 1.5
+s, 4 warnings, 3 of 3 Completed, the worker listed 6.3 s after the restart (server_restart .poller_back_s).
+-- F4: start-dev's own ports, 10:21:14 to 10:21:40
+temporal server start-dev --headless --ip 127.0.0.1 --port 7490 --ui-port 8490, twice, no --http-port and no
+--metrics-port: 6 listeners each, every one on 127.0.0.1: 7490 and 33127 37669 41125 43731 44429 the first time, 7490
+and 34949 38325 38545 41771 45419 the second (extra/f4-1.txt, f4-2.txt; start_dev_ports_1, _2); metrics on 41125, then
+38545 (steps/F4-1.txt, F4-2.txt). Each of the 10 lies in the host's ephemeral range, 32768 to 60999 (H3).
+Replaces: "started twice without them, it served metrics on 45199, then on 46379" and "3 listeners it has no flag for
+... from the kernel's ephemeral range, 44620 to 48715 on the dev host" (dev host, <...>;
+internal/orchestrator/README.md:91 and :95-96): 41125, then 38545, and 5 ports a start beside 7490 from 32768 to 60999
+on the lab host. None of laug's pinned ports (7400 to 7402, 8400, 7700 to 7769) is in that range (computed).
+-- F5: gate cancel, WaitForCancellation true (the tree's), 10:21:40 to 10:22:23
+FAKE_GATE_ITEM_S=120 bin/laug gate run 1.31.0 -fake -workflow: the wave at 10:21:51.557 (extra/f5-g20261024-102139-
+timeline.jsonl). At +30 s, with TEMPORAL_ADDRESS=127.0.0.1:1, TEMPORAL_NAMESPACE=foo, TEMPORAL_API_KEY=x and
+TEMPORAL_ENV=nosuch set, bin/laug gate cancel g20261024-102139: exit 0, "cancel requested for workflow
+gate-g20261024-102139", and on stderr "TEMPORAL_ADDRESS=127.0.0.1:1 in the environment is not passed on;
+-orchestrator sets it" and "TEMPORAL_NAMESPACE=foo in the environment is not passed on; laug sets it"; the other two
+not named (steps/F5-cancel.txt). The gate: BLOCK, class invalid, stopped_at wave, released, exit 1 in 44.2 s; "S1:
+left out: verdict.json is the trap verdict (stopped_at wave)" (steps/F5.txt; cancel_true).
+-- F7: gate cancel, WaitForCancellation false, 10:23:07 to 10:23:55
+A scratch clone with internal/orchestrator/gate.go's one StepOptions line set false, committed on the box as 839b9c3
+(steps/F7-clone.txt: "1 1 internal/orchestrator/gate.go"), its own build and worker, laug-worker@839b9c3 on
+laug-gate-e4460a47 (steps/F7-build.txt, F7-worker.txt). The same fake gate and cancel at wave + 30 s: BLOCK, class
+invalid, stopped_at wave, exit 1 in 44.3 s, S1 left out the same way (steps/F7.txt; cancel_false).
+The two cancels side by side, from the cancel request's event, 87 in each (extra/f5-events.json, f7-events.json,
+types and times; the fake runs' timeline.jsonl):
+                                                    true (F5)        false (F7)
+  WORKFLOW_EXECUTION_CANCEL_REQUESTED, event 87     10:22:21.604     10:23:53.960
+  the 4 ACTIVITY_TASK_CANCEL_REQUESTED, event 91-94 +0.046 s         +0.046 s
+  the stop path's activity scheduled                +0.248 s, event  +0.046 s, event 96, in the same workflow
+                                                    107, after the   task as the cancel requests, before any
+                                                    4 cancels        ACTIVITY_TASK_CANCELED
+  the 4 ACTIVITY_TASK_CANCELED                      +0.112 to 0.205  +0.141 to 0.217 s
+  the timeline's "watchdog TERM"                    +0.347 s         +0.349 s
+  the three items ended                             +0.863 to 0.885  +0.864 to 0.886 s
+  WORKFLOW_EXECUTION_COMPLETED, event 131           +1.641 s         +1.694 s
+  the readings: closed after the request            1.7 s            1.7 s (cancel_true, cancel_false)
+  the readings: TERM / items ended                  0.6 s to TERM    1.1 s to no item running
+  every offset computed from the events' and the marks' times; the readings count from the batch's own request
+  time, a little earlier
+Shows: the flag decides when the workflow schedules its stop path, before or after the four cancelled activities
+report back, and nothing else here: in both modes the stop path TERMed the items 0.35 s after the request and the
+workflow closed 1.6 to 1.7 s after it with the trap BLOCK. In the gate, false does not leave the items running, since
+the stop path stops them (inference: the events keep types and times, not the activity's name).
+Replaces: "With it false ... the workflow released the cells and completed 0.3 s after the request while the wave step
+and its item were still running on the host ... They ended on their own minutes later" (dev host, ItemProbe,
+<...>): in workflow Gate, closed 1.7 s after, the items ended 0.9 s after. "With WaitForCancellation
+true ... TERM reached the wave step 7.9 s after the request" (dev host, <...>): 0.35 s on fakes
+here. The cancel's environment line, "laug named the first two on stderr as not passed on and cancelled gate-<gate id>
+in namespace default (seen 2026-10-23 on a scratch dev server)" (dev host, internal/orchestrator/README.md:247-249): the
+same seen on the lab host's dev server. "a cancel 60 s into the wave ... 39 s and 47 s from the signal to the end"
+(lab host, real cells, STATUS.md:303-305, :623) stays: fakes are not like for like.
+-- F8: terminate, then stop, 10:22:23 to 10:23:07
+The same fake gate; at wave + 30 s, 10:23:05, bin/laug gate terminate g20261024-102223 -reason "boot 4 F8": "terminated
+workflow gate-g20261024-102223, reason 'laug: boot 4 F8'", exit 0 (steps/F8-terminate.txt). The starter exited 2,
+"workflow execution error ... terminated" (steps/F8.txt): steps.tsv counts it fail, as a terminated gate's starter
+exits. bin/laug gate status: "Terminated, started 10:22:23 UTC, closed 10:23:05 UTC", step wave since 10:22:35,
+items ended none (steps/F8-status.txt); its history 87 events, the reason "laug: boot 4 F8" (terminate). bin/laug
+gate stop with FAKE_GATE_DIR and -results of the fake run: "stop wave: TERM, done, exit 143", "stopped: done, BLOCK,
+exit 1, stopped_at wave", "release stopped: laugd stopped, 3 released, left none", exit 1 in 1.4 s (steps/F8-stop.txt).
+-- F6: cancels of ended gates, 10:23:07
+  gate                   laug gate cancel                                    the CLI's form, four TEMPORAL_* set
+  F5's, Completed        exit 2, "is completed, not running: nothing to      exit 0, "Canceled workflow"; Completed,
+                         cancel" (F6-1-laug.txt)                             131 events before and after
+  F8's, Terminated       exit 2, "is terminated, not running" (F6-2-laug)    exit 0, "Canceled workflow"; Terminated,
+                                                                             87 events before and after
+  without --env default, TEMPORAL_ENV=nosuch: exit 1, 'Error: environment "nosuch" not found' (steps/F6-noenv.txt)
+  (cancel_ended; each step file)
+Replaces: "seen 2026-10-16 and 2026-10-23 on scratch dev servers, CLI 1.9.1: a Completed gate, then a Terminated one,
+kept its status and its history length" and 'environment "nosuch" not found, exit 1 (seen 2026-10-23 on a scratch dev
+server ...)' (dev host, internal/orchestrator/README.md:242-244, :258-260): seen on the lab host's dev server, 131 and
+87 events unchanged.
+-- F9: a worker KILLed 30 s into a fake wave, 10:23:57 to 10:26:10
+FAKE_GATE_ITEM_S=120 bin/laug gate run 1.31.0 -fake -workflow: the wave at 10:24:08; KILL to the worker's group at
+10:24:38; a new worker at 10:25:08: "replayed 1 open gate(s) ... gate-g20261024-102356" (batch-log.txt;
+steps/F9-worker.txt). One "progress: no answer (stream terminated by RST_STREAM with error code: CANCEL)" between; the
+items exit 0 at 10:26:09; ADVANCE, exit 0 in 133.6 s, S1 byte for byte (8058 bytes, sha256 fb3e26f802ad), rejudge
+identical (steps/F9.txt; kill_fake). bin/laug orchestrator record g20261024-102356 adopted -overwrite-fixture: exit 2,
+the same two leaks as G2r, events 107 and 123, $.verdict, nothing written (steps/F9-record.txt): this fake verdict
+holds the same evidence path (extra/f9-g20261024-102356-verdict.json, .comparison.evidence). The replay of the
+existing fixtures passed (steps/F9-replay.txt); extra/f9-adopted.json is the committed adopted.json, the same bytes
+(computed with cmp), 108 events.
+Replaces nothing: adopted.json stands. A fake wave adopted after a KILL 30 s in, on the lab host's dev server: seen.
+-- F10: laug obs up with the fetched releases, 10:26:10 to 10:28:30
+bin/laug obs up -dir <out>/obs: exit 0 in 135.9 s (steps/F10.txt; obs_up). Each release fetched, its size and sha256
+the line of obs/versions.txt it names:
+  part        version  bytes        sha256 (first 12)  obs/versions.txt
+  prometheus  2.53.0   104192065    d9900a11e3c8       :12
+  grafana     11.1.0   123535977    33822a0b275e       :13
+  otelcol     0.162.0  37254744     f99929987a91       :14
+  jaeger      2.21.0   64228592     f5741318ea2c       :15, and its binary jaeger-2.21.0-linux-amd64/jaeger 17b98bae5eb9
+  329211378 bytes in all (computed)
+Six parts up, each on 127.0.0.1: prometheus 7730, jaeger 7760 to 7763, the collector 7751 to 7753, cellstat 7710,
+follow 7720, grafana 7740; each answered 0.2 to 0.4 s after its start, grafana 4.8 s; the store settled 120.5 s after
+ready (steps/F10.txt). ss: 11 listeners, every one 127.0.0.1 (extra/f10-listeners.txt). laug obs status -json: 6 parts
+up, RSS 28.3 to 167.1 MiB a part (rss_bytes, computed), 19366 head series, 0 cells federated (extra/f10-status.json).
+The worker started again with -otlp 127.0.0.1:7751, "traces to 127.0.0.1:7751 (OTLP over HTTP, service
+laug-worker)", listed 0.0 s after (steps/F10-worker.txt, F10-c.txt).
+Replaces: "make obs-up fetched all four on the dev host from these URLs, and every size and sha256 matched" (dev host,
+obs/versions.txt:7-8): fetched on the lab host, each matching its line. "make obs-up, exit 0 in 123 s" (lab host,
+cells/results/2026-10-18-lab-obs.txt:233): 135.9 s with the fetch and the store's 120.5 s settle.
+-- F11: three traced fake gates, 10:28:30 to 10:31:30
+  T  gate id           how                              verdict  exit  s      S1
+  1  g20261024-102829  -fake -workflow -otlp            ADVANCE  0     13.5   8056 bytes, 79eb77d76b5c, identical
+  2  g20261024-102853  the same                         ADVANCE  0     13.8   8056 bytes, ed8018a3a99b, identical
+  3  g20261024-102917  FAKE_GATE_ITEM_S=120, worker     ADVANCE  0     133.3  8058 bytes, 01fa4ff2f573, identical
+                       KILLed at 10:29:59, new 10:30:29
+  (steps/F11-T<n>.txt; batch-log.txt; trace_T1 to trace_T3)
+The starter said "traces to 127.0.0.1:7751 (OTLP over HTTP, service laug-gate)" (steps/F11-T1.txt). After each, bin/laug
+obs find <id>: exit 0 in 0.2 s, a board link, a trace link, Grafana's Explore and Jaeger's own search at
+127.0.0.1:7761 for service laug-worker and tag temporalWorkflowID gate-<id>, and the store line: "0 of 3 federated; 3
+with a target that never answered: no Prometheus stood behind its lease" (steps/F11-T<n>-find.txt). The end line's
+"traced 0 of 3" counts that store line, which every fake gate gets: a fake cell has no Prometheus (seen).
+The traces themselves: the batch asked Jaeger's /api/traces for each gate's workflow id and kept the answer in
+extra/f11-<id>-trace.json. All three files are empty, 0 bytes, and the readings hold trace null. obs find names a link
+and does not count spans.
+Does not show: any span. Whether Jaeger held the gates' traces is not in the pack: an empty answer is a refused
+connection or an HTTP error as much as no trace (inference).
+Replaces nothing: "1 StartWorkflow:Gate ... 33 [RunWorkflow] of the second worker ... 31 with no child ... orphans 16"
+(dev host, cells/results/2026-10-17-obs-offline.txt:1558-1573) stands; this pack has no trace to set beside it.
+-- F12: obs down, then make obs-test, 10:31:30 to 10:42:43
+bin/laug obs down: six parts stopped, each 0.0 to 0.1 s after TERM, each port free, the data kept (steps/F12-down.txt).
+env OBS_DIR=<out>/obs make obs-test: exit 0 in 662.1 s (steps/F12.txt; obs_test): the configs' addresses, 7 files
+on 127.0.0.1; promtool check config SUCCESS on both files; otelcol and jaeger validate exit 0; the lint, 5 boards, 166
+panels, 386 queries; "48 plants, each refused with exit 2"; "8 pack and view plants, each refused with exit 2; the
+clean fixture packed"; the fake cell: numshards_gauge 512 missing on the cell 2.5 s after it left the exposition and in
+the store at 5.0 s, 2.5 s after the cell; 0 again on the cell at +2.5 s and in the store at +5.0 s; the six readings
+"equal bit for bit", 60 samples a series in each; follow removed the target 0.9 s after the release line, the store
+held no series of the cell 12.3 s after that; "--- PASS: TestFakeCellInTheStore (340.82s)". The negative control: the
+store read 0, recovered, at each of its 297 reads to +296.7 s, 512 at +297.7 s; "--- PASS: TestFakeCellStalenessControl
+(313.25s)". 0 tests skipped (obs_test .skips).
+Replaces: "TestFakeCellInTheStore, 344.06 s", "TestFakeCellStalenessControl, 315.83 s", the store "4.8 s after the
+cell" (lab host, cells/results/2026-10-18-lab-obs.txt:225-231): 340.82 s, 313.25 s, 2.5 s after the cell. make
+obs-test "about 12 min" (Makefile:77, :107): 11.0 min (computed). "18 of 18 equal to 2e-14 relative in each of 5 up
+gates" (lab host, STATUS.md:633; docs/DESIGN.md:618) stays: obs-test's fake cell is not a gate.
+-- F13: laug obs purge -remove-state, 10:42:43
+"the stack's parts stop, then <out>/obs goes: 9051 files, 1335.7 MiB on disk"; "left: 0 processes, 0 ports, 0 files",
+exit 0 in 0.5 s (steps/F13.txt); then nothing listening on 7400 to 7402, 8400 or 7700 to 7799 (steps/F13-check.txt).
+
+== N: the density ladder, 10:42:46 to 12:29:46
+For N in 1 2 3 4 5 5 6 6 8 8: bin/laug usage record beside bin/laug gate run 1.31.0 -plan gate/plans/noise.yaml
+-items N, then laug usage stop and laug usage report -gate <id> -json (steps/N<N>-<k>*.txt; extra/n<N>-<k>-usage.json).
+Every item is gate/plan.yaml's steady load, 5 m at 20/s, 50 in flight (gate/plans/noise.yaml:21-27). The plan has no
+fault item, so every run BLOCKs on R5, class control, and a run cut to fewer than its 8 items BLOCKs on R2 too: "Both
+BLOCKs are by design" (gate/plans/noise.yaml:5-8). The ladder reads each item's own verdict instead.
+  run   gate id           items  verdict  class       rules     items ADVANCE  wf s2s p99 ms     e2e p95 ms
+  N1-1  g20261024-104246  1      BLOCK    control     R2 R5     1 of 1         19.01             49.74
+  N2-1  g20261024-105215  2      BLOCK    control     R2 R5     2 of 2         17.66 to 17.71    49.15 to 49.17
+  N3-1  g20261024-110203  3      BLOCK    control     R2 R5     3 of 3         17.57 to 17.89    49.44 to 49.52
+  N4-1  g20261024-111210  4      BLOCK    control     R2 R5     4 of 4         19.06 to 19.18    49.98 to 50.73
+  N5-1  g20261024-112242  5      BLOCK    control     R2 R5     5 of 5         33.37 to 37.53    71.38 to 73.66
+  N5-2  g20261024-113325  5      BLOCK    control     R2 R5     5 of 5         31.28 to 36.83    70.34 to 73.45
+  N6-1  g20261024-114403  6      BLOCK    regression  R2 R4 R5  4 of 6         33.29 to 40.46    80.03 to 80.99
+  N6-2  g20261024-115510  6      BLOCK    regression  R2 R4 R5  0 of 6         39.69 to 42.50    81.83 to 82.39
+  N8-1  g20261024-120609  8      BLOCK    regression  R4 R5     0 of 8         106.17 to 164.69  181.20 to 183.17
+  N8-2  g20261024-121800  8      BLOCK    regression  R4 R5     0 of 8         91.88 to 99.25    179.99 to 181.84
+  max                                                                          38                84
+  run   persistence p99 ms  frontend p99 ms  activity s2s p99 ms  completed     window s
+  N1-1  9.22                9.99             9.98                 5910          302
+  N2-1  8.70 to 8.72        9.99             9.97 to 9.98         5933 to 5949  302
+  N3-1  8.15 to 8.21        12.03 to 12.60   10.13 to 10.49       5925 to 5957  301
+  N4-1  8.62 to 8.81        14.29 to 14.82   11.69 to 14.23       5881 to 5929  301 to 302
+  N5-1  9.35 to 9.50        17.72 to 18.40   15.61 to 17.77       5893 to 5970  301
+  N5-2  9.37 to 9.49        17.52 to 18.13   15.52 to 17.53       5883 to 5960  301
+  N6-1  9.67 to 9.76        18.18 to 18.71   17.18 to 17.75       5873 to 5948  302
+  N6-2  9.63 to 9.70        19.06 to 19.18   17.91 to 18.73       5899 to 5973  301
+  N8-1  36.39 to 39.11      49.79 to 53.96   48.94 to 49.43       5839 to 5939  301 to 302
+  N8-2  36.66 to 39.54      49.32 to 49.72   48.43 to 49.12       5854 to 5931  302
+  max   23                  22               20                   >= 5700
+  each item's readings: readings.json items_N<N>_<k> (the five it keeps) and <key>/<id>-<key>.verdict.json
+  (.readings, .window_s, the activity column); ms rounded to 0.01; service error rate 0 in 46 of 48; N6-1's s3 and
+  s5 read 6.8e-06 at most (.readings.service_error_rate), 0.000 in their rows (max 0.001)
+Items: 48, 24 ADVANCE (the end line; computed from the table: 1 + 2 + 3 + 4 + 5 + 5 + 4).
+- The 6 BLOCKs by design, N1-1 to N5-2: class control, R2 and R5 only, every item ADVANCE on its own maxima. They are
+  the plan's two BLOCKs and nothing else.
+- The 4 regressions, N6-1 to N8-2: R4 too, since items BLOCKed on their maxima. Each BLOCKed item's .deciding: in N6-1
+  and N6-2, workflow_task_schedule_to_start_p99_ms alone, 8 items (s1 at 40.46 and s6 at 38.75 ms in N6-1, all 6 at
+  39.69 to 42.50 in N6-2); in N8-1 and N8-2, 5 rows in all 16 items, workflow task and activity schedule-to-start,
+  end-to-end, persistence and frontend p99 (<key>/<id>-<key>.verdict.json, .deciding). N8 has no R2: 8 items is the
+  whole plan.
+The cost beside each (extra/n<N>-<k>-usage.json; usage_N<N>_<k>; an item's cores summed over its cell's 11
+containers, computed):
+  run   items  busy cores (of 32)  cores an item   run-queue wait ms/s a CPU  cpu some %  Omes worker wait ms/s
+  N1-1  1      1.588               1.463           1.192                      0.473       0.810
+  N2-1  2      3.273               1.512 to 1.517  4.421                      1.066       1.420 to 1.508
+  N3-1  3      5.154               1.584 to 1.599  9.270                      1.791       1.905 to 2.166
+  N4-1  4      7.243               1.657 to 1.670  17.327                     2.680       2.753 to 3.026
+  N5-1  5      9.659               1.743 to 1.755  30.265                     3.797       3.998 to 4.336
+  N5-2  5      9.606               1.737 to 1.748  31.646                     3.819       3.989 to 4.317
+  N6-1  6      12.159              1.798 to 1.812  51.407                     5.340       5.960 to 6.759
+  N6-2  6      12.231              1.813 to 1.820  53.168                     5.399       6.443 to 6.701
+  N8-1  8      16.940              1.816 to 1.836  182.228                    12.040      20.202 to 21.720
+  N8-2  8      16.916              1.818 to 1.835  182.638                    11.946      19.632 to 26.448
+  .host.busy_cores, .host.runq_ms_per_s_per_cpu, .host.cpu_some_pct, .omes[] role omes-worker .wait_ms_per_s; steal 0
+  in all 10; each window 301.968 to 302.843 s, 60 or 61 lines, 0 skipped (.window)
+Shows: up to 4 items at once the readings sit with one item's: workflow task schedule-to-start 17.57 to 19.18 ms against
+N1's 19.01, persistence 8.15 to 9.22, frontend rising from 9.99 to 14.82 ms. At 5 items schedule-to-start nearly
+doubles, to 31.28 to 37.53 ms, within 0.47 ms of its 38 ms max, and end to end goes to 70.34 to 73.66 ms; at 6 it passes
+38 in 8 of 12 items; at 8 every row but the error rate and the floor fails in all 16, schedule-to-start at 91.88 to
+164.69 ms and persistence at 36.39 to 39.54 against 23. Completed stayed at 5839 to 5973, over the 5700 floor, at every
+N, and the error rate 0 in 46 of 48 items, 6.8e-06 at most in N6-1's other 2. Busy cores grew 1.7 to 2.6 an item
+from one step to the next (computed from the table), to 16.94 of 32 at 8, while the host's run-queue wait grew from
+1.192 to 182.2 ms a second a CPU, 153 times, and 3.43 to 3.55 times from 6 to 8 (computed). So the readings follow the
+waiting more than the busy count: at 8 items half the vCPU are busy, and the wait jumped (inference).
+Does not show: which container took the CPU in N8; the usage reports hold each container's cores, not summed here.
+Whether 7 items hold; the ladder skipped 7. Whether the host's 32 vCPU are 16 cores with two threads each (verify: the
+instance type's page), which would put N8's 16.94 busy cores at the core count (inference).
+Replaces: "Measured on the lab host for N from 1 to 4, 11 runs" (lab host, gate/plans/noise.yaml:9-10, a recorded
+input; its comment is not changed here): N from 1 to 8, 10 runs. Its runs at 1 to 4, wf s2s 17.1 to 23.0, e2e 49.3 to
+54.8, persistence 8.0 to 9.2 and frontend 10.0 to 16.7 ms, "Whole runs took 503 to 566 s" (lab host,
+cells/results/2026-10-15-lab-gates-4-5-noise.txt:14-24): 17.57 to 19.18, 49.15 to 50.73, 8.15 to 9.22 and 9.99 to
+14.82 ms, whole runs 568.6 to 630.8 s at 1187 harness checks. "An item cost 1.57 to 1.58 cores at two and 1.64 to
+1.66 at three ... three items kept 5.0 of 32 cores busy (3.2 at two)", "the host's run-queue wait 2.3 times" from two
+to three and "the Omes workers' ... to 2.0 ms per s" (lab host, STATUS.md:317-320, :469-470): 1.512 to 1.517 and 1.584
+to 1.599 cores, 5.154 of 32 busy at three (3.273 at two), run-queue wait 2.10 times (computed), the Omes workers 1.905
+to 2.166 ms per s at three. Next item 7's density question (STATUS.md:309-328) gains the points from 4 to 8.
+
+== The 19 gates together
+- Gate 5 and Gate 6 on one tree and host, through the two laug commands: G1 and G2 ADVANCE, equal by S2; G4 and G5,
+  each with its worker KILLed, ADVANCE and equal to G1; the 4 handed on 612.5 to 614.3 s.
+- A/A gates through gate/plan.yaml at three items: 6, W1, W2, G1, G2, G4 and G5; 2 BLOCKed class invalid on R4 and
+  R5, both warm-ups, the box's first and second gates; 0 of the 4 counted passed a max. With the earlier sessions' 55
+  (STATUS.md:393, README.md:48, docs/DESIGN.md:510): 4 of 61 A/A gates BLOCKed, each a box's first or second gate
+  (computed); the counted gates 0 of 54 over a max (computed: 50 and 4). Boot 4's do not join the validation set:
+  their judge and set_sha256 differ, 2 of 16 fields (G2 above).
+- Controls: G3 BLOCK regression, as its diff says; C1 and C2 BLOCK refused, as theirs says.
+- The ladder: 10 of 10 BLOCK by design or on items' maxima; 24 of 48 items ADVANCE.
+Replaces: "The first gate after a boot: the only 2 BLOCKs in 55 A/A gates" (lab host, README.md:48): 4 BLOCKs in 61,
+two of them boot 4's first and second gates. README's header line and docs/BRAND.md's card, "ADVANCE 30 of 30 A/A
+gates" and "BLOCK 3 of 3 gates, 25 us delay into Postgres" (lab host, README.md:7; docs/BRAND.md:215-216), count the
+validation set and the known-slow control: boot 4 adds to neither, so they stand. README's Noise and A/B rows (lab host,
+README.md:24-25) stand for the same reason.
+
+== The pages these numbers feed, by section
+Each number above sits with its "Replaces" line in its own section; this is the map from the page to the sections.
+  STATUS.md, Gates row 5 (:18), the command block (:37-38)            S, G1, G3, W, The 19 gates together
+  STATUS.md, Gates row 6 (:19), Next item 6 (:292-305), the table      G2, G4, G5, F5 to F8
+    (:621-623)
+  STATUS.md, Next item 7 (:309-328, :469-470)                          N
+  STATUS.md, the A/A counts (:393-397), Open (:443-450), the table     W, G2, F12, The 19 gates together
+    (:627, :628, :633, :634)
+  README.md, the header (:7), Status (:22-26), the offline block       P, G1, G3, G4, The 19 gates together
+    (:30-31, :41), What it does not prove (:48)
+  docs/DESIGN.md, the gate's time (:288-291), the A/A counts           G1, W, G2, F12, The 19 gates together
+    (:510-513), the store (:618), the metrics (:951-954)
+  docs/BRAND.md, the card (:215-216)                                   The 19 gates together: it stands
+  internal/orchestrator/README.md (:91, :95-96, :242-249, :258-260)    F4, F5, F6
+  <...>                                                                F1 to F7
+  gate/sets/warm-up-m8i.8xlarge.txt, gate/sets/control-gate5-known-    W, G3, C: no set gains a run in this commit
+    bad.txt, gate/controls/persistence-maxqps-50.diff:1
+  gate/plans/noise.yaml:9-10, a recorded input, not changed here       N
+  obs/versions.txt:7-8, Makefile:77 and :107                           F10, F12
+  internal/orchestrator/testdata/histories/real.json, adopted.json     G2r, F9: unchanged
+  cells/results/2026-10-23-boot1.txt (D7), 2026-10-14-server-1.32.1    E1: they stand
+    .txt (:38-40, :65-66)
+
+== The end line
+The batch's last line (batch-log.txt, 12:41:08):
+  batch ended: gates on cells 19 (warm-up W1 BLOCK invalid, W2 BLOCK invalid; G1 ADVANCE, G2 ADVANCE, S2 G1=G2 equal,
+  set_sha256 b3f542321181 equal to the file; G3 BLOCK regression; G4 ADVANCE, G5 ADVANCE; C1 BLOCK refused, C2 BLOCK
+  refused; noise 10 of 10, BLOCK by design 6, items ADVANCE 24 of 48); fake gates 7 (cancel true wave in 1.7 s, false
+  closed in 1.7 s, terminate Terminated, killed worker ADVANCE, traced 0 of 3); obs-test exit 0; P exit 0, first
+  verdict 16.0 s after the clone; harness failures 0; readings 101; skipped 0
+and before it: "end: on 7700 0, laug projects 0, laugd 0, pool serve 0, cellstat 0, dev servers 0, firecracker 0;
+listening of 7400 to 7402, 8400, 7700 to 7799: none; cells left 0; 202 min left, up 235 min".
+- "BLOCK by design 6": N1-1 to N5-2, class control. The other 4 ladder gates BLOCKed class regression on items' maxima,
+  N6-1 to N8-2; the line counts them in "noise 10 of 10" only.
+- "cancel true wave in 1.7 s": stopped_at wave, closed 1.7 s after the request (F5); "false closed in 1.7 s" (F7).
+- "traced 0 of 3": obs find's store line for fake cells, not a trace count (F11).
+- 0 harness failures: no gate on cells exited other than 0 or 1 or met its cap.
+- steps.tsv counts 142 ok and 4 fail: G2r-record and F9-record, exit 2, the recorder's leak refusal (G2r, F9);
+  E1-1.32.1-health, exit 1, "Namespace default is not found" (E1); F8, exit 2, the starter of a terminated gate (F8).
+  Every exit 1 of a BLOCK and every exit 1 or 2 of a refusal asked for (F2-probe, F6, F8-stop) counts ok.
+
+== The two known shape hits
+A scan for account-id shapes finds a twelve-digit number twice in the pack: extra/f10-status.json's .free_bytes, and
+the same value in steps/F10-status.txt, line 2, the step's print of the same laug obs status -json. This file does not
+repeat it.
+It is the free bytes on the stack's disk, a byte counter, not an account id. The box allowed both at the pack's paths;
+check/allow.txt allows them at their paths here, 1 match each, with that reason.
+
+== What the pack lacks
+- Traces: the three answers from Jaeger are empty files, so no span count, no orphan count and no trace shape (F11).
+- A three-item gate's history as a fixture, and a new adopted one: the recorder refused both on "-lab-" in a
+  repository path (G2r, F9). real.json and adopted.json are unchanged.
+- The eager counter on 1.32.1: its HealthCheck failed, so no workflow ran there (E1).
+- Why F1's frontend counted 58 heartbeat requests for 29 calls: the pack keeps the difference, not the metric answers.
+- Why pl was never steady in W1 and W2: no per-second reading of the before window.
+- The usage recorders' own lines (*.jsonl): only the reports came off the box.
+- make test's time inside P as a reading: p4_make_test_s, 88.7 s, starts at the wrong line; 322.3 s is computed
+  from the stamps.
+- Whether the box has 16 cores with two threads or 32 cores, which bears on N8 (verify).
+- When the instance stopped: the pack ends with the batch.

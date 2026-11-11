@@ -1,0 +1,138 @@
+{
+  "run_id": "g20261017-192202-steady",
+  "verdict": "ADVANCE",
+  "exit": 0,
+  "window_s": 301,
+  "short_window": null,
+  "readings": {
+    "workflow_task_schedule_to_start_p99_ms": 17.251769523252396,
+    "activity_schedule_to_start_p99_ms": 9.988931312087102,
+    "workflow_end_to_end_p95_ms": 49.383021467714286,
+    "persistence_latency_p99_ms": 8.201056285653173,
+    "service_error_rate": 0,
+    "frontend_request_p99_ms": 11.731631355490542,
+    "workflow_task_schedule_to_start_over_20ms": 0.0036092444976465465,
+    "activity_schedule_to_start_over_10ms": 0.0080587144398796,
+    "persistence_latency_over_10ms": 0.0012470833274851323,
+    "frontend_request_over_10ms": 0.011739349188011339,
+    "workflow_end_to_end_over_50ms": 0.030052098919933545,
+    "workflows_completed": 5955,
+    "counter_resets": 0,
+    "window_seconds": 301
+  },
+  "rows": [
+    {
+      "metric": "workflow_task_schedule_to_start_p99_ms",
+      "value": 17.252,
+      "limit": "38",
+      "result": "ok",
+      "blocks": false
+    },
+    {
+      "metric": "activity_schedule_to_start_p99_ms",
+      "value": 9.989,
+      "limit": "20",
+      "result": "ok",
+      "blocks": false
+    },
+    {
+      "metric": "workflow_end_to_end_p95_ms",
+      "value": 49.383,
+      "limit": "84",
+      "result": "ok",
+      "blocks": false
+    },
+    {
+      "metric": "persistence_latency_p99_ms",
+      "value": 8.201,
+      "limit": "23",
+      "result": "ok",
+      "blocks": false
+    },
+    {
+      "metric": "service_error_rate",
+      "value": 0.000,
+      "limit": "0.001",
+      "result": "ok",
+      "blocks": false
+    },
+    {
+      "metric": "frontend_request_p99_ms",
+      "value": 11.732,
+      "limit": "22",
+      "result": "ok",
+      "blocks": false
+    },
+    {
+      "metric": "workflow_task_schedule_to_start_over_20ms",
+      "value": 0.00361,
+      "limit": "null",
+      "result": "no threshold yet",
+      "blocks": false
+    },
+    {
+      "metric": "activity_schedule_to_start_over_10ms",
+      "value": 0.00806,
+      "limit": "null",
+      "result": "no threshold yet",
+      "blocks": false
+    },
+    {
+      "metric": "persistence_latency_over_10ms",
+      "value": 0.00125,
+      "limit": "null",
+      "result": "no threshold yet",
+      "blocks": false
+    },
+    {
+      "metric": "frontend_request_over_10ms",
+      "value": 0.01174,
+      "limit": "null",
+      "result": "no threshold yet",
+      "blocks": false
+    },
+    {
+      "metric": "workflow_end_to_end_over_50ms",
+      "value": 0.03005,
+      "limit": "null",
+      "result": "no threshold yet",
+      "blocks": false
+    },
+    {
+      "metric": "workflows_completed",
+      "value": 5955,
+      "limit": ">= 5700",
+      "result": "ok (0.95 x 20/s x 300 s)",
+      "blocks": false
+    },
+    {
+      "metric": "omes_exit",
+      "value": 0,
+      "limit": "0",
+      "result": "ok",
+      "blocks": false
+    },
+    {
+      "metric": "iterations_failed",
+      "value": 0,
+      "limit": "",
+      "result": "not judged apart from omes_exit",
+      "blocks": false
+    },
+    {
+      "metric": "workflows_not_completed",
+      "value": 0,
+      "limit": "0",
+      "result": "ok (5381 started before 2026-10-17T19:30:21Z, all Completed)",
+      "blocks": false
+    }
+  ],
+  "deciding": [],
+  "sweep": {
+    "Completed": 5381
+  },
+  "sweep_cutoff": "2026-10-17T19:30:21Z",
+  "thresholds_release": null,
+  "thresholds_note": "load/steady-state.yaml, the base (1.31.0 baselines), unchanged: no load/releases/1.31.yaml for server 1.31.0",
+  "overrides_applied": []
+}

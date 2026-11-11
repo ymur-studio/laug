@@ -1,0 +1,7 @@
+# make: make --no-print-directory -n release
+# laug: laug release -last
+# lease: present
+# compare: request POST /release
+[ -s .last-lease.json ] || { echo "laug · no lease in .last-lease.json; make lease first" >&2; exit 2; }
+curl -s --fail-with-body -X POST 'http://127.0.0.1:7700/release' -H 'content-type: application/json' -d "$(jq '{id}' .last-lease.json)" | jq . \
+  && rm -f .last-lease.json

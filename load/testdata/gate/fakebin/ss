@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Fake ss for a fake gate (GATE_FAKE=1): ss -ltn with the ports in FAKE_GATE_LISTEN (comma-separated) listening on
+# 127.0.0.1.
+echo "State  Recv-Q Send-Q Local Address:Port Peer Address:Port"
+IFS=, read -r -a held <<<"${FAKE_GATE_LISTEN:-}"
+for p in "${held[@]}"; do [[ -z "$p" ]] || printf 'LISTEN 0      4096       127.0.0.1:%s      0.0.0.0:*\n' "$p"; done

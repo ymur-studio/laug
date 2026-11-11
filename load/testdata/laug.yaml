@@ -1,0 +1,42 @@
+# Test fixture: cells/compose/dynamicconfig/laug.yaml with every laug key at the server 1.31.0 default, as the
+# fake cells of make harness-test start with it. faults/candidates.yaml's from values and the fault checks are
+# written against these values, so a change to the checkout's laug.yaml (a gated change, or a known-bad branch)
+# does not fail them. make harness-test checks that this file has the same keys as the template.
+#
+# laug dynamic config, the template. Replaces the upstream development-sql.yaml (DYNAMIC_CONFIG_FILE_PATH points
+# here), so the two upstream dev keys are carried over first.
+# Every key below passed `temporal-server validate-dynamic-config` inside temporalio/server:1.31.0 on
+# 2026-10-07 (a made-up key gets "warning: unregistered key", so the check is real), and each role logged
+# "dynamic config changed for the key" for all seven at start. That proves the names, not the defaults.
+# The five laug keys restate the server 1.31.0 defaults (frontend.rps 2400, frontend.namespaceRPS 2400,
+# history.persistenceMaxQPS 9000, 4 read and 4 write partitions; constants.go) so a fault has a line to edit.
+# Fault "throttle-frontend" lowers frontend.rps in the leased cell's copy (cells/run/laug-<id>/) and restores it.
+
+# From upstream development-sql.yaml (samples-server f811a03; MIT, see THIRD_PARTY_NOTICES.md)
+limit.maxIDLength:
+  - value: 255
+    constraints: {}
+# Dev only, from upstream. Server 1.31.0 defaults this to false and says "This should not be turned on in
+# production" (common/dynamicconfig/constants.go). With it on, every search attribute lookup reads cluster
+# metadata from the store under one lock, and Omes sets OmesExecutionID on every start. Every laug baseline and
+# fault run so far ran with it on; its cost is not measured. Removing it means re-taking those
+# baselines.
+system.forceSearchAttributesCacheRefreshOnRead:
+  - value: true
+    constraints: {}
+
+# laug: the server 1.31.0 defaults, restated (see the header)
+frontend.rps:
+  - value: 2400
+frontend.namespaceRPS:
+  - value: 2400
+history.persistenceMaxQPS:
+  - value: 9000
+matching.numTaskqueueReadPartitions:
+  - value: 4
+    constraints:
+      namespace: default
+matching.numTaskqueueWritePartitions:
+  - value: 4
+    constraints:
+      namespace: default

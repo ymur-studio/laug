@@ -1,0 +1,86 @@
+# The start-order race (server v1.31.0 common/persistence/sql/cluster_metadata.go:95, temporal/fx.go:600)
+# and its timings (cells/results/2026-10-15-startup-race.txt, a record not kept whole: its lines below are quotes rows;
+# 10 cells before the change, 20 after). The order lives in cells/compose/cell.yml. Replaces startup-race.png, which
+# rounded 44.5 s to 44 and left out the six cells that answered 3.9 s after create returned. Every time here runs
+# from the start of create to the warm check's pass: for the 10 before, each cell's create plus its time to healthy
+# (computed), cells/results/2026-10-15-startup-race.txt:29-38; for the 20 after, :53-55, 15.5 to 17.2 s. The
+# mismatch line: :12; the ports, 7237 and 7236: :21. Timing scale: x = 170 + 4 px a second, 0 to 140 s; marks at
+# each range's ends.
+name startup-race
+size 800 540
+title | Started together, two frontends race to rewrite one record
+sub | Server 1.31.0, cells made one at a time: 10 with their roles started together, then 20 in turn
+desc | Top left, before: frontends A and B, on ports 7237 and 7236, both rewrite the one cluster metadata row,
+desc | which a version guards; the loser gets version mismatch, Unavailable, retries once 40 to 50 ms later, loses again
+desc | and exits, and Docker restarts it, the outlined box. Top right, after: each role starts only once the one
+desc | before it listens, and a role listens only after its write, so the next one reads a settled record.
+desc | Bottom, seconds from the start of create until each new cell passed laug's warm check, on one scale from 0
+desc | to 140: before, 6 cells at 14.4 to 14.8 s and 4 at 54.0 to 130.1 s; after, all 20 at 15.5 to 17.2 s, with no
+desc | restarts. Ranges are drawn as a line between end ticks.
+source cells/compose/cell.yml
+row quotes cells/results/2026-10-15-startup-race.txt:12
+row quotes cells/results/2026-10-15-startup-race.txt:21
+row quotes cells/results/2026-10-15-startup-race.txt:29
+row quotes cells/results/2026-10-15-startup-race.txt:30
+row quotes cells/results/2026-10-15-startup-race.txt:31
+row quotes cells/results/2026-10-15-startup-race.txt:32
+row quotes cells/results/2026-10-15-startup-race.txt:33
+row quotes cells/results/2026-10-15-startup-race.txt:34
+row quotes cells/results/2026-10-15-startup-race.txt:35
+row quotes cells/results/2026-10-15-startup-race.txt:36
+row quotes cells/results/2026-10-15-startup-race.txt:37
+row quotes cells/results/2026-10-15-startup-race.txt:38
+row quotes cells/results/2026-10-15-startup-race.txt:53
+row quotes cells/results/2026-10-15-startup-race.txt:54
+row quotes cells/results/2026-10-15-startup-race.txt:55
+region 16 70 376 262 | before: started together
+box fa 36 96 160 44 | frontend A | writes :7237
+box fb 212 96 160 44 | frontend B | writes :7236
+box meta 36 166 336 44 | cluster metadata | one row, guarded by a version
+box loser 36 236 336 80 fill=steam stroke=ember | the loser exits | version mismatch, Unavailable;
+  | retried once 40 to 50 ms later, loses again | and exits; Docker restarts it
+arrow fa meta
+arrow fb meta
+arrow meta loser
+region 408 70 376 262 | after: started in turn
+box r1 428 96 336 44 | a role starts | and rewrites the record if it differs
+box r2 428 166 336 44 | it listens only after that write | so listening means the write is done
+box r3 428 236 336 80 | the next role starts | only once the one before listens, | and reads a settled record
+arrow r1 r2
+arrow r2 r3
+text 24 362 bold size=12 | Seconds until a new cell passed laug's warm check
+text 24 394 bold size=12 | before
+text 24 408 size=11 | 10 cells, roles together
+path 227.6,388 227.6,404
+path 227.6,396 229.2,396
+path 229.2,388 229.2,404
+text 235.2 400 size=11 | 6 cells: 14.4 to 14.8 s
+path 386,388 386,404
+path 386,396 690.4,396
+path 690.4,388 690.4,404
+text 392 390 size=11 | 4 cells: 54.0 to 130.1 s, the loser restarted
+text 24 438 bold size=12 | after
+text 24 452 size=11 | 20 cells, roles in turn
+path 232,432 232,448
+path 232,440 238.8,440
+path 238.8,432 238.8,448
+text 244.8 444 size=11 | 20 cells: 15.5 to 17.2 s, 0 restarts, 0 version mismatch lines
+path 170,470 730,470
+path 170,470 170,474
+text 167 486 size=10 | 0
+path 250,470 250,474
+text 244 486 size=10 | 20
+path 330,470 330,474
+text 324 486 size=10 | 40
+path 410,470 410,474
+text 404 486 size=10 | 60
+path 490,470 490,474
+text 484 486 size=10 | 80
+path 570,470 570,474
+text 561 486 size=10 | 100
+path 650,470 650,474
+text 641 486 size=10 | 120
+path 730,470 730,474
+text 721 486 size=10 | 140
+text 170 502 size=10 | seconds from the start of create until laug's warm check passed, one HealthCheck included
+text 24 528 size=10 | source: server v1.31.0 common/persistence/sql/cluster_metadata.go:95 and temporal/fx.go:600.

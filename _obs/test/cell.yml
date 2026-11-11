@@ -1,0 +1,12 @@
+# make obs-test's fake cell (_obs/README.md): a second Prometheus 2.53.0, started by
+# _obs/follow/fakecell_test.go on 127.0.0.1:7768, that scrapes the test's canned exposition on 127.0.0.1:7769 as a
+# cell's Prometheus scrapes its history role (cells/compose/prometheus.yml), so the store under test federates it as it
+# would a leased cell. Never up while a gate is open. make obs-test runs promtool check config on it.
+global:
+  scrape_interval: 5s
+  scrape_timeout: 4s
+
+scrape_configs:
+  - job_name: temporal-history
+    static_configs:
+      - targets: ["127.0.0.1:7769"]

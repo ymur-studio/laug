@@ -1,0 +1,6 @@
+# make: make --no-print-directory -n cell-health CELL_ADDRESS=127.0.0.1:17233 PROM_URL=http://127.0.0.1:19090 NAMESPACE=ns1
+# laug: laug cell health -address 127.0.0.1:17233 -prom http://127.0.0.1:19090 -namespace ns1
+# lease: absent
+# compare: line cells/health.sh
+[[ 'ns1' =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || { echo "laug · make cell-health: NAMESPACE="'ns1'" is not one word of letters, digits, ., _ and -, from a letter or digit" >&2; exit 2; };                
+CELL_ADDRESS='127.0.0.1:17233' NAMESPACE=ns1 PROM_URL='http://127.0.0.1:19090' cells/health.sh

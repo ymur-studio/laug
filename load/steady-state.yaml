@@ -1,0 +1,115 @@
+# Steady-state thresholds for the verdict. Set from load/baseline.md, taken again on the lab host (an
+# m8i.8xlarge on EC2, the reference host from 2026-10-15) by runs labbase1-124757 and labbase2-124757.
+# Rule of thumb: threshold = baseline p99 plus headroom you can defend in one sentence.
+# Metric names below were read from the cell's Prometheus (server 1.31.0, 2026-10-07), not from docs.
+# The server's own view is used for every row, the six with a max and the five shares, so the verdict does not depend
+# on which worker is scraped.
+# The SDK's view is also scraped (job sdk-workers, process omes-worker / omes-client) and its names were confirmed
+# on the 2026-10-09 smoke run: temporal_workflow_task_schedule_to_start_latency_bucket,
+# temporal_activity_schedule_to_start_latency_bucket, temporal_workflow_endtoend_latency_bucket. None is a
+# threshold here; a row may add one as a second opinion, and a server-side threshold stays authoritative.
+# window is the shortest run the verdict accepts, not a sampling range: every threshold query is evaluated over
+# the whole run (read-thresholds.sh rewrites [1m] to the run length). At a 5 s scrape a quantile needs 30 s or
+# more to mean anything; 5 m is what the baseline runs used.
+window: 5m
+# The server release the baselines behind every max below ran on (load/baseline.md). load/verdict.sh prints it beside a
+# run's own server_tag when the two differ: a threshold then judges another release against this one's numbers.
+# This file is the base. For a run on another release, load/thresholds.sh lays load/releases/<major>.<minor>.yaml over it
+# when that file exists (1.32.yaml: activity schedule-to-start, which 1.32 does not produce); laug thresholds prints the
+# set a tag gets.
+server_tag: 1.31.0
+# The host every number in this file was measured on: its EC2 instance type, and its size as laug gate run reads it
+# (nproc, and free -b's total in whole GiB: 128 GiB nominal reads 123). laug gate run refuses a host of another type
+# or size (gate/lib.sh, host_check, since 2026-10-17). A set for a new host type: load/baseline.md.
+host:
+  type: m8i.8xlarge
+  vcpu: 32
+  mem_gib: 123
+thresholds:
+  # history service: task_type is Workflow or Activity
+  - name: workflow_task_schedule_to_start_p99_ms
+    query: histogram_quantile(0.99, sum(rate(task_schedule_to_start_latency_bucket{task_type="Workflow"}[1m])) by (le)) * 1000
+    max: 38              # lab-host baseline 19.0 and 18.8 ms; 2x the worse run, because this is the metric that moved most between clean runs
+  - name: activity_schedule_to_start_p99_ms
+    query: histogram_quantile(0.99, sum(rate(task_schedule_to_start_latency_bucket{task_type="Activity"}[1m])) by (le)) * 1000
+    max: 20              # lab-host baseline 10.0 and 10.0 ms (the 10 ms bucket edge); 2x, same shape as the workflow task line
+  # workflow_schedule_to_close_latency is the server's start-to-close time for a workflow, recorded at close
+  # (server 1.31.0 service/history/workflow/metrics.go:114-118; name in common/metrics/metric_defs.go)
+  - name: workflow_end_to_end_p95_ms
+    query: histogram_quantile(0.95, sum(rate(workflow_schedule_to_close_latency_bucket[1m])) by (le)) * 1000
+    max: 84              # lab-host baseline 49.4 and 49.4 ms (just under the 50 ms bucket edge); 1.7x, both schedule-to-start limits plus two task executions
+  - name: persistence_latency_p99_ms
+    query: histogram_quantile(0.99, sum(rate(persistence_latency_bucket[1m])) by (le)) * 1000
+    max: 23              # lab-host baseline 9.1 and 9.1 ms; 2.5x because the persistence-latency fault adds 200 ms and must BLOCK by a wide margin
+  # service_errors counts unexpected errors only; service_error_with_type counts every error, by error_type. The
+  # rate uses the second (server 1.31.0 common/metrics/metric_defs.go).
+  # serviceerror_Canceled on matching AddWorkflowTask / AddActivityTask is a sync-match miss, not a hand-off: a child
+  # task queue partition forwards the task to the root, the root has no waiting poller, the forward returns Canceled
+  # and the child writes the task to the database (server 1.31.0 service/matching/task_queue_partition_manager.go,
+  # errRemoteSyncMatchFailed). Forwarding is rate-limited, so this counts only forwarded misses. In a healthy
+  # 61 s smoke on the lab host at 63.5 workflows/s it was every error (258.4 on AddWorkflowTask, 54.3 on
+  # AddActivityTask) and would read as a 0.33% error rate (cells/results/2026-10-23-boot1.txt, A6). Excluded because
+  # no client sees it.
+  # The rate is over every role's requests, internal ones included, so it is not the client-visible error rate;
+  # that would be service_name="frontend" (each role's metrics carry service_name: server 1.31.0 temporal/fx.go:445).
+  - name: service_error_rate
+    query: (sum(rate(service_error_with_type{error_type!="serviceerror_Canceled"}[1m])) or vector(0)) / sum(rate(service_requests[1m]))
+    max: 0.001           # baseline 0.000 on both runs with Canceled excluded; one failure in a thousand requests is the smallest rate a 5 m window can resolve at this load
+  # Poll* are long-polls the server holds up to 60 s when there is no work (matching.longPollExpirationInterval,
+  # default 1 m). On an idle lab-host cell under the health loop, over the minute to 240 s after SERVING, the
+  # p99 read 19 600 ms with them in and 9.93 ms without (cells/results/2026-10-23-boot1.txt, A5). Both are bucket
+  # positions: 19 600 ms puts that minute's 99th percentile in the 10 to 20 s bucket. Over the 4 m from SERVING, 26.4%
+  # of requests sat in the 50 to 100 s bucket, so with the polls in the p99 depends on the minute read.
+  - name: frontend_request_p99_ms
+    query: histogram_quantile(0.99, sum(rate(service_latency_bucket{service_name="frontend", operation!~"Poll.*"}[1m])) by (le)) * 1000
+    max: 22              # lab-host baseline 10.7 and 10.0 ms; 2x the worse run
+  # Shares past a bucket edge: recorded, not judged. Each is the fraction of a reading's own
+  # requests, the same series summed, slower than the bucket edge just above where that reading sits on the lab host:
+  # 1 minus the count up to the edge over the count in +Inf. A p99 at an edge moves little while under 1% of requests
+  # pass it and fast once more do (histogram_quantile interpolates inside a bucket, seen); its share moves the same
+  # way on both sides. Activity schedule-to-start and frontend p99 sit at the 10 ms edge and end-to-end p95 under the
+  # 50 ms edge (their baselines above). A row with no max is read in every window and recorded in every run, raun and
+  # gate item; load/verdict.sh prints "no threshold yet" and BLOCKs on nothing, and faults/lib.sh (thresholds_judge)
+  # skips it. It reads null when a bucket is not there, or on 0/0 (no request in the window).
+  # The le strings, seen 2026-10-17 on the lab host on one cell of server 1.31.0, 120 s into a wave
+  # (g20261017-060633, cells/results/2026-10-17-arm-pilot.txt): count by (le) over each of the five histograms, as the
+  # queries below select them without le, listed the same 20, in seconds: 0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1,
+  # 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000 and +Inf, the edges of server 1.31.0
+  # common/metrics/config.go:239-258. Over six gates every share read a number in the 12
+  # load windows and in pl's 12 before and after windows.
+  - name: workflow_task_schedule_to_start_over_20ms
+    query: 1 - sum(rate(task_schedule_to_start_latency_bucket{task_type="Workflow", le="0.02"}[1m])) / sum(rate(task_schedule_to_start_latency_bucket{task_type="Workflow", le="+Inf"}[1m]))
+    max: null            # its p99 sits inside (10, 20] ms
+  - name: activity_schedule_to_start_over_10ms
+    query: 1 - sum(rate(task_schedule_to_start_latency_bucket{task_type="Activity", le="0.01"}[1m])) / sum(rate(task_schedule_to_start_latency_bucket{task_type="Activity", le="+Inf"}[1m]))
+    max: null            # its p99 sits at the 10 ms edge
+  - name: persistence_latency_over_10ms
+    query: 1 - sum(rate(persistence_latency_bucket{le="0.01"}[1m])) / sum(rate(persistence_latency_bucket{le="+Inf"}[1m]))
+    max: null            # its p99 sits inside (5, 10] ms
+  - name: frontend_request_over_10ms
+    query: 1 - sum(rate(service_latency_bucket{service_name="frontend", operation!~"Poll.*", le="0.01"}[1m])) / sum(rate(service_latency_bucket{service_name="frontend", operation!~"Poll.*", le="+Inf"}[1m]))
+    max: null            # its p99 sits at the 10 ms edge
+  - name: workflow_end_to_end_over_50ms
+    query: 1 - sum(rate(workflow_schedule_to_close_latency_bucket{le="0.05"}[1m])) / sum(rate(workflow_schedule_to_close_latency_bucket{le="+Inf"}[1m]))
+    max: null            # its p95 sits under the 50 ms edge
+# The incumbent arm, R7, judged by laug judge (internal/judge/arm.go): the release's steady load against the
+# incumbent's beside it, d = the release's reading minus the incumbent's, rounded to 0.001 ms or 0.000001. A row with
+# tolerance null is recorded, not judged; every row null is recording mode, which is what ships until A/A gates of
+# this wave on this host type set them (laug gate tolerance). floor is the noise floor under each tolerance: 0.1 ms, and
+# 0.0005 (0.05 points, about 3 of 5 900 workflows in a window). Only worse BLOCKs: a row fails when its d is over its
+# tolerance. release is the release both arms ran in those A/A gates; wave, gates and evidence say which wave, how many
+# gates and which results file set them, and are null while no row has a tolerance.
+compare:
+  release: 1.31.0
+  wave: ["load:incumbent workflow_with_single_noop_activity 20/s 50 5m","load workflow_with_single_noop_activity 20/s 50 5m","fault:persistence-latency workflow_with_single_noop_activity"]
+  gates: 20
+  evidence: cells/results/2026-10-17-lab-arm-calibration.txt
+  rows:
+    - {name: workflow_task_schedule_to_start_p99_ms, scale: ms, floor: 0.1, tolerance: 1.02}
+    - {name: persistence_latency_p99_ms, scale: ms, floor: 0.1, tolerance: 0.35}
+    - {name: activity_schedule_to_start_over_10ms, scale: share, floor: 0.0005, tolerance: 0.0072}
+    - {name: frontend_request_over_10ms, scale: share, floor: 0.0005, tolerance: 0.0032}
+    - {name: workflow_end_to_end_over_50ms, scale: share, floor: 0.0005, tolerance: 0.0064}
+verdict:
+  block_if_any_exceeds: true
+  flaky_list: load/flaky.txt

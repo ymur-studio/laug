@@ -1,0 +1,2779 @@
+{
+  "uid": "laug-stack",
+  "title": "laug · stack",
+  "description": "What watching costs: each part up, its CPU, RSS and writes against the noise rule's R-e limits, the federation passes and what they cost each cell, the store's intake, disk, compactions and queries, the spans, follow and the host. The stack judges nothing; these are its own numbers. Times are UTC.",
+  "tags": [
+    "laug",
+    "stack"
+  ],
+  "timezone": "utc",
+  "editable": false,
+  "graphTooltip": 1,
+  "refresh": "30s",
+  "schemaVersion": 39,
+  "version": 1,
+  "fiscalYearStartMonth": 0,
+  "liveNow": false,
+  "weekStart": "",
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "10s",
+      "30s",
+      "1m",
+      "5m"
+    ]
+  },
+  "links": [
+    {
+      "title": "laug",
+      "type": "dashboards",
+      "tags": [
+        "stack"
+      ],
+      "asDropdown": false,
+      "includeVars": false,
+      "keepTime": true,
+      "targetBlank": false,
+      "icon": "external link",
+      "tooltip": "",
+      "url": ""
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "#D99A3A",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "laug-store"
+        },
+        "enable": true,
+        "iconColor": "rgba(217, 154, 58, 0.12)",
+        "name": "Every gate's wave",
+        "expr": "(last_over_time(laug_gate_step_seconds{step=\"wave\"}[$__range] @ end()) <= time() and on (gate_id) last_over_time(laug_gate_step_seconds{step=\"wave end\"}[$__range] @ end()) >= time()) * 1000",
+        "step": "2m",
+        "titleFormat": "{{gate_id}}: the wave",
+        "textFormat": "",
+        "tagKeys": "",
+        "useValueForTime": false,
+        "hide": false
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "laug-store"
+        },
+        "enable": true,
+        "iconColor": "rgba(217, 154, 58, 0.45)",
+        "name": "Every gate's done line",
+        "expr": "laug_gate_step_seconds{step=\"done\"} * 1000",
+        "step": "1m",
+        "titleFormat": "{{gate_id}} done",
+        "textFormat": "",
+        "tagKeys": "",
+        "useValueForTime": true,
+        "hide": false
+      }
+    ]
+  },
+  "templating": {
+    "list": []
+  },
+  "panels": [
+    {
+      "type": "row",
+      "title": "The parts, and what each costs",
+      "collapsed": false,
+      "id": 1,
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 1
+      },
+      "panels": []
+    },
+    {
+      "type": "state-timeline",
+      "title": "Parts up (store)",
+      "description": "up of each of the stack's scrape jobs: cellstat, follow, the host (the Collector's exporter), the stack's own four, and the orchestrator's dev server, which is down between batches.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#CFE3E4"
+          },
+          "custom": {
+            "lineWidth": 0,
+            "fillOpacity": 80,
+            "spanNulls": false,
+            "insertNulls": false,
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            }
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#CFE3E4",
+                "value": null
+              }
+            ]
+          },
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "1": {
+                  "text": "up",
+                  "color": "#5FB3BF",
+                  "index": 0
+                },
+                "0": {
+                  "text": "down",
+                  "color": "#C44B32",
+                  "index": 1
+                }
+              }
+            }
+          ],
+          "noValue": "the store holds no up series"
+        },
+        "overrides": []
+      },
+      "options": {
+        "mergeValues": true,
+        "showValue": "never",
+        "alignValue": "left",
+        "rowHeight": 0.7,
+        "legend": {
+          "showLegend": false,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "A",
+          "expr": "up{job=~\"laug-cellstat|laug-follow|laug-host|laug-stack\"}",
+          "legendFormat": "{{job}} {{part}}",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "B",
+          "expr": "up{job=\"laug-orchestrator\"}",
+          "legendFormat": "the orchestrator's dev server (down between batches)",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 1,
+        "w": 24,
+        "h": 7
+      },
+      "id": 2,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "CPU by part (% of one CPU), and summed against R-e's 5%",
+      "description": "cellstat -pids over the stack's records, every 5 s. Dashed ember: the noise rule's R-e, the stack's processes summed under 5% of one CPU through a wave (docs/CAPABILITIES.md, Observability).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "shades",
+            "fixedColor": "#5FB3BF"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "insertNulls": false,
+            "showPoints": "never",
+            "pointSize": 4,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisSoftMin": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "dashed"
+            }
+          },
+          "unit": "percent",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5FB3BF",
+                "value": null
+              },
+              {
+                "color": "#C44B32",
+                "value": 5
+              }
+            ]
+          },
+          "mappings": []
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "sum"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#5FB3BF"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "A",
+          "expr": "rate(laug_proc_cpu_seconds_total{role=~\"prometheus|grafana|collector|jaeger|follow|cellstat\"}[30s]) * 100",
+          "legendFormat": "{{role}}",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "sum",
+          "expr": "sum(rate(laug_proc_cpu_seconds_total{role=~\"prometheus|grafana|collector|jaeger|follow|cellstat\"}[30s])) * 100",
+          "legendFormat": "the stack, summed",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 8,
+        "w": 8,
+        "h": 8
+      },
+      "id": 3,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "RSS by part, and summed against R-e's 1.5 GiB",
+      "description": "VmRSS of each part. Dashed ember: R-e's 1.5 GiB for the stack summed.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "shades",
+            "fixedColor": "#5FB3BF"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "insertNulls": false,
+            "showPoints": "never",
+            "pointSize": 4,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisSoftMin": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "dashed"
+            }
+          },
+          "unit": "bytes",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5FB3BF",
+                "value": null
+              },
+              {
+                "color": "#C44B32",
+                "value": 1610612736.0
+              }
+            ]
+          },
+          "mappings": []
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "sum"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#5FB3BF"
+                }
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "A",
+          "expr": "laug_proc_rss_bytes{role=~\"prometheus|grafana|collector|jaeger|follow|cellstat\"}",
+          "legendFormat": "{{role}}",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "sum",
+          "expr": "sum(laug_proc_rss_bytes{role=~\"prometheus|grafana|collector|jaeger|follow|cellstat\"})",
+          "legendFormat": "the stack, summed",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        }
+      ],
+      "gridPos": {
+        "x": 8,
+        "y": 8,
+        "w": 8,
+        "h": 8
+      },
+      "id": 4,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Bytes written per 5 s, by part",
+      "description": "write_bytes from /proc of each part, per 5 s: a block write shows as one tall step.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "shades",
+            "fixedColor": "#5FB3BF"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "insertNulls": false,
+            "showPoints": "never",
+            "pointSize": 4,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisSoftMin": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "unit": "bytes",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5FB3BF",
+                "value": null
+              }
+            ]
+          },
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "A",
+          "expr": "rate(laug_proc_io_write_bytes_total{role=~\"prometheus|grafana|collector|jaeger|follow|cellstat\"}[30s]) * 5",
+          "legendFormat": "{{role}}",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        }
+      ],
+      "gridPos": {
+        "x": 16,
+        "y": 8,
+        "w": 8,
+        "h": 8
+      },
+      "id": 5,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    },
+    {
+      "type": "row",
+      "title": "Federation: every leased cell kept, and what it costs the cell",
+      "collapsed": false,
+      "id": 6,
+      "gridPos": {
+        "x": 0,
+        "y": 16,
+        "w": 24,
+        "h": 1
+      },
+      "panels": []
+    },
+    {
+      "type": "table",
+      "title": "Cells federated now (store)",
+      "description": "One row a federation target: its gate and item (absent for a hand lease), its cell and whether its last pass answered (up of job laug-cells).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#CFE3E4"
+          },
+          "unit": "none",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#CFE3E4",
+                "value": null
+              }
+            ]
+          },
+          "mappings": [],
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false,
+            "filterable": false
+          },
+          "noValue": "no cell federated now"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "up"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "1": {
+                        "text": "answering",
+                        "color": "#5FB3BF",
+                        "index": 0
+                      },
+                      "0": {
+                        "text": "not answering",
+                        "color": "#C44B32",
+                        "index": 1
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false,
+          "reducer": [
+            "sum"
+          ],
+          "countRows": false,
+          "fields": ""
+        }
+      },
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "__name__": true,
+              "job": true,
+              "life": true
+            },
+            "indexByName": {
+              "gate_id": 0,
+              "item": 1,
+              "arm": 2,
+              "cell": 3,
+              "block": 4,
+              "backend": 5,
+              "server_tag": 6,
+              "instance": 7,
+              "Value": 8
+            },
+            "renameByName": {
+              "gate_id": "gate",
+              "server_tag": "server",
+              "Value": "up"
+            }
+          }
+        }
+      ],
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "A",
+          "expr": "up{job=\"laug-cells\"}",
+          "legendFormat": "__auto",
+          "range": false,
+          "instant": true,
+          "editorMode": "code",
+          "format": "table"
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 17,
+        "w": 12,
+        "h": 7
+      },
+      "id": 7,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Cells federated, by gate and item (count)",
+      "description": "count of up of job laug-cells by gate and item: is every leased cell being kept.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "shades",
+            "fixedColor": "#5FB3BF"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "insertNulls": false,
+            "showPoints": "never",
+            "pointSize": 4,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisSoftMin": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5FB3BF",
+                "value": null
+              }
+            ]
+          },
+          "mappings": [],
+          "noValue": "no cell federated in this range",
+          "decimals": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "A",
+          "expr": "count by (gate_id, item) (up{job=\"laug-cells\"})",
+          "legendFormat": "{{gate_id}} {{item}}",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        }
+      ],
+      "gridPos": {
+        "x": 12,
+        "y": 17,
+        "w": 12,
+        "h": 7
+      },
+      "id": 8,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "A federation pass, per cell (s), against the 4 s timeout",
+      "description": "scrape_duration_seconds of each cell's /federate pass. Dashed ember: _obs/prometheus.yml's 4 s scrape timeout; a pass past it fails whole.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "shades",
+            "fixedColor": "#5FB3BF"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "insertNulls": false,
+            "showPoints": "never",
+            "pointSize": 4,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisSoftMin": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "dashed"
+            }
+          },
+          "unit": "s",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5FB3BF",
+                "value": null
+              },
+              {
+                "color": "#C44B32",
+                "value": 4
+              }
+            ]
+          },
+          "mappings": [],
+          "noValue": "no cell federated in this range"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "A",
+          "expr": "scrape_duration_seconds{job=\"laug-cells\"}",
+          "legendFormat": "{{gate_id}} {{item}} {{cell}}",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 24,
+        "w": 8,
+        "h": 7
+      },
+      "id": 9,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Samples a pass, per cell: S",
+      "description": "scrape_samples_scraped of each cell's pass: S, the series a cell holds of the 31 families and job sdk-workers.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "shades",
+            "fixedColor": "#5FB3BF"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "insertNulls": false,
+            "showPoints": "never",
+            "pointSize": 4,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisSoftMin": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5FB3BF",
+                "value": null
+              }
+            ]
+          },
+          "mappings": [],
+          "noValue": "no cell federated in this range",
+          "decimals": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "A",
+          "expr": "scrape_samples_scraped{job=\"laug-cells\"}",
+          "legendFormat": "{{gate_id}} {{item}} {{cell}}",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        }
+      ],
+      "gridPos": {
+        "x": 8,
+        "y": 24,
+        "w": 8,
+        "h": 7
+      },
+      "id": 10,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "The cell's side: each cell's prometheus container (cellstat, cores), against R-e's 0.05",
+      "description": "cgroup CPU of each cell's prometheus container: what federation costs the measured cell. Dashed ember: R-e's 0.05 cores; without federation it read 0.005 to 0.006 (cells/results/2026-10-17-lab-cell-usage.txt).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "shades",
+            "fixedColor": "#5FB3BF"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "insertNulls": false,
+            "showPoints": "never",
+            "pointSize": 4,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisSoftMin": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "dashed"
+            }
+          },
+          "unit": "suffix: cores",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5FB3BF",
+                "value": null
+              },
+              {
+                "color": "#C44B32",
+                "value": 0.05
+              }
+            ]
+          },
+          "mappings": [],
+          "noValue": "no cell container read by cellstat in this range"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "A",
+          "expr": "rate(laug_cell_cpu_seconds_total{service=\"prometheus\"}[1m])",
+          "legendFormat": "{{cell}}",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        }
+      ],
+      "gridPos": {
+        "x": 16,
+        "y": 24,
+        "w": 8,
+        "h": 7
+      },
+      "id": 11,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    },
+    {
+      "type": "row",
+      "title": "The store: intake, disk, compactions and queries",
+      "collapsed": false,
+      "id": 12,
+      "gridPos": {
+        "x": 0,
+        "y": 31,
+        "w": 24,
+        "h": 1
+      },
+      "panels": []
+    },
+    {
+      "type": "timeseries",
+      "title": "Samples appended a second",
+      "description": "prometheus_tsdb_head_samples_appended_total over 2 m (the stack's own scrape is every 30 s).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#5FB3BF"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "insertNulls": false,
+            "showPoints": "never",
+            "pointSize": 4,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisSoftMin": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5FB3BF",
+                "value": null
+              }
+            ]
+          },
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "A",
+          "expr": "sum(rate(prometheus_tsdb_head_samples_appended_total{job=\"laug-stack\"}[2m]))",
+          "legendFormat": "samples a second",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 32,
+        "w": 8,
+        "h": 7
+      },
+      "id": 13,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Series in the head",
+      "description": "prometheus_tsdb_head_series: what the store holds in memory.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#5FB3BF"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "insertNulls": false,
+            "showPoints": "never",
+            "pointSize": 4,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisSoftMin": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5FB3BF",
+                "value": null
+              }
+            ]
+          },
+          "mappings": [],
+          "decimals": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "A",
+          "expr": "max(prometheus_tsdb_head_series{job=\"laug-stack\"})",
+          "legendFormat": "head series",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        }
+      ],
+      "gridPos": {
+        "x": 8,
+        "y": 32,
+        "w": 8,
+        "h": 7
+      },
+      "id": 14,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Compactions and their length",
+      "description": "increase of prometheus_tsdb_compactions_total over 2 m (count) and the mean compaction's seconds; shaded: every gate's wave, from its timeline. Did a compaction land inside a wave.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#5FB3BF"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "insertNulls": false,
+            "showPoints": "never",
+            "pointSize": 4,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisSoftMin": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5FB3BF",
+                "value": null
+              }
+            ]
+          },
+          "mappings": []
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    10
+                  ]
+                }
+              },
+              {
+                "id": "unit",
+                "value": "s"
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "A",
+          "expr": "sum(increase(prometheus_tsdb_compactions_total{job=\"laug-stack\"}[2m]))",
+          "legendFormat": "compactions in 2 m",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "B",
+          "expr": "sum(rate(prometheus_tsdb_compaction_duration_seconds_sum{job=\"laug-stack\"}[2m])) / sum(rate(prometheus_tsdb_compaction_duration_seconds_count{job=\"laug-stack\"}[2m]))",
+          "legendFormat": "a compaction's mean seconds",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        }
+      ],
+      "gridPos": {
+        "x": 16,
+        "y": 32,
+        "w": 8,
+        "h": 7
+      },
+      "id": 15,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "The store on disk: blocks and WAL, against the 20 GB cap",
+      "description": "prometheus_tsdb_storage_blocks_bytes and prometheus_tsdb_wal_storage_size_bytes. Dashed ember: --storage.tsdb.retention.size 20GB, drawn as 20 GiB (Prometheus reads GB as 2^30 B: its runtime info gives 20GB as 20GiB); retention deletes blocks only.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#5FB3BF"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "insertNulls": false,
+            "showPoints": "never",
+            "pointSize": 4,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisSoftMin": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "dashed"
+            }
+          },
+          "unit": "bytes",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5FB3BF",
+                "value": null
+              },
+              {
+                "color": "#C44B32",
+                "value": 21474836480
+              }
+            ]
+          },
+          "mappings": []
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    10
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "A",
+          "expr": "max(prometheus_tsdb_storage_blocks_bytes{job=\"laug-stack\"})",
+          "legendFormat": "blocks",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "B",
+          "expr": "max(prometheus_tsdb_wal_storage_size_bytes{job=\"laug-stack\"})",
+          "legendFormat": "WAL",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 39,
+        "w": 12,
+        "h": 7
+      },
+      "id": 16,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Free on OBS_DIR's filesystem, against the 30 GiB floor",
+      "description": "The Collector's filesystem scraper on OBS_DIR's mount, renamed obs on ingest. Dashed ember: bin/obs up refuses under 30 GiB free (OBS_MIN_FREE_GIB).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#5FB3BF"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "insertNulls": false,
+            "showPoints": "never",
+            "pointSize": 4,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisSoftMin": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "dashed"
+            }
+          },
+          "unit": "bytes",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5FB3BF",
+                "value": null
+              },
+              {
+                "color": "#C44B32",
+                "value": 32212254720
+              }
+            ]
+          },
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "A",
+          "expr": "max(system_filesystem_usage_bytes{job=\"laug-host\", mountpoint=\"obs\", state=\"free\"})",
+          "legendFormat": "free",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        }
+      ],
+      "gridPos": {
+        "x": 12,
+        "y": 39,
+        "w": 12,
+        "h": 7
+      },
+      "id": 17,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Queries: Grafana's requests a second",
+      "description": "grafana_http_request_duration_seconds_count over 2 m: are people looking.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#5FB3BF"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "insertNulls": false,
+            "showPoints": "never",
+            "pointSize": 4,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisSoftMin": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "unit": "reqps",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5FB3BF",
+                "value": null
+              }
+            ]
+          },
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "A",
+          "expr": "sum(rate(grafana_http_request_duration_seconds_count{job=\"laug-stack\"}[2m]))",
+          "legendFormat": "Grafana requests a second",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 46,
+        "w": 8,
+        "h": 7
+      },
+      "id": 18,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Queries: the store's evaluation time, p90 (s)",
+      "description": "prometheus_engine_query_duration_seconds, the summary's 0.9 quantile of inner evaluation: what looking costs the store.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#5FB3BF"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "insertNulls": false,
+            "showPoints": "never",
+            "pointSize": 4,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisSoftMin": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "unit": "s",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5FB3BF",
+                "value": null
+              }
+            ]
+          },
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "A",
+          "expr": "max(prometheus_engine_query_duration_seconds{job=\"laug-stack\", slice=\"inner_eval\", quantile=\"0.9\"})",
+          "legendFormat": "inner_eval p90",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        }
+      ],
+      "gridPos": {
+        "x": 8,
+        "y": 46,
+        "w": 8,
+        "h": 7
+      },
+      "id": 19,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Series kept since",
+      "description": "prometheus_tsdb_lowest_timestamp_seconds: the store's oldest sample. Retention is 90 d.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#CFE3E4"
+          },
+          "unit": "dateTimeAsIso",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#CFE3E4",
+                "value": null
+              }
+            ]
+          },
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "none",
+        "graphMode": "none",
+        "textMode": "value_and_name",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "wideLayout": true,
+        "showPercentChange": false,
+        "text": {
+          "valueSize": 20,
+          "titleSize": 13
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "A",
+          "expr": "max(prometheus_tsdb_lowest_timestamp_seconds{job=\"laug-stack\"}) * 1000",
+          "legendFormat": "oldest sample",
+          "range": false,
+          "instant": true,
+          "editorMode": "code"
+        }
+      ],
+      "gridPos": {
+        "x": 16,
+        "y": 46,
+        "w": 8,
+        "h": 7
+      },
+      "id": 20,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    },
+    {
+      "type": "row",
+      "title": "Traces, follow, and the host",
+      "collapsed": false,
+      "id": 21,
+      "gridPos": {
+        "x": 0,
+        "y": 53,
+        "w": 24,
+        "h": 1
+      },
+      "panels": []
+    },
+    {
+      "type": "timeseries",
+      "title": "Spans since each part started: accepted, refused, failed and sent on (count)",
+      "description": "The Collector's own telemetry on 7753 and Jaeger's on 7763, both OpenTelemetry Collector counters (names as 0.162.0 and 2.21.0 serve them, seen): spans its OTLP receiver accepted, refused and failed, and spans its exporter sent on (the Collector to Jaeger; Jaeger to its Badger store). Accepted and sent on are equal when nothing is lost; a restart starts a part's counts at 0. otelcol_exporter_send_failed_spans appears only once a send failed.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "shades",
+            "fixedColor": "#5FB3BF"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "insertNulls": false,
+            "showPoints": "never",
+            "pointSize": 4,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisSoftMin": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5FB3BF",
+                "value": null
+              }
+            ]
+          },
+          "mappings": [],
+          "decimals": 0
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*(refused|failed)$"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#C44B32"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "^jaeger.*"
+            },
+            "properties": [
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    10
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "acc",
+          "expr": "sum by (part) (otelcol_receiver_accepted_spans{job=\"laug-stack\"})",
+          "legendFormat": "{{part}}: accepted",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "ref",
+          "expr": "sum by (part) (otelcol_receiver_refused_spans{job=\"laug-stack\"})",
+          "legendFormat": "{{part}}: refused",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "fail",
+          "expr": "sum by (part) (otelcol_receiver_failed_spans{job=\"laug-stack\"})",
+          "legendFormat": "{{part}}: failed",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "sent",
+          "expr": "sum by (part) (otelcol_exporter_sent_spans{job=\"laug-stack\"})",
+          "legendFormat": "{{part}}: sent on",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "sfail",
+          "expr": "sum by (part) (otelcol_exporter_send_failed_spans{job=\"laug-stack\"})",
+          "legendFormat": "{{part}}: send failed",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 54,
+        "w": 12,
+        "h": 8
+      },
+      "id": 22,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "follow: polls and failed laugd reads (per minute)",
+      "description": "laug_follow_polls_total (every 2 s, so about 30 a minute) and laugd_errors_total: three failed reads in a row drop every hand target.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#5FB3BF"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "insertNulls": false,
+            "showPoints": "never",
+            "pointSize": 4,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisSoftMin": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5FB3BF",
+                "value": null
+              }
+            ]
+          },
+          "mappings": []
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#C44B32"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "A",
+          "expr": "sum(rate(laug_follow_polls_total[2m])) * 60",
+          "legendFormat": "polls",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "B",
+          "expr": "sum(rate(laug_follow_laugd_errors_total[2m])) * 60",
+          "legendFormat": "failed laugd reads",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        }
+      ],
+      "gridPos": {
+        "x": 12,
+        "y": 54,
+        "w": 6,
+        "h": 8
+      },
+      "id": 23,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "follow: targets, stale targets, gates found, files skipped (count)",
+      "description": "The target files it wrote, those past their lease's expiry (a dead follow's leftovers: bin/obs up restarts it), the gate directories it follows, and the files and lines it skipped since it started.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "shades",
+            "fixedColor": "#5FB3BF"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "insertNulls": false,
+            "showPoints": "never",
+            "pointSize": 4,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisSoftMin": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5FB3BF",
+                "value": null
+              }
+            ]
+          },
+          "mappings": [],
+          "decimals": 0
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#C44B32"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "A",
+          "expr": "sum(laug_follow_targets)",
+          "legendFormat": "target files",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "B",
+          "expr": "sum(laug_follow_stale_targets)",
+          "legendFormat": "stale target files",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "C",
+          "expr": "count(laug_follow_gate_dir_found)",
+          "legendFormat": "gate directories followed",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "D",
+          "expr": "sum(laug_follow_skipped_files_total)",
+          "legendFormat": "files and lines skipped",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        }
+      ],
+      "gridPos": {
+        "x": 18,
+        "y": 54,
+        "w": 6,
+        "h": 8
+      },
+      "id": 24,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "The host: memory used and paging (the Collector)",
+      "description": "system_memory_usage_bytes used and the paging scraper's swap in use, every 15 s.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#5FB3BF"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "insertNulls": false,
+            "showPoints": "never",
+            "pointSize": 4,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisSoftMin": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "unit": "bytes",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5FB3BF",
+                "value": null
+              }
+            ]
+          },
+          "mappings": []
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    10
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "A",
+          "expr": "sum(system_memory_usage_bytes{job=\"laug-host\", state=\"used\"})",
+          "legendFormat": "memory used",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "B",
+          "expr": "sum(system_paging_usage_bytes{job=\"laug-host\", state=\"used\"})",
+          "legendFormat": "swap used",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 62,
+        "w": 8,
+        "h": 7
+      },
+      "id": 25,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "The host: load average (the Collector)",
+      "description": "1 m and 5 m load averages.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#5FB3BF"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "insertNulls": false,
+            "showPoints": "never",
+            "pointSize": 4,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisSoftMin": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5FB3BF",
+                "value": null
+              }
+            ]
+          },
+          "mappings": []
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    10
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "A",
+          "expr": "max(system_cpu_load_average_1m{job=\"laug-host\"})",
+          "legendFormat": "1 m",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "B",
+          "expr": "max(system_cpu_load_average_5m{job=\"laug-host\"})",
+          "legendFormat": "5 m",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        }
+      ],
+      "gridPos": {
+        "x": 8,
+        "y": 62,
+        "w": 8,
+        "h": 7
+      },
+      "id": 26,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "The host: the root volume's operations (the Collector, ops/s)",
+      "description": "system_disk_operations_total of the root volume by direction, every 15 s, over 1 m.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#5FB3BF"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "insertNulls": false,
+            "showPoints": "never",
+            "pointSize": 4,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisSoftMin": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "unit": "iops",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5FB3BF",
+                "value": null
+              }
+            ]
+          },
+          "mappings": []
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "read"
+            },
+            "properties": [
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "dash",
+                  "dash": [
+                    10,
+                    10
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "A",
+          "expr": "sum by (direction) (rate(system_disk_operations_total{job=\"laug-host\", device=\"root\"}[1m]))",
+          "legendFormat": "{{direction}}",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        }
+      ],
+      "gridPos": {
+        "x": 16,
+        "y": 62,
+        "w": 8,
+        "h": 7
+      },
+      "id": 27,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    }
+  ]
+}

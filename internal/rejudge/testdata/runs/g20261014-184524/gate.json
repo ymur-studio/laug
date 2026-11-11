@@ -1,0 +1,64 @@
+{
+  "gate_id": "g20261014-184524",
+  "server_tag": "1.31.0",
+  "laug_commit": "e4540a8",
+  "tree_dirty": true,
+  "base": "e4540a8",
+  "base_ref": "main",
+  "inputs": [
+    {
+      "path": "gate/plans/noise.yaml",
+      "sha256": "f6207722a4dd2ac606ceddd16af29b6c470de817f4cea4e422cbc50c79f3d154",
+      "changed_vs_base": false
+    },
+    {
+      "path": "gate/combine.sh",
+      "sha256": "284a759c54557c18bcbdfc257414199c9c94bfb573e3234e2265ecf18ab5366c",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/steady-state.yaml",
+      "sha256": "3d86abd2379a92b1d6e2ce6df294d8f8737854f48364674e7305b929942bc321",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/thresholds.sh",
+      "sha256": "77d5fb8a58d6b9b850f83279b8f61e988615c60dbdd5a7d0d2fa7aecd386500f",
+      "changed_vs_base": false
+    },
+    {
+      "path": "faults/catalog.yaml",
+      "sha256": "f0e73b887d68b2e28575b8146f430d3a98dbae09f96d1da8aed63404cf333a9e",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/releases/1.32.yaml",
+      "sha256": "f4a11d5c163ce31006eb50bd41e2ef4b9e5d30a6f01d10d116744f74d5ff90a7",
+      "changed_vs_base": false
+    }
+  ],
+  "host": {
+    "vcpu": 24,
+    "mem_gib": 47,
+    "mem_available_gib": 36.4
+  },
+  "refused": null,
+  "plan": "gate/plans/noise.yaml",
+  "items_limit": 1,
+  "fake": false,
+  "pool": "127.0.0.1:7700",
+  "wiring": [
+    {
+      "key": "s1",
+      "run_id": "g20261014-184524-s1",
+      "requester": "gate-g20261014-184524-s1",
+      "results_dir": "gate/results/g20261014-184524/s1",
+      "lease_file": "gate/results/g20261014-184524/s1/.lease.json",
+      "task_queue": "omes-g20261014-184524-s1",
+      "omes_metrics": {
+        "worker": "127.0.0.1:19100",
+        "client": "127.0.0.1:19101"
+      }
+    }
+  ]
+}

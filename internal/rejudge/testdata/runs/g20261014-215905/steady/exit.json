@@ -1,0 +1,22 @@
+{
+  "exit": 1,
+  "stopped_by": null,
+  "start": {
+    "wall": 1792015341.452,
+    "mono": 579038.94
+  },
+  "end": {
+    "wall": 1792015684.634,
+    "mono": 579380.22
+  },
+  "run_id": "g20261014-215905-steady",
+  "requester": "gate-g20261014-215905-steady",
+  "results_dir": "gate/results/g20261014-215905/steady",
+  "lease_file": "gate/results/g20261014-215905/steady/.lease.json",
+  "task_queue": "omes-g20261014-215905-steady",
+  "omes_metrics": {
+    "worker": "127.0.0.1:19100",
+    "client": "127.0.0.1:19101"
+  },
+  "load_exit": 0
+}

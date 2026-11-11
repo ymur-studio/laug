@@ -1,0 +1,155 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="632" viewBox="0 0 800 632" role="img"
+    aria-labelledby="map-title map-desc" font-family="Inter, system-ui, sans-serif">
+<title id="map-title">laug&#39;s map: cells from a warm pool, a load and a fault on them, a judge and its
+    verdict</title>
+<desc id="map-desc">Above, one lease. A requester, a person with laug lease or laug raun, asks laug pool serve for a
+    cell. The pool builds cells warm before anyone asks and hands one over. The leased cell is a Temporal server of its
+    own: every role, and its own Postgres behind toxiproxy. laug load runs Omes on it. laug fault holds a fault on it
+    and reads it before, during and after. Released, the cell is destroyed, and the pool builds warm cells back up to
+    its -min. Below, one gate. laug gate run starts a pool of its own, which builds a fresh cell for each of its three
+    leases. Three items run at once: incumbent, the release the tag replaces, under the load; steady, the release under
+    the same load; pl, the release with Postgres slowed by a fault. Each writes its files under gate/results/&lt;gate
+    id&gt;/. The judge, laug judge, reads them: ADVANCE only when every rule from R1 to R7 holds, else BLOCK, naming the
+    rule that decided. Sources: cells/compose/cell.yml, cmd/laug/main.go, cmd/laug/pool.go, docs/DESIGN.md,
+    docs/img/src/map.txt, faults/README.md, faults/catalog.yaml, gate/plan.yaml, gate/run.sh,
+    internal/pool/pool.go.</desc>
+<rect x="0" y="0" width="800" height="632" fill="#EEF3F2"/>
+<text x="24" y="30" font-size="14" fill="#163A44"
+    font-weight="600">laug&#39;s map: cells from a warm pool, a load and a fault on them, a judge and its verdict</text>
+<text x="24" y="50" font-size="12"
+    fill="#163A44">Above, one lease: a cell taken, run and given back. Below, a gate: three leases, one wave, one verdict</text>
+<text x="24" y="84" font-size="12" fill="#163A44" font-weight="600">one lease</text>
+<g aria-label="a requester, laug lease,, laug raun">
+  <rect x="24" y="132" width="132" height="76" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="90" y="159" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">a requester</text>
+  <text x="90" y="174" font-size="12" fill="#163A44" text-anchor="middle">laug lease,</text>
+  <text x="90" y="189" font-size="12" fill="#163A44" text-anchor="middle">laug raun</text>
+</g>
+<rect x="196" y="100" width="148" height="168" fill="none" stroke="#163A44" stroke-dasharray="6 4"/>
+<text x="204" y="116" font-size="11" fill="#163A44" font-weight="600">laug pool serve</text>
+<g aria-label="a warm cell">
+  <rect x="208" y="128" width="124" height="28" fill="#D99A3A" stroke="#163A44"/>
+  <text x="270" y="146" font-size="12" fill="#10181C" text-anchor="middle">a warm cell</text>
+</g>
+<g aria-label="a warm cell">
+  <rect x="208" y="164" width="124" height="28" fill="#D99A3A" stroke="#163A44"/>
+  <text x="270" y="182" font-size="12" fill="#10181C" text-anchor="middle">a warm cell</text>
+</g>
+<g aria-label="a warm cell">
+  <rect x="208" y="200" width="124" height="28" fill="#D99A3A" stroke="#163A44"/>
+  <text x="270" y="218" font-size="12" fill="#10181C" text-anchor="middle">a warm cell</text>
+</g>
+<text x="208" y="252" font-size="10" fill="#163A44">built before a lease</text>
+<line x1="156" y1="178" x2="200" y2="178" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="208,178 200,182 200,174" fill="#163A44"/>
+<text x="160" y="170" font-size="11" fill="#163A44">lease</text>
+<line x1="332" y1="178" x2="364" y2="178" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="372,178 364,182 364,174" fill="#163A44"/>
+<rect x="372" y="100" width="240" height="168" fill="none" stroke="#163A44" stroke-dasharray="6 4"/>
+<text x="380" y="116" font-size="11" fill="#163A44" font-weight="600">the leased cell</text>
+<g aria-label="Temporal server, frontend, history,, matching, worker">
+  <rect x="384" y="128" width="216" height="60" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="492" y="147" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">Temporal server</text>
+  <text x="492" y="162" font-size="12" fill="#163A44" text-anchor="middle">frontend, history,</text>
+  <text x="492" y="177" font-size="12" fill="#163A44" text-anchor="middle">matching, worker</text>
+</g>
+<g aria-label="Postgres, behind toxiproxy">
+  <rect x="384" y="204" width="216" height="44" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="492" y="222.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">Postgres</text>
+  <text x="492" y="237.5" font-size="12" fill="#163A44" text-anchor="middle">behind toxiproxy</text>
+</g>
+<line x1="492" y1="188" x2="492" y2="204" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<g aria-label="load, laug load: Omes, starts workflows">
+  <rect x="640" y="116" width="136" height="60" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="708" y="135" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">load</text>
+  <text x="708" y="150" font-size="12" fill="#163A44" text-anchor="middle">laug load: Omes</text>
+  <text x="708" y="165" font-size="12" fill="#163A44" text-anchor="middle">starts workflows</text>
+</g>
+<g aria-label="a fault, laug fault, read, before, during, and after">
+  <rect x="640" y="192" width="136" height="68" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="708" y="207.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">a fault</text>
+  <text x="708" y="222.5" font-size="12" fill="#163A44" text-anchor="middle">laug fault, read</text>
+  <text x="708" y="237.5" font-size="12" fill="#163A44" text-anchor="middle">before, during</text>
+  <text x="708" y="252.5" font-size="12" fill="#163A44" text-anchor="middle">and after</text>
+</g>
+<line x1="640" y1="152" x2="608" y2="152" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="600,152 608,148 608,156" fill="#163A44"/>
+<line x1="640" y1="226" x2="620" y2="226" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="612,226 620,222 620,230" fill="#163A44"/>
+<polyline points="492,268 492,288 270,288" fill="none" stroke="#163A44" stroke-width="1.5" stroke-dasharray="4 3"/>
+<line x1="270" y1="288" x2="270" y2="276" fill="none" stroke="#163A44" stroke-width="1.5" stroke-dasharray="4 3"/>
+<polygon points="270,268 274,276 266,276" fill="#163A44"/>
+<text x="196" y="306" font-size="11"
+    fill="#163A44">release: the cell is destroyed, and the pool builds warm cells back up to its -min</text>
+<text x="24" y="340" font-size="12" fill="#163A44" font-weight="600">one gate</text>
+<g aria-label="a gate, laug gate run, &lt;release tag&gt;">
+  <rect x="24" y="386" width="124" height="64" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="86" y="407" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">a gate</text>
+  <text x="86" y="422" font-size="12" fill="#163A44" text-anchor="middle">laug gate run</text>
+  <text x="86" y="437" font-size="12" fill="#163A44" text-anchor="middle">&lt;release tag&gt;</text>
+</g>
+<rect x="196" y="356" width="420" height="136" fill="none" stroke="#163A44" stroke-dasharray="6 4"/>
+<text x="204" y="372" font-size="11" fill="#163A44"
+    font-weight="600">one wave: three items at once, each on a fresh cell</text>
+<g aria-label="incumbent, the release the, tag replaces,, under the load">
+  <rect x="208" y="384" width="128" height="92" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="272" y="411.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">incumbent</text>
+  <text x="272" y="426.5" font-size="12" fill="#163A44" text-anchor="middle">the release the</text>
+  <text x="272" y="441.5" font-size="12" fill="#163A44" text-anchor="middle">tag replaces,</text>
+  <text x="272" y="456.5" font-size="12" fill="#163A44" text-anchor="middle">under the load</text>
+</g>
+<g aria-label="steady, the release,, under the same, load">
+  <rect x="344" y="384" width="128" height="92" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="408" y="411.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">steady</text>
+  <text x="408" y="426.5" font-size="12" fill="#163A44" text-anchor="middle">the release,</text>
+  <text x="408" y="441.5" font-size="12" fill="#163A44" text-anchor="middle">under the same</text>
+  <text x="408" y="456.5" font-size="12" fill="#163A44" text-anchor="middle">load</text>
+</g>
+<g aria-label="pl, the release,, Postgres slowed, by a fault">
+  <rect x="480" y="384" width="128" height="92" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="544" y="411.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">pl</text>
+  <text x="544" y="426.5" font-size="12" fill="#163A44" text-anchor="middle">the release,</text>
+  <text x="544" y="441.5" font-size="12" fill="#163A44" text-anchor="middle">Postgres slowed</text>
+  <text x="544" y="456.5" font-size="12" fill="#163A44" text-anchor="middle">by a fault</text>
+</g>
+<line x1="148" y1="418" x2="188" y2="418" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="196,418 188,422 188,414" fill="#163A44"/>
+<text x="154" y="410" font-size="11" fill="#163A44">leases</text>
+<g aria-label="the run&#39;s files, gate/results/, &lt;gate id&gt;/">
+  <rect x="640" y="384" width="136" height="92" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="708" y="419" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">the run&#39;s files</text>
+  <text x="708" y="434" font-size="12" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">gate/results/</text>
+  <text x="708" y="449" font-size="12" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">&lt;gate id&gt;/</text>
+</g>
+<line x1="616" y1="430" x2="632" y2="430" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="640,430 632,434 632,426" fill="#163A44"/>
+<g aria-label="the judge, laug judge,, rules R1 to R7">
+  <rect x="640" y="516" width="136" height="64" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="708" y="537" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">the judge</text>
+  <text x="708" y="552" font-size="12" fill="#163A44" text-anchor="middle">laug judge,</text>
+  <text x="708" y="567" font-size="12" fill="#163A44" text-anchor="middle">rules R1 to R7</text>
+</g>
+<line x1="708" y1="476" x2="708" y2="508" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="708,516 704,508 712,508" fill="#163A44"/>
+<text x="714" y="500" font-size="11" fill="#163A44">reads</text>
+<g aria-label="ADVANCE">
+  <rect x="480" y="516" width="128" height="28" fill="#5B9B6A" stroke="#163A44"/>
+  <text x="544" y="534" font-size="12" fill="#10181C" text-anchor="middle">ADVANCE</text>
+</g>
+<g aria-label="BLOCK">
+  <rect x="480" y="552" width="128" height="28" fill="#C44B32" stroke="#163A44"/>
+  <text x="544" y="570" font-size="12" fill="#EEF3F2" text-anchor="middle">BLOCK</text>
+</g>
+<line x1="640" y1="530" x2="616" y2="530" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="608,530 616,526 616,534" fill="#163A44"/>
+<line x1="640" y1="566" x2="616" y2="566" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="608,566 616,562 616,570" fill="#163A44"/>
+<text x="208" y="534" font-size="11" fill="#163A44">ADVANCE only when every rule holds;</text>
+<text x="208" y="548" font-size="11" fill="#163A44">else BLOCK, naming the rule that decided.</text>
+<text x="24" y="604" font-size="10"
+    fill="#163A44">source: cmd/laug/main.go, cmd/laug/pool.go, internal/pool/pool.go, cells/compose/cell.yml, faults/README.md,</text>
+<text x="24" y="617" font-size="10"
+    fill="#163A44">faults/catalog.yaml, gate/plan.yaml, gate/run.sh and docs/DESIGN.md.</text>
+</svg>

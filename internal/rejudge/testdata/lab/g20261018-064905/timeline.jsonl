@@ -1,0 +1,24 @@
+{"step":"start","wall":1792306146.001,"mono":1699.67}
+{"step":"lock","wall":1792306146.024,"mono":1699.69}
+{"step":"plan","wall":1792306146.138,"mono":1699.81}
+{"step":"preflight","wall":1792306146.193,"mono":1699.86}
+{"step":"omes_build","wall":1792306146.879,"mono":1700.55}
+{"step":"laugd","wall":1792306147.963,"mono":1701.63}
+{"step":"harness","wall":1792306148.114,"mono":1701.78}
+{"step":"lease incumbent","wall":1792306148.268,"mono":1701.94}
+{"step":"leased incumbent","wall":1792306164.437,"mono":1718.11}
+{"step":"lease steady","wall":1792306164.592,"mono":1718.26}
+{"step":"leased steady","wall":1792306180.962,"mono":1734.63}
+{"step":"lease pl","wall":1792306181.124,"mono":1734.79}
+{"step":"leased pl","wall":1792306197.372,"mono":1751.04}
+{"step":"barrier","wall":1792306197.510,"mono":1751.18}
+{"step":"wave","wall":1792306372.115,"mono":1925.78}
+{"step":"ended incumbent","wall":1792306674.439,"mono":2228.11}
+{"step":"ended steady","wall":1792306674.452,"mono":2228.12}
+{"step":"ended pl","wall":1792306734.375,"mono":2288.04}
+{"step":"wave end","wall":1792306734.380,"mono":2288.05}
+{"step":"combine","wall":1792306734.510,"mono":2288.18}
+{"step":"post","wall":1792306734.702,"mono":2288.37}
+{"step":"release","wall":1792306734.838,"mono":2288.51}
+{"step":"laugd stopped","wall":1792306798.250,"mono":2351.92}
+{"step":"done","wall":1792306798.324,"mono":2351.99}

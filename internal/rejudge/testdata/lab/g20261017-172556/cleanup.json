@@ -1,0 +1,15 @@
+{
+  "at": {
+    "wall": 1792258602.900,
+    "mono": 2076.83
+  },
+  "released": [
+    "bc40dd34",
+    "3f597812",
+    "b38fb89d"
+  ],
+  "release_errors": [],
+  "laugd": "stopped",
+  "left": [],
+  "up_at_preflight": []
+}

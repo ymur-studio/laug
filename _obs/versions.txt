@@ -1,0 +1,15 @@
+# The releases the observability stack runs (_obs/README.md). bin/obs up fetches each into OBS_DIR, outside
+# the checkout, checks its size and sha256, and unpacks it only when both match. One line a release:
+#   <part> <version> <URL> <size in bytes> <sha256 of the tarball> [<file in the tarball>=<its sha256>]
+# then a comment that says where the size and hashes were read. A tarball sha256 of - is one this file does not hold
+# yet: the fetch checks the file hashes such a line must name, prints the tarball's, and that one goes here.
+# Sizes and hashes were read from the releases' pages on 2026-10-17 (Grafana's and Jaeger's sizes from a HEAD of the
+# tarball). The same day, 13:26 UTC, make obs-up fetched all four on the dev host from these URLs, and every size and
+# sha256 matched (cells/results/2026-10-17-obs-offline.txt, section 1). Jaeger lists its tarball's sha256 in
+# jaeger-2.21.0.sha256sum.txt (read 14:17 UTC) and its binary's in jaeger-2.21.0-linux-amd64.sha256sum.txt.
+# Prometheus and Grafana are the cells' versions (cells/compose/cell.yml). The Collector and Jaeger are the newest
+# releases at least two weeks old on 2026-10-17 (their release pages).
+prometheus 2.53.0 https://github.com/prometheus/prometheus/releases/download/v2.53.0/prometheus-2.53.0.linux-amd64.tar.gz 104192065 d9900a11e3c89261e6416e3c9989858bad7b206af8b6838dfe9a5392d8ddc60d  # seen 2026-10-17, the dev host's fetch: the size of the asset and the sha256 of the release's sha256sums.txt
+grafana 11.1.0 https://dl.grafana.com/oss/release/grafana-11.1.0.linux-amd64.tar.gz 123535977 33822a0b275ea4f216c9a3bdda53d1dba668e3e9873dc52104bc565bcbd8d856  # seen 2026-10-17, the dev host's fetch: the size of a HEAD of the tarball and its published .sha256
+otelcol 0.162.0 https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/v0.162.0/otelcol_0.162.0_linux_amd64.tar.gz 37254744 f99929987a915d3c6b2c9b15bc4938c5cea903a37a3f49e478024a0fa0772339  # seen 2026-10-17, the dev host's fetch: the core distribution; the asset's size and its .sha256
+jaeger 2.21.0 https://github.com/jaegertracing/jaeger/releases/download/v2.21.0/jaeger-2.21.0-linux-amd64.tar.gz 64228592 f5741318ea2c3a2e64a1e1fffafcd1b03872ed0783ec5e7675fb6c686bfc7a5a jaeger=17b98bae5eb99f0dc2c6923accf1369804c08e252f10e0fe35f82b2319a77b11  # seen 2026-10-17, the dev host's fetch: the size of a HEAD of the tarball; the tarball's sha256 from the release's jaeger-2.21.0.sha256sum.txt; the binary, jaeger-2.21.0-linux-amd64/jaeger, from jaeger-2.21.0-linux-amd64.sha256sum.txt

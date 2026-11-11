@@ -1,0 +1,6 @@
+# make: make --no-print-directory -n reset POOL_ADDR=http://127.0.0.1:17700
+# laug: laug reset -last -pool http://127.0.0.1:17700
+# lease: present
+# compare: request POST /reset
+[ -s .last-lease.json ] || { echo "laug · no lease in .last-lease.json; make lease first" >&2; exit 2; }
+curl -s --fail-with-body -X POST 'http://127.0.0.1:17700/reset' -H 'content-type: application/json' -d "$(jq '{id}' .last-lease.json)" | jq .

@@ -1,0 +1,85 @@
+# laug's warm check (cells/backend-compose.sh, cells/shards-ready.sh) with the times boot 1 recorded on server
+# 1.31.0 (cells/results/2026-10-23-boot1.txt): A4, three fresh cells; A7, one cell whose history refuses every
+# shard from its first start. Rows are the check's rungs; a bar runs from the lane's zero to the moment its rung
+# became true, ending at the range's upper end. Scale: x = 286 + 16 px a second, 0 to 30 s, both lanes.
+# Lane A's zero is bin/laug cell up's start, lane B's history's start. Replaces the hand-drawn warm-check.png, whose
+# ladder put 'frontend answers' first, though on fresh cells history owned its shards before the frontend answered.
+# The shards and frontend rungs are the readings rows A4/ready_1 to ready_3 (shards_ready_s, cluster_health_s and
+# namespace_s; cells/results/2026-10-23-boot1.txt:166-168). The workflow rung is the HealthCheck's own end: its ID's
+# start stamp (internal/health/check.go:136) plus its completed ms, against the row's shards_line, computed: 16.9,
+# 16.55 and 16.54 s, from cells/results/2026-10-23-boot1/extra/a4-health-1.txt:15,
+# cells/results/2026-10-23-boot1/extra/a4-health-2.txt:14 and cells/results/2026-10-23-boot1/extra/a4-health-3.txt:15,
+# kept as quotes rows. A4's 24.5 to 24.9 s is when the poller's bin/laug cell health returned, after it waited for
+# Prometheus targets (cells/health.sh). Lane B: cells/results/2026-10-23-boot1.txt:240 and :248-251.
+name warm-check
+size 800 520
+title | A cell answers seconds before it can run a workflow
+sub | laug's warm check on server 1.31.0: three fresh cells, and one cell whose history refuses every shard
+desc | Two lanes of laug's warm-check rungs on one scale of seconds, 0 to 30. Top, three fresh cells, from the start of
+desc | bin/laug cell up: history owned its 512 shards at 10.3 to 10.4 s; the frontend answered cluster health and the
+desc | namespace existed at 13.8 to 14.4 s; the first HealthCheck failed, Namespace default is not found, and the
+desc | next completed at 16 to 17 s. Each bar runs from zero to the moment its rung became true. Bottom, a
+desc | cell whose history refused every shard, from history's start: the frontend answered SERVING at 5.3 to 6.3
+desc | s, while no shard was ever owned, the dashed box: 1,299 failed acquires by the last poll, after its 150 s
+desc | cap.
+source cells/results/2026-10-23-boot1.txt
+source cells/backend-compose.sh
+source cells/shards-ready.sh
+row readings-2026-10-23-boot1 A4/ready_1
+row readings-2026-10-23-boot1 A4/ready_2
+row readings-2026-10-23-boot1 A4/ready_3
+row quotes cells/results/2026-10-23-boot1/extra/a4-health-1.txt:15
+row quotes cells/results/2026-10-23-boot1/extra/a4-health-2.txt:14
+row quotes cells/results/2026-10-23-boot1/extra/a4-health-3.txt:15
+text 24 84 bold size=12 | Three fresh cells: seconds after bin/laug cell up began; a bar ends when its rung became true
+text 24 108 bold size=12 | shards owned
+text 24 122 size=11 | history's 512, by its log line
+box a96 286 98 166.4 28 fill=deep | 10.3 to 10.4 s
+text 24 152 bold size=12 | frontend answers
+text 24 166 size=11 | cluster health; namespace exists
+box a140 286 142 230.4 28 fill=deep | 13.8 to 14.4 s
+text 24 196 bold size=12 | a workflow completes
+text 24 210 size=11 | one HealthCheck, end to end
+box a184 286 186 272 28 fill=deep | 16 to 17 s
+path 286,226 766,226
+path 286,226 286,230
+text 283 242 size=10 | 0
+path 366,226 366,230
+text 363 242 size=10 | 5
+path 446,226 446,230
+text 440 242 size=10 | 10
+path 526,226 526,230
+text 520 242 size=10 | 15
+path 606,226 606,230
+text 600 242 size=10 | 20
+path 686,226 686,230
+text 680 242 size=10 | 25
+path 766,226 766,230
+text 760 242 size=10 | 30
+text 24 262 size=11 | The first HealthCheck on each cell failed, Namespace default is not found; the next one completed.
+text 24 304 bold size=12 | History refusing every shard: seconds after history started
+text 24 328 bold size=12 | frontend answers
+text 24 342 size=11 | cluster health: SERVING
+box b316 286 318 100.8 28 fill=deep | 5.3 to 6.3 s
+text 24 372 bold size=12 | shards owned
+text 24 386 size=11 | history's 512
+box b360 286 362 480 28 fill=steam stroke=ember dash=4,3 | none: 1,299 failed acquires by the last poll, after its 150 s cap
+path 286,402 766,402
+path 286,402 286,406
+text 283 418 size=10 | 0
+path 366,402 366,406
+text 363 418 size=10 | 5
+path 446,402 446,406
+text 440 418 size=10 | 10
+path 526,402 526,406
+text 520 418 size=10 | 15
+path 606,402 606,406
+text 600 418 size=10 | 20
+path 686,402 686,406
+text 680 418 size=10 | 25
+path 766,402 766,406
+text 760 418 size=10 | 30
+text 24 452 size=11 | Each rung proves one thing. The frontend said SERVING while history owned no shard;
+text 24 467 size=11 | only a completed workflow proves the whole path works.
+text 24 492 size=10 | History's own health status waits for its first shards; the frontend's does not (source: server v1.31.0
+text 24 505 size=10 | service/history/service.go:79-90).

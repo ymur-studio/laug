@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="520" viewBox="0 0 800 520" role="img"
+    aria-labelledby="fc-network-title fc-network-desc" font-family="Inter, system-ui, sans-serif">
+<title id="fc-network-title">The Firecracker pool&#39;s network: a namespace a clone, held by its own process</title>
+<desc id="fc-network-desc">Two cells of the microVM pool, blocks 0 and 1, each a firecracker process in network and
+    mount namespaces that only it holds. laugfc&lt;b&gt; on the host and veth0, 10.254.&lt;b&gt;.2, inside the
+    cell&#39;s namespace are the two ends of a veth pair. Inside, a DNAT rule sends what the host sends to
+    10.254.&lt;b&gt;.2 on through tap0 to the guest, whose address is the same in every clone, so two guests never meet.
+    The guest can start one kind of connection: to the host&#39;s SDK metrics ports, 9091 to 9093. Deny rules on the
+    host drop anything forwarded to or from laugfc+. Arrows run the way a connection from the host goes. Sources:
+    SECURITY.md, cells/backend-firecracker.sh, docs/img/src/fc-network.txt.</desc>
+<rect x="0" y="0" width="800" height="520" fill="#EEF3F2"/>
+<text x="24" y="30" font-size="14" fill="#163A44"
+    font-weight="600">The Firecracker pool&#39;s network: a namespace a clone, held by its own process</text>
+<text x="24" y="50" font-size="12"
+    fill="#163A44">Two microVM cells, blocks 0 and 1, restored from one snapshot: one machine inside, apart outside</text>
+<text x="24" y="82" font-size="12" fill="#163A44" font-weight="600">the host</text>
+<text x="276" y="82" font-size="12" fill="#163A44" font-weight="600">each cell&#39;s network namespace</text>
+<text x="618" y="82" font-size="12" fill="#163A44" font-weight="600">the guest</text>
+<rect x="260" y="92" width="330" height="176" fill="none" stroke="#163A44" stroke-dasharray="6 4"/>
+<text x="268" y="108" font-size="11" fill="#163A44" font-weight="600">cell 0&#39;s namespace, held by its process</text>
+<g aria-label="laugfc0, the veth&#39;s host end">
+  <rect x="24" y="132" width="200" height="44" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="124" y="150.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">laugfc0</text>
+  <text x="124" y="165.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">the veth&#39;s host end</text>
+</g>
+<g aria-label="veth0, 10.254.0.2/30">
+  <rect x="276" y="132" width="130" height="44" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="341" y="150.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">veth0</text>
+  <text x="341" y="165.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">10.254.0.2/30</text>
+</g>
+<g aria-label="DNAT, to the guest">
+  <rect x="446" y="132" width="140" height="44" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="516" y="150.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">DNAT</text>
+  <text x="516" y="165.5" font-size="12" fill="#163A44" text-anchor="middle">to the guest</text>
+</g>
+<g aria-label="tap0, the guest&#39;s gateway">
+  <rect x="446" y="206" width="140" height="44" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="516" y="224.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">tap0</text>
+  <text x="516" y="239.5" font-size="12" fill="#163A44" text-anchor="middle">the guest&#39;s gateway</text>
+</g>
+<g aria-label="eth0, one address, the same, in every clone">
+  <rect x="618" y="198" width="158" height="60" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="697" y="217" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">eth0</text>
+  <text x="697" y="232" font-size="12" fill="#163A44" text-anchor="middle">one address, the same</text>
+  <text x="697" y="247" font-size="12" fill="#163A44" text-anchor="middle">in every clone</text>
+</g>
+<line x1="224" y1="154" x2="268" y2="154" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="276,154 268,158 268,150" fill="#163A44"/>
+<text x="230" y="148" font-size="11" fill="#163A44">veth</text>
+<line x1="406" y1="154" x2="438" y2="154" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="446,154 438,158 438,150" fill="#163A44"/>
+<line x1="516" y1="176" x2="516" y2="198" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="516,206 512,198 520,198" fill="#163A44"/>
+<line x1="586" y1="228" x2="618" y2="228" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<rect x="260" y="290" width="330" height="176" fill="none" stroke="#163A44" stroke-dasharray="6 4"/>
+<text x="268" y="306" font-size="11" fill="#163A44" font-weight="600">cell 1&#39;s namespace, held by its process</text>
+<g aria-label="laugfc1, the veth&#39;s host end">
+  <rect x="24" y="330" width="200" height="44" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="124" y="348.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">laugfc1</text>
+  <text x="124" y="363.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">the veth&#39;s host end</text>
+</g>
+<g aria-label="veth0, 10.254.1.2/30">
+  <rect x="276" y="330" width="130" height="44" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="341" y="348.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">veth0</text>
+  <text x="341" y="363.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">10.254.1.2/30</text>
+</g>
+<g aria-label="DNAT, to the guest">
+  <rect x="446" y="330" width="140" height="44" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="516" y="348.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">DNAT</text>
+  <text x="516" y="363.5" font-size="12" fill="#163A44" text-anchor="middle">to the guest</text>
+</g>
+<g aria-label="tap0, the guest&#39;s gateway">
+  <rect x="446" y="404" width="140" height="44" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="516" y="422.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">tap0</text>
+  <text x="516" y="437.5" font-size="12" fill="#163A44" text-anchor="middle">the guest&#39;s gateway</text>
+</g>
+<g aria-label="eth0, one address, the same, in every clone">
+  <rect x="618" y="396" width="158" height="60" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="697" y="415" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">eth0</text>
+  <text x="697" y="430" font-size="12" fill="#163A44" text-anchor="middle">one address, the same</text>
+  <text x="697" y="445" font-size="12" fill="#163A44" text-anchor="middle">in every clone</text>
+</g>
+<line x1="224" y1="352" x2="268" y2="352" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="276,352 268,356 268,348" fill="#163A44"/>
+<text x="230" y="346" font-size="11" fill="#163A44">veth</text>
+<line x1="406" y1="352" x2="438" y2="352" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="446,352 438,356 438,348" fill="#163A44"/>
+<line x1="516" y1="374" x2="516" y2="396" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="516,404 512,396 520,396" fill="#163A44"/>
+<line x1="586" y1="426" x2="618" y2="426" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<g aria-label="deny rules, FORWARD, DOCKER-USER:, drop to or from laugfc+">
+  <rect x="24" y="404" width="200" height="62" fill="#EEF3F2" stroke="#C44B32"/>
+  <text x="124" y="424" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">deny rules</text>
+  <text x="124" y="439" font-size="12" fill="#163A44" text-anchor="middle">FORWARD, DOCKER-USER:</text>
+  <text x="124" y="454" font-size="12" fill="#163A44" text-anchor="middle">drop to or from laugfc+</text>
+</g>
+<text x="24" y="102" font-size="11" fill="#163A44">The pool and every client dial</text>
+<text x="24" y="116" font-size="11" fill="#163A44">10.254.&lt;b&gt;.2 from this host.</text>
+<text x="618" y="282" font-size="10" fill="#163A44">From the guest, one way out:</text>
+<text x="618" y="295" font-size="10" fill="#163A44">the host&#39;s SDK metrics ports,</text>
+<text x="618" y="308" font-size="10" fill="#163A44">9091 to 9093, through tap0.</text>
+<text x="24" y="494" font-size="11"
+    fill="#163A44">Kill a cell&#39;s process and the kernel frees its namespace, its veth pair and its tap; destroy removes its disk.</text>
+</svg>

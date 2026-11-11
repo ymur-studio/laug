@@ -1,0 +1,102 @@
+{
+  "gate_id": "g20261017-192202",
+  "server_tag": "1.31.0",
+  "laug_commit": "d14a4fe",
+  "tree_dirty": false,
+  "base": "d14a4fe",
+  "base_ref": "main",
+  "inputs": [
+    {
+      "path": "gate/plan.yaml",
+      "sha256": "ef34d8359084ad717c6e43f0f241de1f17b4e0c9b353ce14d479a0e9ab32b28c",
+      "changed_vs_base": false
+    },
+    {
+      "path": "gate/combine.sh",
+      "sha256": "33b4e89dc2ecef502e73ea88136a482fbf8694986789712fd5126e31f5faf6f0",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/steady-state.yaml",
+      "sha256": "932f6ac57b68462066eeaf1ee1fe9cbd0579125edda55bdd559db17a9fa31c33",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/thresholds.sh",
+      "sha256": "d054c485bb3027a78945640c484910c2fca206573a6a9fcbf34d8c223ea4a48d",
+      "changed_vs_base": false
+    },
+    {
+      "path": "faults/catalog.yaml",
+      "sha256": "f0e73b887d68b2e28575b8146f430d3a98dbae09f96d1da8aed63404cf333a9e",
+      "changed_vs_base": false
+    },
+    {
+      "path": "cells/compose/dynamicconfig/laug.yaml",
+      "sha256": "6ecc1d5ae589a5f89049b4f15d23becb616252e567ffd6a862db7294c50e705a",
+      "changed_vs_base": false
+    },
+    {
+      "path": "cells/compose/cell.yml",
+      "sha256": "131e51d360a5808d3f4de2cbb36b0a7a1b64588f6a65d2052f9b46295d0c035d",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/releases/1.32.yaml",
+      "sha256": "d22200aedb8b3fdcaa2d7326338d7f553fcf4d002305938b225637524f23a02c",
+      "changed_vs_base": false
+    }
+  ],
+  "host": {
+    "type": "m8i.8xlarge",
+    "vcpu": 32,
+    "mem_gib": 123,
+    "mem_available_gib": 121.6
+  },
+  "refused": null,
+  "plan": "gate/plan.yaml",
+  "items_limit": null,
+  "fake": false,
+  "pool": "127.0.0.1:7700",
+  "driver": "step.sh",
+  "workflow_id": "gate-g20261017-192202",
+  "worker_commit": "d14a4fe-dirty",
+  "wiring": [
+    {
+      "key": "incumbent",
+      "run_id": "g20261017-192202-incumbent",
+      "requester": "gate-g20261017-192202-incumbent",
+      "results_dir": "gate/results/g20261017-192202/incumbent",
+      "lease_file": "gate/results/g20261017-192202/incumbent/.lease.json",
+      "task_queue": "omes-g20261017-192202-incumbent",
+      "omes_metrics": {
+        "worker": "127.0.0.1:19100",
+        "client": "127.0.0.1:19101"
+      }
+    },
+    {
+      "key": "steady",
+      "run_id": "g20261017-192202-steady",
+      "requester": "gate-g20261017-192202-steady",
+      "results_dir": "gate/results/g20261017-192202/steady",
+      "lease_file": "gate/results/g20261017-192202/steady/.lease.json",
+      "task_queue": "omes-g20261017-192202-steady",
+      "omes_metrics": {
+        "worker": "127.0.0.1:19102",
+        "client": "127.0.0.1:19103"
+      }
+    },
+    {
+      "key": "pl",
+      "run_id": "g20261017-192202-pl",
+      "requester": "gate-g20261017-192202-pl",
+      "results_dir": "gate/results/g20261017-192202/pl",
+      "lease_file": "gate/results/g20261017-192202/pl/.lease.json",
+      "task_queue": "omes-g20261017-192202-pl",
+      "omes_metrics": {
+        "worker": "127.0.0.1:19104",
+        "client": "127.0.0.1:19105"
+      }
+    }
+  ]
+}

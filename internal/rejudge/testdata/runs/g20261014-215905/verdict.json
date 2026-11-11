@@ -1,0 +1,158 @@
+{
+  "gate_id": "g20261014-215905",
+  "verdict": "BLOCK",
+  "class": "regression",
+  "rerun": false,
+  "class_if_quiet": null,
+  "refused": null,
+  "fake": false,
+  "server_tag": "1.31.0",
+  "laug_commit": "aafc0db",
+  "tree_dirty": false,
+  "base": "d7919e3",
+  "inputs": [
+    {
+      "path": "gate/plan.yaml",
+      "sha256": "27680a32844f30ba7d60cf3b00973762b1d1c7b77b4c2066f62a0177f0402bdd",
+      "changed_vs_base": false
+    },
+    {
+      "path": "gate/combine.sh",
+      "sha256": "284a759c54557c18bcbdfc257414199c9c94bfb573e3234e2265ecf18ab5366c",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/steady-state.yaml",
+      "sha256": "3d86abd2379a92b1d6e2ce6df294d8f8737854f48364674e7305b929942bc321",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/thresholds.sh",
+      "sha256": "77d5fb8a58d6b9b850f83279b8f61e988615c60dbdd5a7d0d2fa7aecd386500f",
+      "changed_vs_base": false
+    },
+    {
+      "path": "faults/catalog.yaml",
+      "sha256": "f0e73b887d68b2e28575b8146f430d3a98dbae09f96d1da8aed63404cf333a9e",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/releases/1.32.yaml",
+      "sha256": "f4a11d5c163ce31006eb50bd41e2ef4b9e5d30a6f01d10d116744f74d5ff90a7",
+      "changed_vs_base": false
+    }
+  ],
+  "deadline_s": 780,
+  "items_in_plan": 2,
+  "items_limit": null,
+  "t0": {
+    "wall": 1792015145.113,
+    "mono": 578843.58
+  },
+  "t_post": {
+    "wall": 1792015684.653,
+    "mono": 579380.23
+  },
+  "elapsed_s": {
+    "wall": 539.54,
+    "mono": 536.65
+  },
+  "host": {
+    "vcpu": 24,
+    "mem_gib": 47,
+    "mem_available_gib": 36.3
+  },
+  "rules": {
+    "R1": {
+      "name": "harness",
+      "pass": true,
+      "reasons": []
+    },
+    "R2": {
+      "name": "coverage",
+      "pass": true,
+      "reasons": []
+    },
+    "R3": {
+      "name": "contract",
+      "pass": true,
+      "reasons": []
+    },
+    "R4": {
+      "name": "outcome",
+      "pass": false,
+      "reasons": [
+        "steady: expected ADVANCE, observed BLOCK: load verdict BLOCK: workflow_task_schedule_to_start_p99_ms 179111.111 EXCEEDS, activity_schedule_to_start_p99_ms 28850.000 EXCEEDS, workflow_end_to_end_p95_ms 160833.333 EXCEEDS, service_error_rate 0.065 EXCEEDS, workflows_completed 284 BELOW (0.95 x 20/s x 300 s)",
+        "pl: expected ADVANCE, observed BLOCK: never steady: workflow_task_schedule_to_start_p99_ms=87250.00000000001 activity_schedule_to_start_p99_ms=19818.75 workflow_end_to_end_p95_ms=92968.75 service_error_rate=0.048283842817079384"
+      ]
+    },
+    "R5": {
+      "name": "live control",
+      "pass": false,
+      "reasons": [
+        "pl: control: service_error_rate read null in the during window, not above its max 0.001"
+      ]
+    },
+    "R6": {
+      "name": "identity",
+      "pass": true,
+      "reasons": []
+    }
+  },
+  "reasons": [
+    "R4 steady: expected ADVANCE, observed BLOCK: load verdict BLOCK: workflow_task_schedule_to_start_p99_ms 179111.111 EXCEEDS, activity_schedule_to_start_p99_ms 28850.000 EXCEEDS, workflow_end_to_end_p95_ms 160833.333 EXCEEDS, service_error_rate 0.065 EXCEEDS, workflows_completed 284 BELOW (0.95 x 20/s x 300 s)",
+    "R4 pl: expected ADVANCE, observed BLOCK: never steady: workflow_task_schedule_to_start_p99_ms=87250.00000000001 activity_schedule_to_start_p99_ms=19818.75 workflow_end_to_end_p95_ms=92968.75 service_error_rate=0.048283842817079384",
+    "R5 pl: control: service_error_rate read null in the during window, not above its max 0.001"
+  ],
+  "items": [
+    {
+      "key": "steady",
+      "kind": "load",
+      "expect": "ADVANCE",
+      "observed": "BLOCK",
+      "class": "regression",
+      "reason": "load verdict BLOCK: workflow_task_schedule_to_start_p99_ms 179111.111 EXCEEDS, activity_schedule_to_start_p99_ms 28850.000 EXCEEDS, workflow_end_to_end_p95_ms 160833.333 EXCEEDS, service_error_rate 0.065 EXCEEDS, workflows_completed 284 BELOW (0.95 x 20/s x 300 s)",
+      "failed": [
+        "R4"
+      ],
+      "run_id": "g20261014-215905-steady",
+      "cell": "c1a7a56e",
+      "block": 0,
+      "exit": 1,
+      "stopped_by": null,
+      "pool_busy": null,
+      "evidence": [
+        "steady/g20261014-215905-steady.json",
+        "steady/g20261014-215905-steady.verdict.json"
+      ]
+    },
+    {
+      "key": "pl",
+      "kind": "fault",
+      "expect": "ADVANCE",
+      "observed": "BLOCK",
+      "class": "invalid",
+      "reason": "never steady: workflow_task_schedule_to_start_p99_ms=87250.00000000001 activity_schedule_to_start_p99_ms=19818.75 workflow_end_to_end_p95_ms=92968.75 service_error_rate=0.048283842817079384",
+      "failed": [
+        "R4",
+        "R5"
+      ],
+      "run_id": "g20261014-215905-pl",
+      "cell": "43944027",
+      "block": 1,
+      "exit": 1,
+      "stopped_by": null,
+      "pool_busy": {
+        "before": 0,
+        "during": null,
+        "drain": null,
+        "after": null
+      },
+      "evidence": [
+        "pl/g20261014-215905-pl.json"
+      ]
+    }
+  ],
+  "host_quiet": true,
+  "host_noise": []
+}

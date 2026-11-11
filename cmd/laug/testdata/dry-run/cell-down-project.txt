@@ -1,0 +1,7 @@
+# make: make --no-print-directory -n cell-down PROJECT=laug2
+# laug: laug cell down -project laug2 -remove-volumes
+# lease: absent
+# compare: line cells/down.sh
+[[ '1.31.0' =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "laug · SERVER_TAG must be a release tag, x.y.z; got '"'1.31.0'"'" >&2; exit 2; }
+[[ 'laug2' =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || { echo "laug · make cell-down: PROJECT="'laug2'" is not one word of letters, digits, ., _ and -, from a letter or digit" >&2; exit 2; };                 
+ENABLE_ES=false COMPOSE_PROFILES= BIND_ADDR='127.0.0.1' SERVER_TAG=1.31.0 FRONTEND_PORT=7233 UI_PORT=8080 PROMETHEUS_PORT=9090 GRAFANA_PORT=3000 TOXIPROXY_PORT=8474 PROJECT=laug2 SERVER_FI='' cells/down.sh

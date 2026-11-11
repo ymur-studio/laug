@@ -1,0 +1,103 @@
+# The stack's store (_obs/README.md): Prometheus 2.53.0 on 127.0.0.1:7730, set by its start line's
+# --web.listen-address, never here. bin/obs up copies this file into OBS_DIR/conf and writes OBS_DIR where it reads
+# @OBS_DIR@, since Prometheus expands no variable in its config (configuration.md at v2.53.0). make obs-test
+# runs promtool check config on that copy. Every address is 127.0.0.1; nothing here names 9090, which load/verdict.sh,
+# load/baseline.sh and load/read-thresholds.sh fall back to. No rule_files, no alerting, no remote_write: the stack
+# judges nothing.
+global:
+  scrape_interval: 5s
+  scrape_timeout: 4s               # under the interval: promtool 2.53.0 refuses one over it (seen 2026-10-17)
+
+scrape_configs:
+  # Each leased cell's own Prometheus, through /federate, every 5 s like the cell's own scrape
+  # (cells/compose/prometheus.yml). The target files are follow's: cell-<id>.json, with the labels that outlive the
+  # cell (cell, life, block, backend, server_tag, and gate_id, item and arm inside a gate). The cell's series carry
+  # none of those names, so honor_labels keeps the cell's job and instance and never has to choose.
+  - job_name: laug-cells
+    metrics_path: /federate
+    honor_labels: true
+    honor_timestamps: true           # the default: federated samples keep the cell's own timestamps
+    track_timestamps_staleness: true # a series the cell stops serving goes stale at the next pass, not 5 m on
+                                     # (seen 2026-10-17 on the dev host against make obs-test's fake cell: 3.0 s
+                                     # after the cell with it; with it false, 297.9 s after the switch, 294.9 s
+                                     # after the cell; cells/results/2026-10-17-obs-offline.txt section 4)
+    enable_compression: false        # one loopback reader, so no gzip (configuration.md at v2.53.0)
+    # No sample_limit: past it the whole scrape fails (configuration.md at v2.53.0), which would drop a cell on
+    # its busiest pass, under a fault. The stack board reads scrape_samples_scraped instead.
+    # The 31 families the verdict's six, lost work, the arm's five shares, the fault catalog's signals and the boards
+    # read, then everything of the cell's own SDK scrape. A family left out shows "no data" on a board, never a
+    # wrong number; widening the list is this one line once the series a cell holds are counted.
+    # task_latency_queue_bucket and task_attempt_bucket: a timer and a histogram in 1.31.0's source, not yet scraped.
+    params:
+      'match[]':
+        - '{__name__=~"task_schedule_to_start_latency_bucket|workflow_schedule_to_close_latency_bucket|persistence_latency_bucket|service_error_with_type|service_requests|service_latency_bucket|workflow_success|persistence_error_with_type|persistence_requests|numshards_gauge|sharditem_created_count|sharditem_removed_count|shard_closed_count|acquire_shards_count|acquire_shards_latency_bucket|up|build_information|restarts|membership_changed_count|poll_success|poll_timeouts|asyncmatch_latency_bucket|syncmatch_latency_bucket|no_poller_tasks|activity_eager_execution|workflow_failed|workflow_timeout|workflow_terminate|workflow_cancel|task_latency_queue_bucket|task_attempt_bucket"}'
+        - '{job="sdk-workers"}'
+    file_sd_configs:
+      - files: ["@OBS_DIR@/targets/cell-*.json"]
+
+  # Each gate item's Omes, worker and client, from the wave line to the item's end (targets by follow). Inside a gate
+  # nothing else scrapes them; outside one, the cell's sdk-workers job does, and the federation above brings it in.
+  - job_name: laug-omes
+    file_sd_configs:
+      - files: ["@OBS_DIR@/targets/omes-*.json"]
+
+  # The orchestrator's dev server (laug orchestrator server). Down unless it runs, so up 0 between batches is expected. It
+  # serves the server's own metric names, which is why every cell query on a board names a cell.
+  - job_name: laug-orchestrator
+    static_configs:
+      - targets: ["127.0.0.1:7402"]
+
+  # cellstat's listener: the last sample of each laug container, the Omes processes, the host, and the stack's and
+  # the orchestrator's processes. A cell's compose project laug-<id> becomes its cell label, and an Omes run id
+  # <gate id>-<item> its gate_id and item.
+  - job_name: laug-cellstat
+    static_configs:
+      - targets: ["127.0.0.1:7710"]
+    metric_relabel_configs:
+      - source_labels: [project]
+        regex: "laug-(.{8})"
+        target_label: cell
+        replacement: "$1"
+      - source_labels: [run_id]
+        regex: "(g[0-9]{8}-[0-9]{6}(-[0-9]+)?)-(.+)"
+        target_label: gate_id
+        replacement: "$1"
+      - source_labels: [run_id]
+        regex: "(g[0-9]{8}-[0-9]{6}(-[0-9]+)?)-(.+)"
+        target_label: item
+        replacement: "$3"
+
+  # follow: lease labels and each gate's records, copied from the gate's own files.
+  - job_name: laug-follow
+    static_configs:
+      - targets: ["127.0.0.1:7720"]
+
+  # The host, from the Collector's prometheus exporter: memory, paging, load, the root volume and OBS_DIR's
+  # filesystem. The device and the mount point are renamed on ingest, so no device or mount name reaches a board or a
+  # results file.
+  - job_name: laug-host
+    scrape_interval: 15s
+    static_configs:
+      - targets: ["127.0.0.1:7752"]
+    metric_relabel_configs:
+      - source_labels: [device]
+        regex: ".+"
+        target_label: device
+        replacement: root
+      - source_labels: [mountpoint]
+        regex: ".+"
+        target_label: mountpoint
+        replacement: obs
+
+  # The stack itself: Prometheus, Grafana, the Collector's and Jaeger's own telemetry.
+  - job_name: laug-stack
+    scrape_interval: 30s
+    static_configs:
+      - targets: ["127.0.0.1:7730"]
+        labels: { part: prometheus }
+      - targets: ["127.0.0.1:7740"]
+        labels: { part: grafana }
+      - targets: ["127.0.0.1:7753"]
+        labels: { part: collector }
+      - targets: ["127.0.0.1:7763"]
+        labels: { part: jaeger }

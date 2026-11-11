@@ -1,0 +1,6 @@
+# make: make --no-print-directory -n cell-health FRONTEND_PORT=7253 PROMETHEUS_PORT=9110
+# laug: laug cell health -block 2
+# lease: absent
+# compare: line cells/health.sh
+[[ '7253' =~ ^[0-9]+$ ]] || { echo "laug · make cell-health: FRONTEND_PORT="'7253'" is not a whole number" >&2; exit 2; };  [[ '9110' =~ ^[0-9]+$ ]] || { echo "laug · make cell-health: PROMETHEUS_PORT="'9110'" is not a whole number" >&2; exit 2; };            
+CELL_ADDRESS='127.0.0.1:7253' NAMESPACE=default PROM_URL='http://127.0.0.1:9110' cells/health.sh

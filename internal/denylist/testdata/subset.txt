@@ -1,0 +1,116 @@
+# The subset's table: a re: line's pattern, less its re:, and the verdict every reader gives it. internal/denylist's
+# TestSubset holds Go's reader to it, and internal/orchestrator's TestDenylistSubsetBash holds check/denylist.sh's.
+# A line is "<verdict> <pattern>": take, subset (outside the subset, or one that does not compile) or empty (one that
+# matches the empty string), then the pattern, the rest of the line as written, or Go-quoted when it starts with ".
+# The subset's limits, 256 bytes and groups 32 deep, are in the tests' code. Lines starting with # and blank lines are
+# skipped.
+
+# Every construct the subset names.
+take qx7
+take q.7
+take a\.b\*c\+d\?e\(f\)g\[h\]i\{j\}k\|l\^m\$n\\o
+take a]b}c
+take ^qx7$
+take a^b
+take (qx7|zorblax)
+take ((q)(x7))
+take [a-z]
+take [^a-z0-9]
+take [-a]
+take [a-]
+take [^-]
+take [a-c-]
+take [A-Z_.$*(]
+take [a^]
+take [&a&]
+take [a:]
+take [a:b]
+take q?x7
+take q*x7
+take qx7+
+take qx{2}
+take qx{0,3}7
+take qx{2,}7
+take q{255}
+take (q{10}){100}
+take x(y|z)+w
+take [ ]
+take a b
+
+# Escapes POSIX ERE does not define, and groups Go and Python read but grep does not.
+subset \bqx7
+subset \dqx7
+subset q\x7
+subset (q)\1
+subset qx7\
+subset (?i)qx7
+subset (?:qx7)
+subset (?=q)x7
+
+# Groups and branches.
+subset (qx7
+subset qx7)
+subset )
+subset ()
+subset (|qx7)
+subset qx7|
+subset |qx7
+
+# Quantifiers: at a branch's start, after another, after an anchor, and counts.
+subset *qx7
+subset +
+subset qx7**
+subset qx7*?
+subset qx7+?
+subset qx7?+
+subset q{2}{3}
+subset ^*q
+subset q$?
+subset q{,2}
+subset q{
+subset q{2
+subset q{02}
+subset q{3,2}
+subset q{256}
+subset q{1,256}
+subset {2}
+subset ((q{10}){10}){11}
+
+# Classes: ] first, empty, unclosed, a backslash or [ inside, ranges out of kind or order, doubled & ~ |, and : first,
+# which GNU grep refuses as a misspelt [[:ab:]].
+subset []a]
+subset []
+subset [^]
+subset [a
+subset [\.]
+subset [[:alpha:]]
+subset [a[]
+subset [z-a]
+subset [a-Z]
+subset [0-z]
+subset [!-/]
+subset [a-c-e]
+subset [a--]
+subset [a&&b]
+subset [a||b]
+subset [a~~b]
+subset [:a:]
+subset [^:ab:]
+subset x[:zq:]
+subset [:a]
+
+# Bytes outside printable ASCII.
+subset "\xc3\xa9tang"
+subset "q\tx7"
+subset "q\x7fx7"
+
+# Lines that match the empty string, which every line holds.
+empty ""
+empty ^
+empty $
+empty ^$
+empty q*
+empty (qx7)?
+empty q{0}
+empty (q|x*)
+empty [a-z]*

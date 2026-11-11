@@ -1,0 +1,17 @@
+# make: make --no-print-directory -n candidate CANDIDATE=frontend-starved DURATION=10m RATE=30 RUN_ID=r1 POOL_ADDR=http://127.0.0.1:17700 SCENARIO=throughput_stress
+# laug: laug candidate frontend-starved -duration 10m -rate 30 -run-id r1 -pool 127.0.0.1:17700 -scenario throughput_stress
+# lease: absent
+# passes: DURATION=10m RATE=30
+# compare: line faults/candidate.sh
+c="${CANDIDATE:-}"; [[ "$c" =~ ^[a-z0-9-]+$ ]] && [ "$(yq "[.candidates[] | select(.name == \"$c\")] | length" faults/candidates.yaml)" = 1 ] \
+  || { echo "laug · make candidate CANDIDATE=<name>, one of: $(yq -r '[.candidates[].name] | join(", ")' faults/candidates.yaml)" >&2; exit 2; }
+[[ 'r1' =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || { echo "laug · make candidate: RUN_ID="'r1'" is not one word of letters, digits, ., _ and -, from a letter or digit" >&2; exit 2; }; [[ 'throughput_stress' =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || { echo "laug · make candidate: SCENARIO="'throughput_stress'" is not one word of letters, digits, ., _ and -, from a letter or digit" >&2; exit 2; };                   
+make lease
+[[ '1800' =~ ^(0|[1-9][0-9]*)$ ]] || { echo "laug · TTL="'1800'": a whole number of seconds" >&2; exit 2; }
+tmp=$(mktemp .lease.XXXXXX); \
+if curl -s --fail-with-body -X POST 'http://127.0.0.1:17700/lease' -H 'content-type: application/json' \
+     -d "$(jq -cn --argjson ttl 1800 --arg requester 'laug' '{ttl_seconds: $ttl, requester: $requester}')" -o "$tmp"; then \
+  mv "$tmp" .last-lease.json && jq . .last-lease.json; \
+else rc=$?; echo "laug · lease refused (curl exit $rc): $(cat "$tmp")" >&2; rm -f "$tmp"; exit 1; fi
+RUN_ID=r1 POOL_ADDR='http://127.0.0.1:17700' OMES_DIR='.upstream/omes' NAMESPACE=default SCENARIO=throughput_stress CANDIDATE_RELEASE=1 \
+  faults/candidate.sh frontend-starved .last-lease.json

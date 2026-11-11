@@ -1,0 +1,21 @@
+{
+  "exit": 0,
+  "stopped_by": null,
+  "start": {
+    "wall": 1792315765.989,
+    "mono": 11319.66
+  },
+  "end": {
+    "wall": 1792316128.014,
+    "mono": 11681.68
+  },
+  "run_id": "g20261018-092540-pl",
+  "requester": "gate-g20261018-092540-pl",
+  "results_dir": "gate/results/g20261018-092540/pl",
+  "lease_file": "gate/results/g20261018-092540/pl/.lease.json",
+  "task_queue": "omes-g20261018-092540-pl",
+  "omes_metrics": {
+    "worker": "127.0.0.1:19104",
+    "client": "127.0.0.1:19105"
+  }
+}

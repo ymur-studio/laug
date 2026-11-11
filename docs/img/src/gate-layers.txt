@@ -1,0 +1,40 @@
+# The durable gate, layer by layer. The starter and workflow id: internal/orchestrator/gate.go:18-22 (the starter
+# runs gate/step.sh check first; the workflow id is gate-<gid>). The dev server: cmd/laug/doc.go:626-630. The worker:
+# cmd/laug/doc.go:632-637 (it replays every open Gate on its build before it polls). The step in a session of its own,
+# its .pid first and its .done last, and the adoption by its record: internal/orchestrator/steps.go:454-500. The
+# leases from laug pool serve: gate/lib.sh. laug gate run without -workflow: gate/run.sh, every step in one process.
+name gate-layers
+size 800 520
+title | The durable gate, layer by layer: its steps outlive the worker that started them
+sub | laug gate run <tag> -workflow: history on the dev server, each step in its own session, cells from the pool
+desc | Five layers, top to bottom. laug gate run -workflow starts workflow Gate on the orchestrator's dev server, which
+desc | keeps Gate's history: the order, every answer, the timers. This checkout's worker runs Gate's activities, each
+desc | gate/step.sh in a session of its own that writes its .pid first and its .done last. The steps lease cells from
+desc | laug pool serve and run loads, faults and the judge on them. The worker's box is dashed, and the two lines under
+desc | the layers say why: kill the worker and the step's session runs on, and the next worker adopts it by its .pid
+desc | record, the process, its start time and its boot id, when the record passes; without -workflow, gate/run.sh runs
+desc | every step in one process.
+source internal/orchestrator/gate.go
+source internal/orchestrator/steps.go
+source cmd/laug/doc.go
+source gate/lib.sh
+box starter 24 76 752 50 | laug gate run <tag> -workflow
+  | runs gate/step.sh check, then starts workflow Gate as gate-<gate id>
+box server 24 150 752 50 | the dev server, 127.0.0.1:7400
+  | Gate's history in orchestrator/run/dev.db: the order, every answer, the timers
+box worker 24 224 752 50 fill=steam stroke=ember dash=4,3 | laug orchestrator worker
+  | runs Step and AwaitItem, heartbeats every 2 s, replays every open Gate before it polls
+box step 24 298 752 50 | gate/step.sh <verb> <dir> [key], in a session of its own
+  | writes .steps/<name>.pid first and .done last; a second copy of the step refuses
+box lib 24 372 752 50 | gate/lib.sh
+  | leases cells from laug pool serve, 127.0.0.1:7700; runs the loads, the faults and the judge
+arrow starter server
+arrow server worker
+arrow worker step
+arrow step lib
+text 24 452 size=11 colour=ember
+  | Kill the worker: the step's session runs on. The next worker adopts it by its .pid record, the process, its
+text 24 468 size=11 colour=ember
+  | start time and its boot id, and answers when its .done comes; a record that fails the check is a lost step.
+text 24 494 size=11
+  | Without -workflow, laug gate run runs gate/run.sh: every step in that one process, its driver run.sh.

@@ -1,0 +1,15 @@
+# make: make --no-print-directory -n candidate CANDIDATE=benign
+# laug: laug candidate benign
+# lease: absent
+# compare: line faults/candidate.sh
+c="${CANDIDATE:-}"; [[ "$c" =~ ^[a-z0-9-]+$ ]] && [ "$(yq "[.candidates[] | select(.name == \"$c\")] | length" faults/candidates.yaml)" = 1 ] \
+  || { echo "laug · make candidate CANDIDATE=<name>, one of: $(yq -r '[.candidates[].name] | join(", ")' faults/candidates.yaml)" >&2; exit 2; }
+make lease
+[[ '1800' =~ ^(0|[1-9][0-9]*)$ ]] || { echo "laug · TTL="'1800'": a whole number of seconds" >&2; exit 2; }
+tmp=$(mktemp .lease.XXXXXX); \
+if curl -s --fail-with-body -X POST 'http://127.0.0.1:7700/lease' -H 'content-type: application/json' \
+     -d "$(jq -cn --argjson ttl 1800 --arg requester 'laug' '{ttl_seconds: $ttl, requester: $requester}')" -o "$tmp"; then \
+  mv "$tmp" .last-lease.json && jq . .last-lease.json; \
+else rc=$?; echo "laug · lease refused (curl exit $rc): $(cat "$tmp")" >&2; rm -f "$tmp"; exit 1; fi
+RUN_ID=20261022-120000 POOL_ADDR='http://127.0.0.1:7700' OMES_DIR='.upstream/omes' NAMESPACE=default SCENARIO=workflow_with_single_noop_activity CANDIDATE_RELEASE=1 \
+  faults/candidate.sh benign .last-lease.json

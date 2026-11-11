@@ -1,0 +1,2 @@
+# One scenario name per line. A shard that fails once and passes on rerun is reported flaky, not blocking,
+# only if it is listed here. Review this file at every gate; it should get shorter.

@@ -1,0 +1,16 @@
+{
+  "id": "a3d295b9",
+  "address": "127.0.0.1:7243",
+  "ui": "http://127.0.0.1:8090",
+  "grafana": "http://127.0.0.1:3010",
+  "prometheus": "http://127.0.0.1:9100",
+  "toxiproxy": "http://127.0.0.1:8484",
+  "project": "laug-a3d295b9",
+  "dynconfig": "cells/run/laug-a3d295b9/dynamicconfig/laug.yaml",
+  "server_tag": "1.31.0",
+  "block": 1,
+  "state": "leased",
+  "requester": "gate-g20261015-223429-pl",
+  "leased_at": "2026-10-15T22:35:07.79986346Z",
+  "expires_at": "2026-10-15T22:55:07.79986346Z"
+}

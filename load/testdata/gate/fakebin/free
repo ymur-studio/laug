@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Fake free for a fake gate (GATE_FAKE=1): free -b's two lines, FAKE_GATE_MEM_GIB (123, the lab host's) total and
+# FAKE_GATE_AVAIL_GIB (36) available, in the columns procps free prints.
+t=$(( ${FAKE_GATE_MEM_GIB:-123} * 1073741824 + 536870912 ))
+a="$(awk -v g="${FAKE_GATE_AVAIL_GIB:-36}" 'BEGIN { printf "%.0f", g * 1073741824 }')"
+printf '               total        used        free      shared  buff/cache   available\n'
+printf 'Mem:     %s %s %s %s %s %s\n' "$t" $(( t - a )) "$a" 0 0 "$a"
+printf 'Swap:    0 0 0\n'

@@ -1,0 +1,601 @@
+laug · boot 6 on the lab host: the runbooks under laug runbook check, traces, a cancel's heartbeat, the drain, serverfi
+2026-10-27, 04:05:56 to 09:09:04 UTC by the box's clock (batch-log.txt, its first and last lines); the batch itself
+started at 04:06:01. Host: the lab host, an m8i.8xlarge (32 vCPU, 128 GiB; bin/laug host type read 32 vCPU and 123
+GiB, H1), up 40.82 s when the batch started, 111G free on /, nothing of laug's running: 0 on 7700, 0 laug projects, 0
+laugd, 0 pool serve, 0 cellstat, 0 dev servers, 0 firecracker, nothing listening on 7400 to 7402, 8400 or 7700 to
+7799 (batch-log.txt, host). Tree: 7244d9e, pushed to the box, which commits a pushed tree itself: f860d06, "tree 040550
+from 7244d9e", whose 5293 files hash as 7244d9e's on the dev host, with no other file (batch-log.txt, launch and S1).
+Every laug command ran in a fresh clone of it, bin/laug stamped f860d06 (S6), but for SAN10's three scratch clones of
+it made on the box (below). Go: go1.26.0, already in /usr/local/go; apt's is go1.22.2 (batch-log.txt, launch). The
+safety stop was set for 12:05 UTC; the boot's budget was 344 min from 04:06:01 (batch-log.txt, safety stop).
+What the batch asked (boot 6 of the lab boots): five readings the learning doc and the runbooks cite from older runs
+or from no run. R11: runbooks 7 and 4 under laug runbook check -lab, runbook 1 under laug runbook check, and runbooks
+2, 3 and 6 under -cell, each page's last line "N of N blocks held" with none failed; until now none of the five marked
+blocks had run under -cell or -lab. SAN2: Jaeger's API v3 answer for a traced fake workflow gate whose worker is KILLed
+30 s into the wave, read by span name and by worker. SAN10: four fake workflow gates canceled 30 s into the wave: X1
+on the tree's build and X2 with Step heartbeating on the activity's own context, each with a pl item that ignores
+TERM; X3c and X3 with Step waiting for its step.sh through the cancel, on the WithoutCancel context and on its own.
+For each: whether ActivityTaskTimedOut follows the cancel request, how long after, whether the activity completes,
+the verdict and the starter's exit. A4: a warm-up raun, never counted, then kill-history three times on cold compose
+leases, every failed iteration of each Omes log timed against the fault's removal to the second. AUD: a warm-up raun,
+then the 9 serverfi rows 3 times each in 2026-10-14's order, the readings stop 10 cites. In order: pre, S, H, R7, R1,
+T, SAN2, SAN10, A4, R11c, R11g, AUD (groups.txt).
+Files. faults/results/raun-lab6-*.json are the 32 raun JSONs A4 and AUD wrote, 4 and 28;
+faults/results/raun-20261027-050724.json, -051406, -052045, -052716 and -053355 are the 5 that runbooks 3 and 6 wrote;
+extra/rb2-20261027-050108.json is runbook 2's load; gate/results/g20261027-054034 and g20261027-055212 are the 2 gate
+runs on cells, W1 and runbook 4's, 27 files each. 91 of the 92 sit at their tree paths; the load sat in load/results,
+where .gitignore keeps a walk's rb<N>-* runs out of git. The clone's git status after the batch lists these 37 raun
+JSONs, 1 load file and 2 run directories, untracked, and no other path (clone-status.txt); runs.tsv names the step that
+wrote each named raun and each gate. The fake gates, T3 and X1 to X3, wrote under the batch's TMPDIR, outside the clone,
+so none is in gate/results; their verdict.json, gate.json and timeline.jsonl are in extra/.
+cells/results/2026-10-27-boot6/ holds the batch's own records, scrubbed of the box's paths and name before they left it
+(a path shows as <clone>, <out>, <home> or <box tree>):
+  batch-log.txt     the batch's log: one line a command, with its exit and seconds, a summary line a raun or gate, UTC
+  steps/            each command's whole stdout and stderr, one file a step (109 files: 98 of the 99 in steps.tsv, all
+                    but T1-status, below; S1.txt, the clone; L-build.txt, the launcher's make build in the box's tree;
+                    9 of processes the batch ran in the background: the dev server, T0a1; the six workers, T2,
+                    T3-worker, X0, X2-worker, X3c-worker and X3-worker; the two pool serves, A4-pool and AUD-pool)
+  steps.tsv         step, exit, seconds, ok or fail: the 99 commands
+  runs.tsv          step, run id, the file the step wrote, exit: the 32 named rauns and the 2 gates on cells
+  readings.json     the 66 readings the batch took, each with its step, how it was read and when
+  groups.txt        the 12 step groups, in order
+  clone-status.txt  the clone's git status after the batch: 40 lines, one a path
+  extra/            the hand readings' raw files (24): A4's three per-second counts; SAN2's Jaeger answer, the
+                    history's attempts and the fake run's three files; SAN10's four event projections and each fake
+                    run's three files; runbook 2's load too, rb2-20261027-050108.json: 25 files in all
+Every table below is read from those files with jq, or quoted from them. Tags: a number with a file beside it is seen in
+that file; "computed" marks arithmetic on such numbers; "inference" marks reasoning; "verify" marks what comes from
+documentation or source not run here. "replaces" names the number this run stands in for, the host it came from and
+the file and line in this tree, at 7244d9e, that holds it; a line that says a block has not run names "no run" as its
+host. A step's file is steps/<step>.txt; a reading is readings.json's entry of that name,
+`jq '.[] | select(.name == "<name>") | .value'`.
+
+== pre and S: the start, 04:06:01 to 04:11:54
+  pre  the box tree's own checks     the six pages and their blocks by need (1: 1 offline; 2, 3 and 6: 3 offline and 1
+                                     cell; 4: 3 offline and 1 lab; 7: 1 offline and 1 lab); 11 of the 11 catalog rows
+                                     the batch runs; Step's hctx line once; runStep's ctx.Done branch once;
+                                     FAKE_GATE_STUCK read once; load/lost-work.sh's parser, 2 of 2 (steps/pre.txt)
+  S1   git clone -q <box tree> <clone> && git -C <clone> checkout -q -B main
+                                     f860d06, 5293 files (steps/S1.txt)
+  S2   make build                    exit 0, 2.1 s (steps/S2.txt; launch's make build in the box's tree 5 s,
+                                     steps/L-build.txt and batch-log.txt)
+  S3   bin/laug upstream -url <box tree>/.upstream/omes
+                                     exit 0, 2.4 s: Omes f0de206 from the box's own copy, its proto submodule at d96bd55
+                                     (steps/S3.txt)
+  S4   bin/laug deps -lab -json      exit 0, 1.1 s: 0 of 17 checks missing; go a note (1.26.0 here, Omes asks 1.26.5);
+                                     docker engine 29.1.3, compose 2.40.3, temporal 1.9.1, jq 1.7, yq 4.54.1, /dev/kvm
+                                     ok; "this host" ok, "32 vCPU and 121.6 GiB available" (steps/S4.txt)
+  S5a  make test-go                  exit 0, 89.2 s: 14 Go packages ok, the slowest internal/orchestrator, 86.414 s
+                                     (steps/S5a.txt; readings.json, make_test_go_s)
+  S5b  make harness-test             exit 0, 256.7 s: 1187 passed, 0 failed (steps/S5b.txt; harness_s, harness_tally)
+  S5c  make lint                     exit 0, 0.7 s, its four lines clean (steps/S5c.txt; lint_s)
+  S6   bin/laug version -json        commit f860d06, go1.26.0, server_tag 1.31.0, Omes f0de206 (steps/S6.txt)
+  S7   git status --porcelain        clean; the clone's owner the box user (steps/S7.txt)
+Shows: the tree builds and passes make test on a fresh lab clone: 89.2 + 256.7 + 0.7 = 346.6 s by its three parts
+(computed), against boot 4's 316.9 s at 1188 checks (cells/results/2026-10-24-boot4.txt, S).
+Inside the two gates on cells, R1 ran the same harness: 1180 passed, 247.5 and 248.5 s (harness.json). It counts 7
+checks fewer. Inside a gate the runbooks section runs none of its 6 pages, and README's case checks that bin/laug is
+there in place of make build (load/testdata/harness-test.sh:3544-3546, :3620-3624; read in source). That those are
+the 7 is inference: 6 + 1.
+Does not show: make test whole; the batch timed its three parts.
+Stands beside: "make test alone took 307.3 s on boot 1" (lab host, docs/runbooks/7-lab-batch.md:12, :32, :37) and "In
+a fresh clone on the lab host, make test took 322.3 s" (lab host, README.md:31): 346.6 s here by its three parts. Not
+like for like: three commands, each timed.
+
+== H: the host, 04:11:54 to 04:11:55
+  H1  bin/laug host type -declare m8i.8xlarge -json
+                                     declared m8i.8xlarge, 32 vCPU, 123 GiB, passes true (steps/H1.txt)
+  H2  images                         8 named for 1.31.0, none absent, each id in readings.json, images_before
+                                     (steps/H2.txt)
+  H3  tools                          temporal 1.9.1 (Server 1.32.0, UI 2.54.1); jq-1.7; yq v4.54.1; perl 5.38.2
+                                     (steps/H3.txt)
+Does not show: the host's clock; no clock was read outside runbook 7's block.
+
+== R7: runbook 7 under laug runbook check -lab, first, while the clone was clean, 04:11:55 to 04:18:30
+  R7-pre    the clone's git status --porcelain: clean (steps/R7-pre.txt; r7_clone_before)
+  R7        bin/laug runbook check -lab docs/runbooks/7-lab-batch.md: exit 0 in 395.0 s (steps/R7.txt; runbook_R7)
+              laug · runbook check: docs/runbooks/7-lab-batch.md, 2 blocks: 2 to run; Ctrl-C stops it
+              ok       docs/runbooks/7-lab-batch.md:26  make build, 394.6 s
+              ok       docs/runbooks/7-lab-batch.md:68  bin/laug gate rejudge -all, 0.3 s
+              laug · runbook check: 2 of 2 blocks held
+  R7-after  clean (steps/R7-after.txt; r7_clone_after)
+The lab block (:26-35) ran make build, a bare bin/laug upstream, deps -lab, host type -declare m8i.8xlarge, host clock
+-for 60s, make test, version -json and git status --porcelain, under bash -e from the clone's root. It holds no
+expected lines, so it held to its exit, 0. The offline block (:68-70) ran rejudge -all over the clone's 156 committed
+runs, the two gates of R11g not yet made, and held to its expected lines (:72-76): "... 0 unexplained, 0 not judged".
+S's make build, upstream -url and deps -lab ran first in this clone, so the block's bare upstream found .upstream/omes
+there and fetched nothing (runbook_R7, its how; cmd/laug/upstream.go:80-104, read in source). A reader's fresh clone
+clones Omes from GitHub there.
+Shows: runbook 7's two blocks hold on the lab host under runbook check -lab, on a fresh clone, the clone clean before
+and after.
+Does not show: what each line of the lab block printed. runbook check prints a line a block and a block's own lines
+only under a failure (cmd/laug/doc.go:812-835, read in source), so make test's time inside the block is not in the
+pack: the 394.6 s holds the 60 s clock read (:31), make test and the rest, so make test took at most 334.6 s of it
+(computed: 394.6 less 60). A bare upstream that clones from GitHub.
+Replaces: "The needs=lab block has not yet run under bin/laug runbook check -lab" (no run,
+docs/runbooks/7-lab-batch.md:13-14), and runbook 7's in "The five marked blocks have not run under bin/laug runbook
+check -cell or -lab" (no run, docs/runbooks/1-offline.md:83-86): 2 of 2 blocks held under -lab on the lab host.
+
+== R1: runbook 1 under laug runbook check, 04:18:30 to 04:24:25
+  R1-pre    0 on 7700, 0 laug projects, no .last-lease.json and no cells/run/pool.pid in the clone (steps/R1-pre.txt)
+  R1        bin/laug runbook check docs/runbooks/1-offline.md: exit 0 in 354.4 s (steps/R1.txt; runbook_R1)
+              laug · runbook check: docs/runbooks/1-offline.md, 1 block: 1 to run; Ctrl-C stops it
+              ok       docs/runbooks/1-offline.md:15  make build; bin/laug deps, 354.3 s
+              laug · runbook check: 1 of 1 blocks held
+  R1-tidy   0 on 7700, 0 laug projects, 0 laugd, 0 pool serve, 0 cellstat, 0 dev servers, 0 firecracker; nothing
+            listening (batch-log.txt)
+The block (:15-24) is README's offline block, 8 lines: the build and deps, a pool of fake cells on 7700, a lease, the
+pool's status and the release, the pool stopped, the thresholds of 1.32.1, a fake gate, the rejudge of
+g20261018-092540 and make test. It ran under bash -e from the clone's root and holds no expected lines, so it held to
+its exit, 0. At T3-pre, after the dev server and the stack had started, the clone's tracked files were unchanged and
+nothing stood outside gate/results (steps/T3-pre.txt).
+Shows: runbook 1 runs under runbook check on a fresh lab clone, as the page says it does
+(docs/runbooks/1-offline.md:13), the block ok in 354.3 s, the call exit 0 in 354.4 s.
+Does not show: each line's output or time, as in R7; make test's time inside it.
+Stands beside: boot 4's P, the same block with && lists in place of ; under plain bash, exit 0 in 339.0 s (lab host,
+cells/results/2026-10-24-boot4.txt, P): 354.3 s here under bash -e. Replaces nothing: no line in the tree says runbook
+1 has run under runbook check, or that it has not.
+
+== T: the dev server, 04:24:25 to 04:24:27
+bin/laug orchestrator server: "Gate 6's dev server on 127.0.0.1:7400, HTTP 7401, metrics 7402, UI 8400, its state in
+orchestrator/run/dev.db", its health call answering 2.1 s after the start (steps/T0a1.txt; orch_server). It served
+SAN2 and SAN10, and stopped with the workers at 04:35:03: 0 dev servers, nothing listening (batch-log.txt, X-end).
+
+== SAN2: stop 19's traces, a traced fake workflow gate whose worker is KILLed 30 s into the wave, 04:24:27 to 04:29:10
+  T1         bin/laug obs up -dir <out>/obs: exit 0 in 135.6 s. Each release fetched, its size and sha256 the line of
+             obs/versions.txt it names, :12 to :15. Six parts up on 127.0.0.1: prometheus 7730, jaeger 7760 to 7763,
+             the collector 7751 to 7753, cellstat 7710, follow 7720, grafana 7740; each answered 0.2 to 0.4 s after its
+             start, grafana 4.6 s; the store settled 120.5 s after ready (steps/T1.txt; obs_up)
+  T1-status  bin/laug obs status -json: exit 0 in 0.7 s (steps.tsv); its files are not in the pack (What the pack
+             lacks)
+  T2         bin/laug orchestrator worker -otlp 127.0.0.1:7751: laug-worker@f860d06 polls laug-gate-a6913142, "traces to
+             127.0.0.1:7751 (OTLP over HTTP, service laug-worker)", listed as a poller 0.0 s after (steps/T2.txt,
+             T2-c.txt)
+  T3         env FAKE_GATE_ITEM_S=120 bin/laug gate run 1.31.0 -fake -workflow -otlp 127.0.0.1:7751: g20261027-042644.
+             The wave at 04:26:57.042; KILL to the worker's group at 04:27:27.069, wave + 30.03 s; a new traced worker
+             started at 04:27:57.105, logged "Started Worker" at 04:27:57.187 and "replayed 1 open gate(s) on
+             laug-gate-a6913142 on this build: gate-g20261027-042644" (steps/T3-worker.txt; trace_san2 .wave_at,
+             .killed_at, .restart_t0; times computed from the Unix seconds). One "progress: no answer (context deadline
+             exceeded)" between. The items exit 0 at 04:28:57; ADVANCE, exit 0 in 133.3 s, S1 byte for byte (8058
+             bytes, sha256 03c672fbbf30), rejudge identical (steps/T3.txt)
+  T3-find    bin/laug obs find: exit 0 in 0.2 s; the board, the trace in Grafana's Explore, Jaeger's own search for
+             service laug-worker and tag temporalWorkflowID gate-g20261027-042644, and the store line "0 of 3
+             federated" (steps/T3-find.txt), the line boot 4's three traced fake gates got too
+             (cells/results/2026-10-24-boot4/steps/F11-T1-find.txt to F11-T3-find.txt, :6)
+  T3-trace   10 s for the exporter, then GET /api/v3/traces for service laug-worker and that workflow id: try 1, HTTP
+             200, 35307 bytes, 73 spans (steps/T3-trace.txt; extra/san2-g20261027-042644-trace.json)
+  T4         the traced worker stopped (INT); bin/laug obs purge -remove-state: 9064 files, 1334.1 MiB on disk; "left:
+             0 processes, 0 ports, 0 files", exit 0 in 0.9 s (steps/T4.txt)
+The answer, counted (trace_san2 .trace, and computed again from the answer: a span of service laug-worker that ended
+by the KILL is the killed worker's, one that ended from the new worker's start on is the new one's; a span whose
+parent is in no span of the answer is an orphan):
+  span                      killed worker  new worker              laug-gate
+  StartWorkflow:Gate                                               1, the root
+  RunWorkflow:Gate          0              34, 33 with no child
+  StartActivity:Step        13             3
+  StartActivity:AwaitItem   3              0
+  RunActivity:Step          12             4
+  RunActivity:AwaitItem     0              3
+  orphans                   16             0                       0
+  73 spans: 28 of the killed worker, 44 of the new one, 1 of the starter; none ended between the KILL and the restart
+The killed worker's 28 spans all ended by the KILL, the last 30.1 s before it (computed). None is a RunWorkflow span.
+Its 12 RunActivity:Step spans are children of its own StartActivity spans, and those 16 are the answer's 16 orphans:
+all 16 name one parent span id, that worker's RunWorkflow span, which no span of the answer holds. Jaeger marks each
+of the 16 itself: "parent span ID=<id> is not in the trace; skipping clock skew adjustment" (@jaeger@warnings). The
+new worker's 34 RunWorkflow spans all start at 04:26:44, the workflow's start, and end from 04:27:57 to 04:28:58,
+2.000 s apart at the median (computed). One has children, the 3 StartActivity:Step spans of judge, post and release;
+33 have none. Its 4 RunActivity spans of wave, await-incumbent, await-steady and await-pl are children of the killed
+worker's StartActivity spans; its 3 of judge, post and release, of its own (computed, by temporalActivityID). The
+history: wave and the three awaits started on attempt 2, the 15 other activities on attempt 1
+(extra/san2-attempts.json, 19 activities).
+Shows: the dev host's shape on the lab host. The workflow ran once and the new worker made 34 RunWorkflow spans of it.
+A KILLed worker exported no RunWorkflow span, so its StartActivity spans have no parent in the store, while the
+history held every step's result and the verdict came out byte for byte.
+Does not show: which RunWorkflow span answered which query: the spans' attributes are temporalWorkflowID,
+temporalRunID, temporalActivityID on activity spans, and Jaeger's warnings; no query. That the 2.000 s spacing is the
+starter's progress query every 2 s is inference (cells/results/2026-10-17-obs-offline.txt:1562-1564 names it so).
+Replaces: "The traces were seen on the dev host, ... Boot 4 traced 3 gates on the lab host, but its reads of Jaeger came
+back empty, so no lab span is on record" (dev host, docs/LEARNING.md:1003-1005): 73 spans on the lab host, HTTP 200 on
+the first try. "RunWorkflow:Gate 0 of the first worker ... 33 of the second worker ... 31 with no child", "orphans 16:
+the first worker's 16 StartActivity spans" (dev host, cells/results/2026-10-17-obs-offline.txt:1560-1573): 0 of the
+killed worker; 34 of the new one, 33 with no child; 16 orphans, the killed worker's 16 StartActivity spans. Not like for
+like on "no child": the dev host's 31 leaves out the span of the starter's last query after the gate closed (:1566),
+which by this answer's rule would make 32 (inference). "A RunWorkflow span is one replay of the workflow, not one run
+of it ... And a killed worker exported no parent span, while the history still held every step's result" (dev host,
+docs/LEARNING.md:993-995): on the lab host the workflow ran once and the new worker made 34 RunWorkflow spans of it,
+and the killed worker exported no parent span while the history held every step's result, above. That each span is
+one progress query's replay stays inference (Does not show). Boot 4's "Replaces nothing ... this pack has no trace to
+set beside it" (lab host, cells/results/2026-10-24-boot4.txt:578-579): this answer.
+
+== SAN10: stop 16's canceled-context heartbeat, four canceled fake workflow gates, 04:29:10 to 04:35:03
+The runs. Each: env FAKE_GATE_ITEM_S=120 [FAKE_GATE_STUCK=pl] bin/laug gate run 1.31.0 -fake -workflow, from its
+clone, on that clone's own worker and queue; at the wave mark + 30 s, bin/laug gate cancel <id>: "cancel requested for
+workflow gate-<id>", exit 0 (steps/X<k>-cancel.txt). FAKE_GATE_STUCK=pl makes pl ignore TERM, so only the watchdog's
+KILL stops it, kill_grace_s 30 s after TERM (load/testdata/gate/fake-item.sh:17, :56; gate/plan.yaml:26). Then
+temporal workflow show into a scratch directory outside the pack, and a projection of its events, without identities
+or task queues, into extra/san10-<run>-events.json.
+  X0         the tree's worker: laug-worker@f860d06 polls laug-gate-a6913142, listed 0.0 s after (steps/X0.txt,
+             X0-c.txt)
+  X2-clone   internal/orchestrator/steps.go, Step's "hctx := context.WithoutCancel(ctx)" made "hctx := ctx"; numstat
+             "1 1"; committed on the box as 1bd82e7 (steps/X2-clone.txt)
+  X3c-clone  runStep's "case <-ctx.Done():" made "case <-context.WithoutCancel(ctx).Done():", a channel that never
+             closes, so Step waits for its step.sh through a cancel and beats every 2 s; numstat "1 1"; d4dd241
+             (steps/X3c-clone.txt)
+  X3-clone   both edits; numstat "2 2"; b66692c (steps/X3-clone.txt)
+  each       make build exit 0 in 2.0, 2.0 and 1.9 s; its own worker, laug-worker@1bd82e7, @d4dd241 and @b66692c,
+             each listed 0.0 s after (steps/X2-build.txt, X3c-build.txt, X3-build.txt, their -worker and -c files)
+Each run's events, in seconds from its WORKFLOW_EXECUTION_CANCEL_REQUESTED event (extra/san10-<run>-events.json),
+and its timeline's marks against the same time (extra/san10-<run>-<id>-timeline.jsonl; every offset computed):
+                                X1, control       X2, hctx          X3c, wait         X3, waitctx
+  build                         f860d06, the tree 1bd82e7           d4dd241           b66692c
+  Step beats on                 WithoutCancel     its own context   WithoutCancel     its own context
+  runStep on a cancel           returns           returns           waits             waits
+  stuck item                    pl                pl                none              none
+  gate                          g20261027-042911  g20261027-043030  g20261027-043148  g20261027-043406
+  the cancel request, UTC       04:29:53.659      04:31:12.476      04:32:31.283      04:34:48.958
+  4 activity cancel requests    +0.044            +0.019            +0.022            +0.031
+  the awaits CANCELED           3, +0.120 to .200 3, +0.094 to .131 3, +0.107 to .143 3, +0.112 to .194
+  the wave's activity           CANCELED +0.180   CANCELED +0.122   COMPLETED +90.220 TIMED_OUT +10.136
+  stop-wave scheduled, done     +0.242, +31.276   +0.167, +31.201   not run           +10.185, +11.222
+  the watchdog's TERM           +0.313            +0.320            none              +10.446
+  the items ended               +0.828 and +0.840 +0.835 and +0.847 +90.166 to 90.190 +10.963 to 10.988
+  pl's KILL, pl ended           +30.555, +31.070  +30.608, +31.124  no KILL           no KILL
+  WORKFLOW_EXECUTION_COMPLETED  +31.881           +31.805           +90.825           +11.883
+  events                        131               131               128               137
+  verdict, class                BLOCK, invalid    BLOCK, invalid    BLOCK, invalid    BLOCK, invalid
+  stopped_at                    wave              wave              wave end          wave
+  the starter                   exit 1, 74.4 s    exit 1, 74.3 s    exit 1, 133.3 s   exit 1, 54.6 s
+  X3's time-out: event 109, ACTIVITY_TASK_TIMED_OUT, TIMEOUT_TYPE_HEARTBEAT, "activity Heartbeat timeout"; the readings
+  cancel_control, cancel_hctx, cancel_wait and cancel_waitctx count from the batch's own request time, 0.019 to
+  0.021 s before the event, so the end line's 31.9, 31.826, 90.845 and 11.903 s are these closes plus that gap
+In each the items' exits are in the step file: X1 and X2, incumbent and steady 143 after TERM, pl 137 after KILL; X3c,
+all three 0; X3, all three 143 after TERM (steps/X1.txt to X3.txt). In each the stop path's stopped, post-stopped and
+release-stopped completed, and the starter printed "S1: left out: verdict.json is the trap verdict", BLOCK. The
+readings' posted is false in all four: the rule is a timeline step whose name starts "post", and these timelines hold
+none; released is true.
+The workers' heartbeats (steps/X0.txt, X2-worker.txt, X3c-worker.txt, X3-worker.txt):
+- X1 and X2: one "RecordActivityHeartbeat with error" for each of the 4 activities, at 04:29:53.767 to .838 and at
+  04:31:12.565 to .598, each followed by "Activity error." and "context canceled": each activity returned at its first
+  beat after the request.
+- X3c: the wave's beats every 2 s from 04:32:31.412 to 04:33:59.977, 45 lines, each "RecordActivityHeartbeat with
+  error ... Error=canceled": the server's answer to a beat it took (inference); no time-out.
+- X3: the wave's first beat after the request at 04:34:49.102, Error=canceled (:9); the next five, 04:34:51.103 to
+  04:34:59.106, Error="context canceled" (:12-16). The server timed it out at 04:34:59.093, 9.991 s after the first
+  answer was logged (computed). At 04:34:59.958 the step ended "exit 143: signal TERM", and the worker's completion
+  was refused: "invalid activityID or activity already timed out or invoking workflow is completed" (:17-18).
+Shows: X3 against X3c is stop 16's sentence on the lab host. With Step waiting through the cancel, a beat on the
+activity's own context timed the activity out 10.136 s after the request, while the items it waited for still ran;
+the stop path then TERMed them, and they ended 0.8 s after the time-out. On the WithoutCancel context the same Step beat
+on for 90 s and completed when its items ended, with no time-out; the stop path found no live step to stop. X1 and X2:
+each activity returned at its first beat after the request, so no beat went out on a canceled context, and X2 matches
+X1 to 0.08 s. In both the stop path's stop-wave ran 31.0 s, the stuck pl's 30 s of kill grace inside, three times the
+10 s heartbeat timeout, on its disconnected context, with no time-out (computed: done less scheduled).
+Does not show: whether the five later beats of X3 left the worker. In the SDK's code a beat on a canceled context
+fails and opens no window (verify: SDK v1.49.0 internal/internal_task_handlers.go:2186-2236, :2276-2280); the log says
+"context canceled" for each. Whether the trap verdict was handed on: post-stopped completed in each history, and what
+it wrote for a fake gate is not in the pack.
+Replaces: "If it heartbeats on the canceled context instead, it times out before its cleanup ends" (dev host,
+docs/LEARNING.md:850) and "I saw the timeout on a canceled context once, in a scratch program on the dev host"
+(dev host, docs/LEARNING.md:873-874; cells/results/2026-10-16-gate6-step3.txt:110-113): on the lab host's dev server,
+X3, ACTIVITY_TASK_TIMED_OUT of type heartbeat 10.136 s after the cancel request, the items still running; X3c, its
+control, none. The figure's dashed box, "the server times the activity out 10 s later", "seen once, on the dev host"
+(dev host, docs/img/src/cancel-path.txt:20-22, :43-46; docs/LEARNING.md:852-855): 10.136 s, on the lab host.
+"the server would time the activity out 10 s later (seen in a scratch program: case C ...)" (dev host,
+internal/orchestrator/steps.go:456-458): X3 here.
+Stands beside: "The four activity cancels went out 0.046 s after the request either way ... the workflows completed at
+1.64 and 1.69 s" (lab host, docs/LEARNING.md:869-872, boot 4's F5 and F7): +0.019 to +0.044 s here; X1 and X2 closed
+at +31.881 and +31.805 s, the stuck pl's kill grace inside. Not like for like: boot 4's fake items took TERM.
+
+== A4: stop 4's drain timing, a warm-up raun, then kill-history three times, 04:35:03 to 05:00:49
+  A4-pre       as R1-pre: nothing left (steps/A4-pre.txt)
+  A4-pool      bin/laug pool serve -backend compose -min 0 -max 1: "listening on 127.0.0.1:7700 (min 0, max 1, quota 2,
+               max lease 2h0m0s, backend compose, server 1.31.0, visibility postgres, on 127.0.0.1)"; compose's lines
+               for the 4 cells it built, one a raun (steps/A4-pool.txt)
+  A4-warmup    bin/laug raun persistence-latency -run-id lab6-a4-warmup: ADVANCE, exit 0 in 403.8 s, the boot's first
+               raun; never counted, never cited (faults/results/raun-lab6-a4-warmup.json)
+  A4-1 to -3   bin/laug raun kill-history -run-id lab6-kill-history-<n>, each on a cold lease, then A4-<n>-bins: every
+               failed iteration in the raun's Omes log, by lost-work.sh's own ts() and failed_iteration(), less
+               .remove_at, floored to the second (steps/A4-<n>-bins.txt; extra/a4-kill-history-<n>-bins.json)
+  A4-pool-end  bin/laug pool down -remove-cells: exit 0 in 0.2 s; left 0 containers, 0 volumes, 0 networks, 0
+               per-cell dirs (steps/A4-pool-end.txt)
+  run  inject    landed  hold  shards  ttr  failed b/d/dr/a  drain s  sweep  s
+  1    04:43:34  5       120   0.5     5    0/545/50/0        35       3625   379.5
+  2    04:49:53  6       120   0.5     10   0/545/51/0        40       3673   383.8
+  3    04:56:17  5       121   0.6     5    0/551/44/0        35       3526   378.9
+  faults/results/raun-lab6-kill-history-<n>.json: hold .remove_at - .inject_at; shards .history_shards_ready_s;
+  ttr .time_to_recover_s; failed .iterations_failed; drain .after_start - .remove_at; sweep .sweep.Completed; s
+  steps.tsv. 3 of 3 ADVANCE; 0 workflows completed in each during window (.during.workflows_completed).
+The bins (extra/a4-kill-history-<n>-bins.json, .by_second_from_remove_at; 595, 596 and 595 failed iterations in the
+logs, each .iterations_failed.total, 0 unplaced):
+  In the hold, the failures come in bursts 10 s apart, 49 in each, over 3 or 4 seconds: run 1 at -110 to -108 s (12,
+  20, 17), -100 to -98, and so on to -10 to -8; runs 2 and 3 the same at their own offsets. From -56 s on, one more
+  failure falls midway between two bursts, 6 in each hold. Run 1: 11 bursts and 6 singles, 545 (computed).
+  From the restart on (.failed_from_remove_at, each the window's .iterations_failed.drain):
+    run 1  +0 s 12, +1 s 20, +2 s 17, +5 s 1                     50; the last +5 s
+    run 2  +0 s 1, +1 s 20, +2 s 20, +3 s 8, +5 s 1, +11 s 1     51; the last +11 s
+    run 3  +0 s 20, +1 s 20, +2 s 3, +4 s 1                      44; its burst began at -1 s with 6, in the hold
+  So 49, 49 and 43 of them fell in the first 4 seconds after the restart, the next burst of the hold's cycle; none from
+  +12 s to the after window's start at +35 to +40 s; 0 in each after window.
+Shows: on the lab host every start that failed after the restart failed within 11 s of it, and 43 to 49 of them in its
+first 4 seconds. The bursts are the hold's: 49 every 10 s, with 50 starts in flight at most (-max-concurrent 50,
+cmd/laug/doc.go:236, :246), fits starts that each wait out a 10 s client deadline (the m8i.2xlarge's load log,
+cells/results/2026-10-13-ec2.txt:74-75); that's an inference. The bins count the log's lines by second and keep no
+message.
+Does not show: why the drains here hold 44 to 51 where 2026-10-17's held 63 to 97; those logs are not in the tree.
+Replaces: "Restarted, it owns all 512 shards again half a second later, and laug's recovery signal, polled every 5
+seconds, reads clear 5 to 6 seconds after the restart" (lab host, docs/LEARNING.md:213-214, :233): 0.5, 0.5 and 0.6 s;
+5, 10 and 5 s. "Clients see more: 545 starts failed while history was down, and 63 to 97 more in the 35 to 36
+seconds after the restart, as requests sent during the outage ran into their own deadlines; that's an inference" (lab
+host, docs/LEARNING.md:214-216, and :231-232): 545 to 551 during; 44 to 51 more in drains of 35 to 40 s, every one by
++11 s and 43 to 49 in the first 4 s; their timing now on record, their cause still inference. "the windows after the
+restart hold 66, 63 and 97" (lab host, docs/LEARNING.md:218-219; docs/img/kill-history.svg, drawn from
+faults/results/raun-lab-kill-history-{1,2,3}.json, internal/report/lessondata.go:21-23): 50, 51 and 44. "The
+October 17 runs above count the 63 to 97 but not their cause, so there the deadlines are an inference" (lab host,
+docs/LEARNING.md:236-238): these runs time each failure; the cause is still inference.
+Stands beside: "Clients feel each restart for about 10 to 15 s (kill-history)" (faults/catalog.yaml:303): the last
+failure after the restart at +5, +11 and +4 s here. "Compose: 3 of 3 ADVANCE, landed 5 to 6 s, recovered 5 to 6 s,
+shards ready 0.5 s after the restart, failed 545 during and 0 after" (lab host, faults/README.md:46, read from
+raun-lab-kill-history-{1,2,3}.json): 3 of 3 ADVANCE, landed 5, 6 and 5 s, recovered 5, 10 and 5 s, shards ready 0.5,
+0.5 and 0.6 s, failed 545, 545 and 551 during and 0 after (the table above). "kill-history on the lab host: shards
+ready 0.5 s after the restart in 3 of 3" (lab host, faults/catalog.yaml:199, the serverfi rows' comment): 0.5, 0.5
+and 0.6 s.
+
+== R11c: runbooks 2, 3 and 6 under laug runbook check -cell, a call a page, 05:00:49 to 05:40:34
+Before each page R11c-<k>-pre (as R1-pre), after it R11c-<k>-tidy: nothing left each time (steps/R11c-<k>-pre.txt;
+batch-log.txt).
+  page  call's s  blocks                held    the cell block, s  it wrote
+  2     392.5     3 offline, 1 cell     4 of 4  :71, 392.4         load/results/rb2-20261027-050108.json
+  3     401.2     3 offline, 1 cell     4 of 4  :60, 401.1         faults/results/raun-20261027-050724.json
+  6     1590.0    3 offline, 1 cell     4 of 4  :85, 1590.0        faults/results/raun-20261027-051406.json, -052045,
+                                                                   -052716 and -053355
+  steps/R11c-2.txt, R11c-3.txt, R11c-6.txt (runbook_R11c_2, _3, _6); the offline blocks 0.0 to 0.1 s each; the files,
+  R11c-files (git ls-files --others after the three less before: 6; runbook_cell_files)
+Runbook 2's cell block: a pool of three warm cells, a lease, a 5 min load, its verdict, the release and the pool down,
+held to its expected lines (:81-94): the pool's listening line, the lease's, "VERDICT: ADVANCE", the release's,
+"stopped laug pool serve, pid ..." and "left: 0 containers, 0 volumes, 0 networks, 0 per-cell dirs". The load,
+rb2-20261027-050108: 05:01:08 to 05:06:10, server 1.31.0, 20/s for 5m, Omes exit 0, 0 failed iterations
+(extra/rb2-20261027-050108.json: .start, .end, .server_tag, .rate, .duration, .omes_exit, .iterations_failed).
+Runbook 3's: a -min 0 -max 1 pool, one persistence-latency raun with no -run-id, the pool down, held to :66-81. Its
+raun, raun-20261027-050724: ADVANCE, landed 10 s, recovered 25 s, failed 0/547/4/0, sweep 4098.
+Runbook 6's: a -min 0 pool, a dry run, four persistence-latency rauns and the pool down, held to its exit alone. The
+four: ADVANCE each; landed 10, 5, 5 and 10 s; recovered 25, 20, 25 and 25 s; failed during 539, 546, 536 and 537, in
+the drain 4, 4, 6 and 6, after 0 (the 4 raun JSONs; runbook_cell_files .rauns).
+Shows: the three pages' needs=cell blocks hold on the lab host under runbook check -cell, for the first time; runbook
+2's and 3's expected lines, taken from boot 1's and boot 2's step files, match what boot 6 printed.
+Does not show: the lines each block printed, as in R7; a raun's own seconds: the cell blocks' times hold the pool's
+start and down.
+Not as the pages say: "The run's files land in load/results/: first <run id>.json, then <run id>.verdict.json"
+(docs/runbooks/2-lease-and-load.md:97-98), and "<id>.verdict.json what laug verdict judged, ADVANCE or BLOCK"
+(load/results/README.md:5). The block wrote load/results/rb2-20261027-050108.json and no verdict file
+(R11c-files.txt; clone-status.txt; runbook_cell_files .rb2_verdicts []). bin/laug verdict prints its verdict and writes
+no file; with -json it prints the JSON on one line (cmd/laug/doc.go:223-232, load/verdict.sh:26-32; read in source).
+Replaces: "This block needs Docker. It has not yet run under bin/laug runbook check -cell; its expected lines are the
+ones the lab host printed in boot 1" (no run, docs/runbooks/2-lease-and-load.md:64-65), the same of boot 2 (no run,
+docs/runbooks/3-raun.md:52-53), "it has not yet run under bin/laug runbook check -cell" (no run,
+docs/runbooks/6-add-a-fault.md:8-9), and the needs=cell blocks of runbooks 2, 3 and 6 in "The five marked blocks have
+not run under bin/laug runbook check -cell or -lab" (no run, docs/runbooks/1-offline.md:83-86): 4 of 4 blocks held on
+each page, the expected lines matched.
+Stands beside: "The raun took 395.3 s there" (lab host, docs/runbooks/3-raun.md:56-57, boot 2): the block 401.1 s here,
+the pool's start and down inside it. "four rauns ... Runbook 3's raun took 395.3 s on one" (lab host,
+docs/runbooks/6-add-a-fault.md:10): the block 1590.0 s, 397.5 s a raun with the pool (computed).
+
+== R11g: the warm-up gate, then runbook 4 under laug runbook check -lab, 05:40:34 to 06:03:38
+  R11g-aside    the 10 untracked result files A4 and R11c wrote (4 raun JSONs; 5 raun JSONs and rb2's load) moved to
+                <out>/aside at their paths, so W1's and R4's gates read a clean tree (steps/R11g-aside.txt)
+  W1-pre        tracked files unchanged and nothing outside gate/results in the clone; 0 on 7700, 0 laug projects
+                (steps/W1-pre.txt; R4-pre.txt the same before R4)
+  W1            bin/laug gate run 1.31.0, the box's first gate on cells since its start, never counted: ADVANCE, exit 0
+                in 685.3 s (steps/W1.txt; gate_W1)
+  R4            bin/laug runbook check -lab docs/runbooks/4-gate.md: exit 0 in 698.0 s (steps/R4.txt; runbook_R4)
+                  ok       docs/runbooks/4-gate.md:20  bin/laug thresholds -server-tag 1.32.1, 0.1 s
+                  ok       docs/runbooks/4-gate.md:41  bin/laug gate run 1.31.0 -fake, 11.7 s
+                  ok       docs/runbooks/4-gate.md:64  bin/laug gate open g20261018-092540, 0.0 s
+                  ok       docs/runbooks/4-gate.md:84  bin/laug host type -declare m8i.8xlarge, 686.1 s
+                  laug · runbook check: 4 of 4 blocks held
+                its lab block (:84-89): host type -declare, upstream, deps -lab and the A/A gate, g20261027-055212
+                (gate_R4_gate)
+  R11g-restore  the 10 files back at their paths; 0 kept aside (steps/R11g-restore.txt)
+The two gates on cells (readings.json gate_W1, gate_R4_gate; each run's verdict.json, gate.json and harness.json):
+  step  gate id           verdict  handed  done   harness  Omes  lease  wave   harness tally
+  W1    g20261027-054034  ADVANCE  622.8   685.2  247.5    1.3   16.8   362.4  1180 passed, 0 failed
+  R4    g20261027-055212  ADVANCE  623.2   685.9  248.5    1.1   16.8   362.4  1180 passed, 0 failed
+  handed: timeline.jsonl's post less its start; done its done less its start; harness harness.json's .seconds; Omes
+  the laugd mark less omes_build; lease the first lease's seconds; wave "wave end" less "wave"; all in s
+In both: R1 to R7 pass, host quiet, tree_dirty false, laug_commit f860d06, 3 items ADVANCE; the judge v3 by its
+internal/judge entry, sources af315e7661ab, laug's own (gate.json; bin/laug gate rejudge <id> -shell on this tree). R7
+compared steady with the incumbent, each d inside its tolerance T from the 20 calibration gates (verdict.json
+.comparison.rows, judged rows only):
+  reading                         W1 d       R4 d       T
+  workflow task s2s p99 ms        -0.433     -0.275     1.02
+  persistence p99 ms              -0.012     -0.025     0.35
+  activity s2s share over 10 ms   -0.001201  -0.002406  0.0072
+  frontend share over 10 ms       -0.000168  +0.000843  0.0032
+  end-to-end share over 50 ms     -0.001745  -0.00135   0.0064
+  the largest |d| a share of T: W1's workflow task row, 0.42; R4's activity row, 0.33 (computed)
+pl in each: landed 10 s after the inject, recovered 31 and 30 s after removal, 539 failed iterations during, 20 and 25
+in the drain, 0 after, sweeps 4196 and 4198 Completed (pl/<id>-pl.json).
+bin/laug gate rejudge -all on this tree with the 2 added: "158 runs: 156 identical, 0 known, 2 re-rendered, 0
+unexplained, 0 not judged", each of the 2 identical; before them, "156 runs: 154 identical, 0 known, 2 re-rendered, 0
+unexplained, 0 not judged".
+W1, the warm-up. The box's first gate since its start ADVANCEd, but it was not the box's first work on cells: A4's 4
+rauns, runbook 2's lease and load, and runbooks 3 and 6's 5 rauns ran on compose cells before it. Its Omes build, 1.3
+s, and its first lease, 16.8 s, are a later gate's figures (batch-log.txt, W1: a box's first gate 5.1 to 5.3 s and
+23.4 to 24.5 s; after it 1.0 to 2.2 s and 15.8 to 19.1 s). That the earlier rauns warmed the box as a warm-up gate
+would is inference.
+Shows: runbook 4's lab block holds under -lab on the lab host, its A/A gate ADVANCE, exit 0.
+Does not show: whether a first gate with no cell work before it would have BLOCKed; this boot ran none.
+Replaces: "This block needs the lab host. It has not yet run under bin/laug runbook check -lab, and it holds no
+expected lines" (no run, docs/runbooks/4-gate.md:79), and runbook 4's in "The five marked blocks have not run ..." (no
+run, docs/runbooks/1-offline.md:83-86): 4 of 4 blocks held under -lab, its gate ADVANCE. "The host page counts
+committed gates only: 3 of its 5 boot epochs open on a BLOCK of class invalid ... and 2 on an ADVANCE" (lab host,
+<...>): with W1 and runbook 4's gate committed, the m8i.8xlarge's page holds 6 boot
+epochs, 3 opening on a BLOCK of class invalid and 3 on an ADVANCE, the sixth on W1 (computed from each gate's
+verdict.json .t0, wall less mono, floored, as internal/report/records.go:352-357 groups them).
+Stands beside: the warm-up rule, "With boot 4, a box's first gate BLOCKed class invalid in 4 of 5 boots" (lab host,
+gate/README.md:124-130), and the same count on STATUS.md:18-20, docs/DESIGN.md:145,
+<...>: W1 ADVANCEd, after cell work. Not
+like for like, so this commit changes none of those counts. It adds W1 to gate/sets/warm-up-m8i.8xlarge.txt: W1 is a
+batch's first gate since the box's start (gate/README.md:124), gate.json cannot mark it (the set's header), and the
+agents find a warm-up by that list (<...>). The set
+lists 4 gates now, and gate/README.md:130 says so. "in 3 of 3 boots the first gate built Omes in 5.1 to 5.3 s, against
+1.0 to 2.2 s in the gates after it, and waited 23.4 to 24.5 s for its first lease, against 15.8 to 18.2 s" (lab host,
+<...>): W1, a first gate after cell work, read 1.3 s and 16.8 s, a later gate's
+figures (batch-log.txt:118). "4 BLOCKs in 61 A/A gates" (lab host, README.md:48; the same count on
+<...>): W1 and runbook 4's gate are 2 A/A gates more, both ADVANCE, so
+4 BLOCKs in 63 (computed).
+
+== AUD: stop 10's serverfi rows on the lab host, a warm-up raun, then 9 rows 3 times each, 06:03:38 to 09:09:04
+  AUD-pre       as R1-pre: nothing left (steps/AUD-pre.txt)
+  AUD-pool      bin/laug pool serve -backend compose -min 0 -max 1, as A4's; compose's lines for the 28 cells it
+                built, one a raun (steps/AUD-pool.txt)
+  AUD-warmup    bin/laug raun persistence-latency -run-id lab6-warmup: ADVANCE, exit 0 in 403.3 s; never counted,
+                never cited (faults/results/raun-lab6-warmup.json)
+  the 27        bin/laug raun <row> -run-id lab6-<row>-<n>, 2026-10-14's order, each row three in a row on cold
+                leases: 371.3 to 403.3 s a raun, 397.1 on average (steps.tsv); the injects 396.96 s apart on average
+                (computed from .inject_at)
+  AUD-pool-end  bin/laug pool down -remove-cells: exit 0 in 0.2 s; left 0 containers, 0 volumes, 0 networks, 0
+                per-cell dirs (steps/AUD-pool-end.txt)
+  run                              inject    landed  ttr  failed d/dr/a  closed   UpdateShard  sweep
+  history-recreate-1               06:12:08  8       3    0/0/0          0        521.31       6011
+  history-recreate-2               06:18:20  8       1    0/0/0          0        546.13       5978
+  history-recreate-3               06:24:35  5       3    0/0/0          0        535.27       6045
+  wf-update-ownership-lost-1       06:30:53  12      28   0/0/0          117.26   712.80       6538
+  wf-update-ownership-lost-2       06:37:36  10      26   0/0/0          120.48   722.86       6518
+  wf-update-ownership-lost-3       06:44:12  13      28   0/0/0          116.63   724.39       6512
+  wf-update-deadline-1             06:50:54  11      28   0/0/0          0        651.92       6485
+  wf-update-deadline-2             06:57:36  12      28   0/0/0          0        675.00       6537
+  wf-update-deadline-3             07:04:19  13      23   0/0/0          0        639.96       6373
+  wf-update-timeout-1              07:10:49  13      28   0/0/0          0        679.45       6517
+  wf-update-timeout-2              07:17:31  13      28   0/0/0          0        655.25       6505
+  wf-update-timeout-3              07:24:11  13      28   0/0/0          0        679.45       6516
+  wf-update-execute-timeout-1      07:30:53  13      28   0/0/0          0        631.81       6508
+  wf-update-execute-timeout-2      07:37:34  13      27   0/0/0          0        631.81       6523
+  wf-update-execute-timeout-3      07:44:16  11      27   0/0/0          0        642.58       6524
+  wf-update-resource-exhausted-1   07:50:52  18      28   0/0/0          0        522.24       6512
+  wf-update-resource-exhausted-2   07:57:34  16      28   0/0/0          0        532.48       6514
+  wf-update-resource-exhausted-3   08:04:14  16      27   0/0/0          0        532.48       6511
+  wf-update-unavailable-1          08:10:55  12      26   0/0/0          0        528.69       6514
+  wf-update-unavailable-2          08:17:36  13      28   0/0/0          0        551.05       6521
+  wf-update-unavailable-3          08:24:14  13      28   0/0/0          0        548.91       6514
+  acquire-lost-1                   08:30:51  13      28   367/8/0        887.59   1799.64      5968
+  acquire-lost-2                   08:37:33  13      28   357/4/0        859.06   1750.72      6035
+  acquire-lost-3                   08:44:15  13      28   343/10/0       890.24   1822.21      6008
+  persistence-chaos-1              08:50:57  11      28   50/1/0         0        814.90       6259
+  persistence-chaos-2              08:57:39  11      23   51/0/0         0        833.59       6150
+  persistence-chaos-3              09:04:09  13      27   51/0/0         0        821.76       6232
+  faults/results/raun-lab6-<run>.json: inject .inject_at in UTC; landed .landed_at - .inject_at; ttr
+  .time_to_recover_s; failed .iterations_failed's during, drain and after, 0 before in all 27; closed
+  .readings.during.shard_contexts_closed and UpdateShard .readings.during.update_shard, each rounded to 0.01;
+  sweep .sweep.Completed. 27 of 27 ADVANCE, .reason empty in each; every one exit 0 (steps.tsv)
+By pile (computed from the table):
+  pile                               rows                               closed            UpdateShard
+  the control, no fault              history-recreate                   0                 521.31 to 546.13
+  another host owns the shard        wf-update-ownership-lost           116.63 to 120.48  712.80 to 724.39
+  it cannot know                     wf-update-deadline, -timeout,      0                 631.81 to 679.45
+                                     -execute-timeout
+  it did not happen                  wf-update-resource-exhausted       0                 522.24 to 532.48
+  retried by the persistence client  wf-update-unavailable              0                 528.69 to 551.05
+  shard acquisition, half the time   acquire-lost                       859.06 to 890.24  1750.72 to 1822.21
+  many methods at once               persistence-chaos                  0                 814.90 to 833.59
+Shows: on the m8i.8xlarge, 2026-10-14's three piles again. With 1% of UpdateWorkflowExecution failing, the 18 rauns
+of the six wf-update rows lost no start in any window. ShardOwnershipLost closed 116.63 to 120.48 shard contexts, 118.12
+on average (computed); the other 15 closed none. The three outcome-unknown rows renewed the shard: 631.81 to 679.45
+UpdateShard against the control's 521.31 to 546.13. ResourceExhausted read 522.24 to 532.48 and Unavailable 528.69 to
+551.05, and both closed none. Starts failed only under acquire-lost, 343 to 367 during and 4 to 10 in the drain, and
+persistence-chaos, 50 to 51 and 0 to 1; 0 after in all 27.
+Several values repeat to the hundredth: within boot 6, 679.45, 631.81 and 532.48, twice each; against 2026-10-14's
+faults/results/raun-fi-*.json, 521.31, 546.13, 631.81, 639.96, 655.25, 522.24 and 528.69. The reading takes few values
+over a window of a given length (inference).
+Does not show: which call failed with which error; the readings are counts over each window.
+Replaces: "On the lab host, an m8i.2xlarge (8 vCPU, 32 GiB), before its resize, with 1% of one write method failing,
+clients saw no failed starts, but each pile left its own trace: under ShardOwnershipLost, history closed its hold on a
+shard about 115 times, and under the others not once. Starts failed only when taking a shard failed half the time, or
+when many methods failed at once" (first lab host, an m8i.2xlarge, docs/LEARNING.md:526-529): on the lab host, an
+m8i.8xlarge, the same, 116.63 to 120.48 times, 118.12 on average. "At 1% on UpdateWorkflowExecution: 111 to 118 shard
+contexts closed under ShardOwnershipLost; none under Timeout, DeadlineExceeded or ExecuteAndTimeout, which renewed the
+shard instead (632 to 669 UpdateShard calls, against 521 to 551 with no fault); no shard effect under
+ResourceExhausted, or under Unavailable ..." (first lab host, docs/LEARNING.md:542-545): 116.63 to 120.48; none;
+631.81 to 679.45 against 521.31 to 546.13; none under either, 522.24 to 551.05. "Starts failed 338 to 368 times with
+shard acquisition failing half the time, and 37 to 55 times with many methods failing at once" (first lab host,
+docs/LEARNING.md:546-547): 343 to 367, and 50 to 51. "These ran on the lab host, an m8i.2xlarge (8 vCPU, 32 GiB),
+before its resize, on October 14. wf-update-timeout-3, 1 of the 27, BLOCKed before its fault: its cell was slow from
+the start" (first lab host, docs/LEARNING.md:548-549): 27 of 27 ADVANCE on the m8i.8xlarge, each .reason empty.
+"faults/results/raun-fi-*.json, 27 rauns" (first lab host, docs/LEARNING.md:552-553): faults/results/raun-lab6-*.json,
+the 27 above. The figure's panels, "on the first lab host, an m8i.2xlarge" (first lab host,
+docs/img/src/three-piles.txt:13-14, :45), read from faults/results/raun-fi-<row>-<n>.json
+(internal/report/lessonpanels.go:180-189, :203): the same readings are in raun-lab6-<row>-<n>.json. "serverfi rows,
+wf-update-ownership-lost to history-recreate, ran on the first lab host, an m8i.2xlarge (8 vCPU, 32 GiB), and on no
+lab host since" (first lab host, and no run since, faults/README.md:31-32): the 9 rows, 3 rauns each, on the lab host,
+an m8i.8xlarge, 27 of 27 ADVANCE.
+Stands beside: the nine serverfi rows of faults/README.md's table, "m8i.2xlarge: 3 of 3 ADVANCE, landed ..., recovered
+..." (first lab host, faults/README.md:52-60, read from raun-fi-<row>-{1,2,3}.json). Landed and recovered in s, least
+to most over each row's 3 rauns (computed with jq from both sets of raun JSONs; the m8i.2xlarge's match the table's):
+                                the m8i.8xlarge, here          the m8i.2xlarge, faults/README.md
+  row                           ADVANCE  landed    recovered    ADVANCE              landed    recovered
+  wf-update-ownership-lost      3 of 3   10 to 13  26 to 28     3 of 3               12 to 18  26 to 27
+  wf-update-deadline            3 of 3   11 to 13  23 to 28     3 of 3               10 to 13  28
+  wf-update-timeout             3 of 3   13        28           2 of 2, run 3 BLOCK  13 to 18  28
+  wf-update-execute-timeout     3 of 3   11 to 13  27 to 28     3 of 3               11 to 13  28
+  wf-update-resource-exhausted  3 of 3   16 to 18  27 to 28     3 of 3               12 to 18  27 to 28
+  wf-update-unavailable         3 of 3   12 to 13  26 to 28     3 of 3               12 to 13  25 to 28
+  acquire-lost                  3 of 3   13        28           3 of 3               13 to 18  23 to 28
+  persistence-chaos             3 of 3   11 to 13  23 to 28     3 of 3               12 to 13  27 to 28
+  history-recreate              3 of 3   5 to 8    1 to 3       3 of 3               7 to 8    2 to 3
+  Failed, there against here: 0 in the other seven rows, both; acquire-lost 338 to 368 during against 343 to 367,
+  persistence-chaos 37 to 55 against 50 to 51; 0 after in all, both. Shard contexts closed: ownership-lost 111 to 118
+  against 116.63 to 120.48; acquire-lost 799 to 886 against 859.06 to 890.24. The table's Caught by column is not
+  computed here.
+
+== The end line
+The batch's last line (batch-log.txt:187, 09:09:04):
+  batch ended: runbooks: 7 -lab 2 of 2 blocks held; 1 1 of 1 blocks held; 2 -cell 4 of 4 blocks held; 3 -cell 4 of 4
+  blocks held; 6 -cell 4 of 4 blocks held; 4 -lab 4 of 4 blocks held, its gate ADVANCE; warm-up W1 ADVANCE; gates on
+  cells 2; fake gates 5 (traced: HTTP 200, 73 spans, RunWorkflow new worker 34 (33 no child), killed worker 28 spans,
+  StartActivity orphans 16; cancel on the tree's build: WORKFLOW_EXECUTION_COMPLETED at 31.9 s, timed out 0, canceled
+  4, completed after the request 4, BLOCK; on Step's ctx: WORKFLOW_EXECUTION_COMPLETED at 31.826 s, timed out 0,
+  canceled 4, completed after the request 4, BLOCK; Step through the cancel: WORKFLOW_EXECUTION_COMPLETED at 90.845 s,
+  timed out 0, canceled 3, completed after the request 4, BLOCK; and on its ctx: WORKFLOW_EXECUTION_COMPLETED at
+  11.903 s, timed out 1, canceled 3, completed after the request 4, BLOCK); kill-history (warm-up ADVANCE) ADVANCE 3 of
+  3 (1: 50 failed from remove_at on, the last at +5 s, drain 35 s; 2: 51 failed from remove_at on, the last at +11 s,
+  drain 40 s; 3: 44 failed from remove_at on, the last at +4 s, drain 35 s); serverfi 27 of 27 (warm-up ADVANCE):
+  ADVANCE 27, BLOCK 0; harness failures 0; readings 66; skipped 0
+and before it: "cleanup: fake items still running after the stop paths: 0, each KILLed" and "end: on 7700 0, laug
+projects 0, laugd 0, pool serve 0, cellstat 0, dev servers 0, firecracker 0; listening of 7400 to 7402, 8400, 7700 to
+7799: none; cells left 0; 134 min left, up 303 min" (batch-log.txt:185-186).
+- "fake gates 5": T3, X1, X2, X3c and X3. "gates on cells 2": W1 and runbook 4's.
+- "completed after the request 4": the stop path's activities from the request on; in X3c the wave is the first of
+  the four, and stop-wave never ran (SAN10).
+- The close times count from the batch's own request time, 0.019 to 0.021 s before the history's event (SAN10).
+- 0 harness failures: no gate on cells or raun exited other than 0 or 1, met its cap or BLOCKed class harness.
+- steps.tsv: 99 commands, every one ok; X1, X2, X3c and X3 exit 1, the trap BLOCK a canceled gate gives, count ok.
+
+== The pages these numbers feed, by section
+Each number above sits with its "Replaces" or "Stands beside" line in its own section; this is the map.
+  docs/LEARNING.md, stop 4 (:213-238), its figure and internal/report/lessondata.go:21-23       A4
+  docs/LEARNING.md, stop 10 (:526-553), docs/img/src/three-piles.txt, lessonpanels.go:180-203  AUD
+  docs/LEARNING.md, stop 16 (:850-874), docs/img/src/cancel-path.txt, steps.go:454-458          SAN10
+  docs/LEARNING.md, stop 19 (:993-1005)                                                         SAN2
+  docs/runbooks/1-offline.md:83-86 and the pages' notes (2:64-65, 3:52-53, 4:79, 6:8-9, 7:13-14) R7, R11c, R11g
+  docs/runbooks/2-lease-and-load.md:97-98 and load/results/README.md:5, the verdict file        R11c
+  docs/runbooks/1-offline.md:13, README.md:31, docs/runbooks/7-lab-batch.md:12                  S, R1
+  gate/README.md:124-130 and gate/sets/warm-up-m8i.8xlarge.txt: W1 joins the set, 4 gates       R11g
+  STATUS.md:18-20, docs/DESIGN.md:145, README.md:48                                             R11g
+  <...>                                                                                         R11g
+  faults/README.md:46, faults/catalog.yaml:199 and :303                                         A4
+  faults/README.md:31-32 and :52-60                                                             AUD
+
+== What the pack lacks
+- extra/san2-obs-status.json and steps/T1-status.txt, laug obs status -json's output for T1 (steps.tsv: T1-status,
+  exit 0 in 0.7 s; batch-log.txt:42): dropped from the pack on purpose. Its free_bytes is a twelve-digit number. The
+  parts' pids, listeners and RSS are in readings.json, obs_up.
+- What each runbook block printed: runbook check prints a line a block and a block's lines only under a failure, so
+  the lines that matched, runbook 7's make test time and runbook 2's VERDICT line among them, are not here.
+- Runbook 2's verdict as a file: bin/laug verdict wrote none (R11c).
+- The fake gates' runs made by runbook 1's and runbook 4's blocks, under TMPDIR: neither is in gate/results or extra/.
+- The rauns' load run JSONs, faults/results/load/raun-lab6-*.json: the clone held none (clone-status.txt). The rauns'
+  logs, *.log, are never committed; A4's per-second counts are in extra/, and its step files hold counts only.
+- SAN10's four whole histories: kept on the box outside the pack, since their sticky queues name the box; the
+  projections in extra/ keep each event's id, type, time, activity, attempt, time-out type and failure.
+- Which progress query each RunWorkflow span answered (SAN2); what post-stopped wrote for a fake gate (SAN10).
+- Why the drains here hold 44 to 51 where 2026-10-17's held 63 to 97 (A4).
+- When the instance stopped: the pack ends with the batch.

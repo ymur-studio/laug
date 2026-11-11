@@ -1,0 +1,41 @@
+laug · gate tolerance: 20 gate(s), A/A gates of 1.31.0 on m8i.8xlarge, the incumbent arm
+wave: load:incumbent workflow_with_single_noop_activity 20/s 50 5m | load workflow_with_single_noop_activity 20/s 50 5m | fault:persistence-latency workflow_with_single_noop_activity
+d = the release reading minus the incumbent reading, per gate; T = max(m + 2 x (largest d - m), floor), rounded up to 0.01 ms or 0.0001
+gates: g20261017-174403 run.sh d14a4fe, g20261017-175458 step.sh d14a4fe, g20261017-180552 run.sh d14a4fe, g20261017-181635 step.sh d14a4fe, g20261017-182733 run.sh d14a4fe, g20261017-183826 step.sh d14a4fe, g20261017-184922 run.sh d14a4fe, g20261017-190015 step.sh d14a4fe, g20261017-191109 run.sh d14a4fe, g20261017-192202 step.sh d14a4fe, g20261017-193258 run.sh d14a4fe, g20261017-194350 step.sh d14a4fe, g20261017-195440 run.sh d14a4fe, g20261017-200534 step.sh d14a4fe, g20261017-201631 run.sh d14a4fe, g20261017-202724 step.sh d14a4fe, g20261017-203815 run.sh d14a4fe, g20261017-204906 step.sh d14a4fe, g20261017-205956 run.sh d14a4fe, g20261017-211051 step.sh d14a4fe
+
+reading                                    scale   n          m    largest        T   floor  jump
+workflow_task_schedule_to_start_p99_ms     ms     20     -0.036      0.488     1.02     0.1  holds (first half 0.488, later half 0.101, 2 sd 0.578)
+persistence_latency_p99_ms                 ms     20     -0.020      0.163     0.35     0.1  holds (first half 0.060, later half 0.163, 2 sd 0.150)
+activity_schedule_to_start_over_10ms       share  20   0.000298   0.003701   0.0072  0.0005  holds (first half 0.002427, later half 0.003701, 2 sd 0.003192)
+frontend_request_over_10ms                 share  20   0.000071   0.001620   0.0032  0.0005  holds (first half 0.001620, later half 0.000464, 2 sd 0.001219)
+workflow_end_to_end_over_50ms              share  20   0.000178   0.003276   0.0064  0.0005  holds (first half 0.003276, later half 0.001870, 2 sd 0.003050)
+
+recorded, not compared:
+activity_schedule_to_start_p99_ms          ms     20      0.008      1.426
+workflow_end_to_end_p95_ms                 ms     20      0.005      0.099
+service_error_rate                         share  20   0.000000   0.000000
+frontend_request_p99_ms                    ms     20     -0.001      1.196
+workflow_task_schedule_to_start_over_20ms  share  20  -0.000021   0.000828
+persistence_latency_over_10ms              share  20   0.000019   0.000163
+workflows_completed                        count  20          9         71
+
+mean d by driver (standard error); gate run runs run.sh, gate run -workflow step.sh:
+  run.sh: workflow_task_schedule_to_start_p99_ms n 10 m 0.012 (0.096); persistence_latency_p99_ms n 10 m -0.020 (0.020); activity_schedule_to_start_over_10ms n 10 m -0.000015 (0.000504); frontend_request_over_10ms n 10 m 0.000109 (0.000243); workflow_end_to_end_over_50ms n 10 m -0.000204 (0.000520)
+  step.sh: workflow_task_schedule_to_start_p99_ms n 10 m -0.085 (0.089); persistence_latency_p99_ms n 10 m -0.019 (0.028); activity_schedule_to_start_over_10ms n 10 m 0.000611 (0.000511); frontend_request_over_10ms n 10 m 0.000032 (0.000139); workflow_end_to_end_over_50ms n 10 m 0.000560 (0.000433)
+mean d by session, the UTC date in the gate id (standard error):
+  20261017: workflow_task_schedule_to_start_p99_ms n 20 m -0.036 (0.065); persistence_latency_p99_ms n 20 m -0.020 (0.017); activity_schedule_to_start_over_10ms n 20 m 0.000298 (0.000357); frontend_request_over_10ms n 20 m 0.000071 (0.000136); workflow_end_to_end_over_50ms n 20 m 0.000178 (0.000341)
+to the owner: none (|m| under T/4 and the drivers under T/2 apart on every compared reading)
+
+the compare: block for load/steady-state.yaml (it goes in place of compare:, its comments kept):
+compare:
+  release: 1.31.0
+  wave: ["load:incumbent workflow_with_single_noop_activity 20/s 50 5m","load workflow_with_single_noop_activity 20/s 50 5m","fault:persistence-latency workflow_with_single_noop_activity"]
+  gates: 20
+  evidence: docs/tables/gates.jsonl
+  rows:
+    - {name: workflow_task_schedule_to_start_p99_ms, scale: ms, floor: 0.1, tolerance: 1.02}
+    - {name: persistence_latency_p99_ms, scale: ms, floor: 0.1, tolerance: 0.35}
+    - {name: activity_schedule_to_start_over_10ms, scale: share, floor: 0.0005, tolerance: 0.0072}
+    - {name: frontend_request_over_10ms, scale: share, floor: 0.0005, tolerance: 0.0032}
+    - {name: workflow_end_to_end_over_50ms, scale: share, floor: 0.0005, tolerance: 0.0064}
+exit 0

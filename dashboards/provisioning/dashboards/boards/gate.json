@@ -1,0 +1,618 @@
+{
+  "uid": "laug-gate",
+  "title": "laug · gate",
+  "tags": [
+    "laug",
+    "verdict"
+  ],
+  "timezone": "utc",
+  "editable": true,
+  "graphTooltip": 1,
+  "refresh": "10s",
+  "schemaVersion": 39,
+  "version": 1,
+  "time": {
+    "from": "now-15m",
+    "to": "now"
+  },
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "#D99A3A",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "templating": {
+    "list": []
+  },
+  "links": [
+    {
+      "title": "load/steady-state.yaml",
+      "type": "link",
+      "url": "https://github.com/ymur-studio/laug/blob/main/load/steady-state.yaml"
+    }
+  ],
+  "panels": [
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "service error rate, 1 m (not the verdict)",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-prometheus"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-prometheus"
+          },
+          "expr": "(sum(rate(service_error_with_type{error_type!=\"serviceerror_Canceled\"}[1m])) or vector(0)) / sum(rate(service_requests[1m]))",
+          "instant": true
+        }
+      ],
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "background",
+        "graphMode": "none",
+        "textMode": "value",
+        "justifyMode": "center"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5FB3BF",
+                "value": null
+              },
+              {
+                "color": "#C44B32",
+                "value": 0.001
+              }
+            ]
+          },
+          "mappings": []
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 2,
+      "type": "timeseries",
+      "title": "Workflow task schedule-to-start p99 (ms)  (red line: steady-state.yaml max)",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-prometheus"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 4
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-prometheus"
+          },
+          "expr": "histogram_quantile(0.99, sum(rate(task_schedule_to_start_latency_bucket{task_type=\"Workflow\"}[1m])) by (le)) * 1000",
+          "legendFormat": "Workflow task schedule-to-start p99 (ms)"
+        }
+      ],
+      "options": {
+        "legend": {
+          "showLegend": false,
+          "displayMode": "hidden",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#5FB3BF"
+          },
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 12,
+            "showPoints": "never",
+            "thresholdsStyle": {
+              "mode": "line"
+            },
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "axisPlacement": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5FB3BF",
+                "value": null
+              },
+              {
+                "color": "#C44B32",
+                "value": 38
+              }
+            ]
+          }
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 3,
+      "type": "timeseries",
+      "title": "Activity schedule-to-start p99 (ms)  (red line: steady-state.yaml max)",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-prometheus"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 4
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-prometheus"
+          },
+          "expr": "histogram_quantile(0.99, sum(rate(task_schedule_to_start_latency_bucket{task_type=\"Activity\"}[1m])) by (le)) * 1000",
+          "legendFormat": "Activity schedule-to-start p99 (ms)"
+        }
+      ],
+      "options": {
+        "legend": {
+          "showLegend": false,
+          "displayMode": "hidden",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#5FB3BF"
+          },
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 12,
+            "showPoints": "never",
+            "thresholdsStyle": {
+              "mode": "line"
+            },
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "axisPlacement": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5FB3BF",
+                "value": null
+              },
+              {
+                "color": "#C44B32",
+                "value": 20
+              }
+            ]
+          }
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 4,
+      "type": "timeseries",
+      "title": "Workflow end-to-end p95 (ms)  (red line: steady-state.yaml max)",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-prometheus"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 12
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-prometheus"
+          },
+          "expr": "histogram_quantile(0.95, sum(rate(workflow_schedule_to_close_latency_bucket[1m])) by (le)) * 1000",
+          "legendFormat": "Workflow end-to-end p95 (ms)"
+        }
+      ],
+      "options": {
+        "legend": {
+          "showLegend": false,
+          "displayMode": "hidden",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#5FB3BF"
+          },
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 12,
+            "showPoints": "never",
+            "thresholdsStyle": {
+              "mode": "line"
+            },
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "axisPlacement": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5FB3BF",
+                "value": null
+              },
+              {
+                "color": "#C44B32",
+                "value": 84
+              }
+            ]
+          }
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 5,
+      "type": "timeseries",
+      "title": "Persistence latency p99 (ms)  (red line: steady-state.yaml max)",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-prometheus"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 12
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-prometheus"
+          },
+          "expr": "histogram_quantile(0.99, sum(rate(persistence_latency_bucket[1m])) by (le)) * 1000",
+          "legendFormat": "Persistence latency p99 (ms)"
+        }
+      ],
+      "options": {
+        "legend": {
+          "showLegend": false,
+          "displayMode": "hidden",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#5FB3BF"
+          },
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 12,
+            "showPoints": "never",
+            "thresholdsStyle": {
+              "mode": "line"
+            },
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "axisPlacement": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5FB3BF",
+                "value": null
+              },
+              {
+                "color": "#C44B32",
+                "value": 23
+              }
+            ]
+          }
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 6,
+      "type": "timeseries",
+      "title": "Service error rate  (red line: steady-state.yaml max)",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-prometheus"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 20
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-prometheus"
+          },
+          "expr": "(sum(rate(service_error_with_type{error_type!=\"serviceerror_Canceled\"}[1m])) or vector(0)) / sum(rate(service_requests[1m]))",
+          "legendFormat": "Service error rate"
+        }
+      ],
+      "options": {
+        "legend": {
+          "showLegend": false,
+          "displayMode": "hidden",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#5FB3BF"
+          },
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 12,
+            "showPoints": "never",
+            "thresholdsStyle": {
+              "mode": "line"
+            },
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "axisPlacement": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5FB3BF",
+                "value": null
+              },
+              {
+                "color": "#C44B32",
+                "value": 0.001
+              }
+            ]
+          }
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 7,
+      "type": "timeseries",
+      "title": "Frontend request p99 (ms)  (red line: steady-state.yaml max)",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-prometheus"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 20
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-prometheus"
+          },
+          "expr": "histogram_quantile(0.99, sum(rate(service_latency_bucket{service_name=\"frontend\", operation!~\"Poll.*\"}[1m])) by (le)) * 1000",
+          "legendFormat": "Frontend request p99 (ms)"
+        }
+      ],
+      "options": {
+        "legend": {
+          "showLegend": false,
+          "displayMode": "hidden",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#5FB3BF"
+          },
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 12,
+            "showPoints": "never",
+            "thresholdsStyle": {
+              "mode": "line"
+            },
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "axisPlacement": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5FB3BF",
+                "value": null
+              },
+              {
+                "color": "#C44B32",
+                "value": 22
+              }
+            ]
+          }
+        },
+        "overrides": []
+      }
+    }
+  ]
+}

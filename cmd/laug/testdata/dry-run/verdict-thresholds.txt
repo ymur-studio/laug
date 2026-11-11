@@ -1,0 +1,8 @@
+# make: make --no-print-directory -n verdict RUN_ID=r1 THRESHOLDS=load/steady-state.yaml SWEEP_MARGIN_S=60
+# laug: laug verdict r1 -thresholds load/steady-state.yaml -sweep-margin 60s
+# lease: absent
+# passes: THRESHOLDS=load/steady-state.yaml SWEEP_MARGIN_S=60
+# adds: VERDICT_JSON=load/results/r1.verdict.json
+# compare: line load/verdict.sh
+[[ 'r1' =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || { echo "laug · make verdict: RUN_ID="'r1'" is not one word of letters, digits, ., _ and -, from a letter or digit" >&2; exit 2; };                    
+PROM_URL='' FALLBACK_PROM_URL='http://127.0.0.1:9090' load/verdict.sh r1

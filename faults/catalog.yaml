@@ -1,0 +1,330 @@
+# Fault catalog, read by faults/run.sh. faults/README.md holds what each row measured and how a fault is added.
+#
+# A fault run has three windows. before: every threshold of the cell's release ok (load/steady-state.yaml plus
+# load/releases/<major>.<minor>.yaml when one exists; load/thresholds.sh), else the run is invalid ("never steady").
+# during: the fault's signal must EXCEED its max, else "did not land" (never ADVANCE). after: time-to-recover is
+# remove_at to the signal back under its max; after settle_s, every threshold ok over after_s seconds. The drain
+# (remove_at to the after window) is recorded with its own readings and not judged.
+# ADVANCE only if landed, recovered within budget_s, and the after window is clean.
+#
+# signal names a threshold of that set (query and max reused), or signal_query + signal_max give a
+# fault-specific one. Mechanisms are per cell: TOXIPROXY is the leased cell's toxiproxy API, CELL its id. They are
+# toxic, docker, dynconfig, tdbg, pg, serverfi, vm or none; vm drive ops=<n> [bw=<bytes>] | vm drive off puts a token
+# bucket on a microVM cell's drive through laugd (faults/run.sh, vm). backend (optional): compose or firecracker, the one
+# backend a row runs on; faults/run.sh refuses a lease of another before the load.
+# readings (optional) maps names to PromQL that faults/run.sh reads over each window, every [1m] rewritten to the
+# window's length, and records in the raun JSON; recorded, not judged.
+#
+# The shard faults (close-shards, stuck-shard, stuck-shard-norestore) use four more fields, read by faults/run.sh:
+# signal_base: inject (landed is the signal's rise since just before inject), recover: shards-acquired with
+# recover_from: inject or remove (recovered is every touched shard logging "Acquired shard" since then), and cleanup
+# (mechanisms run once the result is decided). Mechanisms: tdbg close <k> <seed>, pg bump <shard|seed:N> <delta>,
+# pg restore, none. Source: go.temporal.io/server v1.31.0, the cells' version (go mod download), read 2026-10-14,
+# paths from the module root. Each row's runs: faults/README.md.
+
+defaults:
+  steady_s: 90          # load before injection; the before window is the last 60 s of it
+  hold_s: 120           # fault held
+  settle_s: 30          # wait after recovery before the after window: a client start deadline (10 s), a workflow
+                        # task timeout (10 s) and a scrape (5 s) can outlast the signal's recovery
+  after_s: 90           # clean window required after recovery
+  signal_range: 30s     # range the signal is read over while polling for landed / recovered
+
+faults:
+  persistence-latency:
+    hypothesis: 200 ms added to every Postgres round trip raises persistence p99 past 50 ms; no client errors; recovery immediate on removal. Measured on the lab host (3 runs, raun-lab2-persistence-latency-1 to 3, cells/results/2026-10-23-boot2.txt), it is much worse than that; persistence requests fall from 750.2 to 103.5/s, a 7.2x cut (faults/results/raun-lab1-pl-rates.json), which the fixed connection pool and the shard queue readers saturating it would explain (unconfirmed; the dev-only key system.forceSearchAttributesCacheRefreshOnRead, cells/compose/dynamicconfig/laug.yaml, is a competing cause), and user traffic stops, 0 workflows completed and 537 to 540 failed iterations in each during window, 0 failed after. Recovery part held.
+    signal: persistence_latency_p99_ms
+    budget_s: 60
+    inject: toxic add latency latency=200 jitter=50
+    remove: toxic remove latency
+
+  persistence-timeout:
+    hypothesis: a Postgres connection that stalls 5 s per query turns into persistence timeouts, task processing stalls, shard queue lag climbs; recovery needs the connection pool to cycle.
+    signal: persistence_latency_p99_ms
+    budget_s: 120
+    inject: toxic add timeout timeout=5000
+    remove: toxic remove timeout
+
+  persistence-errors:
+    hypothesis: a fraction of Postgres connections reset at the proxy produce real persistence errors with no server change; history retries, the SDK sees nothing, server-side error rate climbs and throughput holds.
+    signal_query: sum(rate(persistence_error_with_type[30s])) or vector(0)
+    signal_max: 0.5
+    budget_s: 60
+    # toxicity is the probability a connection gets the toxic (0 to 1). At 1.0 every connection resets and this is
+    # total loss, the persistence-latency result again; the row's hypothesis needs a few percent. What 0.05 does:
+    # faults/README.md.
+    inject: toxic add reset_peer timeout=0 toxicity=0.05
+    remove: toxic remove reset_peer
+
+  disk-slow:
+    hypothesis: a token bucket of 100 operations a second on the cell's one drive, which holds Postgres, Docker's logs and the guest's Prometheus store, raises persistence p99 past its max and holds it there until the limit is lifted; off turns both buckets off at once, so recovery is the 30 s signal range draining. 100 held the drive at 100 a second, about a quarter of a 20/s load's 407 to 417, in boot 10 (cells/results/2026-10-29-boot10.txt, DS).
+    # microVM cells only: the vm mechanism PATCHes the drive's rate limiter through laugd (cells/backend-firecracker.sh,
+    # vmfault). Each request takes one ops token, flushes included; a bucket refills its size over refill_time, 1000 ms
+    # here (v1.17 swagger, TokenBucket; src/vmm/src/devices/virtio/block/virtio/request.rs, rate_limit). Under
+    # Unsafe the guest sends no flush, so a commit costs fewer ops than under Writeback (docs/CAPABILITIES.md, The pool). The
+    # limit slows the signal's store too (inference).
+    backend: firecracker
+    signal: persistence_latency_p99_ms
+    budget_s: 60
+    inject: vm drive ops=100
+    remove: vm drive off
+
+  kill-history:
+    hypothesis: on a one-host cell killing history is restart plus 512-shard reacquisition, not reassignment; nothing completes until the shards are back; time-to-recover is that reacquisition, not failover.
+    # 1 - min(up) would say "recovered" the moment the process answers /metrics, before the shards are back. The
+    # shard gauge (sums to 512 when warm, seen) is written at the end of an acquire pass, and a killed history
+    # exports no series, so the query reads absence as 512 missing and run.sh treats no data as not recovered.
+    # run.sh also records history_shards_ready_s: removal to the new process's "initial shards ready" line.
+    # history.acquireShardConcurrency is the knob a later experiment varies; its default is 10 (server 1.31.0
+    # constants.go:1694, read 2026-10-11).
+    signal_query: (512 - sum(numshards_gauge{job="temporal-history"})) or vector(512)
+    signal_max: 0
+    budget_s: 120
+    inject: docker kill temporal-history
+    remove: docker start temporal-history
+
+  throttle-frontend:
+    hypothesis: frontend.rps lowered to 10 makes the frontend return ResourceExhausted; the SDK backs off and retries; throughput falls, nothing fails. Dynamic config is polled from the file, so the edit lands with a lag the landed_at timestamp absorbs.
+    signal_query: sum(rate(service_error_with_type{error_type="serviceerror_ResourceExhausted"}[30s])) or vector(0)
+    signal_max: 0.5
+    # 120 s was set before any run. The first 3 runs (microVM cells on the first lab host, an m8i.2xlarge, 2026-10-13)
+    # recovered 58, 123 and 123 s after removal, and 2 BLOCKed on the budget, not on the cell. Lifting the limit waits
+    # on two timers in turn: each role re-reads the file every 60 s (pollInterval, set in the server's config template,
+    # cells/compose/config/laug-server.yaml; on the lab host two edits 90.5 s apart reached each role 120.0 to 120.1 s
+    # apart, two periods by inference, cells/results/2026-10-23-boot1.txt, P6), then the frontend's rate limiter
+    # refreshes (within 60 s: service/frontend/configs/quotas.go:348, dynamic_rate_limiter_impl.go:130-139); then the
+    # signal's 30 s rate window has to empty. Worst case about 155 s, so 180 s. On compose cells on the lab host 3 runs
+    # recovered 50 to 55 s after removal (raun-lab2-throttle-frontend-1 to 3, cells/results/2026-10-23-boot2.txt, R8).
+    budget_s: 180
+    # frontend.rps is per frontend process (server 1.31.0 constants.go: "per-instance"; default 2400, the value
+    # laug.yaml sets), and a cell has two behind nginx, so 10 is about 20 requests/s for the cell.
+    inject: dynconfig frontend.rps 10
+    remove: dynconfig restore
+
+  oom-history:
+    hypothesis: history under a 256 MiB limit is OOM-killed under load. cell.yml gives every server role the on-failure restart policy, so Docker restarts it and each restart re-acquires all 512 shards; expect a crash loop until remove lifts the limit.
+    # up for every scrape of the last 30 s (6 scrapes at 5 s). A single up sample flaps in a crash loop: run fvoom1
+    # (a microVM cell on the first lab host, an m8i.2xlarge, 2026-10-13) read recovered 1 s after removal, while the
+    # new history owned its shards 51.4 s after, and the after window caught the backlog (BLOCK). Lands on the first
+    # failed scrape; recovered means 30 s up.
+    signal_query: 1 - min(min_over_time(up{job="temporal-history"}[30s]))
+    signal_max: 0
+    budget_s: 120
+    # A limit needs --memory-swap too, or Docker refuses it ("should be smaller than already set memoryswap
+    # limit", seen on the dev host), and --memory 0 changes nothing. Remove sets a limit far above the guest's or host's
+    # memory, which is no limit in effect. docker start does nothing while Docker holds history in its restart
+    # backoff (100 ms doubling to 60 s, reset after a 10 s run: moby restartmanager.go), so recovery waits on
+    # Docker's timer (seen on the lab host: history's shards ready 29.7 to 35.1 s after removal,
+    # raun-lab2-oom-history-1 to 3; 42.6 and 45.9 s on microVM cells on the first lab host).
+    inject: docker update --memory 256m --memory-swap 256m temporal-history
+    remove: docker update --memory 64g --memory-swap 64g temporal-history; docker start temporal-history
+
+  close-shards:
+    hypothesis: >-
+      AdminService.CloseShard on 64 of the 512 shards, with no restart. History drops each one's context and stops its
+      engine; the next request for the shard, or the controller's acquire pass at most 1 m later, builds a new context
+      that acquires the shard with one range id write. An eighth of the shards, each gone for seconds, at 20/s: no
+      client error, no lost workflow, and an after window as clean as the before window.
+    # Landed: sharditem_removed_count, not shard_closed_count. CloseShard reaches controller.CloseShardByID
+    # (service/frontend/admin_handler.go:853-861, service/history/handler.go:870-873), which takes the context out of
+    # the map, recording sharditem_removed_count (service/history/shard/controller_impl.go:189-200, 278-298), and stops
+    # it without the close callback. shard_closed_count is recorded only in that callback, shardRemoveAndStop
+    # (controller_impl.go:214-222), when a shard stops itself (ownership lost, acquire failed). Names in
+    # common/metrics/metric_defs.go:780-782. A warm cell has removed no shard, so the counter's series may not exist
+    # before inject, and increase() reads a series that first appears at 64 as no increase; the signal is the raw
+    # counter's rise since just before inject, and lands at 64.
+    signal_query: sum(sharditem_removed_count{job="temporal-history"}) or vector(0)
+    signal_base: inject
+    signal_max: 63
+    # Recovered: every closed shard logged "Acquired shard" since inject (context_impl.go:2005, tagged shard-id;
+    # faults/lib.sh, shards_acquired). Chosen over sharditem_created_count, which counts a context put in the map
+    # before its acquire runs (controller_impl.go:262-272), counts a shard that never acquires, and names no shard.
+    # Not numshards_gauge: written at the end of an acquire pass (controller_impl.go:458-463), and it counts contexts
+    # in the map, acquired or not.
+    recover: shards-acquired
+    recover_from: inject
+    # The acquire pass runs every history.acquireShardInterval, default 1 m (common/dynamicconfig/constants.go:1688-
+    # 1692, service/history/shard/ownership.go:79-90). On the lab host acquire_shards_count rose 5 times, 60 s of wall
+    # clock apart each time, to the query's 5 s step (cells/results/2026-10-23-boot1/extra/A5c-acquire_pass_times.json).
+    # A shard with no request waits for it. 90 s puts every reacquisition inside the hold, so time to recover reads 0
+    # and shards_acquired holds the real times.
+    hold_s: 90
+    budget_s: 60
+    # Seed 1014 draws shards 379, 2, 203, 28, 357, ... (faults/lib.sh, shard_draw; make harness-test pins them).
+    inject: tdbg close 64 1014
+    remove: none
+
+  stuck-shard:
+    hypothesis: >-
+      One shard's range_id column moved 1000 past the range id the shard holds, with no restart. Its next write finds
+      the column changed, reads that as another owner (ShardOwnershipLostError) and stops. Every new context for it
+      loads its range id from the row's data blob, which the column now contradicts, so it cannot acquire until the
+      column is put back. Starts that land on it wait out the client's deadline, about 1 in 512 of them; nothing else
+      moves. Restored, it is acquired on its next request or within the 1 m acquire pass, and nothing is lost.
+    # Landed: shard_closed_count, recorded each time the shard stops itself (controller_impl.go:214-222): once at the
+    # first failed write, then once per failed acquire (context_impl.go:1212-1220 and 1455-1459, 2041-2066). Its
+    # series may not exist before the fault either, hence signal_base. Each write runs readLockShard (FOR SHARE) and
+    # UpdateShard runs lockShard (FOR UPDATE); both compare the column with the caller's range id
+    # (common/persistence/sql/shard.go:123-175, execution.go:39-58, execution_tasks.go:17-29). GetOrCreateShard returns
+    # the blob only (common/persistence/sql/shard.go:37-48, common/persistence/shard_manager.go:36-68), so a new
+    # context's acquire writes blob + 1 conditioned on the column holding the blob's value, and is refused; an
+    # ownership loss is not retried (context_impl.go:2041-2057), and the context stops. Inferred from source.
+    signal_query: sum(shard_closed_count{job="temporal-history"}) or vector(0)
+    signal_base: inject
+    signal_max: 0
+    # Recovered: the bumped shard logged "Acquired shard" since removal. One logged before removal is recorded
+    # (shards_acquired.acquired_before_remove): it would mean the bump did not hold the shard. What shows the bump did
+    # hold it is recorded too, as shards_acquired.held_evidence: the shard's refused acquires in the hold
+    # ("Couldn't acquire shard" and the lines before it; faults/lib.sh, shards_held).
+    recover: shards-acquired
+    recover_from: remove
+    hold_s: 120
+    # After the restore nothing retries by itself: the shard waits for its next request (a start every 26 s on
+    # average at 20/s) or the acquire pass (at most 1 m). 90 s covers both.
+    budget_s: 90
+    # seed:1014 draws shard 379, the first of close-shards' 64. restore writes the old value back only while the
+    # column still holds the bumped one (faults/run.sh, pg_restore).
+    inject: pg bump seed:1014 1000
+    remove: pg restore
+
+  stuck-shard-norestore:
+    hypothesis: >-
+      The harness's self-test: stuck-shard with a remove that does nothing. The shard never logs "Acquired shard" after
+      removal, so the run must BLOCK with "did not recover", whatever the thresholds read. An ADVANCE means the harness,
+      or this reading of the source, is wrong. cleanup restores the range_id once the result is decided, so the cell
+      can serve another raun. A BLOCK alone shows nothing: a shard the bump never reached logs no "Acquired shard"
+      either, and "did not land" or "never steady" BLOCK too.
+    signal_query: sum(shard_closed_count{job="temporal-history"}) or vector(0)
+    signal_base: inject
+    signal_max: 0
+    recover: shards-acquired
+    recover_from: remove
+    hold_s: 120
+    budget_s: 90
+    inject: pg bump seed:1014 1000
+    remove: none
+    cleanup: pg restore
+    # Passed only on a BLOCK whose reason starts "did not recover" and whose shard logged "Couldn't acquire shard"
+    # between inject and removal: the line every new context for a held shard logs when its acquire is refused
+    # (server 1.31.0 service/history/shard/context_impl.go:2041-2062, tagged shard-id; faults/lib.sh, shards_held).
+    # faults/run.sh records the verdict on that in the raun JSON's self_test.
+    self_test: did not recover
+
+  # The server's own persistence fault injection (serverfi; cells/compose/fi.yml, cells/compose/config/laug-server.yaml).
+  # Each on and each off recreates temporal-history, so every row also carries two history restarts and two 512-shard
+  # reacquisitions (kill-history on the lab host: shards ready 0.5 s after the restart in 3 of 3,
+  # cells/results/2026-10-17-lab-kill-history.txt). history-recreate, the last of these rows, is those two restarts
+  # with no fault: a row's during and drain readings are fault cost only by how far they sit above that row's. On a
+  # compose cell serverfi recreates history with docker compose on the host; on a microVM cell, with docker compose
+  # inside the guest over ssh, on the image's cells/compose. No serverfi row has run on a microVM cell yet.
+  # The signal is the server's own count of the injected error, persistence_error_with_type, which history's
+  # persistence metrics client records once per attempt (server 1.31.0 common/persistence/client/factory.go:203-217,
+  # persistence_metric_clients.go:1436-1438). Its labels were read from an idle cell's Prometheus on the dev host
+  # (2026-10-14): service_name history, operation the store method, error_type the error's Go type with the dot as
+  # an underscore (common/util/error_type.go:29-67, common/metrics/config.go:204-218).
+  # Each row fixes its seed. The seed fixes the sequence of draws for each method in one history process
+  # (faultinjection/method_fault_generator.go:24-44), not which request gets which draw under concurrent load, and
+  # each recreate starts the sequence again. laug cell fi-template-check checks every row's store and method against
+  # the methods the server's wrapper draws for at that tag: the server takes any method name, and a misspelt one
+  # injects nothing.
+  # The branches below are server 1.31.0 service/history/shard/context_impl.go handleWriteErrorLocked (1422-1471),
+  # reached from ContextImpl.UpdateWorkflowExecution (628-688, call at 684). Read in source; each row's runs:
+  # faults/README.md.
+  # budget_s 90 for every row: removal recreates history (shards back in seconds), then the signal's 30 s rate window
+  # has to empty; 90 s is 3 times that.
+  # Readings, the same for every serverfi row, so a renewal or a shard stop a hypothesis predicts is a number in the raun
+  # JSON and not an inference after the cell is gone: update_shard counts UpdateShard calls, failed ones included (an
+  # acquire, a range renewal and the periodic shard info write are one each); shard_contexts_created and _closed count
+  # history's shard contexts (metric_defs.go:780-781); acquire_passes counts the controller's acquire passes. Names and
+  # labels seen on an idle cell on the dev host (2026-10-14): one history restart was 512 contexts created, 512
+  # UpdateShard and 1 pass. increase() extrapolates to the window's edges (a 60 s window holding that restart read 598
+  # for 512), so compare windows of one raun, and rows with history-recreate, not exact counts.
+  wf-update-ownership-lost:
+    hypothesis: 1% of UpdateWorkflowExecution calls fail with ShardOwnershipLost. Branch case *persistence.ShardOwnershipLostError (context_impl.go:1455-1458) stops the shard context (stopReasonOwnershipLost, 1715-1716), and the next request for that shard builds a new context and acquires it at once (controller_impl.go:178, 230-269; seen for acquire-lost on an idle cell on the dev host, 2026-10-14). No fault on UpdateShard here, so that acquire succeeds. Each error unloads one of 512 shards; expect shard_contexts_closed and shard_contexts_created in the during window above history-recreate's by about the error count; clients see retries and latency, not failures; nothing is lost.
+    signal_query: sum(rate(persistence_error_with_type{service_name="history", operation="UpdateWorkflowExecution", error_type="persistence_ShardOwnershipLostError"}[30s])) or vector(0)
+    signal_max: 0
+    budget_s: 90
+    inject: serverfi on store=ExecutionStore method=UpdateWorkflowExecution error=ShardOwnershipLost rate=0.01 seed=6001
+    remove: serverfi off
+    readings: &serverfi-readings
+      update_shard: sum(increase(persistence_requests{service_name="history", operation="UpdateShard"}[1m])) or vector(0)
+      shard_contexts_created: sum(increase(sharditem_created_count{service_name="history"}[1m])) or vector(0)
+      shard_contexts_closed: sum(increase(shard_closed_count{service_name="history"}[1m])) or vector(0)
+      acquire_passes: sum(increase(acquire_shards_count{service_name="history"}[1m])) or vector(0)
+
+  wf-update-deadline:
+    hypothesis: 1% fail with a wrapped context.DeadlineExceeded, which a real store never returns (faultinjection/fault.go:36-39). It is not in either list of handleWriteErrorLocked, so it takes the default branch (context_impl.go:1461-1469; the write may or may not have landed, so contextRequestLost and the shard reacquires its range in the background, 1636-1639 and 1712-1713). Same shape as wf-update-timeout, so the same readings; it checks that the error type does not matter to that branch.
+    signal_query: sum(rate(persistence_error_with_type{service_name="history", operation="UpdateWorkflowExecution", error_type="context_DeadlineExceeded"}[30s])) or vector(0)
+    signal_max: 0
+    budget_s: 90
+    inject: serverfi on store=ExecutionStore method=UpdateWorkflowExecution error=DeadlineExceeded rate=0.01 seed=6002
+    remove: serverfi off
+    readings: *serverfi-readings
+
+  wf-update-timeout:
+    hypothesis: 1% fail with persistence.TimeoutError before the write is attempted. Default branch (context_impl.go:1461-1469); the shard renews its range (UpdateShard with RangeID + 1, 1189-1233) and the caller retries. The persistence retry client does not retry a TimeoutError (client/factory.go:270-278). Expect range renewals, about one update_shard per error above history-recreate's in the during window, task retries and a few client-visible errors, no lost work.
+    signal_query: sum(rate(persistence_error_with_type{service_name="history", operation="UpdateWorkflowExecution", error_type="persistence_TimeoutError"}[30s])) or vector(0)
+    signal_max: 0
+    budget_s: 90
+    inject: serverfi on store=ExecutionStore method=UpdateWorkflowExecution error=Timeout rate=0.01 seed=6003
+    remove: serverfi off
+    readings: *serverfi-readings
+
+  wf-update-execute-timeout:
+    hypothesis: 1% of writes land and then report persistence.TimeoutError (faultinjection/fault.go:42-47, 65-70). The same default branch as wf-update-timeout (context_impl.go:1461-1469), but here the write did happen, the case that branch's comment exists for (1462-1467); history must learn the outcome by reading after it reacquires the range. The row to watch for duplicated or lost workflow progress; the sweep and "workflow execution not found" are the checks.
+    signal_query: sum(rate(persistence_error_with_type{service_name="history", operation="UpdateWorkflowExecution", error_type="persistence_TimeoutError"}[30s])) or vector(0)
+    signal_max: 0
+    budget_s: 90
+    inject: serverfi on store=ExecutionStore method=UpdateWorkflowExecution error=ExecuteAndTimeout rate=0.01 seed=6004
+    remove: serverfi off
+    readings: *serverfi-readings
+
+  wf-update-resource-exhausted:
+    hypothesis: 1% fail with ResourceExhausted (SYSTEM_OVERLOADED, scope SYSTEM; faultinjection/fault.go:48-53). Branch "definitely not committed" (context_impl.go:1443-1453) returns the error with no shard transition, so no range renewals, unlike the timeout rows; expect update_shard and shard_contexts_closed at history-recreate's level. Also counted in persistence_errors_resource_exhausted (persistence_metric_clients.go:1457-1459).
+    signal_query: sum(rate(persistence_error_with_type{service_name="history", operation="UpdateWorkflowExecution", error_type="serviceerror_ResourceExhausted"}[30s])) or vector(0)
+    signal_max: 0
+    budget_s: 90
+    inject: serverfi on store=ExecutionStore method=UpdateWorkflowExecution error=ResourceExhausted rate=0.01 seed=6005
+    remove: serverfi off
+    readings: *serverfi-readings
+
+  wf-update-unavailable:
+    hypothesis: 1% of attempts fail with Unavailable, which the persistence retry client retries (client/factory.go:217, 270-278) for 2 attempts 50 ms apart (common/util.go:39-40, 161-164). Both attempts fail about once in 10 000 calls, so history's handler (default branch, context_impl.go:1461-1469) almost never sees it. The signal counts every failed attempt, retried or not; expect it to land and clients to see nothing.
+    signal_query: sum(rate(persistence_error_with_type{service_name="history", operation="UpdateWorkflowExecution", error_type="serviceerror_Unavailable"}[30s])) or vector(0)
+    signal_max: 0
+    budget_s: 90
+    inject: serverfi on store=ExecutionStore method=UpdateWorkflowExecution error=Unavailable rate=0.01 seed=6006
+    remove: serverfi off
+    readings: *serverfi-readings
+
+  acquire-lost:
+    hypothesis: half of UpdateShard calls fail with ShardOwnershipLost. The injection recreates history, so the new process acquires all 512 shards with the fault on. An acquire that gets it stops retrying (context_impl.go:2042-2059) and stops the shard (2060-2070); a write that gets it later stops the shard through handleWriteErrorLocked (1455-1458, from renewRangeLocked 1220 and updateShardInfo 1308). A stopped shard leaves the controller's map, and the next request for it creates a context and starts one acquire at once (controller_impl.go:178, 230-269, 267), not at the next pass. The request then waits on GetEngine (handler.go:339-343, context_impl.go:258-261; read in source), whose future is set only when an acquire succeeds, so at 0.5 about half the requests that reach an unowned shard wait out their own deadline, and a client's next try is a fresh 50% attempt. The 1 m pass (history.acquireShardInterval, dynamicconfig/constants.go:1688-1691) reaches only the shards no request touches. Seen on an idle cell on the dev host (2026-10-14), between two passes the only acquires were the 3 that HealthCheck starts set off, 1 won and 2 lost, and those 2 starts timed out after 10 s. At rate 1.0 from the cell's first start, on the lab host, history owned no shard in a 150 s cap and logged 1299 failed acquires by 143 s after its start, while cluster health answered SERVING, and a HealthCheck's start timed out (cells/results/2026-10-23-boot1.txt, A7). Under load expect failed iterations during the hold (starts that wait out the client's 10 s), and shard_contexts_created in the during window far above 512 per acquire pass.
+    signal_query: sum(rate(persistence_error_with_type{service_name="history", operation="UpdateShard", error_type="persistence_ShardOwnershipLostError"}[30s])) or vector(0)
+    signal_max: 0
+    budget_s: 90
+    inject: serverfi on store=ShardStore method=UpdateShard error=ShardOwnershipLost rate=0.5 seed=6007
+    remove: serverfi off
+    readings: *serverfi-readings
+
+  persistence-chaos:
+    hypothesis: the server's own DefaultFaultInjection set (common/config/config.go:838-856), 15 errors at 1% each on 6 ExecutionStore methods, ResourceExhausted, Timeout and ExecuteAndTimeout mixed, so the not-committed and outcome-unknown branches at once (no ShardOwnershipLost, DeadlineExceeded or Unavailable), on starts (CreateWorkflowExecution, context_impl.go:569-626) and reads (handleReadError, 1396-1410) too. Each method gets its own seed, the row's seed plus 0 to 5 in the order DefaultFaultInjection names the methods (laug-server.yaml), as the server's own set, which has no seed, gives each method a stream of its own. The seed fixes the sequence of draws for each method in one history process, not which call gets which draw; with 2 or 3 errors on a method, which error a failing call gets also follows Go's map order at start (faultinjection/store_fault_generator.go:19-24). Expect errors and retries, renewals from the Timeout errors, no lost work.
+    signal_query: sum(rate(persistence_error_with_type{service_name="history", error_type=~"persistence_TimeoutError|serviceerror_ResourceExhausted"}[30s])) or vector(0)
+    signal_max: 0
+    budget_s: 90
+    inject: serverfi on profile=default seed=6008
+    remove: serverfi off
+    readings: *serverfi-readings
+
+  history-recreate:
+    hypothesis: the control for every serverfi row. serverfi on with an error on a method history never calls, ClusterMDStore DeleteClusterMetadata (only the frontend's two RemoveRemoteCluster handlers call it, service/frontend/admin_handler.go:1269 and operator_handler.go:687), then serverfi off, so the same two history recreates and no fault. Clients feel each restart for about 10 to 15 s (kill-history). The during window opens at landed_at, a scrape after the first restart, and the drain window opens on the second, as for every serverfi row; their readings here are the restart's cost alone.
+    # Lands on the restart, not on a fault: resets() of history's persistence request counters over 30 s is above 0
+    # from the first scrape of a new process until its 30 s have passed. Seen on an idle cell on the dev host
+    # (2026-10-14), on each of 2 recreates: 0 at +1 to 2 s, 14 at +7 s, 0 again at +27 to 28 s. So time_to_recover_s on
+    # this row is not a recovery time: the first poll after the removal can read 0 before the second restart shows in a
+    # scrape.
+    signal_query: sum(resets(persistence_requests{service_name="history"}[30s])) or vector(0)
+    signal_max: 0
+    budget_s: 90
+    inject: serverfi on store=ClusterMDStore method=DeleteClusterMetadata error=Unavailable rate=1.0 seed=6009
+    remove: serverfi off
+    readings: *serverfi-readings

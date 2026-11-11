@@ -1,0 +1,5 @@
+# make: make --no-print-directory -n pool-down
+# laug: laug pool down -remove-cells
+# lease: absent
+# compare: line cells/pool-down.sh
+cells/pool-down.sh

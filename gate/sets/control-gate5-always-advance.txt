@@ -1,0 +1,13 @@
+# The control gate5-always-advance: a branch whose one changed file, load/verdict.sh, always prints ADVANCE, which the
+# harness must catch before any item runs. gate.json cannot tell its gates from another gate the harness failed. On
+# the lab host, an m8i.8xlarge (32 vCPU); the gates before the calibration session record no host type. Each BLOCKed
+# class harness. _report, the renderer, reads this list.
+# 3 gates.
+# One gate id a line; a line starting with # is a comment. A line "# <file>:<lines>, ..." names the transcript lines
+# that record the ids after it (TestSets).
+# cells/results/2026-10-15-lab-gate-5.txt:38, the one through gate/run.sh
+g20261015-230231
+# cells/results/2026-10-16-gate6-runs.txt:43, aa1, the branch rebased, through the workflow
+g20261016-221717
+# cells/results/2026-10-17-lab-arm-calibration.txt:569, aa
+g20261017-225512

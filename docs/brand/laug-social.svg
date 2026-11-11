@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" width="1280" height="640" role="img" aria-label="laug: ephemeral Temporal cells from a warm pool, for release validation">
+  <title>laug</title>
+  <rect width="1280" height="640" fill="#10181C"/>
+  <!-- The lockup at font-size 150: the mark cropped to 0 6.5 64 43, 0.72 em (108) tall, scale 2.511628, its lowest
+       stroke on the baseline, y 226; the word at x 120 + 1.402 em = 330.3. One color, steam on basalt. -->
+  <g transform="translate(120 101.674) scale(2.511628)" fill="none" stroke="#EEF3F2" stroke-width="5"
+     stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 29H60"/>
+    <path d="M14 29A18 18 0 0 0 50 29"/>
+    <path d="M32 21C28 18 36 14 32 9"/>
+  </g>
+  <text x="330.3" y="226" fill="#EEF3F2" font-family="Literata, 'Iowan Old Style', Georgia, serif" font-size="150"
+        font-weight="500" letter-spacing="-1.5">laug</text>
+  <text x="120" y="318" fill="#CFE3E4" font-family="Inter, 'Helvetica Neue', Arial, system-ui, sans-serif"
+        font-size="34">Ephemeral Temporal cells from a warm pool, for release validation.</text>
+  <!-- The verdict lines: docs/CAPABILITIES.md's Noise and Controls rows, from cells/results/2026-10-18-lab-arm-validation.txt.
+       The detail starts at column 10. -->
+  <g font-family="'Source Code Pro', ui-monospace, Menlo, Consolas, monospace" font-size="28">
+    <text x="120" y="404" fill="#5B9B6A"><tspan font-weight="700">ADVANCE</tspan><tspan x="271.2">30 of 30 gates of a release against itself</tspan></text>
+    <text x="120" y="446" fill="#C44B32"><tspan font-weight="700">BLOCK</tspan><tspan x="271.2">3 of 3 gates, 25 µs delay into Postgres</tspan></text>
+  </g>
+  <text x="120" y="530" fill="#5FB3BF" font-family="'Source Code Pro', ui-monospace, Menlo, Consolas, monospace"
+        font-size="24" xml:space="preserve">laug lease  ·  laug raun  ·  laug gate run</text>
+</svg>

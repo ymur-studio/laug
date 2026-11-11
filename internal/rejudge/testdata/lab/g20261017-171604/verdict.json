@@ -1,0 +1,384 @@
+{
+  "gate_id": "g20261017-171604",
+  "verdict": "BLOCK",
+  "class": "refused",
+  "rerun": false,
+  "class_if_quiet": null,
+  "refused": "this host's declared type is not m8i.8xlarge, the type load/steady-state.yaml was measured on: its numbers judge no other host type (docs/DESIGN.md section 7.1)",
+  "fake": false,
+  "server_tag": "1.31.0",
+  "incumbent": "1.31.0",
+  "laug_commit": "42446b7",
+  "tree_dirty": false,
+  "base": "42446b7",
+  "inputs": [
+    {
+      "path": "gate/plan.yaml",
+      "sha256": "ef34d8359084ad717c6e43f0f241de1f17b4e0c9b353ce14d479a0e9ab32b28c",
+      "changed_vs_base": false
+    },
+    {
+      "path": "gate/combine.sh",
+      "sha256": "33b4e89dc2ecef502e73ea88136a482fbf8694986789712fd5126e31f5faf6f0",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/steady-state.yaml",
+      "sha256": "932f6ac57b68462066eeaf1ee1fe9cbd0579125edda55bdd559db17a9fa31c33",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/thresholds.sh",
+      "sha256": "d054c485bb3027a78945640c484910c2fca206573a6a9fcbf34d8c223ea4a48d",
+      "changed_vs_base": false
+    },
+    {
+      "path": "faults/catalog.yaml",
+      "sha256": "f0e73b887d68b2e28575b8146f430d3a98dbae09f96d1da8aed63404cf333a9e",
+      "changed_vs_base": false
+    },
+    {
+      "path": "cells/compose/dynamicconfig/laug.yaml",
+      "sha256": "6ecc1d5ae589a5f89049b4f15d23becb616252e567ffd6a862db7294c50e705a",
+      "changed_vs_base": false
+    },
+    {
+      "path": "cells/compose/cell.yml",
+      "sha256": "131e51d360a5808d3f4de2cbb36b0a7a1b64588f6a65d2052f9b46295d0c035d",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/releases/1.32.yaml",
+      "sha256": "d22200aedb8b3fdcaa2d7326338d7f553fcf4d002305938b225637524f23a02c",
+      "changed_vs_base": false
+    }
+  ],
+  "deadline_s": 780,
+  "items_in_plan": 3,
+  "items_limit": null,
+  "t0": {
+    "wall": 1792257364.882,
+    "mono": 838.81
+  },
+  "t_post": {
+    "wall": 1792257365.533,
+    "mono": 839.46
+  },
+  "elapsed_s": {
+    "wall": 0.651,
+    "mono": 0.65
+  },
+  "host": {
+    "type": "other",
+    "vcpu": 32,
+    "mem_gib": 123,
+    "mem_available_gib": 121.7
+  },
+  "rules": {
+    "R1": {
+      "name": "harness",
+      "pass": false,
+      "reasons": [
+        "harness: harness.json is missing, so make harness-test was not seen to pass"
+      ]
+    },
+    "R2": {
+      "name": "coverage",
+      "pass": false,
+      "reasons": [
+        "incumbent: no JSON: there is no incumbent/ directory",
+        "steady: no JSON: there is no steady/ directory",
+        "pl: no JSON: there is no pl/ directory"
+      ]
+    },
+    "R3": {
+      "name": "contract",
+      "pass": false,
+      "reasons": [
+        "incumbent: contract: no exit code was recorded",
+        "steady: contract: no exit code was recorded",
+        "pl: contract: no exit code was recorded"
+      ]
+    },
+    "R4": {
+      "name": "outcome",
+      "pass": false,
+      "reasons": [
+        "incumbent: expected ADVANCE, observed nothing",
+        "steady: expected ADVANCE, observed nothing",
+        "pl: expected ADVANCE, observed nothing"
+      ]
+    },
+    "R5": {
+      "name": "live control",
+      "pass": false,
+      "reasons": [
+        "pl: control: service_error_rate read null in the during window, not above its max 0.001"
+      ]
+    },
+    "R6": {
+      "name": "identity",
+      "pass": false,
+      "reasons": [
+        "gate.json records host type other with 32 vCPU and 123 GiB, and thresholds.json names a set measured on m8i.8xlarge with 32 vCPU and 123 GiB",
+        "incumbent: identity: the cell said server_version null, and the plan names incumbent 1.31.0",
+        "incumbent: identity: incumbent/g20261017-171604-incumbent.verdict.json records no thresholds_release",
+        "steady: identity: the cell said server_version null, and the gate SERVER_TAG is 1.31.0",
+        "steady: identity: steady/g20261017-171604-steady.verdict.json records no thresholds_release",
+        "pl: identity: server_tag null, and the gate SERVER_TAG is 1.31.0",
+        "pl: identity: pl/g20261017-171604-pl.json records no thresholds_release"
+      ]
+    },
+    "R7": {
+      "name": "incumbent",
+      "pass": true,
+      "reasons": []
+    }
+  },
+  "reasons": [
+    "refused: this host's declared type is not m8i.8xlarge, the type load/steady-state.yaml was measured on: its numbers judge no other host type (docs/DESIGN.md section 7.1)",
+    "R1 harness: harness.json is missing, so make harness-test was not seen to pass",
+    "R2 incumbent: no JSON: there is no incumbent/ directory",
+    "R2 steady: no JSON: there is no steady/ directory",
+    "R2 pl: no JSON: there is no pl/ directory",
+    "R3 incumbent: contract: no exit code was recorded",
+    "R3 steady: contract: no exit code was recorded",
+    "R3 pl: contract: no exit code was recorded",
+    "R4 incumbent: expected ADVANCE, observed nothing",
+    "R4 steady: expected ADVANCE, observed nothing",
+    "R4 pl: expected ADVANCE, observed nothing",
+    "R5 pl: control: service_error_rate read null in the during window, not above its max 0.001",
+    "R6 gate.json records host type other with 32 vCPU and 123 GiB, and thresholds.json names a set measured on m8i.8xlarge with 32 vCPU and 123 GiB",
+    "R6 incumbent: identity: the cell said server_version null, and the plan names incumbent 1.31.0",
+    "R6 incumbent: identity: incumbent/g20261017-171604-incumbent.verdict.json records no thresholds_release",
+    "R6 steady: identity: the cell said server_version null, and the gate SERVER_TAG is 1.31.0",
+    "R6 steady: identity: steady/g20261017-171604-steady.verdict.json records no thresholds_release",
+    "R6 pl: identity: server_tag null, and the gate SERVER_TAG is 1.31.0",
+    "R6 pl: identity: pl/g20261017-171604-pl.json records no thresholds_release"
+  ],
+  "items": [
+    {
+      "key": "incumbent",
+      "kind": "load",
+      "arm": "incumbent",
+      "expect": "ADVANCE",
+      "observed": null,
+      "class": "invalid",
+      "reason": "no JSON: there is no incumbent/ directory",
+      "failed": [
+        "R2",
+        "R3",
+        "R4",
+        "R6"
+      ],
+      "run_id": "g20261017-171604-incumbent",
+      "cell": null,
+      "block": null,
+      "exit": null,
+      "stopped_by": null,
+      "pool_busy": null,
+      "evidence": [
+        "incumbent/g20261017-171604-incumbent.json",
+        "incumbent/g20261017-171604-incumbent.verdict.json"
+      ]
+    },
+    {
+      "key": "steady",
+      "kind": "load",
+      "arm": null,
+      "expect": "ADVANCE",
+      "observed": null,
+      "class": "invalid",
+      "reason": "no JSON: there is no steady/ directory",
+      "failed": [
+        "R2",
+        "R3",
+        "R4",
+        "R6"
+      ],
+      "run_id": "g20261017-171604-steady",
+      "cell": null,
+      "block": null,
+      "exit": null,
+      "stopped_by": null,
+      "pool_busy": null,
+      "evidence": [
+        "steady/g20261017-171604-steady.json",
+        "steady/g20261017-171604-steady.verdict.json"
+      ]
+    },
+    {
+      "key": "pl",
+      "kind": "fault",
+      "arm": null,
+      "expect": "ADVANCE",
+      "observed": null,
+      "class": "invalid",
+      "reason": "no JSON: there is no pl/ directory",
+      "failed": [
+        "R2",
+        "R3",
+        "R4",
+        "R5",
+        "R6"
+      ],
+      "run_id": "g20261017-171604-pl",
+      "cell": null,
+      "block": null,
+      "exit": null,
+      "stopped_by": null,
+      "pool_busy": null,
+      "evidence": [
+        "pl/g20261017-171604-pl.json"
+      ]
+    }
+  ],
+  "comparison": {
+    "incumbent": "incumbent",
+    "release": "steady",
+    "mode": "recording",
+    "wave": [
+      "load:incumbent workflow_with_single_noop_activity 20/s 50 5m",
+      "load workflow_with_single_noop_activity 20/s 50 5m",
+      "fault:persistence-latency workflow_with_single_noop_activity"
+    ],
+    "wave_measured": null,
+    "measured_with": "1.31.0",
+    "evidence": null,
+    "gates": null,
+    "windows": {
+      "start_apart_s": null,
+      "length_s": {
+        "release": null,
+        "incumbent": null
+      }
+    },
+    "notes": [],
+    "rows": [
+      {
+        "name": "workflow_task_schedule_to_start_p99_ms",
+        "scale": "ms",
+        "release": null,
+        "incumbent": null,
+        "d": null,
+        "tolerance": null,
+        "judged": false,
+        "result": "not compared"
+      },
+      {
+        "name": "persistence_latency_p99_ms",
+        "scale": "ms",
+        "release": null,
+        "incumbent": null,
+        "d": null,
+        "tolerance": null,
+        "judged": false,
+        "result": "not compared"
+      },
+      {
+        "name": "activity_schedule_to_start_over_10ms",
+        "scale": "share",
+        "release": null,
+        "incumbent": null,
+        "d": null,
+        "tolerance": null,
+        "judged": false,
+        "result": "not compared"
+      },
+      {
+        "name": "frontend_request_over_10ms",
+        "scale": "share",
+        "release": null,
+        "incumbent": null,
+        "d": null,
+        "tolerance": null,
+        "judged": false,
+        "result": "not compared"
+      },
+      {
+        "name": "workflow_end_to_end_over_50ms",
+        "scale": "share",
+        "release": null,
+        "incumbent": null,
+        "d": null,
+        "tolerance": null,
+        "judged": false,
+        "result": "not compared"
+      },
+      {
+        "name": "activity_schedule_to_start_p99_ms",
+        "scale": "ms",
+        "release": null,
+        "incumbent": null,
+        "d": null,
+        "tolerance": null,
+        "judged": false,
+        "result": "not compared"
+      },
+      {
+        "name": "workflow_end_to_end_p95_ms",
+        "scale": "ms",
+        "release": null,
+        "incumbent": null,
+        "d": null,
+        "tolerance": null,
+        "judged": false,
+        "result": "not compared"
+      },
+      {
+        "name": "service_error_rate",
+        "scale": "share",
+        "release": null,
+        "incumbent": null,
+        "d": null,
+        "tolerance": null,
+        "judged": false,
+        "result": "not compared"
+      },
+      {
+        "name": "frontend_request_p99_ms",
+        "scale": "ms",
+        "release": null,
+        "incumbent": null,
+        "d": null,
+        "tolerance": null,
+        "judged": false,
+        "result": "not compared"
+      },
+      {
+        "name": "workflow_task_schedule_to_start_over_20ms",
+        "scale": "share",
+        "release": null,
+        "incumbent": null,
+        "d": null,
+        "tolerance": null,
+        "judged": false,
+        "result": "not compared"
+      },
+      {
+        "name": "persistence_latency_over_10ms",
+        "scale": "share",
+        "release": null,
+        "incumbent": null,
+        "d": null,
+        "tolerance": null,
+        "judged": false,
+        "result": "not compared"
+      },
+      {
+        "name": "workflows_completed",
+        "scale": "count",
+        "release": null,
+        "incumbent": null,
+        "d": null,
+        "tolerance": null,
+        "judged": false,
+        "result": "not compared"
+      }
+    ]
+  },
+  "host_quiet": false,
+  "host_noise": [
+    "poll.jsonl is missing, so the host was not seen quiet"
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "gate_id": "g20261024-104246",
+  "server_tag": "1.31.0",
+  "laug_commit": "5fe3f15",
+  "tree_dirty": false,
+  "base": "5fe3f15",
+  "base_ref": "main",
+  "inputs": [
+    {
+      "path": "gate/plans/noise.yaml",
+      "sha256": "12b017b2404f44724b1445d695d5266cdc83cdf163ab019ea6ac249e63bc5904",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/steady-state.yaml",
+      "sha256": "b3f542321181015f4a4d35825f56ec8d13d063ac81e131e3c39a25b9bb1c0416",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/thresholds.sh",
+      "sha256": "63b15eca3a4a9508008a146096459d669f6a99259542339ca9ebd276731d4a9e",
+      "changed_vs_base": false
+    },
+    {
+      "path": "faults/catalog.yaml",
+      "sha256": "749c662f6edbe80f43b18501db14e8fd48163581a5e7cfe82677004d8c624f9a",
+      "changed_vs_base": false
+    },
+    {
+      "path": "cells/compose/dynamicconfig/laug.yaml",
+      "sha256": "6ecc1d5ae589a5f89049b4f15d23becb616252e567ffd6a862db7294c50e705a",
+      "changed_vs_base": false
+    },
+    {
+      "path": "cells/compose/cell.yml",
+      "sha256": "24e7cbac0d1cd57235740bfb0b0b5853baa075e9e8a1f6e73b0d66514754fe59",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/releases/1.32.yaml",
+      "sha256": "3b4b20d8015da70a75f77b768e5f8faf90f29692fdbbd6e810c7bac79c19b710",
+      "changed_vs_base": false
+    },
+    {
+      "path": "internal/judge",
+      "sha256": "eb37b18a8bbe78033fa1906917b4774c6463fa0a79983194abaec33e8878be55",
+      "changed_vs_base": false,
+      "version": "v3",
+      "go": "go1.26.0",
+      "tree_clean": true
+    }
+  ],
+  "host": {
+    "type": "m8i.8xlarge",
+    "vcpu": 32,
+    "mem_gib": 123,
+    "mem_available_gib": 121.8
+  },
+  "refused": null,
+  "plan": "gate/plans/noise.yaml",
+  "items_limit": 1,
+  "fake": false,
+  "pool": "127.0.0.1:7700",
+  "driver": "run.sh",
+  "workflow_id": null,
+  "worker_commit": null,
+  "wiring": [
+    {
+      "key": "s1",
+      "run_id": "g20261024-104246-s1",
+      "requester": "gate-g20261024-104246-s1",
+      "results_dir": "gate/results/g20261024-104246/s1",
+      "lease_file": "gate/results/g20261024-104246/s1/.lease.json",
+      "task_queue": "omes-g20261024-104246-s1",
+      "omes_metrics": {
+        "worker": "127.0.0.1:19100",
+        "client": "127.0.0.1:19101"
+      }
+    }
+  ]
+}

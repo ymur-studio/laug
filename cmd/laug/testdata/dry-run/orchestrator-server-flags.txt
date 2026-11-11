@@ -1,0 +1,9 @@
+# make: make --no-print-directory -n orchestrator-server ORCH_ADDRESS=127.0.0.1:7500 ORCH_HTTP_PORT=7501 ORCH_METRICS_PORT=7502 ORCH_UI_PORT=8500
+# laug: laug orchestrator server -orchestrator 127.0.0.1:7500 -http-port 7501 -metrics-port 7502 -ui-port 8500
+# lease: absent
+# compare: line temporal server
+[ '127.0.0.1' = 127.0.0.1 ] || { echo "laug · the dev server has no auth: ORCH_ADDRESS must be 127.0.0.1:<port>" >&2; exit 2; }
+[[ '7501' =~ ^[0-9]+$ ]] || { echo "laug · make orchestrator-server: ORCH_HTTP_PORT="'7501'" is not a whole number" >&2; exit 2; }; [[ '7502' =~ ^[0-9]+$ ]] || { echo "laug · make orchestrator-server: ORCH_METRICS_PORT="'7502'" is not a whole number" >&2; exit 2; }; [[ '8500' =~ ^[0-9]+$ ]] || { echo "laug · make orchestrator-server: ORCH_UI_PORT="'8500'" is not a whole number" >&2; exit 2; }; 
+mkdir -p 'orchestrator/run'
+temporal server start-dev --ip 127.0.0.1 --port '7500' --http-port 7501 --metrics-port 7502 \
+  --ui-port 8500 --db-filename 'orchestrator/run/dev.db'

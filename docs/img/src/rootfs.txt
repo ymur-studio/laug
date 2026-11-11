@@ -1,0 +1,70 @@
+# Snapshot, restore and clone, cells/rootfs/README.md's figure. The snapshot: cells/rootfs/snapshot.sh:19-20
+# (golden.ext4 a copy of the image, cell.ext4; the recorded disk path a link to it), :22-31 (boot, then the cell warm in
+# the guest), :38-44 (freeze, pause, snapshot/create Full into vm.snap and vm.mem); cells/rootfs/fc-lib.sh:299-315 (the
+# disks on XFS with reflink=1; a copy a reflink where the filesystem shares blocks). The clone, the pool's create:
+# cells/backend-firecracker.sh:399 (cp --reflink=always), :403 and :413 (jail_launch, or unshare --net --mount),
+# :429-444 (the veth pair, tap0 and the DNAT in the cell's namespace), :449-462 (the cell's disk at the recorded path,
+# in its mount namespace only), :464-470 (snapshot/load, the handle check, resume), :476-479 (the clock set over one ssh
+# session), :480-485 (the thaw, after the set); internal/pool/pool.go:323-332 (the pool's health check before the cell
+# is warm or leased). make fc-restore: cells/rootfs/restore.sh:5-10 and :25-47 (the same steps on one VM on the host's
+# own network, timed to warm; fc-lib.sh:237-247, fc_start).
+name rootfs
+size 800 632
+title | A microVM cell: one snapshot, then a clone for each cell, its disk a reflink
+sub | make fc-snapshot takes the snapshot once; the pool's create clones it for every cell it builds
+desc | Left, make fc-snapshot, once. It copies the image's disk to golden.ext4 and boots a microVM from it, with the
+desc | cell brought to warm inside. It freezes the cell's containers with docker pause unless FREEZE=0, pauses the
+desc | microVM and writes a full snapshot, vm.snap and vm.mem. Right, the pool's create, for each cell. It reflinks
+desc | golden.ext4 into a disk of its own that shares its blocks, and makes network and mount namespaces, under the
+desc | jailer by default. A veth pair to the host, tap0 and a DNAT let every clone keep one guest address. The cell's
+desc | disk is bound at the path the snapshot recorded, in its mount namespace only. Then snapshot/load, and resume once
+desc | the VM holds the cell's disk, not golden.ext4. The host sets the guest clock over one ssh session, and the
+desc | containers thaw only after the set. Then the pool's health check passes, and the cell is warm. A snapshot taken
+desc | with FREEZE=0 is not frozen, and no thaw runs. make fc-restore runs the same restore on one microVM on the host's
+desc | own network, with no pool, and times it to warm.
+source cells/rootfs/snapshot.sh
+source cells/rootfs/restore.sh
+source cells/rootfs/fc-lib.sh
+source cells/backend-firecracker.sh
+source internal/pool/pool.go
+text 24 84 bold size=12 | snapshot, once
+text 24 100 size=10 | make fc-snapshot
+text 264 84 bold size=12 | the snapshot
+text 480 84 bold size=12 | clone, for each cell
+text 480 100 size=10 | the pool's create, cells/backend-firecracker.sh
+box s1 24 112 208 44 | copy the image's disk | cell.ext4 to golden.ext4
+box s2 24 172 208 44 | boot the microVM | the cell warm inside it
+box s3 24 232 208 44 | freeze, then pause | docker pause, then the VM
+box s4 24 292 208 44 | snapshot/create | a full snapshot
+arrow s1 s2
+arrow s2 s3
+arrow s3 s4
+box golden 264 112 168 44 | golden.ext4 | on XFS with reflink=1
+box snap 264 322 168 44 | vm.snap, vm.mem | device state, memory
+arrow s1 golden
+arrow s4 snap
+box c1 480 112 296 44 mono | a disk of its own | cp --reflink=always golden.ext4
+box c2 480 172 296 44 | namespaces of its own | network and mount; the jailer inside
+box c3 480 232 296 44 | its network | a veth pair to the host, tap0, DNAT
+box c4 480 292 296 44 | its disk at the recorded path | a bind mount, in its mount namespace only
+box c5 480 352 296 44 | snapshot/load, then resume | once it holds its disk, not golden.ext4
+box c6 480 412 296 44 | the guest clock set | from the host, over one ssh session
+box c7 480 472 296 44 | thaw | the containers, only after the set
+box c8 480 532 296 44 fill=warm | warm | the pool's health check passes
+arrow c1 c2
+arrow c2 c3
+arrow c3 c4
+arrow c4 c5
+arrow c5 c6
+arrow c6 c7
+arrow c7 c8
+arrow golden c1 at=436,128 | reflink
+arrow snap c5
+text 24 392 bold size=12 | make fc-restore
+text 24 410 | The same restore on one microVM,
+  | on the host's own network, with no
+  | pool: a reflink, snapshot/load,
+  | the clock set, the thaw; timed to warm.
+text 24 604 size=10
+  | source: cells/rootfs/snapshot.sh, cells/rootfs/restore.sh, cells/rootfs/fc-lib.sh,
+  | cells/backend-firecracker.sh and internal/pool/pool.go.

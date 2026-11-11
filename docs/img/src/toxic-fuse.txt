@@ -1,0 +1,47 @@
+# The loop a reset_peer toxic could make on the cell's Postgres. It never blew in boot 2's rauns; the source does not
+# say why. The SQL layer reopens a pool at most once a second (db_handle.go:24, :98-103). The toxic:
+# faults/catalog.yaml:48-57 (persistence-errors, toxicity 0.05). Toxiproxy between the roles and Postgres:
+# cells/compose/cell.yml:22, :99-104 (toxiproxy 2.12.0). The three layers' behavior is read in source, not run:
+# Toxiproxy 2.12.0 toxics/toxic.go:84-85, toxics/reset_peer.go:21-33, link.go:95-107 and :171-192; Go
+# 1.26.2 (server v1.31.0's go.mod) database/sql/sql.go:1572-1584 and :2511-2536, with lib/pq v1.10.9
+# error.go:506-508 and conn.go:343-348; server v1.31.0 common/persistence/sql/sqlplugin/db_handle.go:157-169 and
+# postgresql/db.go:66-71, :132-135.
+# The panel is boot 2's rauns of the row and the sampler beside each, their rauns and fig-toxic-fuse rows
+# (_report/lessonfaults.go, toxicitiesPanel); the sampler's queries: cells/results/2026-10-23-boot2.txt:163-169.
+name toxic-fuse
+size 800 616
+title | A reset_peer toxic on Postgres: three layers between the fault and the server
+sub | faults/catalog.yaml's persistence-errors: Toxiproxy between the cell's roles and their Postgres
+desc | Top: the cell's server roles reach its Postgres through Toxiproxy, where persistence-errors adds a reset_peer
+desc | toxic at toxicity 0.05. Middle: what each of the three layers does: Toxiproxy decides once a connection whether
+desc | the toxic applies; Go's database/sql retries, outside a transaction, a query whose open connection was closed;
+desc | and Temporal's SQL layer answers a reset during a new connection's handshake by closing the role's whole pool,
+desc | and opens a new one at most once a second (db_handle.go:24). The loop is the fuse the design suggests: every new
+desc | connection draws the toxic again. It never blew here: no role stopped at any toxicity. Read in source, not run
+desc | (Toxiproxy 2.12.0; database/sql with lib/pq v1.10.9; server v1.31.0 db_handle.go:157-169). Below, what
+desc | was run: boot 2's rauns of the row on compose cells, the committed toxicity three times, then catalog copies that
+desc | change only the toxicity, a column a raun, headed by its toxicity and the end of its run id. A column holds the
+desc | raun's verdict, when its signal crossed 0.5, and what a sampler beside it read on the cell's Prometheus and
+desc | Postgres from the inject to the hold's end, each the range over those reads: persistence errors a second and
+desc | workflows completed a second, each over 30 s; each role's pool refresh attempts and their failures, each over
+desc | 1 m, at their peak, with the role that reached it; and connections to the temporal database. Last, the raun's
+desc | failed client starts over every window. A BLOCK here means only that the fault never landed: its signal stayed
+desc | at 0 for the whole hold.
+source faults/catalog.yaml
+source cells/compose/cell.yml
+box roles 24 76 236 56 | the cell's server roles | each with its own pool
+box proxy 300 76 200 56 fill=warm | Toxiproxy 2.12.0 | reset_peer, toxicity 0.05
+box pg 540 76 236 56 | Postgres | the cell's store
+arrow roles proxy
+arrow proxy pg
+box layer1 24 176 236 82 | 1. Toxiproxy | decides once a connection | whether the toxic applies, | the open ones too
+box layer2 282 176 236 82 | 2. Go's database/sql | an armed open connection | closes; outside a transaction
+  | the query runs on another one
+box layer3 540 176 236 82 fill=deep | 3. Temporal's SQL layer | a new connection reset in | its handshake: close the
+  | pool, dial a new one
+path 658,258 658,300 142,300 142,258 colour=ember head at=232,318 | every new connection draws the toxic again
+panel toxicities 24 336 752 226
+text 24 579 size=11
+  | BLOCK here means only that the fault never landed: its signal stayed at 0 for the whole 120 s hold.
+text 24 596 size=10 | source, read and not run: Toxiproxy 2.12.0; Go's database/sql with lib/pq v1.10.9;
+  | server v1.31.0 common/persistence/sql/sqlplugin/db_handle.go:24, :157-169. The toxic: faults/catalog.yaml.

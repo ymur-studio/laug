@@ -1,0 +1,483 @@
+laug · boot 1 on the lab host: a cell from nothing, readiness, serverfi, a timer kill, two releases, the pool, a raun
+2026-10-23, 06:24:56 to 08:04:37 UTC by the box's clock (batch-log.txt, its first and last lines). Host: the lab host,
+an m8i.8xlarge (32 vCPU, 128 GiB; bin/laug host type read 32 vCPU and 123 GiB, H2) on demand, up 41.83 s when the
+batch started at 06:25:10, nothing of laug's running: 0 listeners on 7700, 0 laug projects, 0 laugd, 0 pool serve, 0
+cellstat (batch-log.txt). Tree: 5e6b65e, pushed to the box, which commits a pushed tree itself: 2e375b0, "tree 062449
+from 5e6b65e", whose 4277 files hash as 5e6b65e's on the dev host, with no other file. Every laug command ran in a
+fresh clone of it, bin/laug stamped 2e375b0 (S1, S6). Go: the launcher installed go1.26.0 from go.dev, its sha256 the
+one go.dev lists, because apt's go1.22.2 is older than go.mod's 1.26.0 (batch-log.txt, launch).
+What the batch asked (boot 1 of the lab boots): the numbers the dev host gave for one cell and the pool, measured
+again on the lab host, one cell at a time on block 0, then the pool, then one raun. In order: the start (S), the host
+(H), a warm-up cell and load (W), a cell from nothing (A1), Elasticsearch visibility (A2), the server image's default
+shard count (A3), readiness on three fresh cells (A4), an idle cell under the health loop (A5), two smokes (A6),
+server fault injection from the cell's first start (A7, A8), a timer whose worker is killed, and the HealthCheck
+fixture recorded again (A9), six 5 m loads alternating 1.31.0 and 1.32.1 and the eager counter (D1 to D7), the pool
+(P), a warm-up raun and one persistence-latency raun with request rates (R). No gate ran. Nothing here counts toward a
+gate.
+Files. load/results/lab1-*.json (.json, .verdict.json, .baseline.json) and faults/results/raun-lab1-*.json are the files
+the verbs wrote in the clone, at their tree paths: the clone's git status after the batch lists these 24, untracked,
+and no other path (clone-status.txt); runs.tsv names the step that wrote each.
+cells/results/2026-10-23-boot1/ holds the batch's own records, scrubbed of the box's paths and name before they left it
+(a path shows as <clone>, <out> or <box tree>, the host's name as <host>):
+  batch-log.txt     the batch's log: one line a command, with its exit and seconds, and the readings kept, UTC
+  steps/            each command's whole stdout and stderr, one file a step (120 files; L-build.txt is the launcher's
+                    make build in the box's tree, before the batch)
+  steps.tsv         step, exit, seconds, ok or fail: the 109 commands
+  runs.tsv          step, run id, the file the step wrote, exit
+  readings.json     the 92 readings the batch took, each with its step, how it was read and when
+  groups.txt        the 21 step groups, in order
+  clone-status.txt  the clone's git status after the batch: the 24 result files, untracked, one line each
+  extra/            the hand readings' raw files (38): Prometheus answers, the readiness and serverfi pollers, the
+                    reap poller, the three dynamic config edits, the timer's history, the new fixture, the usage
+                    sample
+Every table below is read from those files with jq, or quoted from them. Tags: a number with a file beside it is seen in
+that file; "computed" marks arithmetic on such numbers; "inference" marks reasoning; "verify" marks what comes from
+documentation or source not run here. "replaces" names the number this run stands in for, the host it came from and
+the file in this tree that holds it.
+
+== S: the start, 06:25:10 to 06:30:28
+  S1  git clone of the box's tree         2e375b0, 4277 files (batch-log.txt; steps/S1.txt is empty: clone -q prints
+                                          nothing)
+  S2  make build                          exit 0, 6.3 s (steps/S2.txt)
+  S3  bin/laug upstream -url <box tree>/.upstream/omes
+                                          exit 0, 2.6 s: Omes f0de206 from the box's own copy, its proto submodule
+                                          checked out at d96bd55 (steps/S3.txt)
+  S4  bin/laug deps -lab -json            exit 0, 1.2 s: 0 of 17 checks missing; go a note (1.26.0 here, Omes asks
+                                          1.26.5, which GOTOOLCHAIN=auto fetches); docker engine 29.1.3, compose
+                                          2.40.3, temporal 1.9.1, jq 1.7, yq 4.54.1, /dev/kvm ok; "this host" ok
+                                          against its need of 16 vCPU and 8 GiB available (steps/S4.txt)
+  S5  make test                           exit 0, 307.3 s: 15 Go packages ok, make harness-test 1137 passed, 0 failed,
+                                          make lint's four lines clean (steps/S5.txt)
+  S6  bin/laug version -json              commit 2e375b0, go1.26.0, server_tag 1.31.0, Omes f0de206 (steps/S6.txt)
+  S7  git status --porcelain              clean (batch-log.txt, S7)
+Shows: the tree at 5e6b65e builds and passes make test on a fresh clone on the lab host, on the go1.26.0 the launcher
+installed (launch make build 12 s, batch-log.txt; steps/L-build.txt).
+Does not show: make test by part. steps/S5.txt holds each Go package's own seconds (orchestrator 76.395 s, the largest),
+not the wall of test-go, harness-test or lint, and the batch kept only the total.
+Replaces, in total only: "about 7 s", "about 79 s" and "about 230 s on the dev host" for the old make targets (dev host,
+STATUS.md:35-37). The dev host's make test on a fresh clone took 345.2 s (cells/results/2026-10-23-fresh-clone.txt).
+
+== H: the host, 06:30:28 to 06:31:29
+  H1  bin/laug host clock -for 60s        uptime 60.240 s, wall 60.236 s, wall/uptime 0.9999, 0 steps over 0.5 s
+                                          (steps/H1.txt)
+  H2  bin/laug host type -json            declared m8i.8xlarge, 32 vCPU, 123 GiB, passes true (steps/H2.txt)
+  H3  tool versions                       Docker Engine 29.1.3; compose 2.40.3 (Ubuntu's package,
+                                          2.40.3+ds1-0ubuntu1~24.04.1); temporal CLI 1.9.1 (Server 1.32.0, UI
+                                          2.54.1); go1.26.0; jq 1.7; yq v4.54.1 (readings.json, tool_versions)
+  H4  images before                       11 named; 10 present, each id kept; elasticsearch:7.17.27 absent
+                                          (readings.json, images_before)
+Replaces: wall over monotonic 1.048, then 1.045 (dev host, STATUS.md:607): 0.9999 here, 0 steps. The tool table's
+"Version on the dev host" column (README.md:42-50: Engine 29.5.3, Compose v5.1.4, Go 1.24.1 on the path, CLI 1.9.1,
+yq v4.54.1, jq 1.7): the lab host's versions above are the other column.
+
+== W: the warm-up, 06:31:29 to 06:33:16, not counted
+  W1  bin/laug cell up                    SERVING after 22 s, the box's first cell since its start
+  W2  bin/laug load -duration 60s -rate 20 -max-concurrent 50 -run-id lab1-warmup
+                                          window 06:31:51 to 06:32:59, Omes exit 0, 0 failed iterations
+                                          (load/results/lab1-warmup.json). It guards what follows; not cited.
+  W3  bin/laug cell down -remove-volumes  13 containers, 2 volumes, 1 network went, 0 left, 17.0 s
+Shows: the first cell after the boot took 22 s; the 13 cached cells after it took 14 to 15 s (A4, A5, A9, D;
+readings.json).
+
+== A1: a cell from nothing, 06:33:16 to 06:35:20
+The 8 images cell.yml names at server 1.31.0 with the es profile off (batch-log.txt, A1: toxiproxy 2.12.0, grafana
+11.1.0, nginx 1.22.1, postgres:16, prometheus v2.53.0, admin-tools 1.31.0, server 1.31.0, ui 2.49.1) were saved to a
+tar and removed, then bin/laug cell up pulled them. No laug verb removes images, so A1a, A1b and A1g are hand steps,
+each printed in its step file.
+  A1a docker image save -o <out>/images-1310.tar <the 8>
+                                          exit 0, 18.8 s; 778238976 bytes in the tar
+  A1b docker image rm <the 8>             exit 0, 2.6 s; 8 named, 0 still present
+  A1c bin/laug cell up                    SERVING after 44 s; the command's wall 43.6 s (steps.tsv), pulls included;
+                                          8 of 8 images present after (steps/A1c.txt holds compose's pull lines)
+  A1d bin/laug cell mem, 20 s after       576 MiB across 11 containers: history 172.8, postgresql 138.1, grafana 51.77,
+      SERVING                             matching 46.66, prometheus 35.34, frontend 34.46, worker 33.76, frontend2
+                                          33.29, toxiproxy 20.55, ui 6.875, nginx 2.613 MiB (steps/A1d.txt)
+  A1e bin/laug cell health x9             completed 1119, 1110, 1095, 1090, 1108, 1131, 1121, 1108, 1109 ms; found by
+                                          List in 9, 3, 3, 4, 6, 5, 5, 4, 3 ms (batch-log.txt, A1e)
+  A1f bin/laug cell down -remove-volumes  13 containers, 2 volumes, 1 network went, 0 left, 16.5 s
+  A1g docker image load -i <the tar>; docker image prune -f
+                                          8 loaded in 7.7 s; prune removed 1 dangling image, 166.1 MB reclaimed
+                                          (steps/A1g.txt, A1g-prune.txt). The 8 ids after the load equal the 8 before
+                                          the removal (readings.json, images_before and images_after_reload), so every
+                                          later cell ran the images the earlier lab runs ran.
+Does not show: each image's pull time or bytes (compose prints no times); which name the dangling image had held. It
+went dangling when the tar's images took their names back, so one pulled image differed from the saved one
+(inference). The prune untagged every saved id but postgres:16's, ca0bd484, and deleted one other image, 9e2cf628
+(steps/A1g-prune.txt; readings.json, images_before), so the pulled postgres:16 is the likely one (inference).
+postgres:16 is the one image whose tag names only a major version (batch-log.txt, A1;
+cells/results/2026-10-15-lab-gates-1-3.txt:3-4).
+Replaces: 55 s from nothing (dev host, STATUS.md:580, after docker rmi of the 8 images, "3.2 GB"): 44 s; the first lab
+host, an m8i.2xlarge, read 46 s (STATUS.md:608). The tar's 778238976 bytes and the dev host's 3.2 GB may count
+different things (inference). 647 MiB across 10 containers (dev host, STATUS.md:584 and docs/DESIGN.md:88, before
+toxiproxy joined the cell): 576 MiB across 11. HealthCheck 1 141 to 1 176 ms (dev host, STATUS.md:586): 1 090 to
+1 131 ms. Found by List in 8 ms (dev host, STATUS.md:587 and docs/DESIGN.md:89-90): 3 to 9 ms.
+
+== A2: Elasticsearch visibility, 06:35:20 to 06:36:47
+  A2a elasticsearch:7.17.27               absent (H4), so A2b's seconds hold its pull
+  A2b bin/laug cell up -visibility es     SERVING after 29 s, wall 28.4 s, the elasticsearch pull in it
+  A2c bin/laug cell mem                   1497 MiB across 12 containers, elasticsearch 944.8 MiB (steps/A2c.txt);
+                                          docker stats on elasticsearch alone, 945 MiB (extra/a2c-es-stats.json)
+  A2d bin/laug cell health x6             completed 1114, 1117, 1107, 1096, 1090, 1095 ms; found by List in 20, 12, 532,
+                                          10, 531, 11 ms (batch-log.txt, A2d)
+  A2e bin/laug cell down -remove-volumes  14 containers, 2 volumes, 1 network went, 0 left, 25.2 s
+Shows: the two slow List reads, 531 and 532 ms, were the third and the fifth, not the first after the cold start as on
+the dev host (STATUS.md:588).
+Does not show: an Elasticsearch cell's time to SERVING with its image cached; this one pulled it.
+Replaces: 1 610 MiB across 11 containers, elasticsearch alone 1 017 MiB (dev host, STATUS.md:585 and
+docs/DESIGN.md:88-89): 1 497 MiB across 12, elasticsearch 945 MiB. 13 to 535 ms (dev host, STATUS.md:588): 10 to 532
+ms. 16 s against 17 s to SERVING and 8 against 22 ms for one List (dev host, docs/DESIGN.md:89-90): 3 to 9 against 10
+to 532 ms here; the time to SERVING has no like pair (15 s cached on Postgres, 29 s with the pull on Elasticsearch).
+
+== A3: the server image's default shard count, 06:36:47 to 06:38:20, hand steps
+bin/laug cell up waits for cell.yml's 512 shards, so this cell came up through docker compose itself, with an
+override file that resets NUM_HISTORY_SHARDS (compose's !reset) on the server roles. The commands, as run
+(steps/A3b.txt, A3c.txt, A3e.txt):
+  env ENABLE_ES=false COMPOSE_PROFILES= BIND_ADDR=127.0.0.1 SERVER_TAG=1.31.0 FRONTEND_PORT=7233 UI_PORT=8080 \
+    PROMETHEUS_PORT=9090 GRAFANA_PORT=3000 TOXIPROXY_PORT=8474 docker compose -p laug-defshards \
+    --project-directory cells/compose -f cells/compose/cell.yml -f <out>/shards-default.yml up -d
+  (the same env and files) docker compose ... exec -T postgresql psql -U temporal -d temporal \
+    -tAc 'select count(*) from shards'
+  bin/laug cell down -remove-volumes -json -project laug-defshards
+  A3a docker compose ... config --format json with the override
+                                          0 services hold NUM_HISTORY_SHARDS: !reset works on compose 2.40.3, the
+                                          batch's verify answered (batch-log.txt, A3a)
+  A3b up -d                               exit 0, 14.9 s; history's first "initial shards ready" line: ts 06:36:57.717,
+                                          total 4
+  A3c select count(*) from shards         4
+  A3d Prometheus at 06:38:02, [1m]        sum(rate(persistence_requests[1m])) 3.29 req/s; by service: frontend 1.08,
+                                          history 1.02, matching 0.64, worker 0.54, server 0
+                                          (extra/A3d-idle_persistence_rps_default_shards*.json)
+  A3e cell down -project laug-defshards   13 containers, 2 volumes, 1 network went, 0 left
+Shows: the 1.31.0 image's default is 4 history shards, by history's own line and by the shards table.
+Does not show: the idle cost of 512 against 4 as a like pair. A5c below read history at 30.07 req/s with 512 shards,
+over [4m] from SERVING with the health loop running; A3d read 1.02 req/s with 4, over [1m] with nothing running, its
+window starting 5.2 s after the shards line (computed: the query's time, 06:38:02.867 in
+extra/A3d-idle_persistence_rps_default_shards.json, less 60 s, against the line's ts, 06:36:57.717 in batch-log.txt).
+Different lengths, different load, both in the cell's first minutes.
+Replaces: "returned 4" (dev host, 2026-10-07, docs/DESIGN.md:116): 4 here too. "not measured" for the idle rate at 4
+shards against 512 (docs/DESIGN.md:129-131): each read once, not yet like for like.
+
+== A4: readiness, three fresh cells, 06:38:20 to 06:40:32
+Each cell: bin/laug cell up with a poller beside it every 0.5 s (extra/a4-ready-1.jsonl to -3.jsonl, a line a poll),
+then cell down (13 containers, 2 volumes, 1 network, 0 left, each time). Seconds from the command's start
+(readings.json, ready_1 to ready_3):
+  cell  history's "initial shards  temporal operator  namespace  first HealthCheck  numshards_gauge  cell up's
+        ready", total 512       cluster health     describe   that completed     at 512           "after"
+  1     10.3                    13.8               13.8       24.9               25.4             15
+  2     10.4                    14.4               14.4       24.5               25.0             15
+  3     10.4                    14.4               14.4       24.5               25.0             15
+In each cell the poller's first HealthCheck failed, "Namespace default is not found" (extra/a4-health-1.txt to -3.txt,
+one failure each, at 06:38:35, 06:39:21 and 06:40:04), and the next one completed. The first lab Gate 1 saw the same
+shape (cells/results/2026-10-15-lab-gates-1-3.txt, attempt 2).
+Does not show: when the gauge reached 512. The poller does one thing at a time. In each file the row that started at
+15.1 to 15.6 s ends with the HealthCheck's success at 24.5 to 24.9 s, and the next row, the first gauge read after it,
+starts at 25.0 to 25.4 s. So the gauge's seconds are an upper bound, and nothing was read between those two rows.
+Replaces: 17.4 / 17.4 / 24.2 s for cluster health, shards owned and the gauge at 512 (dev host, STATUS.md:611,
+cells/results/2026-10-13-dev-readiness.txt): 13.8 to 14.4 / 10.3 to 10.4 / at most 25.0 to 25.4 s. The first lab
+host, an m8i.2xlarge, read 10.4 / 11.2 / 16.3 s (STATUS.md:612); the gauge's 16.3 s has no like number here.
+
+== A5: an idle cell under the health loop, 06:40:32 to 06:45:47
+  A5a bin/laug cell up                    SERVING after 15 s, at 06:40:47
+  A5b bin/laug health loop -address 127.0.0.1:7233 -every 10s, 300 s, then INT to its group (A5d)
+                                          27 rounds, completed 1091 to 1128 ms (steps/A5b.txt; readings.json,
+                                          health_loop_completed_ms)
+  A5c at +240 s, 06:44:47, on the cell's Prometheus (extra/A5c-*.json):
+      frontend p99, every operation, [1m]                    19 600 ms
+      frontend p99, operation!~"Poll.*", [1m]                9.93 ms
+      persistence p99, [1m]                                  8.77 ms
+      persistence requests/s by service, [4m]                history 30.07, frontend 1.87, matching 1.69, worker 0.60,
+                                                             server 0
+      frontend requests by bucket, [4m], 466.8 in all        up to 50 ms 216.0 (46.3%); 1 to 2 s 41.9 (9.0%); 10 to
+                                                             20 s 85.8 (18.4%); 50 to 100 s 123.2 (26.4%); 0 above
+                                                             100 s (computed from the cumulative buckets)
+      sum(acquire_shards_count{service_name="history"}),     1 at the first sample, 06:40:57; one more at 06:41:47,
+      query_range, step 5 s, over the loop's 300 s          06:42:47, 06:43:47, 06:44:47 and 06:45:47: 60 s apart, to
+                                                             the query's 5 s step (computed from the unix times)
+Shows: with the long polls in, the p99 sits in their buckets (19.6 s over this minute); with them out, 9.93 ms. The
+history acquire pass ran every 60 s of wall clock on this host.
+Does not show: an idle floor for the request rate. The 4 m window began at SERVING (06:40:47 to 06:44:47), so it holds
+the cell's first minutes and the loop's HealthChecks; history's 30.07 req/s is not the idle rate (inference; on idle
+512-shard cells the dev host read about 1 request/s from history plus a burst every 4 to 4.5 min, STATUS.md:512-514).
+Replaces: 20 ms polls excluded (dev host, STATUS.md:589 and docs/DESIGN.md:141): 9.93 ms. 11.5 ms persistence (dev host,
+STATUS.md:590): 8.77 ms. 98 862 ms with the polls in (dev host, docs/DESIGN.md:140): 19 600 ms, another minute's
+bucket. "about 44%" in the 50 to 100 s bucket (dev host, docs/DESIGN.md:152): 26.4% over 4 m. The acquire pass's
+wall-clock period, which faults/catalog.yaml:124-126 says "is measured on the lab host" (it was not): 60 s.
+
+== A6: the smokes, 06:45:47 to 06:47:11, on A5's cell
+  A6a bin/laug load -iterations 200 -run-id lab1-smoke200
+                                          window 06:45:47 to 06:45:51, 4 s; Omes exit 0, 0 failed iterations
+                                          (load/results/lab1-smoke200.json)
+  A6b bin/laug sweep lab1-smoke200        {} (steps/A6b.txt). The sweep counts workflows started before 30 s ahead of
+                                          the run's end (-sweep-margin 30s, cmd/laug/sweep.go), here 06:45:21, before
+                                          this 4 s run began, so it counted none by design
+  A6c bin/laug load -duration 60s -run-id lab1-smoke60, Omes's own rate and concurrency
+                                          window 06:45:52 to 06:46:53, 61 s; Omes exit 0, 0 failed iterations
+                                          (load/results/lab1-smoke60.json)
+  A6d bin/laug baseline lab1-smoke60      exit 3: "window is 61 s; steady-state.yaml trusts nothing shorter than 300 s"
+                                          (steps/A6d.txt); the end line's one failed command, below
+  A6e bin/laug sweep lab1-smoke60         Completed 1920, of those started before 06:46:23
+  A6f at the run's end, 06:46:53 (extra/A6f-*.json; readings.json):
+      workflows completed in the 61 s (increase of workflow_success)   3872.5, 63.5/s
+      1 m rates at the end                 workflow task s2s p99 389.6 ms, activity s2s p99 412.3 ms, end-to-end p95
+                                           429.6 ms, persistence p99 9.69 ms, frontend p99 polls excluded 17.5 ms,
+                                           the threshold's error rate (Canceled left out) 0
+      requests in the 61 s                 94 855
+      errors in the 61 s, by type          serviceerror_Canceled on matching: AddWorkflowTask 258.4, AddActivityTask
+                                           54.3; serviceerror_NamespaceNotFound 0
+      raw error rate, Canceled counted     0.33% (0.003297); Canceled's share of the errors 1.0000
+  A6g bin/laug cell down -remove-volumes  13 containers, 2 volumes, 1 network went, 0 left
+Shows: at Omes's own rate the cell completed 63.5 workflows/s; schedule-to-start rose to 389.6 and 412.3 ms while
+persistence held 9.69 ms against 8.77 ms idle (A5c), so the queueing is not in the store (inference, as
+docs/DESIGN.md:199-201 reads the dev run).
+Does not show: the 200 iterations counted by visibility (A6b's cutoff); a baseline over a 61 s run (A6d).
+Replaces: 3.6 s of run, 200 workflows counted by visibility (dev host, STATUS.md:597): 4 s, the count not read. 3 450
+workflows, 54/s (dev host, STATUS.md:598): 3872.5, 63.5/s. 413 / 199 / 453 ms (dev host, STATUS.md:599 and
+docs/DESIGN.md:201): 389.6 / 412.3 / 429.6 ms. 11.5 / 27.8 ms (dev host, STATUS.md:600): 9.69 / 17.5 ms. 0.62% raw,
+447 of 467 errors Canceled (dev host, STATUS.md:601 and docs/DESIGN.md:199): 0.33%, every error Canceled.
+
+== A7 and A8: server fault injection from the cell's first start, 06:47:11 to 06:51:44
+A7a: env LAUG_FI_STORE=ShardStore LAUG_FI_METHOD=UpdateShard LAUG_FI_RATE=1.0 LAUG_FI_SEED=6007
+LAUG_FI_ERROR=ShardOwnershipLost bin/laug cell up -server-fi, under a 150 s cap: exit 124 at 150.1 s, the cap's INT.
+bin/laug cell up never printed SERVING (steps/A7a.txt).
+A7b, a poller every 5 s from history's start at 06:47:21.750 (extra/a7-poll.jsonl, 27 polls to 06:49:45):
+  06:47:22  poll 0: the frontend refused the connection
+  06:47:27  poll 1 on: temporal operator cluster health SERVING, exit 0, in each of the 26 polls left
+  06:47:52  bin/laug cell health at +20 s: cluster health SERVING; the HealthCheck "context deadline exceeded", exit 1
+            (steps/A7b-health.txt)
+  06:48:18  numshards_gauge first answered: 0 shards owned, and 0 in every poll after it
+  06:49:45  the last poll: "Couldn't acquire shard" lines 1299 (10 at poll 0), UpdateShard persistence errors 1279,
+            "initial shards ready" lines 0
+What the cell did in its 150 s: it answered the health call SERVING at poll 1, stamped 06:47:27, 5.3 to 6.3 s after
+history's start (computed; the polls' stamps are whole seconds) and owned no shard. History had failed 1299 acquires by
+the last poll, 06:49:45, 4 s after the cap ended at 06:49:41 (batch-log.txt, A7a; computed). It completed no workflow
+(inference: its one HealthCheck failed, steps/A7b-health.txt, and it owned 0 shards). The cap is the measurement:
+SERVING and owning nothing, for as long as the fault stays on.
+A7c, the fault removed: history recreated with every LAUG_FI_* unset, through compose (env -u LAUG_FI_* ... docker
+compose -p laug ... -f cells/compose/fi.yml up -d --no-deps --force-recreate temporal-history, exit 0, 0.5 s;
+steps/A7c.txt). "initial shards ready" at 06:49:51.265, 0.78 s after the command; numshards_gauge at 512 3.6 s after the
+command, polled every 0.2 s against a 5 s scrape (batch-log.txt, A7c; readings.json, r4_off_to_gauge_512_s).
+A7d: bin/laug cell health completed 1115 ms, visible 9 ms; cell down, 13 containers, 2 volumes, 1 network, 0 left.
+A8a: the same with LAUG_FI_ERROR=ShardOwnershipLostError, the example name in the server's config.go comment, under a
+90 s cap: exit 124 at 90.1 s; compose: "dependency failed to start: container laug-temporal-history-1 is unhealthy"
+(steps/A8a.txt).
+A8b, history at the cap: 10 restarts, status restarting, exit code 1, 0 lines with panic (batch-log.txt, A8b). Its first
+error is laug's own template refusing the name, at laug-server.yaml:137:16: "laug: LAUG_FI_ERROR
+"ShardOwnershipLostError" is not one of ShardOwnershipLost D", where the pack's copy stops (readings.json,
+example_name_error_line, cut to 400 characters; batch-log.txt, A8b, stops sooner). The rest, "DeadlineExceeded Timeout
+ExecuteAndTimeout ResourceExhausted Unavailable", is the format string at cells/compose/config/laug-server.yaml:137.
+A8c: cell down, 13 containers, 2 volumes, 1 network went, 0 left, 0.8 s.
+What the cell did in its 90 s: history never loaded its configuration and restarted 10 times, and compose did not start
+the roles that depend on it. The cap is the measurement here too.
+Does not show: another method, error or rate; how long history would go on restarting.
+Replaces: the dev host turned the fault on in a cell already serving (cells/results/2026-10-14-serverfi-smoke.txt);
+here it was on from the first start. 2.40 s from the recreate to "initial shards ready" (dev host, same file, lines
+42-43): 0.78 s. 6 restarts in 8 s and no panic for the example name (dev host, same file, lines 46-50): 10 restarts in
+90 s, no panic.
+
+== A9: the timer kill and the fixture, 06:51:44 to 06:53:34
+  A9a bin/laug cell up                    SERVING after 15 s
+  A9b bin/laug health timer 60s -id lab1-r2-timer -address 127.0.0.1:7233, then KILL to its process group
+                                          its worker armed a 1m0s timer at 06:52:14.274 by host time, run 01a16788
+                                          (steps/A9b.txt); KILL at 06:52:34.429, 20 s later (batch-log.txt, A9b)
+  A9c the same command again: a new worker, the same workflow id
+                                          it joined the running workflow, run 01a16788 again (steps/A9c.txt), and exited
+                                          0 in 39.9 s. Its JSON: server_at_start 06:52:14.291, server_at_fire
+                                          06:53:14.316, server_timer_s 60.025, host_at_fire 06:53:14.337
+  A9d temporal workflow show -w lab1-r2-timer --output json
+                                          16 events; TimerStarted 06:52:14.305, TimerFired 06:53:14.308, 60.003 s apart
+                                          (computed); 0 WorkflowTaskTimedOut (extra/a9-r2-history.json)
+  A9e bin/laug health record -overwrite-fixture
+                                          one HealthCheck, 1109 ms, visible 7 ms; its history written over the clone's
+                                          health/testdata/healthcheck_history.json (5e6b65e's path);
+                                          TestReplayHealthCheck and TestReplayDetectsSwappedActivities passed
+                                          (steps/A9e.txt)
+  A9f the new fixture's event types against the committed file's
+                                          24 and 24 events, equal; the committed file restored in the clone
+                                          (batch-log.txt, A9f). The new recording is extra/a9-healthcheck_history.json.
+  A9g bin/laug cell down -remove-volumes  13 containers, 2 volumes, 1 network went, 0 left
+The timer's lateness by host time: host_at_fire minus the armed time plus 60 s, 0.063 s (computed from steps/A9b.txt and
+steps/A9c.txt). The batch's own r2 reading is null, "no value read" (readings.json). The probe's own late_s, -20.15 s,
+counts from its own start at 06:52:34.489, not from the first probe's arming.
+The history (extra/a9-r2-history.json): the workflow task after the fire, event 7, was scheduled on the killed worker's
+sticky queue (kind STICKY) and started 7.3 ms later, event 8 at 06:53:14.316, by identity laug-timerprobe (computed from
+the events' times); the next workflow task, event 13, went to another sticky queue, the second worker's. A task on a
+dead worker's sticky queue can wait out the sticky schedule-to-start timeout before it moves (verify: Temporal's
+documentation on sticky execution); this one did not wait (inference: matching found no poller on the sticky queue and
+handed the task to the normal queue, where the second worker polled; verify in server 1.31.0's matching).
+Shows: a durable timer outlives its worker. Killed 20 s after arming, it fired 60.003 s after it started by the server's
+events, 0.063 s late by host time, and a second worker completed the run. A HealthCheck recorded on the lab host has the
+same 24 events, type by type, as the fixture recorded on the dev host.
+Does not show: the sticky timeout path; a worker gone for longer than the timer.
+Replaces: Gate 0's fixture, "recorded on the cell; on 2026-10-13 the worker identity and sticky queue host name in it
+were replaced with fixed strings, not re-recorded" (dev host, STATUS.md:13): it stays, since a lab recording has the
+same 24 events, type by type (A9f).
+
+== D1 to D6: two releases, six 5 m loads, 06:53:34 to 07:28:46
+Each: bin/laug cell up -server-tag <tag> (cached, SERVING after 14 to 15 s), 15 s idle, bin/laug load -duration 5m
+-rate 20 -max-concurrent 50 (Gate 3's lab parameters), bin/laug verdict -json, bin/laug baseline, cell down (13
+containers, 2 volumes, 1 network, 0 left, each time). Order: 1.31.0, 1.32.1, three times. Every load: Omes exit 0, 0
+failed iterations (load/results/lab1-v1310-*.json, lab1-v1321-*.json). Readings over each run's whole window, from
+load/results/<run>.baseline.json; the verdict JSONs hold the same six:
+  run           server  wf s2s  act s2s  e2e p95  persist  error  frontend  completed  window  history       postgres
+  lab1-v1310-1  1.31.0  19.1    10.0     49.9     9.2      0      10.9      5906       301     7.30% 555     2.85% 284
+  lab1-v1321-1  1.32.1  19.2    none     48.9     9.3      0      13.4      5927       301     8.85% 655     6.98% 281
+  lab1-v1310-2  1.31.0  18.9    10.0     49.7     9.2      0      10.6      5948       301     8.53% 554     3.30% 279
+  lab1-v1321-2  1.32.1  19.3    none     48.9     9.3      0      12.9      5966       301     8.00% 555    19.07% 278
+  lab1-v1310-3  1.31.0  18.9    10.0     49.6     9.2      0      10.0      5967       302     7.68% 552     3.14% 279
+  lab1-v1321-3  1.32.1  19.3    none     48.9     9.3      0      13.4      5967       302     7.77% 565    21.24% 284
+  ms: workflow task schedule-to-start p99, activity schedule-to-start p99, end-to-end p95, persistence p99, frontend
+  p99 with polls left out; error: the threshold's rate; window in s; history and postgres: % of one CPU and MiB from
+  one docker stats at the run's end (load/baseline.sh)
+Verdicts: 6 of 6 ADVANCE, no deciding row (load/results/<run>.verdict.json). 1.31.0's by load/steady-state.yaml;
+1.32.1's by the same with load/releases/1.32.yaml's 2 overrides, which mark activity schedule-to-start "not produced on
+this release". Limits in force (the verdict rows): 38, 20, 84, 23 ms, 0.001, 22 ms, and 5700 completed.
+Side by side, 1.32.1 against 1.31.0: end-to-end p95 48.86 to 48.91 against 49.62 to 49.90 ms; frontend p99 12.9 to
+13.4 against 10.0 to 10.9 ms; persistence p99 9.28 to 9.32 against 9.19 to 9.24 ms; workflow task 19.24 to 19.32
+against 18.86 to 19.10 ms; activity schedule-to-start none against 9.98 to 9.99 ms; Postgres CPU at the end 6.98,
+19.07 and 21.24% against 2.85 to 3.30%.
+Does not show: Postgres's CPU over a run. Each figure is one docker stats sample at the run's end, not a mean.
+Replaces: "1.32.1 read 18% faster end to end than 1.31.0 on the dev host" (dev host, docs/DESIGN.md:492): on the lab
+host 1.32.1 read 0.7 to 1.0 ms lower, 48.86 to 48.91 against 49.62 to 49.90 ms (computed from the baselines). Cached
+cell up 21 s / 22 s for 1.32.1 / 1.31.0 (dev host, STATUS.md:582): 14 to 15 s each. 16 s to 23 s cached (dev host,
+STATUS.md:581): 14 to 15 s over the 13 cached cells. load/releases/1.32.yaml:12-13 says the override is "measured on
+the lab host, see docs/EVIDENCE.md", which does not exist: these three 1.32.1 loads at 20/s produced no activity
+schedule-to-start.
+
+== D7: the eager counter, 07:28:46 to 07:30:24
+For 1.32.1, then 1.31.0: bin/laug cell up -server-tag <tag> (SERVING after 15 s each), one bin/laug cell health (1101
+and 1129 ms), then on the cell's Prometheus sum by (service_name, operation) (activity_eager_execution) and sum by
+(task_type) (task_schedule_to_start_latency_count), then cell down.
+All four answers are empty vectors (extra/D7-eager_1.32.1.json, D7-eager_1.31.0.json,
+D7-schedule_to_start_count_*.json): no series, not a 0.
+Does not show: the eager counter. Even task_schedule_to_start_latency_count, which a HealthCheck on 1.31.0 feeds
+(inference), had no series. Each read ran in the second the HealthCheck ended (readings.json's times, 07:29:17 and
+07:30:06, against batch-log.txt's D7 health lines), so it came before the next scrape (inference).
+Replaces nothing: 2 eager and no Activity schedule-to-start series on 1.32.1 after one HealthCheck, no eager series
+and Activity 4 on 1.31.0 after two (dev host, cells/results/2026-10-14-server-1.32.1.txt:38-40, :65-66) stand. D's
+loads carry the release difference instead: activity schedule-to-start none on 1.32.1 in 3 of 3, 9.98 to 9.99 ms on
+1.31.0 in 3 of 3.
+
+== P: the pool, 07:30:24 to 07:51:19
+  P0  no laug project, nothing on 7700, no lease file
+  P1  bin/laug pool serve -backend compose, its defaults: min 3, max 6, quota 2, max lease 2h, server 1.31.0, visibility
+      postgres, on 127.0.0.1 (steps/P1.txt, its log and every cell's compose lines)
+  P2  bin/laug pool bench 127.0.0.1:7700, at once, -cycles 20 and -ttl-short 30s by default (steps/P2.txt, 568.0 s):
+        laug pool serve to 3 warm (serial replenish)        50.7 s
+        lease from warm, p50 / p95 / max over 20 cycles      0 / 1 / 1 ms
+        cold lease, pool drained (create and health)         17.5 s
+        TTL 30 s: lease to the cell gone from /status        54.1 s
+  P3  3 warm cells (322dc2d8, 8adc34c1, ddd8d6a4)
+        docker stats over the laug-* containers              2037 MiB across 33 (extra/p3-stats.jsonl; readings.json)
+        bin/laug usage sample -json, anon plus file bytes    2095 MiB across the same 33: 629.7, 741.5 and 723.8 MiB a
+                                                             cell (computed from extra/p3-usage.json)
+  P4  bin/laug lease -ttl 10m: ddd8d6a4 at 07:39:55.330, expiring 07:49:55.330 (steps/P4.txt). laug pool serve logged
+      "ttl expired: releasing ddd8d6a4" at 07:50:05 (steps/P1.txt). Pool status every 5 s last showed it at
+      07:50:21.547 and not at 07:50:26.556 (extra/p4-reap.txt, 127 polls): 631.2 s from lease to gone, 31.2 s past the
+      TTL (readings.json).
+  P5  bin/laug lease -ttl 30m: 8adc34c1 on block 0; bin/laug reset -last three times: 34.3, 31.1 and 38.1 s, the id
+      and block kept each time (steps/P5b-1.txt to -3.txt); release 16.5 s.
+  P6  bin/laug lease -ttl 30m: 322dc2d8. Three edits of its own dynamic config copy (a hand step: no laug verb edits a
+      leased cell's copy), each read for 80 s in the docker logs of the leased cell's 5 roles and of every other cell's
+      frontend and frontend2. Seconds from the edit to the role's "changed for the key: frontend.rps" line
+      (extra/p6-edit-1.txt to -3.txt):
+        edit                            at            history  matching  frontend  frontend2  worker
+        1, frontend.rps to 10           07:41:55.356  13.5     15.1      15.7      17.3       18.6
+        2, the committed file back      07:43:25.821  43.1     44.7      45.3      46.9       48.1
+        3, the same bytes               07:45:02.011  no line from any role in 80 s
+      Each role picked up edit 2 120.0 to 120.1 s after edit 1 (computed: 90.465 s between the edits, plus 29.5 to
+      29.6 s), two periods of 60.0 s: each role re-reads its file on its own 60 s ticker (inference).
+      Other cells: after edit 1, 4 frontends logged the key: laug-5fc5647d's frontend and frontend2 at 12.1 and 13.7 s,
+      laug-d491ad0b's at 28.9 and 30.6 s; after edits 2 and 3, none. Those two cells are the ones the pool created after
+      P5's release at 07:41:55, in that order, after 8adc34c1's last removal (steps/P1.txt), so they were starting
+      during edit 1's 80 s. Inference: a starting role logs each key its own copy sets; the edit to 322dc2d8's copy did
+      not reach them. verify: the value each line logged, which the edit files do not keep. The batch's reading counts
+      them as other_cells_changed 4 (readings.json, dynconfig_edit_1).
+      release 18.0 s (steps/P6c.txt).
+  P8  bin/laug pool down -remove-cells: 53.3 s; 3 pool cells, 39 containers, 6 volumes, 3 networks went; left 0
+      containers, 0 volumes, 0 networks, 0 per-cell dirs (steps/P8.txt); after it 0 on 7700, 0 laug projects, 0 laugd
+      (batch-log.txt, P8).
+Shows: Gate 2's numbers through bin/laug pool bench on the lab host, and the reaper taking a 10 m lease. In P4 the
+reaper released the cell 9.7 s after its TTL, to the log's whole second, and /status dropped it at most 21.6 s after
+that line (computed, to the poll's 5 s), so a TTL row holds the destroy (inference; the same for P2's 54.1 s).
+Does not show: parallel replenish. The copy's isolation rests on the 2 other cells up before edit 1, laug-ddd8d6a4
+(leased, P4) and laug-f9b00d0f (warm): no line from either after any edit.
+Replaces: 52 s to 3 warm (dev host, STATUS.md:593, README.md:99, docs/DESIGN.md:66): 50.7 s. 1 / 1 / 2 ms from warm
+(dev host, STATUS.md:591, docs/DESIGN.md:65, README.md:105): 0 / 1 / 1 ms. 22.4 s with the pool drained (dev host,
+STATUS.md:592, docs/DESIGN.md:66 and :948, README.md:105's "about 22 s"): 17.5 s. 40.0 s for a 30 s TTL (dev host,
+STATUS.md:595, docs/DESIGN.md:67): 54.1 s. 1 820 MiB across 30 containers for 3 warm (dev host, STATUS.md:594,
+docs/DESIGN.md:67, 10 containers a cell before toxiproxy joined): 2037 MiB across 33. 647 s, then 633 s for a 600 s
+lease (dev host, STATUS.md:596, docs/DESIGN.md:986): 631.2 s, 31.2 s past the TTL. 28.0 s for a reset (dev host,
+STATUS.md:602) and 32 s with the per-cell copy (dev host, STATUS.md:650): 31.1 to 38.1 s. Pickup 0.2 to 62.2 s per
+role (dev host, STATUS.md:605, <...>): 13.5 to 48.1 s. A re-read period of 62.9 s of wall (dev host,
+STATUS.md:606, docs/DESIGN.md:993): 60.0 s; the first lab host, an m8i.2xlarge, read 60.000 s (faults/catalog.yaml:76).
+Two cells serial in 32 s (dev host, STATUS.md:583): three in 50.7 s. 0 / 0 / 0 left by pool-down (dev host,
+STATUS.md:603): 0 / 0 / 0. The first lab gates' 0 ms p95, 14.5 s drained and 3 warm in 43 s, through the old make
+targets (lab host, 2026-10-15, README.md:29), stand beside P2 as an earlier lab run.
+
+== R: a warm-up raun, then one raun with the persistence request rate, 07:51:19 to 08:04:36
+  R1  bin/laug pool serve -backend compose -min 0 -max 1
+  R2  a copy of faults/catalog.yaml with 3 lines added: two readings, persistence_rps and history_persistence_rps, for
+      persistence-latency (batch-log.txt, R2: 3 lines differ, yq reads both). CATALOG is laug raun's seam for a
+      catalog file.
+  Rw  bin/laug raun persistence-latency -run-id lab1-pl-warmup: ADVANCE, exit 0 in 398.7 s. The warm-up: not counted,
+      its numbers not cited.
+  R3  CATALOG=<out>/catalog-rates.yaml bin/laug raun persistence-latency -run-id lab1-pl-rates (steps/R3.txt;
+      faults/results/raun-lab1-pl-rates.json): lease 7477794a; injected 07:59:45; landed 11 s after; the signal,
+      persistence p99, peaked at 9864.8 ms against its 23 ms max; removed 08:01:45, 0 s after the 120 s hold; recovered
+      25 s after removal (budget 60 s); failed iterations before 0, during 545, drain 0, after 0; sweep Completed 4122;
+      soft assertions 0 in every window; ADVANCE, exit 0 in 397.8 s.
+      Persistence requests/s, the raun JSON's readings, each window's own length in place of [1m]:
+        window   seconds  every role  history
+        before   60       750.2       684.3
+        during   109      103.5       90.2
+        drain    55       708.6       643.2
+        after    90       737.4       674.8
+      A sampler beside it, every 15 s, sum by (service_name, operation) (rate(persistence_requests[30s])) on the leased
+      cell (extra/r3-rates.jsonl, 26 samples; the sums are computed): 784.5/s at 07:59:30, before the inject, history
+      725.0 of it, its largest operations GetCurrentClusterMetadata 140.0, UpdateWorkflowExecution 120.0,
+      GetTransferTasks 80.0 and GetTimerTasks 74.1; 61.2 to 161.8/s in the 7 samples from 08:00:16 to 08:01:46, under
+      the latency, history's largest operation GetOutboundTasks in 3 of them, RangeCompleteOutboundTasks in 2 and
+      GetTimerTasks in 2, 08:00:16 (31.0) and 08:01:46 (8.3); 687.9 to 758.5/s from 08:02:16. The first sample,
+      07:58:15, has no series yet; the last 2, after the cell went back, no answer.
+  R4  bin/laug pool down -remove-cells: 0.2 s; left 0 / 0 / 0, 0 per-cell dirs
+Shows: with the latency on, the cell made 103.5 persistence requests/s against 750.2 before, both saved, by service and
+by operation in the sampler.
+Does not show: Gate 4's three counted rauns (boot 2's); why GetCurrentClusterMetadata runs at 140/s while 20
+workflows/s start (STATUS.md:504 reads a cluster-metadata read per Omes start in source, verify).
+Replaces: "request rate 736/s to 107/s (read live, not saved)" (dev host, docs/DESIGN.md:223, :995-997, STATUS.md:510):
+750.2/s before and 103.5/s during, in faults/results/raun-lab1-pl-rates.json. The read STATUS.md:506-507 asks for,
+persistence requests by service and operation under the latency, is extra/r3-rates.jsonl, at 30 s.
+
+== The end line, the failed command and the two caps
+The batch's last line (batch-log.txt, 08:04:37):
+  batch ended: steps 21 of 21 (groups S, H, W, A1 to A9, D1 to D7, P, R), commands 109, failed 1, skipped 0; cells up
+  16, down 19, left 0; loads 9 (W 1, A6 2, D 6, 6 of 6 judged: 1.31.0 ADVANCE 3 of 3, 1.32.1 ADVANCE 3 of 3); rauns 1
+  (ADVANCE; + warm-up: ADVANCE, exit 0); readings 92; pool down left 0/0/0
+and before it: "end: on 7700 0, laug projects 0, laugd 0, pool serve 0, cellstat 0; cells left 0; 337 min left, up 100
+min". The safety stop was set for 14:24 UTC; the boot's budget was 194 min from 06:25:10 (batch-log.txt).
+- Cells (counted here from steps.tsv): 16 up are the cell up commands that printed SERVING; 19 down are every cell
+  down, the 3 cells A3, A7 and A8 brought up without a SERVING line among them.
+- The failed command: A6d, bin/laug baseline lab1-smoke60, exit 3, a short run. laug baseline refuses any window under
+  300 s, and the 60 s smoke's was 61 s; the batch asked for it on that run. It is the only exit the batch counted as
+  failed (steps.tsv). load/baseline.sh opens its output before load/read-thresholds.sh refuses (load/baseline.sh:30),
+  so the refusal left load/results/lab1-smoke60.baseline.json at 0 bytes; it is committed as the verb left it.
+- The two caps: A7a at 150.1 s and A8a at 90.1 s, exit 124 each, are counted ok (steps.tsv). bin/laug cell up waits for
+  SERVING, which neither cell could reach; the cap is how long each fault was watched, and A7b's polls and A8b's
+  restarts are what it showed.
+
+== What the pack lacks
+- make test's parts (test-go, harness-test, lint): the batch kept the total, 307.3 s.
+- Three step files are empty: S1 (git clone -q prints nothing), A3a (its count went to batch-log.txt) and A9d (its
+  output went to extra/a9-r2-history.json). These have no step file: the hand readings H3, H4, A2a, A3d, A5c, A6f,
+  A8b, A9f, P0, P7 and R2, S7's git status, A5d's INT to the health loop, and P6's three edits. Their values are in
+  batch-log.txt, readings.json and extra/ (P6's edits in extra/p6-edit-1.txt to -3.txt).
+- Three readings the batch's jq could not parse, each holding jq's parse error as its value: es_image ("absent"),
+  es_alone_mem ("945MiB / 123.8GiB") and example_name_error_line (the line, kept in the error text, cut). And r2,
+  null, "no value read" (readings.json). Their values are in batch-log.txt (es_image), extra/a2c-es-stats.json
+  (es_alone_mem), readings.json's error text (the error line), steps/A9b.txt and steps/A9c.txt (r2), as quoted above.
+- A visibility count of the 200-iteration smoke (A6b's cutoff fell before the run).
+- The eager counter (D7: four empty answers).
+- The gauge's time to 512 in A4 (an upper bound), and an Elasticsearch cell's time to SERVING with its image cached.
+- Each image's pull time and bytes in A1c, and the name the pruned dangling image had held.
+- The values the other cells' frontends logged in P6 edit 1.
+- When the instance stopped: the pack ends with the batch.

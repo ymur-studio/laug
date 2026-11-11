@@ -1,0 +1,175 @@
+# The Go judge against the shell judges, before the shell judges were deleted: every committed run (offline: no cell)
+
+2026-11-04, 21:58 UTC, on the dev host, with jq-1.7. The tree just before the shell judges (gate/combine.sh,
+gate/compare.sh, gate/tolerance.sh and the archived versions under gate/judges/) were deleted, its bin/laug built
+from that tree. The question: does the Go judge give the same answer as the shell judges on every committed gate run,
+so that the shell judges can go? `bin/laug gate rejudge -all -shell` judged each run again in Go under the judge
+version its gate.json records, then ran the shell judges' own rejudge, and compared the two run by run.
+
+The answer: yes. 158 runs: in Go, 156 identical and 2 re-rendered (two trap verdicts whose text the Go judge renders
+again, which the shell side calls known); in the shell judges, 156 identical and 2 known; 0 unexplained and 0 not
+judged on either side; the two agree on every run. Below is the transcript as the command printed it.
+
+laug · gate rejudge -all: every run in gate/results, judged again in Go under the judge version its gate.json records, a line each, then the counts, then gate/compare.sh's
+g20261015-065429  identical
+g20261015-070530  identical
+g20261015-071518  identical
+g20261015-072520  identical
+g20261015-073517  identical
+g20261015-074521  identical
+g20261015-135406  identical
+g20261015-140232  identical
+g20261015-141055  identical
+g20261015-141922  identical
+g20261015-142759  identical
+g20261015-143633  identical
+g20261015-144517  identical
+g20261015-145418  identical
+g20261015-150315  identical
+g20261015-151214  identical
+g20261015-152138  identical
+g20261015-214524  identical
+g20261015-215507  identical
+g20261015-220501  identical
+g20261015-221451  identical
+g20261015-222438  identical
+g20261015-223429  identical
+g20261015-224343  identical
+g20261015-225308  identical
+g20261015-230231  identical
+g20261015-230856  identical
+g20261016-024601  identical
+g20261016-091701  identical
+g20261016-203845  identical
+g20261016-204845  identical
+g20261016-205837  identical
+g20261016-210833  identical
+g20261016-211828  identical
+g20261016-212825  identical
+g20261016-213821  identical
+g20261016-214818  identical
+g20261016-215819  identical
+g20261016-220739  identical
+g20261016-221717  identical
+g20261017-011151  identical
+g20261017-012148  identical
+g20261017-013145  identical
+g20261017-014142  re-rendered: trap T2
+g20261017-014632  re-rendered: trap T2
+g20261017-020417  identical
+g20261017-060633  identical
+g20261017-061717  identical
+g20261017-062801  identical
+g20261017-063843  identical
+g20261017-064925  identical
+g20261017-070006  identical
+g20261017-171604  identical
+g20261017-171614  identical
+g20261017-172556  identical
+g20261017-174353  identical
+g20261017-174403  identical
+g20261017-175458  identical
+g20261017-180552  identical
+g20261017-181635  identical
+g20261017-182733  identical
+g20261017-183826  identical
+g20261017-184922  identical
+g20261017-190015  identical
+g20261017-191109  identical
+g20261017-192202  identical
+g20261017-193258  identical
+g20261017-194350  identical
+g20261017-195440  identical
+g20261017-200534  identical
+g20261017-201631  identical
+g20261017-202724  identical
+g20261017-203815  identical
+g20261017-204906  identical
+g20261017-205956  identical
+g20261017-211051  identical
+g20261017-212148  identical
+g20261017-213812  identical
+g20261017-215534  identical
+g20261017-221200  identical
+g20261017-222254  identical
+g20261017-223357  identical
+g20261017-224422  identical
+g20261017-225512  identical
+g20261018-062701  identical
+g20261018-063803  identical
+g20261018-064905  identical
+g20261018-065958  identical
+g20261018-071048  identical
+g20261018-072142  identical
+g20261018-073238  identical
+g20261018-074337  identical
+g20261018-075357  identical
+g20261018-080445  identical
+g20261018-080919  identical
+g20261018-082010  identical
+g20261018-083103  identical
+g20261018-084154  identical
+g20261018-085245  identical
+g20261018-090337  identical
+g20261018-091444  identical
+g20261018-092540  identical
+g20261018-155946  identical
+g20261018-160941  identical
+g20261018-162821  identical
+g20261018-163914  identical
+g20261018-165015  identical
+g20261018-170110  identical
+g20261018-171208  identical
+g20261018-172301  identical
+g20261018-173348  identical
+g20261018-174432  identical
+g20261018-175523  identical
+g20261018-180618  identical
+g20261018-181716  identical
+g20261018-182815  identical
+g20261018-183909  identical
+g20261018-185000  identical
+g20261018-190056  identical
+g20261018-191151  identical
+g20261018-192249  identical
+g20261018-193339  identical
+g20261018-194431  identical
+g20261018-195529  identical
+g20261018-200626  identical
+g20261018-201718  identical
+g20261018-202807  identical
+g20261018-225322  identical
+g20261018-230413  identical
+g20261018-231805  identical
+g20261018-232958  identical
+g20261018-234352  identical
+g20261018-235556  identical
+g20261019-000954  identical
+g20261019-002158  identical
+g20261019-003555  identical
+g20261019-005744  identical
+g20261024-085719  identical
+g20261024-090728  identical
+g20261024-091739  identical
+g20261024-092853  identical
+g20261024-094016  identical
+g20261024-095106  identical
+g20261024-100229  identical
+g20261024-100751  identical
+g20261024-104246  identical
+g20261024-105215  identical
+g20261024-110203  identical
+g20261024-111210  identical
+g20261024-112242  identical
+g20261024-113325  identical
+g20261024-114403  identical
+g20261024-115510  identical
+g20261024-120609  identical
+g20261024-121800  identical
+g20261024-122949  identical
+g20261027-054034  identical
+g20261027-055212  identical
+laug · rejudge, 158 runs: 156 identical, 0 known, 2 re-rendered, 0 unexplained, 0 not judged
+gate/compare.sh --rejudge-all, 158 runs: 156 identical, 2 known, 0 unexplained, 0 not judged
+laug and gate/compare.sh agree on every run: 156 identical both ways, and 0 known and 2 re-rendered here are its 2 known
+exit 0

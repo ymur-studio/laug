@@ -1,0 +1,13 @@
+{
+  "run_id": "base1-100551",
+  "scenario": "workflow_with_single_noop_activity",
+  "cell": "127.0.0.1:7243",
+  "namespace": "default",
+  "start": "2026-10-09T14:05:51Z",
+  "end": "2026-10-09T14:11:13Z",
+  "omes_commit": "f0de206",
+  "iterations": "1000",
+  "duration": "5m",
+  "rate": "20",
+  "max_concurrent": "50"
+}

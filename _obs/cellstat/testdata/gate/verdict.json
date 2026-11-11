@@ -1,0 +1,27 @@
+{
+  "gate_id": "g20261015-144517",
+  "verdict": "BLOCK",
+  "items": [
+    {
+      "key": "s1",
+      "kind": "load",
+      "observed": "ADVANCE",
+      "run_id": "g20261015-144517-s1",
+      "cell": "1dafb33b"
+    },
+    {
+      "key": "s2",
+      "kind": "load",
+      "observed": "ADVANCE",
+      "run_id": "g20261015-144517-s2",
+      "cell": "54cf13a9"
+    },
+    {
+      "key": "s3",
+      "kind": "load",
+      "observed": "ADVANCE",
+      "run_id": "g20261015-144517-s3",
+      "cell": "dd347a3d"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+# The finished public pages, one a line, each its path as git ls-files prints it. make test-go holds every page here to
+# the rules check/docs_test.go names: make targets and laug verbs that exist, "cell" not "cluster", no dead path.
+# docs/LEARNING.md keeps its own rules too (dates, anchors and stops), and docs/CAPABILITIES.md the date rule. A page
+# here is public: it names only what the public tree holds, so a path to a private file or to a record that is not
+# kept fails. The commit that finishes a page adds it here, and the check passes on it then; a page not listed is not
+# checked yet. Lines starting with # and blank lines are skipped.
+THIRD_PARTY_NOTICES.md
+dashboards/README.md
+internal/pool/README.md
+cells/README.md
+load/README.md
+load/baseline.md
+internal/health/README.md
+internal/orchestrator/README.md
+docs/EVIDENCE.md
+README.md
+SECURITY.md
+docs/runbooks/1-offline.md
+docs/runbooks/2-lease-and-load.md
+docs/runbooks/3-raun.md
+docs/runbooks/4-gate.md
+docs/runbooks/5-rejudge.md
+docs/runbooks/6-add-a-fault.md
+docs/runbooks/7-lab-batch.md
+_obs/README.md
+docs/BRAND.md
+gate/README.md
+faults/README.md
+cells/rootfs/README.md
+docs/LEARNING.md
+docs/DESIGN.md
+docs/img/README.md
+docs/tables/README.md
+docs/RECORDS.md
+cells/results/README.md
+load/results/README.md
+faults/results/README.md
+gate/results/README.md
+docs/CAPABILITIES.md

@@ -1,0 +1,9 @@
+# make: make --no-print-directory -n orchestrator-gate
+# laug: laug gate run -workflow
+# lease: absent
+# compare: refused
+cd orchestrator && go build -o bin/gate ./cmd/gate
+[ 'file' != file ] || { echo "laug · make orchestrator-gate SERVER_TAG=x.y.z: name the server release the gate judges" >&2; exit 2; }
+[[ '1.31.0' =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "laug · SERVER_TAG must be a release tag, x.y.z; got '"'1.31.0'"'" >&2; exit 2; }
+[[ -z '' || '' =~ ^127\.0\.0\.1:[1-9][0-9]{0,4}$ ]] || { echo "laug · make orchestrator-gate: ORCH_OTLP is 127.0.0.1:<port>, the stack's Collector, 127.0.0.1:7751, or empty: it has no auth" >&2; exit 2; }
+env $(compgen -e | sed -n -e 's/^TEMPORAL_SDK_FLAG_/-u &/p' -e 's/^TEMPORAL_DEBUG$/-u &/p' -e 's/^OTEL_/-u &/p') TEMPORAL_ADDRESS='127.0.0.1:7400' TEMPORAL_NAMESPACE='default' SERVER_TAG='1.31.0' PLAN='gate/plan.yaml' ITEMS='' BASE='main' GATE_FAKE='' GATE_POST='local' GATE_RESULTS='gate/results' OMES_DIR='.upstream/omes' orchestrator/bin/gate -repo '$ROOT' 

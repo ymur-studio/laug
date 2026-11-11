@@ -1,0 +1,33 @@
+# The swapped build of TestReplayDetectsSwappedActivities (internal/health/replay_test.go) against HealthCheck's
+# recorded history (internal/health/testdata/healthcheck_history.json, boot 1's recording on the lab host,
+# cells/results/2026-10-23-boot1.txt:294-296). Replaces replay-swapped.png.
+name replay-swapped
+size 800 400
+title | Replay routes results by ID, so the swapped build fails at event 12
+sub | TestReplayDetectsSwappedActivities, offline: HealthCheck's recorded history, a build with Echo and Sum swapped
+desc | Three rows, a recorded event each, read left to right: the event, what the replay of the swapped build does
+desc | with it, and the outcome. Event 6 is matched to Sum's command by ID alone, so the mix-up begins with no
+desc | error. Event 8 hands Echo's result, "laug", to Sum, whose decode fails, so the code returns early. Event 12
+desc | finds no command with its ID, and replay fails with TMPRL1100, the outlined box.
+source internal/health/replay_test.go
+source internal/health/testdata/healthcheck_history.json
+text 24 82 size=11 | recorded history
+text 282 82 size=11 | replay of the build with Echo and Sum swapped
+text 580 82 size=11 | outcome
+box h6 24 92 220 64 | event 6 | ActivityTaskScheduled, id 6
+box r6 282 92 260 64 | looks up command ID 6 | it is Sum's command; | the type is not compared here
+box o6 580 92 196 64 | matched | the mix-up begins; | no error yet
+arrow h6 r6
+arrow r6 o6
+box h8 24 176 220 64 | event 8 | Completed for id 6: "laug"
+box r8 282 176 260 64 | delivers it to Sum's future | Sum wants an int, so the decode | fails and the code returns early
+box o8 580 176 196 64 | code returns | no more commands
+arrow h8 r8
+arrow r8 o8
+box h12 24 260 220 64 | event 12 | ActivityTaskScheduled, id 12
+box r12 282 260 260 64 | no command has ID 12 | lookup failed for scheduledEventID
+box o12 580 260 196 64 fill=steam stroke=ember | TMPRL1100 | the error surfaces | here: replay fails
+arrow h12 r12
+arrow r12 o12
+text 24 358 size=11 | The type check runs only after the whole history replays. Swap two activities whose results both decode,
+text 24 374 size=11 | and the type check, at the end of the replay, names event 6 instead.

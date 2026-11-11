@@ -1,0 +1,53 @@
+# A cell's anatomy, cells/README.md's figure. The services and how they join: cells/compose/cell.yml:147-235 (the server
+# roles, each temporalio/server; nginx in front of both frontends, :222-231), :99-106 (toxiproxy, its API on 8474),
+# :22-23 (every role reaches Postgres through it), :26-27 and :65-80 (Postgres publishes no port, its own volume),
+# :253-297 (Temporal UI, Prometheus, Grafana and their ports), :300-302 (one network). Prometheus scrapes every role:
+# cells/compose/prometheus.yml:8-19. The ports and the block: cells/compose/cell.yml:8-10; cells/backend-compose.sh:25
+# and :39-44 (one project, laug-<id>; block b adds 10b). The microVM: cells/rootfs/snapshot.sh:27-29 (cell.yml again in
+# the guest, project laug), cells/backend-firecracker.sh:10-17 and :493 (each cell at 10.254.<b>.2, on block 0's ports).
+# Not drawn: temporal-setup, temporal-create-namespace and Elasticsearch, a profile.
+name cell
+size 800 540
+title | A cell: one Temporal deployment with its own Postgres, as compose or as a microVM
+sub | The services of cells/compose/cell.yml and how they join. The ports drawn are block 0's
+desc | One cell, one compose project on one network of its own. nginx is the one gRPC address a client or the pool sees,
+desc | 7233, in front of two frontends; Temporal UI dials it too. The server roles, frontend, frontend2, history,
+desc | matching and worker, run one temporalio/server release, and every role reaches Postgres through toxiproxy, a
+desc | passthrough until a fault adds a toxic. Postgres keeps its own volume and publishes no port. Prometheus scrapes
+desc | every role, and Grafana reads Prometheus. Below, the two backends. The compose backend runs the project on the
+desc | host, its ports on 127.0.0.1, and block b adds 10b to each. The Firecracker backend runs the same cell.yml inside
+desc | a microVM restored from one snapshot, each cell at 10.254.<b>.2 on block 0's ports. Not drawn: temporal-setup,
+desc | which writes the schema straight to Postgres, temporal-create-namespace, and Elasticsearch, a profile.
+source cells/compose/cell.yml
+source cells/compose/prometheus.yml
+source cells/backend-compose.sh
+source cells/backend-firecracker.sh
+source cells/rootfs/snapshot.sh
+region 16 66 768 290 | one cell: the services of cells/compose/cell.yml, on a network of its own
+box nginx 48 96 272 44 | nginx | 7233, the one gRPC address
+box ui 352 96 112 44 | Temporal UI | 8080
+box prom 480 96 112 44 | Prometheus | 9090
+box graf 632 96 120 44 | Grafana | 3000
+arrow ui nginx
+arrow graf prom
+region 24 168 752 84 at=336,184 | the server roles: temporalio/server, one release
+box fe1 48 202 128 30 | frontend
+box fe2 192 202 128 30 | frontend2
+box hist 336 202 128 30 | history
+box match 480 202 128 30 | matching
+box work 624 202 128 30 | worker
+arrow nginx fe1
+arrow nginx fe2
+path 536,140 536,168 head at=544,160 | scrapes every role
+path 296,252 296,284 head at=304,272 | every role's database calls
+box toxi 192 284 208 56 | toxiproxy | 8474, its API; no toxic | until a fault adds one
+box pg 448 284 208 56 | Postgres | its own volume; | no port published
+arrow toxi pg
+text 24 386 bold size=12 | two backends, one cell.yml
+box compose 24 400 364 84 mono | compose: cells/backend-compose.sh | one project on the host, laug-<id>
+  | ports on 127.0.0.1; block b adds 10b | block 1: 7243, 8090, 9100, 3010, 8484
+box fc 412 400 364 84 mono | microVM: cells/backend-firecracker.sh | cell.yml again, in a Firecracker guest
+  | restored from one snapshot | at 10.254.<b>.2, on block 0's ports
+text 24 516 size=10
+  | source: cells/compose/cell.yml, cells/compose/prometheus.yml, cells/backend-compose.sh,
+  | cells/backend-firecracker.sh and cells/rootfs/snapshot.sh.

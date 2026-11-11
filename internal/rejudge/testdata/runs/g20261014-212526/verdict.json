@@ -1,0 +1,188 @@
+{
+  "gate_id": "g20261014-212526",
+  "verdict": "BLOCK",
+  "class": "refused",
+  "rerun": false,
+  "class_if_quiet": null,
+  "refused": "lease steady: laugd refused it (curl exit 22): cell b5fb9ba7 not healthy before deadline: context deadline exceeded",
+  "fake": false,
+  "server_tag": "1.31.0",
+  "laug_commit": "25851b0",
+  "tree_dirty": false,
+  "base": "f8ed8a7",
+  "inputs": [
+    {
+      "path": "gate/plan.yaml",
+      "sha256": "27680a32844f30ba7d60cf3b00973762b1d1c7b77b4c2066f62a0177f0402bdd",
+      "changed_vs_base": false
+    },
+    {
+      "path": "gate/combine.sh",
+      "sha256": "284a759c54557c18bcbdfc257414199c9c94bfb573e3234e2265ecf18ab5366c",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/steady-state.yaml",
+      "sha256": "3d86abd2379a92b1d6e2ce6df294d8f8737854f48364674e7305b929942bc321",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/thresholds.sh",
+      "sha256": "77d5fb8a58d6b9b850f83279b8f61e988615c60dbdd5a7d0d2fa7aecd386500f",
+      "changed_vs_base": false
+    },
+    {
+      "path": "faults/catalog.yaml",
+      "sha256": "f0e73b887d68b2e28575b8146f430d3a98dbae09f96d1da8aed63404cf333a9e",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/releases/1.32.yaml",
+      "sha256": "f4a11d5c163ce31006eb50bd41e2ef4b9e5d30a6f01d10d116744f74d5ff90a7",
+      "changed_vs_base": false
+    }
+  ],
+  "deadline_s": 780,
+  "items_in_plan": 2,
+  "items_limit": null,
+  "t0": {
+    "wall": 1792013126.966,
+    "mono": 576834.40
+  },
+  "t_post": {
+    "wall": 1792013437.747,
+    "mono": 577143.92
+  },
+  "elapsed_s": {
+    "wall": 310.781,
+    "mono": 309.52
+  },
+  "host": {
+    "vcpu": 24,
+    "mem_gib": 47,
+    "mem_available_gib": 36.3
+  },
+  "rules": {
+    "R1": {
+      "name": "harness",
+      "pass": false,
+      "reasons": [
+        "harness: harness.json is missing, so make harness-test was not seen to pass"
+      ]
+    },
+    "R2": {
+      "name": "coverage",
+      "pass": false,
+      "reasons": [
+        "steady: no exit record: steady/exit.json is missing",
+        "steady: no JSON: steady/g20261014-212526-steady.json is missing",
+        "steady: no JSON: steady/g20261014-212526-steady.verdict.json is missing",
+        "pl: no JSON: there is no pl/ directory"
+      ]
+    },
+    "R3": {
+      "name": "contract",
+      "pass": false,
+      "reasons": [
+        "steady: contract: no exit code was recorded",
+        "pl: contract: no exit code was recorded"
+      ]
+    },
+    "R4": {
+      "name": "outcome",
+      "pass": false,
+      "reasons": [
+        "steady: expected ADVANCE, observed nothing",
+        "pl: expected ADVANCE, observed nothing"
+      ]
+    },
+    "R5": {
+      "name": "live control",
+      "pass": false,
+      "reasons": [
+        "pl: control: service_error_rate read null in the during window, not above its max 0.001"
+      ]
+    },
+    "R6": {
+      "name": "identity",
+      "pass": false,
+      "reasons": [
+        "steady: identity: the cell said server_version null, and the gate SERVER_TAG is 1.31.0",
+        "steady: identity: steady/g20261014-212526-steady.verdict.json records no thresholds_release",
+        "pl: identity: server_tag null, and the gate SERVER_TAG is 1.31.0",
+        "pl: identity: pl/g20261014-212526-pl.json records no thresholds_release"
+      ]
+    }
+  },
+  "reasons": [
+    "refused: lease steady: laugd refused it (curl exit 22): cell b5fb9ba7 not healthy before deadline: context deadline exceeded",
+    "R1 harness: harness.json is missing, so make harness-test was not seen to pass",
+    "R2 steady: no exit record: steady/exit.json is missing",
+    "R2 steady: no JSON: steady/g20261014-212526-steady.json is missing",
+    "R2 steady: no JSON: steady/g20261014-212526-steady.verdict.json is missing",
+    "R2 pl: no JSON: there is no pl/ directory",
+    "R3 steady: contract: no exit code was recorded",
+    "R3 pl: contract: no exit code was recorded",
+    "R4 steady: expected ADVANCE, observed nothing",
+    "R4 pl: expected ADVANCE, observed nothing",
+    "R5 pl: control: service_error_rate read null in the during window, not above its max 0.001",
+    "R6 steady: identity: the cell said server_version null, and the gate SERVER_TAG is 1.31.0",
+    "R6 steady: identity: steady/g20261014-212526-steady.verdict.json records no thresholds_release",
+    "R6 pl: identity: server_tag null, and the gate SERVER_TAG is 1.31.0",
+    "R6 pl: identity: pl/g20261014-212526-pl.json records no thresholds_release"
+  ],
+  "items": [
+    {
+      "key": "steady",
+      "kind": "load",
+      "expect": "ADVANCE",
+      "observed": null,
+      "class": "invalid",
+      "reason": "no exit record: steady/exit.json is missing",
+      "failed": [
+        "R2",
+        "R3",
+        "R4",
+        "R6"
+      ],
+      "run_id": "g20261014-212526-steady",
+      "cell": null,
+      "block": null,
+      "exit": null,
+      "stopped_by": null,
+      "pool_busy": null,
+      "evidence": [
+        "steady/g20261014-212526-steady.json",
+        "steady/g20261014-212526-steady.verdict.json"
+      ]
+    },
+    {
+      "key": "pl",
+      "kind": "fault",
+      "expect": "ADVANCE",
+      "observed": null,
+      "class": "invalid",
+      "reason": "no JSON: there is no pl/ directory",
+      "failed": [
+        "R2",
+        "R3",
+        "R4",
+        "R5",
+        "R6"
+      ],
+      "run_id": "g20261014-212526-pl",
+      "cell": null,
+      "block": null,
+      "exit": null,
+      "stopped_by": null,
+      "pool_busy": null,
+      "evidence": [
+        "pl/g20261014-212526-pl.json"
+      ]
+    }
+  ],
+  "host_quiet": false,
+  "host_noise": [
+    "poll.jsonl is missing, so the host was not seen quiet"
+  ]
+}

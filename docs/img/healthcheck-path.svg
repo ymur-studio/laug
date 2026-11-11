@@ -1,0 +1,190 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="560" viewBox="0 0 800 560" role="img"
+    aria-labelledby="healthcheck-path-title healthcheck-path-desc" font-family="Inter, system-ui, sans-serif">
+<title id="healthcheck-path-title">The worker proposes; history writes every event</title>
+<desc id="healthcheck-path-desc">Top: the client and the worker reach the cell only through its two frontends. The
+    worker polls (1), gets the events so far (2), runs the code until it blocks (3) and replies with commands (4). The
+    frontend hands the commands to history, the filled box, which owns the workflow&#39;s shard, turns commands into
+    events, runs timers and writes to Postgres; it tells matching a task is ready, and matching hands it to the next
+    poll. Bottom: HealthCheck&#39;s 24 events in order, each numbered. Filled: a workflow task completed, at 5, 11, 17
+    and 22, one burst of the worker&#39;s code each. Dashed outline: the signal at 3, stored before the code read it,
+    and the timers started at 18 and 23. The worker wrote none of the 24. Sources: cells/compose/cell.yml,
+    docs/img/src/healthcheck-path.txt, docs/tables/readings-2026-10-23-boot1.jsonl, internal/health/health.go,
+    internal/health/testdata/healthcheck_history.json.</desc>
+<rect x="0" y="0" width="800" height="560" fill="#EEF3F2"/>
+<text x="24" y="30" font-size="14" fill="#163A44"
+    font-weight="600">The worker proposes; history writes every event</text>
+<text x="24" y="50" font-size="12"
+    fill="#163A44">One HealthCheck through a cell on server 1.31.0: every call through the frontend, every event by history</text>
+<g aria-label="client, Dial, ExecuteWorkflow, SignalWorkflow">
+  <rect x="24" y="76" width="200" height="76" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="124" y="95.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">client</text>
+  <text x="124" y="110.5" font-size="12" fill="#163A44" text-anchor="middle">Dial</text>
+  <text x="124" y="125.5" font-size="12" fill="#163A44" text-anchor="middle">ExecuteWorkflow</text>
+  <text x="124" y="140.5" font-size="12" fill="#163A44" text-anchor="middle">SignalWorkflow</text>
+</g>
+<g
+    aria-label="worker, 1 polls for a task, 2 gets the events so far, 3 runs code until it blocks, 4 replies with commands">
+  <rect x="24" y="184" width="200" height="104" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="124" y="210" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">worker</text>
+  <text x="124" y="225" font-size="12" fill="#163A44" text-anchor="middle">1 polls for a task</text>
+  <text x="124" y="240" font-size="12" fill="#163A44" text-anchor="middle">2 gets the events so far</text>
+  <text x="124" y="255" font-size="12" fill="#163A44" text-anchor="middle">3 runs code until it blocks</text>
+  <text x="124" y="270" font-size="12" fill="#163A44" text-anchor="middle">4 replies with commands</text>
+</g>
+<g aria-label="frontend ×2, behind nginx;, every client, and worker call, comes in here">
+  <rect x="268" y="76" width="140" height="212" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="338" y="156" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">frontend ×2</text>
+  <text x="338" y="171" font-size="12" fill="#163A44" text-anchor="middle">behind nginx;</text>
+  <text x="338" y="186" font-size="12" fill="#163A44" text-anchor="middle">every client</text>
+  <text x="338" y="201" font-size="12" fill="#163A44" text-anchor="middle">and worker call</text>
+  <text x="338" y="216" font-size="12" fill="#163A44" text-anchor="middle">comes in here</text>
+</g>
+<g aria-label="history, owns the workflow&#39;s shard; turns, commands into events; runs timers">
+  <rect x="476" y="76" width="300" height="76" fill="#163A44" stroke="#163A44"/>
+  <text x="626" y="103" font-size="12" fill="#EEF3F2" text-anchor="middle" font-weight="600">history</text>
+  <text x="626" y="118" font-size="12" fill="#EEF3F2" text-anchor="middle">owns the workflow&#39;s shard; turns</text>
+  <text x="626" y="133" font-size="12" fill="#EEF3F2" text-anchor="middle">commands into events; runs timers</text>
+</g>
+<g aria-label="matching, holds the task queue,, hands tasks to polls">
+  <rect x="476" y="212" width="300" height="76" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="626" y="239" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">matching</text>
+  <text x="626" y="254" font-size="12" fill="#163A44" text-anchor="middle">holds the task queue,</text>
+  <text x="626" y="269" font-size="12" fill="#163A44" text-anchor="middle">hands tasks to polls</text>
+</g>
+<g aria-label="Postgres, persistence and visibility">
+  <rect x="476" y="312" width="300" height="48" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="626" y="332.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">Postgres</text>
+  <text x="626" y="347.5" font-size="12" fill="#163A44" text-anchor="middle">persistence and visibility</text>
+</g>
+<line x1="224" y1="114" x2="260" y2="114" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="268,114 260,118 260,110" fill="#163A44"/>
+<line x1="224" y1="212" x2="260" y2="212" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="268,212 260,216 260,208" fill="#163A44"/>
+<text x="242" y="207" font-size="11" fill="#163A44">1</text>
+<line x1="268" y1="240" x2="232" y2="240" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="224,240 232,236 232,244" fill="#163A44"/>
+<text x="242" y="235" font-size="11" fill="#163A44">2</text>
+<line x1="224" y1="268" x2="260" y2="268" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="268,268 260,272 260,264" fill="#163A44"/>
+<text x="242" y="263" font-size="11" fill="#163A44">4</text>
+<line x1="408" y1="114" x2="468" y2="114" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="476,114 468,118 468,110" fill="#163A44"/>
+<text x="414" y="108" font-size="11" fill="#163A44">commands</text>
+<line x1="408" y1="250" x2="468" y2="250" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="476,250 468,254 468,246" fill="#163A44"/>
+<text x="420" y="244" font-size="11" fill="#163A44">polls</text>
+<line x1="626" y1="152" x2="626" y2="204" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="626,212 622,204 630,204" fill="#163A44"/>
+<text x="632" y="190" font-size="11" fill="#163A44">task ready</text>
+<polyline points="776,140 788,140 788,336" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<line x1="788" y1="336" x2="784" y2="336" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="776,336 784,332 784,340" fill="#163A44"/>
+<text x="24" y="330" font-size="11" fill="#163A44">Commands are proposals: the worker never writes an event.</text>
+<text x="24" y="345" font-size="11" fill="#163A44">Steps 1 to 4 repeat once per workflow task.</text>
+<text x="24" y="404" font-size="12" fill="#163A44"
+    font-weight="600">HealthCheck&#39;s history: 24 events, every one written by history</text>
+<g aria-label="1">
+  <rect x="24" y="416" width="27" height="28" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="37.5" y="434" font-size="12" fill="#163A44" text-anchor="middle">1</text>
+</g>
+<g aria-label="2">
+  <rect x="55" y="416" width="27" height="28" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="68.5" y="434" font-size="12" fill="#163A44" text-anchor="middle">2</text>
+</g>
+<g aria-label="3">
+  <rect x="86" y="416" width="27" height="28" fill="#EEF3F2" stroke="#C44B32" stroke-dasharray="4 3"/>
+  <text x="99.5" y="434" font-size="12" fill="#163A44" text-anchor="middle">3</text>
+</g>
+<g aria-label="4">
+  <rect x="117" y="416" width="27" height="28" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="130.5" y="434" font-size="12" fill="#163A44" text-anchor="middle">4</text>
+</g>
+<g aria-label="5">
+  <rect x="148" y="416" width="27" height="28" fill="#163A44" stroke="#163A44"/>
+  <text x="161.5" y="434" font-size="12" fill="#EEF3F2" text-anchor="middle">5</text>
+</g>
+<g aria-label="6">
+  <rect x="179" y="416" width="27" height="28" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="192.5" y="434" font-size="12" fill="#163A44" text-anchor="middle">6</text>
+</g>
+<g aria-label="7">
+  <rect x="210" y="416" width="27" height="28" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="223.5" y="434" font-size="12" fill="#163A44" text-anchor="middle">7</text>
+</g>
+<g aria-label="8">
+  <rect x="241" y="416" width="27" height="28" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="254.5" y="434" font-size="12" fill="#163A44" text-anchor="middle">8</text>
+</g>
+<g aria-label="9">
+  <rect x="272" y="416" width="27" height="28" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="285.5" y="434" font-size="12" fill="#163A44" text-anchor="middle">9</text>
+</g>
+<g aria-label="10">
+  <rect x="303" y="416" width="27" height="28" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="316.5" y="434" font-size="12" fill="#163A44" text-anchor="middle">10</text>
+</g>
+<g aria-label="11">
+  <rect x="334" y="416" width="27" height="28" fill="#163A44" stroke="#163A44"/>
+  <text x="347.5" y="434" font-size="12" fill="#EEF3F2" text-anchor="middle">11</text>
+</g>
+<g aria-label="12">
+  <rect x="365" y="416" width="27" height="28" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="378.5" y="434" font-size="12" fill="#163A44" text-anchor="middle">12</text>
+</g>
+<g aria-label="13">
+  <rect x="396" y="416" width="27" height="28" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="409.5" y="434" font-size="12" fill="#163A44" text-anchor="middle">13</text>
+</g>
+<g aria-label="14">
+  <rect x="427" y="416" width="27" height="28" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="440.5" y="434" font-size="12" fill="#163A44" text-anchor="middle">14</text>
+</g>
+<g aria-label="15">
+  <rect x="458" y="416" width="27" height="28" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="471.5" y="434" font-size="12" fill="#163A44" text-anchor="middle">15</text>
+</g>
+<g aria-label="16">
+  <rect x="489" y="416" width="27" height="28" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="502.5" y="434" font-size="12" fill="#163A44" text-anchor="middle">16</text>
+</g>
+<g aria-label="17">
+  <rect x="520" y="416" width="27" height="28" fill="#163A44" stroke="#163A44"/>
+  <text x="533.5" y="434" font-size="12" fill="#EEF3F2" text-anchor="middle">17</text>
+</g>
+<g aria-label="18">
+  <rect x="551" y="416" width="27" height="28" fill="#EEF3F2" stroke="#C44B32" stroke-dasharray="4 3"/>
+  <text x="564.5" y="434" font-size="12" fill="#163A44" text-anchor="middle">18</text>
+</g>
+<g aria-label="19">
+  <rect x="582" y="416" width="27" height="28" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="595.5" y="434" font-size="12" fill="#163A44" text-anchor="middle">19</text>
+</g>
+<g aria-label="20">
+  <rect x="613" y="416" width="27" height="28" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="626.5" y="434" font-size="12" fill="#163A44" text-anchor="middle">20</text>
+</g>
+<g aria-label="21">
+  <rect x="644" y="416" width="27" height="28" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="657.5" y="434" font-size="12" fill="#163A44" text-anchor="middle">21</text>
+</g>
+<g aria-label="22">
+  <rect x="675" y="416" width="27" height="28" fill="#163A44" stroke="#163A44"/>
+  <text x="688.5" y="434" font-size="12" fill="#EEF3F2" text-anchor="middle">22</text>
+</g>
+<g aria-label="23">
+  <rect x="706" y="416" width="27" height="28" fill="#EEF3F2" stroke="#C44B32" stroke-dasharray="4 3"/>
+  <text x="719.5" y="434" font-size="12" fill="#163A44" text-anchor="middle">23</text>
+</g>
+<g aria-label="24">
+  <rect x="737" y="416" width="27" height="28" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="750.5" y="434" font-size="12" fill="#163A44" text-anchor="middle">24</text>
+</g>
+<text x="24" y="470" font-size="11"
+    fill="#163A44">Filled: a workflow task completed, at 5, 11, 17 and 22. Each ends one burst of the worker&#39;s code: 4 bursts.</text>
+<text x="24" y="486" font-size="11"
+    fill="#163A44">Dashed outline: the signal at 3, stored before any code ran and read later; the timers started at 18 and 23.</text>
+<text x="24" y="502" font-size="11"
+    fill="#163A44">Event 23 is AwaitWithTimeout&#39;s 30 s timer, started although the signal it waited for was already in.</text>
+<text x="24" y="532" font-size="10"
+    fill="#163A44">Events from internal/health/testdata/healthcheck_history.json, boot 1&#39;s recording; only those LEARNING.md names are marked.</text>
+</svg>

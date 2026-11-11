@@ -1,0 +1,413 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="464" viewBox="0 0 800 464" role="img"
+    aria-labelledby="adopted-title adopted-desc" font-family="Inter, system-ui, sans-serif">
+<title id="adopted-title">A worker KILLed 60.1 and 300.1 s into the wave: the wave on attempt 2, 2 of 2 ADVANCE</title>
+<desc id="adopted-desc">A lane a gate of boot 4 through laug gate run -workflow, 3 items on cells; across, seconds from
+    the gate&#39;s wave mark (timeline.jsonl). The upper bar is the wave, from its mark to its wave end mark; the
+    diamonds above it are the items&#39; ended marks, the ticks under it the lines of the gate&#39;s poll.jsonl. The row
+    under it is this checkout&#39;s worker. G2 ran with one throughout. In G4 and G5 the batch sent KILL to the
+    worker&#39;s process group, the solid line (readings.json&#39;s killed_at), and started another; the worker
+    row&#39;s middle segment, no worker, runs up to the next one&#39;s Started Worker line, after it replayed the open
+    gate (its step file). The words give the activities temporal workflow show recorded on an attempt over 1 (each
+    gate&#39;s attempts file in the pack&#39;s extra/), the largest gap between poll lines, and handed on, the post mark
+    less the start. Sources: docs/tables/fig-adopted.jsonl, docs/tables/gates.jsonl,
+    docs/tables/readings-2026-10-24-boot4.jsonl.</desc>
+<rect x="0" y="0" width="800" height="464" fill="#EEF3F2"/>
+<text x="24" y="30" font-size="14" fill="#163A44"
+    font-weight="600">A worker KILLed 60.1 and 300.1 s into the wave: the wave on attempt 2, 2 of 2 ADVANCE</text>
+<text x="24" y="50" font-size="12"
+    fill="#163A44">Boot 4&#39;s workflow gates on server 1.31.0, the lab host, an m8i.8xlarge: G2 with no KILL, G4 and G5 with one</text>
+<text x="256" y="76" font-size="11" fill="#163A44" text-anchor="middle">wave</text>
+<text x="24" y="76" font-size="11" fill="#163A44">Above each wave: its items&#39; ends</text>
+<line x1="256" y1="94" x2="256" y2="144" fill="none" stroke="#CFE3E4"/>
+<line x1="296" y1="94" x2="296" y2="144" fill="none" stroke="#CFE3E4"/>
+<line x1="336" y1="94" x2="336" y2="144" fill="none" stroke="#CFE3E4"/>
+<line x1="376" y1="94" x2="376" y2="144" fill="none" stroke="#CFE3E4"/>
+<line x1="416" y1="94" x2="416" y2="144" fill="none" stroke="#CFE3E4"/>
+<line x1="456" y1="94" x2="456" y2="144" fill="none" stroke="#CFE3E4"/>
+<line x1="496" y1="94" x2="496" y2="144" fill="none" stroke="#CFE3E4"/>
+<line x1="536" y1="94" x2="536" y2="144" fill="none" stroke="#CFE3E4"/>
+<line x1="576" y1="94" x2="576" y2="144" fill="none" stroke="#CFE3E4"/>
+<line x1="616" y1="94" x2="616" y2="144" fill="none" stroke="#CFE3E4"/>
+<line x1="656" y1="94" x2="656" y2="144" fill="none" stroke="#CFE3E4"/>
+<line x1="696" y1="94" x2="696" y2="144" fill="none" stroke="#CFE3E4"/>
+<line x1="736" y1="94" x2="736" y2="144" fill="none" stroke="#CFE3E4"/>
+<line x1="776" y1="94" x2="776" y2="144" fill="none" stroke="#CFE3E4"/>
+<g aria-label="G2 g20261024-092853: ADVANCE">
+  <text x="24" y="116" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">G2  g20261024-092853</text>
+  <text x="24" y="132" font-size="11" fill="#5B9B6A" font-weight="600">ADVANCE</text>
+  <rect x="256" y="106" width="483.256" height="16" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>the wave, its mark to wave end: 362.442 s</title></rect>
+  <text x="260" y="118" font-size="11" fill="#163A44">wave</text>
+  <polygon points="659.275,95 663.275,100 659.275,105 655.275,100"
+      fill="#163A44"><title>ended incumbent +302.456 s</title></polygon>
+  <polygon points="659.291,95 663.291,100 659.291,105 655.291,100"
+      fill="#163A44"><title>ended steady +302.468 s</title></polygon>
+  <polygon points="739.248,95 743.248,100 739.248,105 735.248,100"
+      fill="#163A44"><title>ended pl +362.436 s</title></polygon>
+  <g aria-label="poll.jsonl&#39;s 71 lines">
+    <line x1="256.14" y1="123" x2="256.14" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="262.957" y1="123" x2="262.957" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="269.773" y1="123" x2="269.773" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="276.593" y1="123" x2="276.593" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="283.441" y1="123" x2="283.441" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="290.263" y1="123" x2="290.263" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="297.088" y1="123" x2="297.088" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="303.912" y1="123" x2="303.912" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="310.727" y1="123" x2="310.727" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="317.553" y1="123" x2="317.553" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="324.372" y1="123" x2="324.372" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="331.195" y1="123" x2="331.195" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="338.021" y1="123" x2="338.021" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="344.844" y1="123" x2="344.844" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="351.673" y1="123" x2="351.673" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="358.499" y1="123" x2="358.499" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="365.317" y1="123" x2="365.317" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="372.139" y1="123" x2="372.139" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="378.98" y1="123" x2="378.98" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="385.796" y1="123" x2="385.796" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="392.617" y1="123" x2="392.617" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="399.441" y1="123" x2="399.441" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="406.256" y1="123" x2="406.256" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="413.073" y1="123" x2="413.073" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="419.891" y1="123" x2="419.891" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="426.709" y1="123" x2="426.709" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="433.528" y1="123" x2="433.528" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="440.348" y1="123" x2="440.348" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="447.164" y1="123" x2="447.164" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="453.977" y1="123" x2="453.977" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="460.8" y1="123" x2="460.8" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="467.616" y1="123" x2="467.616" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="474.431" y1="123" x2="474.431" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="481.247" y1="123" x2="481.247" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="488.072" y1="123" x2="488.072" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="494.891" y1="123" x2="494.891" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="501.715" y1="123" x2="501.715" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="508.535" y1="123" x2="508.535" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="515.352" y1="123" x2="515.352" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="522.173" y1="123" x2="522.173" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="528.991" y1="123" x2="528.991" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="535.808" y1="123" x2="535.808" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="542.639" y1="123" x2="542.639" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="549.457" y1="123" x2="549.457" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="556.279" y1="123" x2="556.279" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="563.104" y1="123" x2="563.104" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="569.931" y1="123" x2="569.931" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="576.76" y1="123" x2="576.76" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="583.581" y1="123" x2="583.581" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="590.405" y1="123" x2="590.405" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="597.231" y1="123" x2="597.231" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="604.052" y1="123" x2="604.052" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="610.876" y1="123" x2="610.876" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="617.7" y1="123" x2="617.7" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="624.523" y1="123" x2="624.523" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="631.367" y1="123" x2="631.367" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="638.196" y1="123" x2="638.196" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="645.02" y1="123" x2="645.02" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="651.851" y1="123" x2="651.851" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="658.663" y1="123" x2="658.663" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="665.476" y1="123" x2="665.476" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="672.32" y1="123" x2="672.32" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="679.131" y1="123" x2="679.131" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="685.947" y1="123" x2="685.947" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="692.763" y1="123" x2="692.763" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="699.571" y1="123" x2="699.571" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="706.383" y1="123" x2="706.383" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="713.195" y1="123" x2="713.195" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="720.005" y1="123" x2="720.005" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="726.821" y1="123" x2="726.821" y2="127" fill="none" stroke="#163A44"/>
+    <line x1="733.633" y1="123" x2="733.633" y2="127" fill="none" stroke="#163A44"/>
+  </g>
+  <rect x="236" y="131" width="503.648" height="10" fill="#CFE3E4" stroke="#163A44"
+      stroke-width="0.5"><title>one worker throughout</title></rect>
+  <text x="24" y="157" font-size="10"
+      fill="#163A44">no KILL, one worker throughout; the wave 362.442 s, handed on 614.339 s after the start</text>
+  <text x="24" y="170" font-size="10" fill="#163A44">poll lines at most 5.136 s apart</text>
+</g>
+<line x1="256" y1="192" x2="256" y2="242" fill="none" stroke="#CFE3E4"/>
+<line x1="296" y1="192" x2="296" y2="242" fill="none" stroke="#CFE3E4"/>
+<line x1="336" y1="192" x2="336" y2="242" fill="none" stroke="#CFE3E4"/>
+<line x1="376" y1="192" x2="376" y2="242" fill="none" stroke="#CFE3E4"/>
+<line x1="416" y1="192" x2="416" y2="242" fill="none" stroke="#CFE3E4"/>
+<line x1="456" y1="192" x2="456" y2="242" fill="none" stroke="#CFE3E4"/>
+<line x1="496" y1="192" x2="496" y2="242" fill="none" stroke="#CFE3E4"/>
+<line x1="536" y1="192" x2="536" y2="242" fill="none" stroke="#CFE3E4"/>
+<line x1="576" y1="192" x2="576" y2="242" fill="none" stroke="#CFE3E4"/>
+<line x1="616" y1="192" x2="616" y2="242" fill="none" stroke="#CFE3E4"/>
+<line x1="656" y1="192" x2="656" y2="242" fill="none" stroke="#CFE3E4"/>
+<line x1="696" y1="192" x2="696" y2="242" fill="none" stroke="#CFE3E4"/>
+<line x1="736" y1="192" x2="736" y2="242" fill="none" stroke="#CFE3E4"/>
+<line x1="776" y1="192" x2="776" y2="242" fill="none" stroke="#CFE3E4"/>
+<g aria-label="G4 g20261024-095106: ADVANCE">
+  <text x="24" y="214" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">G4  g20261024-095106</text>
+  <text x="24" y="230" font-size="11" fill="#5B9B6A" font-weight="600">ADVANCE</text>
+  <rect x="256" y="204" width="481.912" height="16" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>the wave, its mark to wave end: 361.434 s</title></rect>
+  <text x="260" y="216" font-size="11" fill="#163A44">wave, attempt 2</text>
+  <polygon points="659.267,193 663.267,198 659.267,203 655.267,198"
+      fill="#163A44"><title>ended incumbent +302.45 s</title></polygon>
+  <polygon points="659.285,193 663.285,198 659.285,203 655.285,198"
+      fill="#163A44"><title>ended steady +302.464 s</title></polygon>
+  <polygon points="737.904,193 741.904,198 737.904,203 733.904,198"
+      fill="#163A44"><title>ended pl +361.428 s</title></polygon>
+  <g aria-label="poll.jsonl&#39;s 71 lines">
+    <line x1="256.141" y1="221" x2="256.141" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="262.967" y1="221" x2="262.967" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="269.783" y1="221" x2="269.783" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="276.605" y1="221" x2="276.605" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="283.427" y1="221" x2="283.427" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="290.252" y1="221" x2="290.252" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="297.072" y1="221" x2="297.072" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="303.909" y1="221" x2="303.909" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="310.735" y1="221" x2="310.735" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="317.549" y1="221" x2="317.549" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="324.371" y1="221" x2="324.371" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="331.195" y1="221" x2="331.195" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="338.02" y1="221" x2="338.02" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="344.841" y1="221" x2="344.841" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="351.66" y1="221" x2="351.66" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="358.501" y1="221" x2="358.501" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="365.324" y1="221" x2="365.324" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="372.147" y1="221" x2="372.147" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="378.964" y1="221" x2="378.964" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="385.784" y1="221" x2="385.784" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="392.607" y1="221" x2="392.607" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="399.431" y1="221" x2="399.431" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="406.249" y1="221" x2="406.249" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="413.067" y1="221" x2="413.067" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="419.884" y1="221" x2="419.884" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="426.705" y1="221" x2="426.705" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="433.52" y1="221" x2="433.52" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="440.341" y1="221" x2="440.341" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="447.16" y1="221" x2="447.16" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="453.969" y1="221" x2="453.969" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="460.787" y1="221" x2="460.787" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="467.601" y1="221" x2="467.601" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="474.415" y1="221" x2="474.415" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="481.259" y1="221" x2="481.259" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="488.079" y1="221" x2="488.079" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="494.896" y1="221" x2="494.896" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="501.717" y1="221" x2="501.717" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="508.535" y1="221" x2="508.535" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="515.357" y1="221" x2="515.357" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="522.179" y1="221" x2="522.179" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="529" y1="221" x2="529" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="535.816" y1="221" x2="535.816" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="542.636" y1="221" x2="542.636" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="549.464" y1="221" x2="549.464" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="556.284" y1="221" x2="556.284" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="563.103" y1="221" x2="563.103" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="569.927" y1="221" x2="569.927" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="576.788" y1="221" x2="576.788" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="583.613" y1="221" x2="583.613" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="590.435" y1="221" x2="590.435" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="597.259" y1="221" x2="597.259" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="604.077" y1="221" x2="604.077" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="610.904" y1="221" x2="610.904" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="617.72" y1="221" x2="617.72" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="624.543" y1="221" x2="624.543" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="631.364" y1="221" x2="631.364" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="638.191" y1="221" x2="638.191" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="645.012" y1="221" x2="645.012" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="651.845" y1="221" x2="651.845" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="658.66" y1="221" x2="658.66" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="665.473" y1="221" x2="665.473" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="672.291" y1="221" x2="672.291" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="679.103" y1="221" x2="679.103" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="685.917" y1="221" x2="685.917" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="692.732" y1="221" x2="692.732" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="699.553" y1="221" x2="699.553" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="706.372" y1="221" x2="706.372" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="713.181" y1="221" x2="713.181" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="719.999" y1="221" x2="719.999" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="726.817" y1="221" x2="726.817" y2="225" fill="none" stroke="#163A44"/>
+    <line x1="733.635" y1="221" x2="733.635" y2="225" fill="none" stroke="#163A44"/>
+  </g>
+  <rect x="236" y="229" width="100.083" height="10" fill="#CFE3E4" stroke="#163A44"
+      stroke-width="0.5"><title>the first worker, to the KILL at +60.062 s</title></rect>
+  <rect x="336.083" y="229" width="40.152" height="10" fill="#D99A3A" stroke="#163A44"
+      stroke-width="0.5"><title>no worker: 30.114 s</title></rect>
+  <rect x="376.235" y="229" width="362.188" height="10" fill="#CFE3E4" stroke="#163A44"
+      stroke-width="0.5"><title>the next worker, Started Worker at +90.176 s after it replayed gate-g20261024-095106</title></rect>
+  <line x1="336.083" y1="200" x2="336.083" y2="243" fill="none" stroke="#10181C"
+      stroke-width="1.5"><title>KILL to the worker&#39;s process group, +60.062 s</title></line>
+  <text x="24" y="255" font-size="10"
+      fill="#163A44">KILL +60.062 s; the next worker replayed gate-g20261024-095106, Started Worker 30.114 s after the KILL</text>
+  <text x="24" y="268" font-size="10"
+      fill="#163A44">attempt 2: await-steady, await-incumbent, wave, await-pl; attempt 1: the 15 others</text>
+  <text x="24" y="281" font-size="10"
+      fill="#163A44">the wave 361.434 s, handed on 612.832 s after the start; poll lines at most 5.146 s apart</text>
+</g>
+<line x1="256" y1="290" x2="256" y2="340" fill="none" stroke="#CFE3E4"/>
+<line x1="296" y1="290" x2="296" y2="340" fill="none" stroke="#CFE3E4"/>
+<line x1="336" y1="290" x2="336" y2="340" fill="none" stroke="#CFE3E4"/>
+<line x1="376" y1="290" x2="376" y2="340" fill="none" stroke="#CFE3E4"/>
+<line x1="416" y1="290" x2="416" y2="340" fill="none" stroke="#CFE3E4"/>
+<line x1="456" y1="290" x2="456" y2="340" fill="none" stroke="#CFE3E4"/>
+<line x1="496" y1="290" x2="496" y2="340" fill="none" stroke="#CFE3E4"/>
+<line x1="536" y1="290" x2="536" y2="340" fill="none" stroke="#CFE3E4"/>
+<line x1="576" y1="290" x2="576" y2="340" fill="none" stroke="#CFE3E4"/>
+<line x1="616" y1="290" x2="616" y2="340" fill="none" stroke="#CFE3E4"/>
+<line x1="656" y1="290" x2="656" y2="340" fill="none" stroke="#CFE3E4"/>
+<line x1="696" y1="290" x2="696" y2="340" fill="none" stroke="#CFE3E4"/>
+<line x1="736" y1="290" x2="736" y2="340" fill="none" stroke="#CFE3E4"/>
+<line x1="776" y1="290" x2="776" y2="340" fill="none" stroke="#CFE3E4"/>
+<g aria-label="G5 g20261024-122949: ADVANCE">
+  <text x="24" y="312" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">G5  g20261024-122949</text>
+  <text x="24" y="328" font-size="11" fill="#5B9B6A" font-weight="600">ADVANCE</text>
+  <rect x="256" y="302" width="483.329" height="16" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>the wave, its mark to wave end: 362.497 s</title></rect>
+  <text x="260" y="314" font-size="11" fill="#163A44">wave, attempt 2</text>
+  <polygon points="659.327,291 663.327,296 659.327,301 655.327,296"
+      fill="#163A44"><title>ended incumbent +302.495 s</title></polygon>
+  <polygon points="659.345,291 663.345,296 659.345,301 655.345,296"
+      fill="#163A44"><title>ended steady +302.509 s</title></polygon>
+  <polygon points="739.321,291 743.321,296 739.321,301 735.321,296"
+      fill="#163A44"><title>ended pl +362.491 s</title></polygon>
+  <g aria-label="poll.jsonl&#39;s 71 lines">
+    <line x1="256.143" y1="319" x2="256.143" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="262.996" y1="319" x2="262.996" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="269.809" y1="319" x2="269.809" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="276.628" y1="319" x2="276.628" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="283.447" y1="319" x2="283.447" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="290.265" y1="319" x2="290.265" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="297.111" y1="319" x2="297.111" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="303.932" y1="319" x2="303.932" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="310.751" y1="319" x2="310.751" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="317.571" y1="319" x2="317.571" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="324.389" y1="319" x2="324.389" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="331.232" y1="319" x2="331.232" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="338.052" y1="319" x2="338.052" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="344.897" y1="319" x2="344.897" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="351.713" y1="319" x2="351.713" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="358.536" y1="319" x2="358.536" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="365.36" y1="319" x2="365.36" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="372.193" y1="319" x2="372.193" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="379.015" y1="319" x2="379.015" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="385.831" y1="319" x2="385.831" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="392.645" y1="319" x2="392.645" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="399.469" y1="319" x2="399.469" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="406.291" y1="319" x2="406.291" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="413.111" y1="319" x2="413.111" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="419.932" y1="319" x2="419.932" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="426.753" y1="319" x2="426.753" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="433.571" y1="319" x2="433.571" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="440.393" y1="319" x2="440.393" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="447.212" y1="319" x2="447.212" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="454.036" y1="319" x2="454.036" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="460.86" y1="319" x2="460.86" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="467.671" y1="319" x2="467.671" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="474.492" y1="319" x2="474.492" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="481.309" y1="319" x2="481.309" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="488.135" y1="319" x2="488.135" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="494.948" y1="319" x2="494.948" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="501.768" y1="319" x2="501.768" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="508.588" y1="319" x2="508.588" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="515.408" y1="319" x2="515.408" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="522.232" y1="319" x2="522.232" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="529.051" y1="319" x2="529.051" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="535.873" y1="319" x2="535.873" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="542.692" y1="319" x2="542.692" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="549.515" y1="319" x2="549.515" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="556.345" y1="319" x2="556.345" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="563.163" y1="319" x2="563.163" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="569.989" y1="319" x2="569.989" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="576.808" y1="319" x2="576.808" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="583.645" y1="319" x2="583.645" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="590.469" y1="319" x2="590.469" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="597.332" y1="319" x2="597.332" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="604.156" y1="319" x2="604.156" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="610.975" y1="319" x2="610.975" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="617.803" y1="319" x2="617.803" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="624.624" y1="319" x2="624.624" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="631.448" y1="319" x2="631.448" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="638.276" y1="319" x2="638.276" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="645.093" y1="319" x2="645.093" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="651.921" y1="319" x2="651.921" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="658.732" y1="319" x2="658.732" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="665.543" y1="319" x2="665.543" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="672.364" y1="319" x2="672.364" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="679.185" y1="319" x2="679.185" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="686.013" y1="319" x2="686.013" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="692.828" y1="319" x2="692.828" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="699.64" y1="319" x2="699.64" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="706.456" y1="319" x2="706.456" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="713.264" y1="319" x2="713.264" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="720.083" y1="319" x2="720.083" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="726.897" y1="319" x2="726.897" y2="323" fill="none" stroke="#163A44"/>
+    <line x1="733.707" y1="319" x2="733.707" y2="323" fill="none" stroke="#163A44"/>
+  </g>
+  <rect x="236" y="327" width="420.13" height="10" fill="#CFE3E4" stroke="#163A44"
+      stroke-width="0.5"><title>the first worker, to the KILL at +300.098 s</title></rect>
+  <rect x="656.13" y="327" width="40.151" height="10" fill="#D99A3A" stroke="#163A44"
+      stroke-width="0.5"><title>no worker: 30.113 s</title></rect>
+  <rect x="696.281" y="327" width="43.581" height="10" fill="#CFE3E4" stroke="#163A44"
+      stroke-width="0.5"><title>the next worker, Started Worker at +330.211 s after it replayed gate-g20261024-122949</title></rect>
+  <line x1="656.13" y1="298" x2="656.13" y2="341" fill="none" stroke="#10181C"
+      stroke-width="1.5"><title>KILL to the worker&#39;s process group, +300.098 s</title></line>
+  <text x="24" y="353" font-size="10"
+      fill="#163A44">KILL +300.098 s; the next worker replayed gate-g20261024-122949, Started Worker 30.113 s after the KILL</text>
+  <text x="24" y="366" font-size="10"
+      fill="#163A44">attempt 2: await-steady, await-incumbent, wave, await-pl; attempt 1: the 15 others</text>
+  <text x="24" y="379" font-size="10"
+      fill="#163A44">the wave 362.497 s, handed on 614.191 s after the start; poll lines at most 5.147 s apart</text>
+</g>
+<line x1="236" y1="390" x2="776" y2="390" fill="none" stroke="#10181C"/>
+<line x1="256" y1="390" x2="256" y2="394" fill="none" stroke="#10181C"/>
+<text x="256" y="406" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+<line x1="296" y1="390" x2="296" y2="394" fill="none" stroke="#10181C"/>
+<text x="296" y="406" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">30</text>
+<line x1="336" y1="390" x2="336" y2="394" fill="none" stroke="#10181C"/>
+<text x="336" y="406" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">60</text>
+<line x1="376" y1="390" x2="376" y2="394" fill="none" stroke="#10181C"/>
+<text x="376" y="406" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">90</text>
+<line x1="416" y1="390" x2="416" y2="394" fill="none" stroke="#10181C"/>
+<text x="416" y="406" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">120</text>
+<line x1="456" y1="390" x2="456" y2="394" fill="none" stroke="#10181C"/>
+<text x="456" y="406" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">150</text>
+<line x1="496" y1="390" x2="496" y2="394" fill="none" stroke="#10181C"/>
+<text x="496" y="406" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">180</text>
+<line x1="536" y1="390" x2="536" y2="394" fill="none" stroke="#10181C"/>
+<text x="536" y="406" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">210</text>
+<line x1="576" y1="390" x2="576" y2="394" fill="none" stroke="#10181C"/>
+<text x="576" y="406" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">240</text>
+<line x1="616" y1="390" x2="616" y2="394" fill="none" stroke="#10181C"/>
+<text x="616" y="406" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">270</text>
+<line x1="656" y1="390" x2="656" y2="394" fill="none" stroke="#10181C"/>
+<text x="656" y="406" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">300</text>
+<line x1="696" y1="390" x2="696" y2="394" fill="none" stroke="#10181C"/>
+<text x="696" y="406" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">330</text>
+<line x1="736" y1="390" x2="736" y2="394" fill="none" stroke="#10181C"/>
+<text x="736" y="406" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">360</text>
+<line x1="776" y1="390" x2="776" y2="394" fill="none" stroke="#10181C"/>
+<text x="776" y="406" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">390</text>
+<text x="506" y="422" font-size="12" fill="#163A44" text-anchor="middle">seconds after the wave mark</text>
+<rect x="24" y="437" width="18" height="10" fill="#5FB3BF"/>
+<text x="48" y="446" font-size="11" fill="#163A44">the wave</text>
+<polygon points="124.28,437 128.28,442 124.28,447 120.28,442" fill="#163A44"/>
+<text x="139.28" y="446" font-size="11" fill="#163A44">an item ended</text>
+<line x1="237.36" y1="442" x2="255.36" y2="442" fill="none" stroke="#163A44" stroke-width="1"/>
+<text x="261.36" y="446" font-size="11" fill="#163A44">a poll line</text>
+<rect x="347.12" y="437" width="18" height="10" fill="#CFE3E4"/>
+<text x="371.12" y="446" font-size="11" fill="#163A44">a worker polling</text>
+<rect x="487.68" y="437" width="18" height="10" fill="#D99A3A"/>
+<text x="511.68" y="446" font-size="11" fill="#163A44">no worker</text>
+<line x1="585.12" y1="442" x2="603.12" y2="442" fill="none" stroke="#10181C" stroke-width="1.5"/>
+<text x="609.12" y="446" font-size="11" fill="#163A44">KILL</text>
+</svg>

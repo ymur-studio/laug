@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="540" viewBox="0 0 800 540" role="img"
+    aria-labelledby="cell-title cell-desc" font-family="Inter, system-ui, sans-serif">
+<title id="cell-title">A cell: one Temporal deployment with its own Postgres, as compose or as a microVM</title>
+<desc id="cell-desc">One cell, one compose project on one network of its own. nginx is the one gRPC address a client or
+    the pool sees, 7233, in front of two frontends; Temporal UI dials it too. The server roles, frontend, frontend2,
+    history, matching and worker, run one temporalio/server release, and every role reaches Postgres through toxiproxy,
+    a passthrough until a fault adds a toxic. Postgres keeps its own volume and publishes no port. Prometheus scrapes
+    every role, and Grafana reads Prometheus. Below, the two backends. The compose backend runs the project on the host,
+    its ports on 127.0.0.1, and block b adds 10b to each. The Firecracker backend runs the same cell.yml inside a
+    microVM restored from one snapshot, each cell at 10.254.&lt;b&gt;.2 on block 0&#39;s ports. Not drawn:
+    temporal-setup, which writes the schema straight to Postgres, temporal-create-namespace, and Elasticsearch, a
+    profile. Sources: cells/backend-compose.sh, cells/backend-firecracker.sh, cells/compose/cell.yml,
+    cells/compose/prometheus.yml, cells/rootfs/snapshot.sh, docs/img/src/cell.txt.</desc>
+<rect x="0" y="0" width="800" height="540" fill="#EEF3F2"/>
+<text x="24" y="30" font-size="14" fill="#163A44"
+    font-weight="600">A cell: one Temporal deployment with its own Postgres, as compose or as a microVM</text>
+<text x="24" y="50" font-size="12"
+    fill="#163A44">The services of cells/compose/cell.yml and how they join. The ports drawn are block 0&#39;s</text>
+<rect x="16" y="66" width="768" height="290" fill="none" stroke="#163A44" stroke-dasharray="6 4"/>
+<text x="24" y="82" font-size="11" fill="#163A44"
+    font-weight="600">one cell: the services of cells/compose/cell.yml, on a network of its own</text>
+<g aria-label="nginx, 7233, the one gRPC address">
+  <rect x="48" y="96" width="272" height="44" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="184" y="114.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">nginx</text>
+  <text x="184" y="129.5" font-size="12" fill="#163A44" text-anchor="middle">7233, the one gRPC address</text>
+</g>
+<g aria-label="Temporal UI, 8080">
+  <rect x="352" y="96" width="112" height="44" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="408" y="114.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">Temporal UI</text>
+  <text x="408" y="129.5" font-size="12" fill="#163A44" text-anchor="middle">8080</text>
+</g>
+<g aria-label="Prometheus, 9090">
+  <rect x="480" y="96" width="112" height="44" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="536" y="114.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">Prometheus</text>
+  <text x="536" y="129.5" font-size="12" fill="#163A44" text-anchor="middle">9090</text>
+</g>
+<g aria-label="Grafana, 3000">
+  <rect x="632" y="96" width="120" height="44" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="692" y="114.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">Grafana</text>
+  <text x="692" y="129.5" font-size="12" fill="#163A44" text-anchor="middle">3000</text>
+</g>
+<line x1="352" y1="118" x2="328" y2="118" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="320,118 328,114 328,122" fill="#163A44"/>
+<line x1="632" y1="118" x2="600" y2="118" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="592,118 600,114 600,122" fill="#163A44"/>
+<rect x="24" y="168" width="752" height="84" fill="none" stroke="#163A44" stroke-dasharray="6 4"/>
+<text x="336" y="184" font-size="11" fill="#163A44"
+    font-weight="600">the server roles: temporalio/server, one release</text>
+<g aria-label="frontend">
+  <rect x="48" y="202" width="128" height="30" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="112" y="221" font-size="12" fill="#163A44" text-anchor="middle">frontend</text>
+</g>
+<g aria-label="frontend2">
+  <rect x="192" y="202" width="128" height="30" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="256" y="221" font-size="12" fill="#163A44" text-anchor="middle">frontend2</text>
+</g>
+<g aria-label="history">
+  <rect x="336" y="202" width="128" height="30" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="400" y="221" font-size="12" fill="#163A44" text-anchor="middle">history</text>
+</g>
+<g aria-label="matching">
+  <rect x="480" y="202" width="128" height="30" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="544" y="221" font-size="12" fill="#163A44" text-anchor="middle">matching</text>
+</g>
+<g aria-label="worker">
+  <rect x="624" y="202" width="128" height="30" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="688" y="221" font-size="12" fill="#163A44" text-anchor="middle">worker</text>
+</g>
+<line x1="112" y1="140" x2="112" y2="194" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="112,202 108,194 116,194" fill="#163A44"/>
+<line x1="256" y1="140" x2="256" y2="194" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="256,202 252,194 260,194" fill="#163A44"/>
+<line x1="536" y1="140" x2="536" y2="160" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="536,168 532,160 540,160" fill="#163A44"/>
+<text x="544" y="160" font-size="11" fill="#163A44">scrapes every role</text>
+<line x1="296" y1="252" x2="296" y2="276" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="296,284 292,276 300,276" fill="#163A44"/>
+<text x="304" y="272" font-size="11" fill="#163A44">every role&#39;s database calls</text>
+<g aria-label="toxiproxy, 8474, its API; no toxic, until a fault adds one">
+  <rect x="192" y="284" width="208" height="56" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="296" y="301" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">toxiproxy</text>
+  <text x="296" y="316" font-size="12" fill="#163A44" text-anchor="middle">8474, its API; no toxic</text>
+  <text x="296" y="331" font-size="12" fill="#163A44" text-anchor="middle">until a fault adds one</text>
+</g>
+<g aria-label="Postgres, its own volume;, no port published">
+  <rect x="448" y="284" width="208" height="56" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="552" y="301" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">Postgres</text>
+  <text x="552" y="316" font-size="12" fill="#163A44" text-anchor="middle">its own volume;</text>
+  <text x="552" y="331" font-size="12" fill="#163A44" text-anchor="middle">no port published</text>
+</g>
+<line x1="400" y1="312" x2="440" y2="312" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="448,312 440,316 440,308" fill="#163A44"/>
+<text x="24" y="386" font-size="12" fill="#163A44" font-weight="600">two backends, one cell.yml</text>
+<g
+    aria-label="compose: cells/backend-compose.sh, one project on the host, laug-&lt;id&gt;, ports on 127.0.0.1; block b adds 10b, block 1: 7243, 8090, 9100, 3010, 8484">
+  <rect x="24" y="400" width="364" height="84" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="206" y="423.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-weight="600">compose: cells/backend-compose.sh</text>
+  <text x="206" y="438.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">one project on the host, laug-&lt;id&gt;</text>
+  <text x="206" y="453.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">ports on 127.0.0.1; block b adds 10b</text>
+  <text x="206" y="468.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">block 1: 7243, 8090, 9100, 3010, 8484</text>
+</g>
+<g
+    aria-label="microVM: cells/backend-firecracker.sh, cell.yml again, in a Firecracker guest, restored from one snapshot, at 10.254.&lt;b&gt;.2, on block 0&#39;s ports">
+  <rect x="412" y="400" width="364" height="84" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="594" y="423.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-weight="600">microVM: cells/backend-firecracker.sh</text>
+  <text x="594" y="438.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">cell.yml again, in a Firecracker guest</text>
+  <text x="594" y="453.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">restored from one snapshot</text>
+  <text x="594" y="468.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">at 10.254.&lt;b&gt;.2, on block 0&#39;s ports</text>
+</g>
+<text x="24" y="516" font-size="10"
+    fill="#163A44">source: cells/compose/cell.yml, cells/compose/prometheus.yml, cells/backend-compose.sh,</text>
+<text x="24" y="529" font-size="10" fill="#163A44">cells/backend-firecracker.sh and cells/rootfs/snapshot.sh.</text>
+</svg>

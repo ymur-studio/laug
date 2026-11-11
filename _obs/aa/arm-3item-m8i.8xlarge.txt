@@ -1,0 +1,46 @@
+# The three-item A/A list: gate/plan.yaml's wave with the incumbent arm, incumbent, steady and pl, all on server 1.31.0,
+# the plan's incumbent, on the lab host, an m8i.8xlarge (32 vCPU). The observability stack draws this wave's band from
+# these ids alone, and never recomputes them from verdicts (docs/DESIGN.md section 9). Chosen once, 2026-10-18, from
+# gate/results at 04c17ab: every committed A/A gate of the arm's wave, the calibration session's gates
+# (cells/results/2026-10-17-lab-arm-calibration.txt) and the validation's Part 1 gates
+# (cells/results/2026-10-18-lab-arm-validation.txt), found by this jq, run from the repository's root:
+#   for d in gate/results/g*; do jq -r --slurpfile v "$d/verdict.json" --slurpfile p "$d/plan.json" \
+#     'select(.plan == "gate/plan.yaml" and .host.vcpu == 32 and .tree_dirty == false and $v[0].verdict == "ADVANCE" and $v[0].server_tag == $v[0].incumbent and ($p[0].items | map(.key)) == ["incumbent","steady","pl"] and (.laug_commit == "d14a4fe" or .laug_commit == "515e50e")) | .gate_id' "$d/gate.json"; done
+# 30 gates, 2026-10-17 and 2026-10-18, drivers run.sh and step.sh, 15 each. d14a4fe and 515e50e are the trees the two
+# sessions ran on, each the lab host's commit of main as pushed (be22e93 and 96b4265, in that order). The 20 of d14a4fe
+# are the gates the tolerances came from, in recording mode; the 10 of 515e50e are the counted validation gates, R7
+# judging, 0 R7 BLOCKs. Two more gates of the wave ADVANCEd with every input unchanged and are left out:
+# g20261017-172556, the calibration session's second launch (tree 42446b7), the make gate for comparison after a BLOCK;
+# g20261017-224422, its spacer between two branch gates, tree_dirty true. The stack's lab session of 2026-10-18 drew
+# R-c's ranges from these 30, before its first run (cells/results/2026-10-18-lab-obs.txt). One gate id a line; a line
+# from # on is a comment.
+g20261017-174403
+g20261017-175458
+g20261017-180552
+g20261017-181635
+g20261017-182733
+g20261017-183826
+g20261017-184922
+g20261017-190015
+g20261017-191109
+g20261017-192202
+g20261017-193258
+g20261017-194350
+g20261017-195440
+g20261017-200534
+g20261017-201631
+g20261017-202724
+g20261017-203815
+g20261017-204906
+g20261017-205956
+g20261017-211051
+g20261018-062701
+g20261018-064905
+g20261018-071048
+g20261018-073238
+g20261018-075357
+g20261018-080919
+g20261018-082010
+g20261018-083103
+g20261018-084154
+g20261018-085245

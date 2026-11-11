@@ -1,0 +1,309 @@
+# laug cell. One complete Temporal deployment, owned by this repo.
+# Vendored on 2026-10-07 from temporalio/samples-server compose/docker-compose-multirole.yaml at f811a03 (2026-09-16),
+# then changed for a pool: no container_name, host ports from env with defaults on BIND_ADDR, every image but postgres
+# pinned at the versions of the first timed cell (the server's tag a knob since 2026-10-14), 512 history shards on every
+# role, named volumes, loki/jaeger/otel gone, visibility a knob. postgres floats on tag 16, as no record names its minor
+# version. MIT, Copyright (c) 2020 Temporal Technologies Inc.; see THIRD_PARTY_NOTICES.md.
+#
+#   laug cell up                            postgres visibility (default), ports 7233/8080/9090/3000/8474 on 127.0.0.1
+#   laug cell up -visibility es             elasticsearch visibility (the upstream shape)
+#   laug cell up -project laug-a -block 1   ports 7243/8090/9100/3010/8484: block N adds 10N to each port
+#   laug cell up -server-tag 1.32.1         another server release: temporalio/server and both admin-tools containers
+#
+# SERVER_TAG names the temporalio/server and temporalio/admin-tools tag, one value for both, default 1.31.0, the
+# release every result before 2026-10-14 ran on. The Makefile and cells/backend-compose.sh pass it and check its
+# shape; load/testdata/harness-test.sh checks that their defaults and the three below agree. Seen on 1.31.0 and
+# 1.32.1 on the lab host: 3 cells of each came up SERVING and took a 5 m load at 20/s, 6 of 6 ADVANCE
+# (cells/results/2026-10-23-boot1.txt, D). A microVM cell runs the tag its image was built with.
+#
+# The server image renders its config from env; NUM_HISTORY_SHARDS is written into cluster metadata on
+# first start and cannot change after, so it is set here, on every role, not in dynamic config.
+#
+# Server roles reach Postgres through toxiproxy (a passthrough with no toxics), so faults/ can add latency,
+# timeouts or resets to persistence without touching the server. Schema setup goes to Postgres directly.
+#
+# Every published port binds BIND_ADDR, 127.0.0.1 unless set: Grafana is anonymous Admin and the toxiproxy API
+# has no auth. Reach a cell on another machine through an SSH tunnel. Postgres (temporal / temporal) publishes
+# no port; only the cell's own network reaches it.
+
+x-logging: &json-logging
+  logging:
+    driver: json-file
+    options:
+      max-size: "10m"
+      max-file: "3"
+
+x-server-env: &server-env
+  DB: postgres12
+  DB_PORT: "15432"
+  POSTGRES_USER: temporal
+  POSTGRES_PWD: temporal
+  POSTGRES_SEEDS: toxiproxy
+  NUM_HISTORY_SHARDS: "512"
+  DYNAMIC_CONFIG_FILE_PATH: config/dynamicconfig/laug.yaml
+  ENABLE_ES: ${ENABLE_ES:-false}
+  ES_SEEDS: elasticsearch
+  ES_VERSION: v7
+  TEMPORAL_ADDRESS: temporal-nginx:7233
+  TEMPORAL_CLI_ADDRESS: temporal-nginx:7233
+
+x-server: &server
+  <<: *json-logging
+  image: temporalio/server:${SERVER_TAG:-1.31.0}
+  # on-failure brings back a role that exits non-zero, with no retry cap, so an OOM-killed history restarts and
+  # re-acquires all 512 shards, in a loop while the cause stays (faults/catalog.yaml, oom-history). Docker
+  # counts an OOM kill (exit 137) as a failure and retries without a cap (docker run's --restart reference).
+  # on-failure:5 for history, or a fault-only override, waits for the first oom-history run.
+  restart: on-failure
+  volumes:
+    # Pool cells mount their own copy (cells/backend-compose.sh); `laug cell up` keeps the template.
+    - ${DYNCONFIG_DIR:-./dynamicconfig}:/etc/temporal/config/dynamicconfig:ro
+  networks:
+    - cell
+
+services:
+  postgresql:
+    <<: *json-logging
+    image: postgres:16 # floats; see the header
+    environment:
+      POSTGRES_USER: temporal
+      POSTGRES_PASSWORD: temporal
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - cell
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U temporal"]
+      interval: 5s
+      timeout: 5s
+      retries: 60
+      start_period: 30s
+
+  elasticsearch:
+    <<: *json-logging
+    profiles: [es]
+    image: elasticsearch:7.17.27
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - xpack.security.enabled=false
+    networks:
+      - cell
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f 'http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=1s' || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 60
+      start_period: 30s
+
+  toxiproxy:
+    <<: *json-logging
+    image: ghcr.io/shopify/toxiproxy:2.12.0
+    command: ["-host", "0.0.0.0", "-config", "/config/toxiproxy.json"]
+    volumes:
+      - ../../faults/toxiproxy.json:/config/toxiproxy.json:ro
+    ports:
+      - "${BIND_ADDR:-127.0.0.1}:${TOXIPROXY_PORT:-8474}:8474"
+    depends_on:
+      postgresql:
+        condition: service_healthy
+    networks:
+      - cell
+
+  temporal-setup:
+    <<: *json-logging
+    image: temporalio/admin-tools:${SERVER_TAG:-1.31.0}
+    restart: on-failure:6
+    depends_on:
+      postgresql:
+        condition: service_healthy
+    environment:
+      DB: postgres12
+      DB_PORT: "5432"
+      POSTGRES_USER: temporal
+      POSTGRES_PWD: temporal
+      POSTGRES_SEEDS: postgresql
+      SQL_PASSWORD: temporal
+      ENABLE_ES: ${ENABLE_ES:-false}
+      ES_SCHEME: http
+      ES_HOST: elasticsearch
+      ES_PORT: "9200"
+      ES_VERSION: v7
+      ES_VISIBILITY_INDEX: temporal_visibility_v1_dev
+    volumes:
+      - ./scripts:/scripts:ro
+    entrypoint: ["/bin/sh"]
+    command: /scripts/setup.sh
+    networks:
+      - cell
+
+  # Every role writes the cluster's metadata record at start-up, with rpcAddress 127.0.0.1:<its FRONTEND_GRPC_PORT>
+  # (the 1.31.0 template; 1.32.1's also takes CLUSTER_RPC_ADDRESS, read in source): 7233 for history, matching and the
+  # worker, 7237 and 7236 for the two frontends. Two roles that start together race on the record's version, and the
+  # loser exits with "SaveClusterMetadata encountered version mismatch" and restarts; the cell then took 44 to 120 s
+  # to answer instead of 4, in 4 of 10 cells on the lab host (cells/results/2026-10-15-startup-race.txt). So the
+  # writers start one at a time: history, then matching and frontend, then frontend2, then the worker, each after the
+  # one before listens (a role listens only once its metadata step is done).
+  temporal-history:
+    <<: *server
+    depends_on:
+      temporal-setup:
+        condition: service_completed_successfully
+      toxiproxy:
+        condition: service_started
+    environment:
+      <<: *server-env
+      TEMPORAL_SERVICES: history
+      PROMETHEUS_ENDPOINT: 0.0.0.0:8000
+    healthcheck:
+      test: ["CMD-SHELL", "netstat -ltn | grep -q ':7234 '"]
+      interval: 1s
+      timeout: 2s
+      retries: 120
+
+  temporal-matching:
+    <<: *server
+    depends_on:
+      temporal-history:
+        condition: service_healthy
+    environment:
+      <<: *server-env
+      TEMPORAL_SERVICES: matching
+      PROMETHEUS_ENDPOINT: 0.0.0.0:8001
+
+  temporal-frontend:
+    <<: *server
+    depends_on:
+      temporal-history:
+        condition: service_healthy
+      temporal-matching:
+        condition: service_started
+    environment:
+      <<: *server-env
+      TEMPORAL_SERVICES: frontend
+      FRONTEND_GRPC_PORT: "7237"
+      PROMETHEUS_ENDPOINT: 0.0.0.0:8002
+    healthcheck:
+      test: ["CMD-SHELL", "netstat -ltn | grep -q ':7237 '"]
+      interval: 1s
+      timeout: 2s
+      retries: 120
+
+  temporal-frontend2:
+    <<: *server
+    depends_on:
+      temporal-frontend:
+        condition: service_healthy
+    environment:
+      <<: *server-env
+      TEMPORAL_SERVICES: frontend
+      FRONTEND_GRPC_PORT: "7236"
+      FRONTEND_MEMBERSHIP_PORT: "6936"
+      PROMETHEUS_ENDPOINT: 0.0.0.0:8004
+    healthcheck:
+      test: ["CMD-SHELL", "netstat -ltn | grep -q ':7236 '"]
+      interval: 1s
+      timeout: 2s
+      retries: 120
+
+  temporal-worker:
+    <<: *server
+    depends_on:
+      temporal-nginx:
+        condition: service_started
+      temporal-frontend2:
+        condition: service_healthy
+    environment:
+      <<: *server-env
+      TEMPORAL_SERVICES: worker
+      PUBLIC_FRONTEND_ADDRESS: temporal-nginx:7233
+      PROMETHEUS_ENDPOINT: 0.0.0.0:8003
+
+  # Fronts both frontends on one port; the only gRPC address a client or the pool ever sees.
+  temporal-nginx:
+    <<: *json-logging
+    image: nginx:1.22.1
+    restart: unless-stopped
+    depends_on:
+      - temporal-frontend
+      - temporal-frontend2
+    ports:
+      - "${BIND_ADDR:-127.0.0.1}:${FRONTEND_PORT:-7233}:7233"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - cell
+
+  temporal-create-namespace:
+    <<: *json-logging
+    image: temporalio/admin-tools:${SERVER_TAG:-1.31.0}
+    restart: on-failure:5
+    depends_on:
+      - temporal-nginx
+    environment:
+      TEMPORAL_ADDRESS: temporal-nginx:7233
+      DEFAULT_NAMESPACE: default
+    volumes:
+      - ./scripts:/scripts:ro
+    entrypoint: ["/bin/sh"]
+    command: /scripts/create-namespace.sh
+    networks:
+      - cell
+
+  temporal-ui:
+    <<: *json-logging
+    image: temporalio/ui:2.49.1
+    depends_on:
+      - temporal-nginx
+    environment:
+      TEMPORAL_ADDRESS: temporal-nginx:7233
+      TEMPORAL_CORS_ORIGINS: http://localhost:${UI_PORT:-8080}
+    ports:
+      - "${BIND_ADDR:-127.0.0.1}:${UI_PORT:-8080}:8080"
+    networks:
+      - cell
+
+  prometheus:
+    <<: *json-logging
+    image: prom/prometheus:v2.53.0
+    command: ["--config.file=/etc/prometheus/prometheus.yml"]
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - promdata:/prometheus
+    ports:
+      - "${BIND_ADDR:-127.0.0.1}:${PROMETHEUS_PORT:-9090}:9090"
+    extra_hosts:
+      # sdk-workers target; Docker Engine on Linux does not add it. In a microVM guest the host is the tap's
+      # gateway, 172.16.0.1, which snapshot.sh passes as SDK_HOST.
+      - "host.docker.internal:${SDK_HOST:-host-gateway}"
+    depends_on:
+      - temporal-nginx
+    networks:
+      - cell
+
+  grafana:
+    <<: *json-logging
+    image: grafana/grafana:11.1.0
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+    volumes:
+      - ../../dashboards/provisioning:/etc/grafana/provisioning:ro
+    ports:
+      - "${BIND_ADDR:-127.0.0.1}:${GRAFANA_PORT:-3000}:3000"
+    depends_on:
+      - prometheus
+    networks:
+      - cell
+
+networks:
+  cell:
+    driver: bridge
+
+# The two images that declare a VOLUME (postgres, prometheus) get named ones, <project>_pgdata and
+# <project>_promdata, so laug pool down and laug cell down can count what is left. down -v removes them (boot 1, W3:
+# laug cell down -remove-volumes, 2 volumes went, 0 left; cells/results/2026-10-23-boot1.txt:78).
+volumes:
+  pgdata:
+  promdata:

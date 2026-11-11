@@ -1,0 +1,98 @@
+{
+  "run_id": "g20261017-020417-steady",
+  "verdict": "ADVANCE",
+  "exit": 0,
+  "window_s": 302,
+  "short_window": null,
+  "readings": {
+    "workflow_task_schedule_to_start_p99_ms": 17.76742633470687,
+    "activity_schedule_to_start_p99_ms": 9.981787090633008,
+    "workflow_end_to_end_p95_ms": 49.11953200703674,
+    "persistence_latency_p99_ms": 8.810173508196861,
+    "service_error_rate": 0,
+    "frontend_request_p99_ms": 9.984142907564383,
+    "workflows_completed": 5906,
+    "counter_resets": 0,
+    "window_seconds": 302
+  },
+  "rows": [
+    {
+      "metric": "workflow_task_schedule_to_start_p99_ms",
+      "value": 17.767,
+      "limit": "38",
+      "result": "ok",
+      "blocks": false
+    },
+    {
+      "metric": "activity_schedule_to_start_p99_ms",
+      "value": 9.982,
+      "limit": "20",
+      "result": "ok",
+      "blocks": false
+    },
+    {
+      "metric": "workflow_end_to_end_p95_ms",
+      "value": 49.120,
+      "limit": "84",
+      "result": "ok",
+      "blocks": false
+    },
+    {
+      "metric": "persistence_latency_p99_ms",
+      "value": 8.810,
+      "limit": "23",
+      "result": "ok",
+      "blocks": false
+    },
+    {
+      "metric": "service_error_rate",
+      "value": 0.000,
+      "limit": "0.001",
+      "result": "ok",
+      "blocks": false
+    },
+    {
+      "metric": "frontend_request_p99_ms",
+      "value": 9.984,
+      "limit": "22",
+      "result": "ok",
+      "blocks": false
+    },
+    {
+      "metric": "workflows_completed",
+      "value": 5906,
+      "limit": ">= 5700",
+      "result": "ok (0.95 x 20/s x 300 s)",
+      "blocks": false
+    },
+    {
+      "metric": "omes_exit",
+      "value": 0,
+      "limit": "0",
+      "result": "ok",
+      "blocks": false
+    },
+    {
+      "metric": "iterations_failed",
+      "value": 0,
+      "limit": "",
+      "result": "not judged apart from omes_exit",
+      "blocks": false
+    },
+    {
+      "metric": "workflows_not_completed",
+      "value": 0,
+      "limit": "0",
+      "result": "ok (5397 started before 2026-10-17T02:12:00Z, all Completed)",
+      "blocks": false
+    }
+  ],
+  "deciding": [],
+  "sweep": {
+    "Completed": 5397
+  },
+  "sweep_cutoff": "2026-10-17T02:12:00Z",
+  "thresholds_release": null,
+  "thresholds_note": "load/steady-state.yaml, the base (1.31.0 baselines), unchanged: no load/releases/1.31.yaml for server 1.31.0",
+  "overrides_applied": []
+}

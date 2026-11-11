@@ -1,0 +1,16 @@
+{
+  "id": "5e6f7a8b",
+  "address": "127.0.0.1:7243",
+  "ui": "http://127.0.0.1:8090",
+  "grafana": "http://127.0.0.1:3010",
+  "prometheus": "http://127.0.0.1:9100",
+  "toxiproxy": "http://127.0.0.1:8484",
+  "project": "laug-5e6f7a8b",
+  "dynconfig": "cells/run/laug-5e6f7a8b/laug.yaml",
+  "server_tag": "1.31.0",
+  "block": 1,
+  "state": "leased",
+  "requester": "gate-g20261014-140000-pl",
+  "leased_at": "2026-10-14T14:01:04Z",
+  "expires_at": "2026-10-14T14:21:04Z"
+}

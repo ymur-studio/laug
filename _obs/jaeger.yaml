@@ -1,0 +1,65 @@
+# The stack's trace store, Jaeger 2.21.0 with Badger on local disk (_obs/README.md). bin/obs up copies this
+# file into OBS_DIR/conf and writes OBS_DIR where it reads @OBS_DIR@; make obs-test runs jaeger validate on that copy.
+# Every listener is 127.0.0.1: OTLP over HTTP on 7760 (from the Collector only; no gRPC receiver), the query API and
+# UI on 7761, the query gRPC on 7762 (bound here, so that it is never on a default address), and Jaeger's own metrics
+# on 7763. No health, expvar, pprof or zpages extension. Jaeger never runs without this file: with none it starts
+# its all-in-one defaults.
+service:
+  extensions: [jaeger_storage, jaeger_query]
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [jaeger_storage_exporter]
+  telemetry:
+    resource:
+      service.name: jaeger
+    logs:
+      level: warn
+    traces:
+      level: none                    # the service's own spans off; jaeger_query's are enable_tracing, below
+    metrics:
+      level: basic
+      readers:
+        - pull:
+            exporter:
+              prometheus:
+                host: 127.0.0.1
+                port: 7763
+
+extensions:
+  jaeger_query:
+    # Off, or the query server traces each request it answers and sends the spans over OTLP gRPC to 127.0.0.1:4317, a
+    # port that is not the stack's: seen 2026-10-17 on the dev host, Jaeger 2.21.0, SYN-SENT to 4317 in ss within 5 s
+    # of three requests to 7761 and a sampled Traceresponse header, with traces level none above. With it false, none
+    # in 30 s.
+    enable_tracing: false
+    storage:
+      traces: laug_badger
+    http:
+      endpoint: 127.0.0.1:7761
+    grpc:
+      endpoint: 127.0.0.1:7762
+  jaeger_storage:
+    backends:
+      laug_badger:
+        badger:
+          directories:
+            keys: "@OBS_DIR@/jaeger/keys"
+            values: "@OBS_DIR@/jaeger/values"
+          ephemeral: false
+          ttl:
+            spans: 2160h               # 90 days, as the store's retention
+
+receivers:
+  otlp:
+    protocols:
+      http:
+        endpoint: 127.0.0.1:7760
+
+processors:
+  batch: {}
+
+exporters:
+  jaeger_storage_exporter:
+    trace_storage: laug_badger

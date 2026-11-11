@@ -1,0 +1,284 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="668" viewBox="0 0 800 668" role="img"
+    aria-labelledby="restore-timing-title restore-timing-desc" font-family="Inter, system-ui, sans-serif">
+<title id="restore-timing-title">A restore reached warm in 4.60 to 4.72 s; a cold boot in 28.99 to 30.91 s</title>
+<desc id="restore-timing-desc">Three groups of bars against one axis, seconds, from boot 9&#39;s snapshots, taken with
+    the cell&#39;s containers frozen and the drive&#39;s cache_type Unsafe, io_engine Sync. The top group is the three
+    cold boots, K1 to K3, each from the VM&#39;s start, as cells/rootfs/snapshot.sh printed them, a bar of four
+    segments, left to right: boot to ssh, then dockerd ready, then compose up, then the warm checks to HealthCheck done;
+    compose up starts at dockerd ready, so a bar&#39;s end is dockerd ready plus compose up to HealthCheck done. Each
+    one&#39;s copy of the image ran before its start, and after warm it froze its 11 containers in 0.29 to 0.31 s and
+    took its snapshot in 33.63 to 33.92 s, none of them drawn. The middle group is R1&#39;s 12 restores of K3&#39;s
+    snapshot, each from snapshot/load, as cells/rootfs/restore.sh printed them: a bar of four segments: snapshot/load
+    and ssh, the guest clock read, set and read again, to the thaw&#39;s start, the thaw of the 11 containers, 1.18 to
+    1.32 s, the warm checks; each restore&#39;s reflink copy of the golden disk, 0.01 to 0.02 s, ran before it. Beside
+    each: the guest clock behind the host before the set, 35.2 to 94.5 s, and its offset after it. The bottom group is
+    the golden disk, 5.04 GiB allocated of 16 GiB, copied plainly after a cache drop, three times, and as a reflink on
+    the same XFS volume, three times, a bar of one segment each, by each step&#39;s own stamps. Each time is the step
+    file&#39;s; readings.json&#39;s entry of each agrees. Sources: docs/tables/fig-restore-timing.jsonl,
+    docs/tables/readings-2026-10-29-boot9.jsonl, docs/tables/src/hosts.tsv.</desc>
+<rect x="0" y="0" width="800" height="668" fill="#EEF3F2"/>
+<text x="24" y="30" font-size="14" fill="#163A44"
+    font-weight="600">A restore reached warm in 4.60 to 4.72 s; a cold boot in 28.99 to 30.91 s</text>
+<text x="24" y="50" font-size="12"
+    fill="#163A44">microVM cells of boot 9 on the lab host, an m8i.8xlarge, snapshots frozen, cache_type Unsafe: seconds</text>
+<line x1="236" y1="86" x2="236" y2="594" fill="none" stroke="#CFE3E4"/>
+<line x1="326" y1="86" x2="326" y2="594" fill="none" stroke="#CFE3E4"/>
+<line x1="416" y1="86" x2="416" y2="594" fill="none" stroke="#CFE3E4"/>
+<line x1="506" y1="86" x2="506" y2="594" fill="none" stroke="#CFE3E4"/>
+<line x1="596" y1="86" x2="596" y2="594" fill="none" stroke="#CFE3E4"/>
+<line x1="686" y1="86" x2="686" y2="594" fill="none" stroke="#CFE3E4"/>
+<line x1="776" y1="86" x2="776" y2="594" fill="none" stroke="#CFE3E4"/>
+<text x="24" y="102" font-size="11" fill="#163A44"
+    font-weight="600">3 cold boots, K1 to K3, from the VM&#39;s start</text>
+<g aria-label="cold boots">
+  <text x="228" y="123" font-size="11" fill="#163A44" text-anchor="end"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">K1</text>
+  <rect x="236" y="112" width="25.83" height="14" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>boot to ssh, 0 to 2.87 s</title></rect>
+  <rect x="261.83" y="112" width="6.12" height="14" fill="#10181C" stroke="#163A44"
+      stroke-width="0.5"><title>dockerd ready, 2.87 to 3.55 s</title></rect>
+  <rect x="267.95" y="112" width="113.4" height="14" fill="#CFE3E4" stroke="#163A44"
+      stroke-width="0.5"><title>compose up returned, 3.55 to 16.15 s</title></rect>
+  <rect x="381.35" y="112" width="132.84" height="14" fill="#D99A3A" stroke="#163A44"
+      stroke-width="0.5"><title>the warm checks: cluster health +12.90 s, shards owned +13.60 s, namespace +24.03 s, HealthCheck done +27.36 s from compose up, 16.15 to 30.91 s</title></rect>
+  <text x="520.19" y="123" font-size="10" fill="#163A44">30.91 s, HealthCheck attempt 2</text>
+  <text x="228" y="143" font-size="11" fill="#163A44" text-anchor="end"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">K2</text>
+  <rect x="236" y="132" width="25.74" height="14" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>boot to ssh, 0 to 2.86 s</title></rect>
+  <rect x="261.74" y="132" width="6.12" height="14" fill="#10181C" stroke="#163A44"
+      stroke-width="0.5"><title>dockerd ready, 2.86 to 3.54 s</title></rect>
+  <rect x="267.86" y="132" width="113.85" height="14" fill="#CFE3E4" stroke="#163A44"
+      stroke-width="0.5"><title>compose up returned, 3.54 to 16.19 s</title></rect>
+  <rect x="381.71" y="132" width="115.74" height="14" fill="#D99A3A" stroke="#163A44"
+      stroke-width="0.5"><title>the warm checks: cluster health +12.70 s, shards owned +13.17 s, namespace +24.29 s, HealthCheck done +25.51 s from compose up, 16.19 to 29.05 s</title></rect>
+  <text x="503.45" y="143" font-size="10" fill="#163A44">29.05 s, HealthCheck attempt 1</text>
+  <text x="228" y="163" font-size="11" fill="#163A44" text-anchor="end"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">K3</text>
+  <rect x="236" y="152" width="26.01" height="14" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>boot to ssh, 0 to 2.89 s</title></rect>
+  <rect x="262.01" y="152" width="6.57" height="14" fill="#10181C" stroke="#163A44"
+      stroke-width="0.5"><title>dockerd ready, 2.89 to 3.62 s</title></rect>
+  <rect x="268.58" y="152" width="113.67" height="14" fill="#CFE3E4" stroke="#163A44"
+      stroke-width="0.5"><title>compose up returned, 3.62 to 16.25 s</title></rect>
+  <rect x="382.25" y="152" width="114.66" height="14" fill="#D99A3A" stroke="#163A44"
+      stroke-width="0.5"><title>the warm checks: cluster health +12.67 s, shards owned +13.15 s, namespace +24.15 s, HealthCheck done +25.37 s from compose up, 16.25 to 28.99 s</title></rect>
+  <text x="502.91" y="163" font-size="10" fill="#163A44">28.99 s, HealthCheck attempt 1</text>
+</g>
+<text x="24" y="188" font-size="11" fill="#163A44"
+    font-weight="600">12 restores of K3&#39;s snapshot, R1, from snapshot/load</text>
+<g aria-label="restores">
+  <text x="228" y="209" font-size="11" fill="#163A44" text-anchor="end"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">restore 1</text>
+  <rect x="236" y="198" width="3.69" height="14" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>snapshot/load 0.01 s, then ssh, 0 to 0.41 s</title></rect>
+  <rect x="239.69" y="198" width="6.03" height="14" fill="#CFE3E4" stroke="#163A44"
+      stroke-width="0.5"><title>the guest clock read, set 0.85 s, and read again, round trip 0.214 s, to the thaw&#39;s start, 0.41 to 1.08 s</title></rect>
+  <rect x="245.72" y="198" width="11.43" height="14" fill="#10181C" stroke="#163A44"
+      stroke-width="0.5"><title>the thaw of 11 containers, 1.27 s, done 2.35 s, 1.08 to 2.35 s</title></rect>
+  <rect x="257.15" y="198" width="21.24" height="14" fill="#D99A3A" stroke="#163A44"
+      stroke-width="0.5"><title>the warm checks: cluster health 2.42 s, namespace 2.47 s, shards owned 3.01 s, HealthCheck done 4.71 s, 2.35 to 4.71 s</title></rect>
+  <text x="284.39" y="209" font-size="10"
+      fill="#163A44">4.71 s; the guest clock 35.2 s behind, -0.114 s after the set</text>
+  <text x="228" y="229" font-size="11" fill="#163A44" text-anchor="end"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">restore 2</text>
+  <rect x="236" y="218" width="3.51" height="14" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>snapshot/load 0.01 s, then ssh, 0 to 0.39 s</title></rect>
+  <rect x="239.51" y="218" width="5.94" height="14" fill="#CFE3E4" stroke="#163A44"
+      stroke-width="0.5"><title>the guest clock read, set 0.83 s, and read again, round trip 0.215 s, to the thaw&#39;s start, 0.39 to 1.05 s</title></rect>
+  <rect x="245.45" y="218" width="10.62" height="14" fill="#10181C" stroke="#163A44"
+      stroke-width="0.5"><title>the thaw of 11 containers, 1.18 s, done 2.23 s, 1.05 to 2.23 s</title></rect>
+  <rect x="256.07" y="218" width="21.33" height="14" fill="#D99A3A" stroke="#163A44"
+      stroke-width="0.5"><title>the warm checks: cluster health 2.36 s, namespace 2.41 s, shards owned 2.95 s, HealthCheck done 4.60 s, 2.23 to 4.6 s</title></rect>
+  <text x="283.4" y="229" font-size="10"
+      fill="#163A44">4.60 s; the guest clock 40.6 s behind, -0.102 s after the set</text>
+  <text x="228" y="249" font-size="11" fill="#163A44" text-anchor="end"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">restore 3</text>
+  <rect x="236" y="238" width="3.6" height="14" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>snapshot/load 0.01 s, then ssh, 0 to 0.4 s</title></rect>
+  <rect x="239.6" y="238" width="5.85" height="14" fill="#CFE3E4" stroke="#163A44"
+      stroke-width="0.5"><title>the guest clock read, set 0.84 s, and read again, round trip 0.205 s, to the thaw&#39;s start, 0.4 to 1.05 s</title></rect>
+  <rect x="245.45" y="238" width="11.25" height="14" fill="#10181C" stroke="#163A44"
+      stroke-width="0.5"><title>the thaw of 11 containers, 1.25 s, done 2.30 s, 1.05 to 2.3 s</title></rect>
+  <rect x="256.7" y="238" width="21.06" height="14" fill="#D99A3A" stroke="#163A44"
+      stroke-width="0.5"><title>the warm checks: cluster health 2.38 s, namespace 2.42 s, shards owned 2.97 s, HealthCheck done 4.64 s, 2.3 to 4.64 s</title></rect>
+  <text x="283.76" y="249" font-size="10"
+      fill="#163A44">4.64 s; the guest clock 45.9 s behind, -0.116 s after the set</text>
+  <text x="228" y="269" font-size="11" fill="#163A44" text-anchor="end"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">restore 4</text>
+  <rect x="236" y="258" width="3.6" height="14" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>snapshot/load 0.01 s, then ssh, 0 to 0.4 s</title></rect>
+  <rect x="239.6" y="258" width="5.94" height="14" fill="#CFE3E4" stroke="#163A44"
+      stroke-width="0.5"><title>the guest clock read, set 0.84 s, and read again, round trip 0.216 s, to the thaw&#39;s start, 0.4 to 1.06 s</title></rect>
+  <rect x="245.54" y="258" width="11.16" height="14" fill="#10181C" stroke="#163A44"
+      stroke-width="0.5"><title>the thaw of 11 containers, 1.24 s, done 2.30 s, 1.06 to 2.3 s</title></rect>
+  <rect x="256.7" y="258" width="21.33" height="14" fill="#D99A3A" stroke="#163A44"
+      stroke-width="0.5"><title>the warm checks: cluster health 2.39 s, namespace 2.45 s, shards owned 3.00 s, HealthCheck done 4.67 s, 2.3 to 4.67 s</title></rect>
+  <text x="284.03" y="269" font-size="10"
+      fill="#163A44">4.67 s; the guest clock 51.3 s behind, -0.099 s after the set</text>
+  <text x="228" y="289" font-size="11" fill="#163A44" text-anchor="end"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">restore 5</text>
+  <rect x="236" y="278" width="3.51" height="14" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>snapshot/load 0.01 s, then ssh, 0 to 0.39 s</title></rect>
+  <rect x="239.51" y="278" width="6.12" height="14" fill="#CFE3E4" stroke="#163A44"
+      stroke-width="0.5"><title>the guest clock read, set 0.84 s, and read again, round trip 0.223 s, to the thaw&#39;s start, 0.39 to 1.07 s</title></rect>
+  <rect x="245.63" y="278" width="10.98" height="14" fill="#10181C" stroke="#163A44"
+      stroke-width="0.5"><title>the thaw of 11 containers, 1.22 s, done 2.29 s, 1.07 to 2.29 s</title></rect>
+  <rect x="256.61" y="278" width="21.06" height="14" fill="#D99A3A" stroke="#163A44"
+      stroke-width="0.5"><title>the warm checks: cluster health 2.38 s, namespace 2.44 s, shards owned 2.98 s, HealthCheck done 4.63 s, 2.29 to 4.63 s</title></rect>
+  <text x="283.67" y="289" font-size="10"
+      fill="#163A44">4.63 s; the guest clock 56.7 s behind, -0.111 s after the set</text>
+  <text x="228" y="309" font-size="11" fill="#163A44" text-anchor="end"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">restore 6</text>
+  <rect x="236" y="298" width="3.6" height="14" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>snapshot/load 0.01 s, then ssh, 0 to 0.4 s</title></rect>
+  <rect x="239.6" y="298" width="5.94" height="14" fill="#CFE3E4" stroke="#163A44"
+      stroke-width="0.5"><title>the guest clock read, set 0.84 s, and read again, round trip 0.208 s, to the thaw&#39;s start, 0.4 to 1.06 s</title></rect>
+  <rect x="245.54" y="298" width="10.98" height="14" fill="#10181C" stroke="#163A44"
+      stroke-width="0.5"><title>the thaw of 11 containers, 1.22 s, done 2.28 s, 1.06 to 2.28 s</title></rect>
+  <rect x="256.52" y="298" width="21.15" height="14" fill="#D99A3A" stroke="#163A44"
+      stroke-width="0.5"><title>the warm checks: cluster health 2.37 s, namespace 2.43 s, shards owned 2.97 s, HealthCheck done 4.63 s, 2.28 to 4.63 s</title></rect>
+  <text x="283.67" y="309" font-size="10"
+      fill="#163A44">4.63 s; the guest clock 62.1 s behind, -0.111 s after the set</text>
+  <text x="228" y="329" font-size="11" fill="#163A44" text-anchor="end"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">restore 7</text>
+  <rect x="236" y="318" width="3.51" height="14" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>snapshot/load 0.01 s, then ssh, 0 to 0.39 s</title></rect>
+  <rect x="239.51" y="318" width="6.12" height="14" fill="#CFE3E4" stroke="#163A44"
+      stroke-width="0.5"><title>the guest clock read, set 0.85 s, and read again, round trip 0.208 s, to the thaw&#39;s start, 0.39 to 1.07 s</title></rect>
+  <rect x="245.63" y="318" width="11.88" height="14" fill="#10181C" stroke="#163A44"
+      stroke-width="0.5"><title>the thaw of 11 containers, 1.32 s, done 2.39 s, 1.07 to 2.39 s</title></rect>
+  <rect x="257.51" y="318" width="20.61" height="14" fill="#D99A3A" stroke="#163A44"
+      stroke-width="0.5"><title>the warm checks: cluster health 2.47 s, namespace 2.52 s, shards owned 3.05 s, HealthCheck done 4.68 s, 2.39 to 4.68 s</title></rect>
+  <text x="284.12" y="329" font-size="10"
+      fill="#163A44">4.68 s; the guest clock 67.5 s behind, -0.116 s after the set</text>
+  <text x="228" y="349" font-size="11" fill="#163A44" text-anchor="end"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">restore 8</text>
+  <rect x="236" y="338" width="3.51" height="14" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>snapshot/load 0.01 s, then ssh, 0 to 0.39 s</title></rect>
+  <rect x="239.51" y="338" width="6.03" height="14" fill="#CFE3E4" stroke="#163A44"
+      stroke-width="0.5"><title>the guest clock read, set 0.84 s, and read again, round trip 0.214 s, to the thaw&#39;s start, 0.39 to 1.06 s</title></rect>
+  <rect x="245.54" y="338" width="10.98" height="14" fill="#10181C" stroke="#163A44"
+      stroke-width="0.5"><title>the thaw of 11 containers, 1.22 s, done 2.28 s, 1.06 to 2.28 s</title></rect>
+  <rect x="256.52" y="338" width="21.51" height="14" fill="#D99A3A" stroke="#163A44"
+      stroke-width="0.5"><title>the warm checks: cluster health 2.38 s, namespace 2.44 s, shards owned 3.05 s, HealthCheck done 4.67 s, 2.28 to 4.67 s</title></rect>
+  <text x="284.03" y="349" font-size="10"
+      fill="#163A44">4.67 s; the guest clock 72.9 s behind, -0.103 s after the set</text>
+  <text x="228" y="369" font-size="11" fill="#163A44" text-anchor="end"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">restore 9</text>
+  <rect x="236" y="358" width="3.6" height="14" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>snapshot/load 0.01 s, then ssh, 0 to 0.4 s</title></rect>
+  <rect x="239.6" y="358" width="5.85" height="14" fill="#CFE3E4" stroke="#163A44"
+      stroke-width="0.5"><title>the guest clock read, set 0.83 s, and read again, round trip 0.211 s, to the thaw&#39;s start, 0.4 to 1.05 s</title></rect>
+  <rect x="245.45" y="358" width="11.25" height="14" fill="#10181C" stroke="#163A44"
+      stroke-width="0.5"><title>the thaw of 11 containers, 1.25 s, done 2.30 s, 1.05 to 2.3 s</title></rect>
+  <rect x="256.7" y="358" width="21.24" height="14" fill="#D99A3A" stroke="#163A44"
+      stroke-width="0.5"><title>the warm checks: cluster health 2.37 s, namespace 2.42 s, shards owned 2.99 s, HealthCheck done 4.66 s, 2.3 to 4.66 s</title></rect>
+  <text x="283.94" y="369" font-size="10"
+      fill="#163A44">4.66 s; the guest clock 78.3 s behind, -0.105 s after the set</text>
+  <text x="228" y="389" font-size="11" fill="#163A44" text-anchor="end"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">restore 10</text>
+  <rect x="236" y="378" width="3.51" height="14" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>snapshot/load 0.01 s, then ssh, 0 to 0.39 s</title></rect>
+  <rect x="239.51" y="378" width="6.03" height="14" fill="#CFE3E4" stroke="#163A44"
+      stroke-width="0.5"><title>the guest clock read, set 0.84 s, and read again, round trip 0.204 s, to the thaw&#39;s start, 0.39 to 1.06 s</title></rect>
+  <rect x="245.54" y="378" width="11.25" height="14" fill="#10181C" stroke="#163A44"
+      stroke-width="0.5"><title>the thaw of 11 containers, 1.25 s, done 2.31 s, 1.06 to 2.31 s</title></rect>
+  <rect x="256.79" y="378" width="21.24" height="14" fill="#D99A3A" stroke="#163A44"
+      stroke-width="0.5"><title>the warm checks: cluster health 2.38 s, namespace 2.43 s, shards owned 2.99 s, HealthCheck done 4.67 s, 2.31 to 4.67 s</title></rect>
+  <text x="284.03" y="389" font-size="10"
+      fill="#163A44">4.67 s; the guest clock 83.7 s behind, -0.109 s after the set</text>
+  <text x="228" y="409" font-size="11" fill="#163A44" text-anchor="end"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">restore 11</text>
+  <rect x="236" y="398" width="3.6" height="14" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>snapshot/load 0.01 s, then ssh, 0 to 0.4 s</title></rect>
+  <rect x="239.6" y="398" width="6.03" height="14" fill="#CFE3E4" stroke="#163A44"
+      stroke-width="0.5"><title>the guest clock read, set 0.84 s, and read again, round trip 0.212 s, to the thaw&#39;s start, 0.4 to 1.07 s</title></rect>
+  <rect x="245.63" y="398" width="11.34" height="14" fill="#10181C" stroke="#163A44"
+      stroke-width="0.5"><title>the thaw of 11 containers, 1.26 s, done 2.33 s, 1.07 to 2.33 s</title></rect>
+  <rect x="256.97" y="398" width="20.79" height="14" fill="#D99A3A" stroke="#163A44"
+      stroke-width="0.5"><title>the warm checks: cluster health 2.40 s, namespace 2.45 s, shards owned 2.97 s, HealthCheck done 4.64 s, 2.33 to 4.64 s</title></rect>
+  <text x="283.76" y="409" font-size="10"
+      fill="#163A44">4.64 s; the guest clock 89.1 s behind, -0.110 s after the set</text>
+  <text x="228" y="429" font-size="11" fill="#163A44" text-anchor="end"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">restore 12</text>
+  <rect x="236" y="418" width="3.51" height="14" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>snapshot/load 0.01 s, then ssh, 0 to 0.39 s</title></rect>
+  <rect x="239.51" y="418" width="6.03" height="14" fill="#CFE3E4" stroke="#163A44"
+      stroke-width="0.5"><title>the guest clock read, set 0.84 s, and read again, round trip 0.216 s, to the thaw&#39;s start, 0.39 to 1.06 s</title></rect>
+  <rect x="245.54" y="418" width="11.34" height="14" fill="#10181C" stroke="#163A44"
+      stroke-width="0.5"><title>the thaw of 11 containers, 1.26 s, done 2.32 s, 1.06 to 2.32 s</title></rect>
+  <rect x="256.88" y="418" width="21.6" height="14" fill="#D99A3A" stroke="#163A44"
+      stroke-width="0.5"><title>the warm checks: cluster health 2.41 s, namespace 2.46 s, shards owned 3.02 s, HealthCheck done 4.72 s, 2.32 to 4.72 s</title></rect>
+  <text x="284.48" y="429" font-size="10"
+      fill="#163A44">4.72 s; the guest clock 94.5 s behind, -0.100 s after the set</text>
+</g>
+<text x="24" y="454" font-size="11" fill="#163A44"
+    font-weight="600">The golden disk copied, 5.04 GiB allocated of 16 GiB, D1 and D2</text>
+<g aria-label="disk copies">
+  <text x="228" y="475" font-size="11" fill="#163A44" text-anchor="end"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">plain 1</text>
+  <rect x="236" y="464" width="421.14" height="14" fill="#163A44" stroke="#163A44"
+      stroke-width="0.5"><title>cp --reflink=never after a cache drop, 0 to 46.793 s</title></rect>
+  <text x="663.14" y="475" font-size="10" fill="#163A44">46.793 s</text>
+  <text x="228" y="495" font-size="11" fill="#163A44" text-anchor="end"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">plain 2</text>
+  <rect x="236" y="484" width="425.257" height="14" fill="#163A44" stroke="#163A44"
+      stroke-width="0.5"><title>cp --reflink=never after a cache drop, 0 to 47.251 s</title></rect>
+  <text x="667.257" y="495" font-size="10" fill="#163A44">47.251 s</text>
+  <text x="228" y="515" font-size="11" fill="#163A44" text-anchor="end"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">plain 3</text>
+  <rect x="236" y="504" width="424.335" height="14" fill="#163A44" stroke="#163A44"
+      stroke-width="0.5"><title>cp --reflink=never after a cache drop, 0 to 47.148 s</title></rect>
+  <text x="666.335" y="515" font-size="10" fill="#163A44">47.148 s</text>
+  <text x="228" y="535" font-size="11" fill="#163A44" text-anchor="end"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">reflink 1</text>
+  <rect x="236" y="524" width="1" height="14" fill="#163A44" stroke="#163A44"
+      stroke-width="0.5"><title>cp --reflink=always, 0 to 0.007 s</title></rect>
+  <text x="242.065" y="535" font-size="10" fill="#163A44">0.007 s</text>
+  <text x="228" y="555" font-size="11" fill="#163A44" text-anchor="end"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">reflink 2</text>
+  <rect x="236" y="544" width="1" height="14" fill="#163A44" stroke="#163A44"
+      stroke-width="0.5"><title>cp --reflink=always, 0 to 0.003 s</title></rect>
+  <text x="242.03" y="555" font-size="10" fill="#163A44">0.003 s</text>
+  <text x="228" y="575" font-size="11" fill="#163A44" text-anchor="end"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">reflink 3</text>
+  <rect x="236" y="564" width="1" height="14" fill="#163A44" stroke="#163A44"
+      stroke-width="0.5"><title>cp --reflink=always, 0 to 0.003 s</title></rect>
+  <text x="242.029" y="575" font-size="10" fill="#163A44">0.003 s</text>
+</g>
+<line x1="236" y1="594" x2="776" y2="594" fill="none" stroke="#10181C"/>
+<line x1="236" y1="594" x2="236" y2="598" fill="none" stroke="#10181C"/>
+<text x="236" y="610" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+<line x1="326" y1="594" x2="326" y2="598" fill="none" stroke="#10181C"/>
+<text x="326" y="610" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">10</text>
+<line x1="416" y1="594" x2="416" y2="598" fill="none" stroke="#10181C"/>
+<text x="416" y="610" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">20</text>
+<line x1="506" y1="594" x2="506" y2="598" fill="none" stroke="#10181C"/>
+<text x="506" y="610" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">30</text>
+<line x1="596" y1="594" x2="596" y2="598" fill="none" stroke="#10181C"/>
+<text x="596" y="610" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">40</text>
+<line x1="686" y1="594" x2="686" y2="598" fill="none" stroke="#10181C"/>
+<text x="686" y="610" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">50</text>
+<line x1="776" y1="594" x2="776" y2="598" fill="none" stroke="#10181C"/>
+<text x="776" y="610" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">60</text>
+<text x="506" y="626" font-size="12" fill="#163A44"
+    text-anchor="middle">seconds from the start: the VM&#39;s, snapshot/load&#39;s, or the copy&#39;s</text>
+<rect x="24" y="641" width="18" height="10" fill="#5FB3BF"/>
+<text x="48" y="650" font-size="11" fill="#163A44">to ssh</text>
+<rect x="102.96" y="641" width="18" height="10" fill="#10181C"/>
+<text x="126.96" y="650" font-size="11" fill="#163A44">dockerd ready, or the thaw</text>
+<rect x="305.12" y="641" width="18" height="10" fill="#CFE3E4"/>
+<text x="329.12" y="650" font-size="11" fill="#163A44">compose up, or the clock set</text>
+<rect x="519.6" y="641" width="18" height="10" fill="#D99A3A"/>
+<text x="543.6" y="650" font-size="11" fill="#163A44">the warm checks</text>
+<rect x="654" y="641" width="18" height="10" fill="#163A44"/>
+<text x="678" y="650" font-size="11" fill="#163A44">a disk copy</text>
+</svg>

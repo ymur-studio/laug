@@ -1,0 +1,7 @@
+# make: make --no-print-directory -n obs-backfill GATE=g20261017-171604
+# obs: bin/obs backfill g20261017-171604
+# lease: absent
+# passes: GATE=g20261017-171604
+# compare: line obs/obs.sh
+[[ 'g20261017-171604' =~ ^g[0-9]{8}-[0-9]{6}(-[0-9]+)?$ ]] || { echo "laug · make obs-backfill GATE=<gate id>: a gate id, g<date>-<time>, as make orchestrator-gate printed it" >&2; exit 2; }
+obs/obs.sh backfill

@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="520" viewBox="0 0 800 520" role="img"
+    aria-labelledby="gate-layers-title gate-layers-desc" font-family="Inter, system-ui, sans-serif">
+<title id="gate-layers-title">The durable gate, layer by layer: its steps outlive the worker that started them</title>
+<desc id="gate-layers-desc">Five layers, top to bottom. laug gate run -workflow starts workflow Gate on the
+    orchestrator&#39;s dev server, which keeps Gate&#39;s history: the order, every answer, the timers. This
+    checkout&#39;s worker runs Gate&#39;s activities, each gate/step.sh in a session of its own that writes its .pid
+    first and its .done last. The steps lease cells from laug pool serve and run loads, faults and the judge on them.
+    The worker&#39;s box is dashed, and the two lines under the layers say why: kill the worker and the step&#39;s
+    session runs on, and the next worker adopts it by its .pid record, the process, its start time and its boot id, when
+    the record passes; without -workflow, gate/run.sh runs every step in one process. Sources: cmd/laug/doc.go,
+    docs/img/src/gate-layers.txt, gate/lib.sh, internal/orchestrator/gate.go, internal/orchestrator/steps.go.</desc>
+<rect x="0" y="0" width="800" height="520" fill="#EEF3F2"/>
+<text x="24" y="30" font-size="14" fill="#163A44"
+    font-weight="600">The durable gate, layer by layer: its steps outlive the worker that started them</text>
+<text x="24" y="50" font-size="12"
+    fill="#163A44">laug gate run &lt;tag&gt; -workflow: history on the dev server, each step in its own session, cells from the pool</text>
+<g
+    aria-label="laug gate run &lt;tag&gt; -workflow, runs gate/step.sh check, then starts workflow Gate as gate-&lt;gate id&gt;">
+  <rect x="24" y="76" width="752" height="50" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="400" y="97.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-weight="600">laug gate run &lt;tag&gt; -workflow</text>
+  <text x="400" y="112.5" font-size="12" fill="#163A44"
+      text-anchor="middle">runs gate/step.sh check, then starts workflow Gate as gate-&lt;gate id&gt;</text>
+</g>
+<g
+    aria-label="the dev server, 127.0.0.1:7400, Gate&#39;s history in orchestrator/run/dev.db: the order, every answer, the timers">
+  <rect x="24" y="150" width="752" height="50" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="400" y="171.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-weight="600">the dev server, 127.0.0.1:7400</text>
+  <text x="400" y="186.5" font-size="12" fill="#163A44"
+      text-anchor="middle">Gate&#39;s history in orchestrator/run/dev.db: the order, every answer, the timers</text>
+</g>
+<g
+    aria-label="laug orchestrator worker, runs Step and AwaitItem, heartbeats every 2 s, replays every open Gate before it polls">
+  <rect x="24" y="224" width="752" height="50" fill="#EEF3F2" stroke="#C44B32" stroke-dasharray="4 3"/>
+  <text x="400" y="245.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-weight="600">laug orchestrator worker</text>
+  <text x="400" y="260.5" font-size="12" fill="#163A44"
+      text-anchor="middle">runs Step and AwaitItem, heartbeats every 2 s, replays every open Gate before it polls</text>
+</g>
+<g
+    aria-label="gate/step.sh &lt;verb&gt; &lt;dir&gt; [key], in a session of its own, writes .steps/&lt;name&gt;.pid first and .done last; a second copy of the step refuses">
+  <rect x="24" y="298" width="752" height="50" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="400" y="319.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-weight="600">gate/step.sh &lt;verb&gt; &lt;dir&gt; [key], in a session of its own</text>
+  <text x="400" y="334.5" font-size="12" fill="#163A44"
+      text-anchor="middle">writes .steps/&lt;name&gt;.pid first and .done last; a second copy of the step refuses</text>
+</g>
+<g
+    aria-label="gate/lib.sh, leases cells from laug pool serve, 127.0.0.1:7700; runs the loads, the faults and the judge">
+  <rect x="24" y="372" width="752" height="50" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="400" y="393.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">gate/lib.sh</text>
+  <text x="400" y="408.5" font-size="12" fill="#163A44"
+      text-anchor="middle">leases cells from laug pool serve, 127.0.0.1:7700; runs the loads, the faults and the judge</text>
+</g>
+<line x1="400" y1="126" x2="400" y2="142" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="400,150 396,142 404,142" fill="#163A44"/>
+<line x1="400" y1="200" x2="400" y2="216" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="400,224 396,216 404,216" fill="#163A44"/>
+<line x1="400" y1="274" x2="400" y2="290" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="400,298 396,290 404,290" fill="#163A44"/>
+<line x1="400" y1="348" x2="400" y2="364" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="400,372 396,364 404,364" fill="#163A44"/>
+<text x="24" y="452" font-size="11"
+    fill="#C44B32">Kill the worker: the step&#39;s session runs on. The next worker adopts it by its .pid record, the process, its</text>
+<text x="24" y="468" font-size="11"
+    fill="#C44B32">start time and its boot id, and answers when its .done comes; a record that fails the check is a lost step.</text>
+<text x="24" y="494" font-size="11"
+    fill="#163A44">Without -workflow, laug gate run runs gate/run.sh: every step in that one process, its driver run.sh.</text>
+</svg>

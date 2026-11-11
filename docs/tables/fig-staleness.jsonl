@@ -1,0 +1,5 @@
+{"id":"F12.txt/0078","value":"  staleness: numshards_gauge left the exposition at +0.0 s; kill-history read 512 missing on the cell at +2.5 s, in the store at +5.0 s, 2.5 s after the cell; the store read 512 at each of its 235 reads to +240.6 s","from":"cells/results/2026-10-24-boot4/steps/F12.txt:78"}
+{"id":"F12.txt/0079","value":"  numshards_gauge back at +245.0 s: kill-history read 0 on the cell at +2.5 s, in the store at +5.0 s, 2.5 s after the cell","from":"cells/results/2026-10-24-boot4/steps/F12.txt:79"}
+{"id":"F12.txt/0088","value":"--- PASS: TestFakeCellInTheStore (340.82s)","from":"cells/results/2026-10-24-boot4/steps/F12.txt:88"}
+{"id":"F12.txt/0094","value":"  negative control: numshards_gauge left the exposition at +340.0 s; kill-history read 512 missing on the cell at +3.0 s; the store read 0, recovered, at each of its 297 reads to +296.7 s, and first read 512 at +297.7 s, when the 5 m lookback let the last sample go","from":"cells/results/2026-10-24-boot4/steps/F12.txt:94"}
+{"id":"F12.txt/0095","value":"--- PASS: TestFakeCellStalenessControl (313.25s)","from":"cells/results/2026-10-24-boot4/steps/F12.txt:95"}

@@ -1,0 +1,1 @@
+{"rate":20,"after":{"workflows_completed":1800,"window_seconds":90},"iterations_failed":{"before":0,"during":540,"drain":9,"after":0,"late":0,"unplaced":0,"total":549},"sweep":{},"sweep_cutoff":"2026-10-13T14:02:50Z","sweep_error":null,"result":"ADVANCE"}

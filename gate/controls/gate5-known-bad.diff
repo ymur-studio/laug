@@ -1,0 +1,14 @@
+# gate5-known-bad: frontend.rps 5 in every cell's dynamic config, faults/candidates.yaml frontend-starved. On cells the gate must BLOCK, class regression, steady and the incumbent each BLOCKing on its maxima, as g20261018-074337 did (R4, R5 and R7). On fakes it ADVANCEs: no fake cell reads it.
+diff --git a/cells/compose/dynamicconfig/laug.yaml b/cells/compose/dynamicconfig/laug.yaml
+index 9b144ec..96959f4 100644
+--- a/cells/compose/dynamicconfig/laug.yaml
++++ b/cells/compose/dynamicconfig/laug.yaml
+@@ -22,7 +22,7 @@ system.forceSearchAttributesCacheRefreshOnRead:
+ 
+ # laug: the server 1.31.0 defaults, restated (see the header)
+ frontend.rps:
+-  - value: 2400
++  - value: 5   # gate5-known-bad: faults/candidates.yaml frontend-starved, which must BLOCK
+ frontend.namespaceRPS:
+   - value: 2400
+ history.persistenceMaxQPS:

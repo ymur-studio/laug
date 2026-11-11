@@ -1,0 +1,50 @@
+# Fetched or built here. make build writes bin/laug and bin/obs. go build ./... and go -C _obs build ./... write
+# nothing: each matches more than one package, and Go then keeps no output. A main package built alone and without
+# -o writes its binary where go runs: go build ./cmd/laug writes laug at the root, and go -C _obs build ./cmd/obs
+# writes _obs/obs. Untracked, either would stamp a later make build -dirty.
+.upstream/
+bin/
+/laug
+/_obs/obs
+*.test
+coverage.out
+
+# Firecracker snapshot artifacts
+*.snap
+*.mem
+*.ext4
+
+# Run state: leases, per-cell dynamic config, raw logs (results logs stay local), CI verdict files
+.last-lease.json
+.lease.*
+cells/run/
+*.log
+load/results/*.verdict
+
+# A runbook walk's runs, named rb<N>-<UTC time> by the page: a load's files in load/results, a raun's in faults/results
+# and its load's copy in faults/results/load. Ignored, they leave git status clean, so make build stamps no -dirty and
+# a gate records no tree_dirty. No committed run has such a name (check/results_test.go, TestWalkFilesIgnored).
+load/results/rb[0-9]-*
+faults/results/raun-rb[0-9]-*
+faults/results/load/raun-rb[0-9]-*
+
+# The orchestrator's state (laug orchestrator server, worker, probe): the dev server's SQLite file, this checkout's
+# task queue name, the worker's lock file and the probe's samples. Tracked, they would make a gate's tree dirty.
+orchestrator/run/
+
+# Gate runs (gate/run.sh): the host lock, and each item's lease as laugd answered it, whose dynconfig names this
+# checkout's absolute path; lease.json beside it is the copy with that path made relative. Logs are *.log, above.
+# A run by gate/step.sh adds its records, which name pids, boot ids and workflow ids: .steps/, .state.json and each
+# item's .pid.
+gate/.lock
+gate/results/*/*/.lease.json
+gate/results/*/.steps/
+gate/results/*/.state.json
+gate/results/*/*/.pid
+
+# Secrets and local settings; never published
+.env
+settings.local.json
+
+# The status page stays private: the public tree leaves it out, and a public clone keeps one out of git
+STATUS.md

@@ -1,0 +1,10 @@
+# make: make --no-print-directory -n lease TTL=600
+# laug: laug lease -ttl 10m
+# lease: absent
+# compare: request POST /lease
+[[ '600' =~ ^(0|[1-9][0-9]*)$ ]] || { echo "laug · TTL="'600'": a whole number of seconds" >&2; exit 2; }
+tmp=$(mktemp .lease.XXXXXX); \
+if curl -s --fail-with-body -X POST 'http://127.0.0.1:7700/lease' -H 'content-type: application/json' \
+     -d "$(jq -cn --argjson ttl 600 --arg requester 'laug' '{ttl_seconds: $ttl, requester: $requester}')" -o "$tmp"; then \
+  mv "$tmp" .last-lease.json && jq . .last-lease.json; \
+else rc=$?; echo "laug · lease refused (curl exit $rc): $(cat "$tmp")" >&2; rm -f "$tmp"; exit 1; fi

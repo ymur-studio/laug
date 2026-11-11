@@ -1,0 +1,234 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="616" viewBox="0 0 800 616" role="img"
+    aria-labelledby="toxic-fuse-title toxic-fuse-desc" font-family="Inter, system-ui, sans-serif">
+<title id="toxic-fuse-title">A reset_peer toxic on Postgres: three layers between the fault and the server</title>
+<desc id="toxic-fuse-desc">Top: the cell&#39;s server roles reach its Postgres through Toxiproxy, where
+    persistence-errors adds a reset_peer toxic at toxicity 0.05. Middle: what each of the three layers does: Toxiproxy
+    decides once a connection whether the toxic applies; Go&#39;s database/sql retries, outside a transaction, a query
+    whose open connection was closed; and Temporal&#39;s SQL layer answers a reset during a new connection&#39;s
+    handshake by closing the role&#39;s whole pool, and opens a new one at most once a second (db_handle.go:24). The
+    loop is the fuse the design suggests: every new connection draws the toxic again. It never blew here: no role
+    stopped at any toxicity. Read in source, not run (Toxiproxy 2.12.0; database/sql with lib/pq v1.10.9; server v1.31.0
+    db_handle.go:157-169). Below, what was run: boot 2&#39;s rauns of the row on compose cells, the committed toxicity
+    three times, then catalog copies that change only the toxicity, a column a raun, headed by its toxicity and the end
+    of its run id. A column holds the raun&#39;s verdict, when its signal crossed 0.5, and what a sampler beside it read
+    on the cell&#39;s Prometheus and Postgres from the inject to the hold&#39;s end, each the range over those reads:
+    persistence errors a second and workflows completed a second, each over 30 s; each role&#39;s pool refresh attempts
+    and their failures, each over 1 m, at their peak, with the role that reached it; and connections to the temporal
+    database. Last, the raun&#39;s failed client starts over every window. A BLOCK here means only that the fault never
+    landed: its signal stayed at 0 for the whole hold. Sources: cells/compose/cell.yml, docs/img/src/toxic-fuse.txt,
+    docs/tables/fig-toxic-fuse.jsonl, docs/tables/rauns.jsonl, docs/tables/src/hosts.tsv, faults/catalog.yaml.</desc>
+<rect x="0" y="0" width="800" height="616" fill="#EEF3F2"/>
+<text x="24" y="30" font-size="14" fill="#163A44"
+    font-weight="600">A reset_peer toxic on Postgres: three layers between the fault and the server</text>
+<text x="24" y="50" font-size="12"
+    fill="#163A44">faults/catalog.yaml&#39;s persistence-errors: Toxiproxy between the cell&#39;s roles and their Postgres</text>
+<g aria-label="the cell&#39;s server roles, each with its own pool">
+  <rect x="24" y="76" width="236" height="56" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="142" y="100.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-weight="600">the cell&#39;s server roles</text>
+  <text x="142" y="115.5" font-size="12" fill="#163A44" text-anchor="middle">each with its own pool</text>
+</g>
+<g aria-label="Toxiproxy 2.12.0, reset_peer, toxicity 0.05">
+  <rect x="300" y="76" width="200" height="56" fill="#D99A3A" stroke="#163A44"/>
+  <text x="400" y="100.5" font-size="12" fill="#10181C" text-anchor="middle" font-weight="600">Toxiproxy 2.12.0</text>
+  <text x="400" y="115.5" font-size="12" fill="#10181C" text-anchor="middle">reset_peer, toxicity 0.05</text>
+</g>
+<g aria-label="Postgres, the cell&#39;s store">
+  <rect x="540" y="76" width="236" height="56" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="658" y="100.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">Postgres</text>
+  <text x="658" y="115.5" font-size="12" fill="#163A44" text-anchor="middle">the cell&#39;s store</text>
+</g>
+<line x1="260" y1="104" x2="292" y2="104" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="300,104 292,108 292,100" fill="#163A44"/>
+<line x1="500" y1="104" x2="532" y2="104" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="540,104 532,108 532,100" fill="#163A44"/>
+<g aria-label="1. Toxiproxy, decides once a connection, whether the toxic applies,, the open ones too">
+  <rect x="24" y="176" width="236" height="82" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="142" y="198.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">1. Toxiproxy</text>
+  <text x="142" y="213.5" font-size="12" fill="#163A44" text-anchor="middle">decides once a connection</text>
+  <text x="142" y="228.5" font-size="12" fill="#163A44" text-anchor="middle">whether the toxic applies,</text>
+  <text x="142" y="243.5" font-size="12" fill="#163A44" text-anchor="middle">the open ones too</text>
+</g>
+<g
+    aria-label="2. Go&#39;s database/sql, an armed open connection, closes; outside a transaction, the query runs on another one">
+  <rect x="282" y="176" width="236" height="82" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="400" y="198.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-weight="600">2. Go&#39;s database/sql</text>
+  <text x="400" y="213.5" font-size="12" fill="#163A44" text-anchor="middle">an armed open connection</text>
+  <text x="400" y="228.5" font-size="12" fill="#163A44" text-anchor="middle">closes; outside a transaction</text>
+  <text x="400" y="243.5" font-size="12" fill="#163A44" text-anchor="middle">the query runs on another one</text>
+</g>
+<g aria-label="3. Temporal&#39;s SQL layer, a new connection reset in, its handshake: close the, pool, dial a new one">
+  <rect x="540" y="176" width="236" height="82" fill="#163A44" stroke="#163A44"/>
+  <text x="658" y="198.5" font-size="12" fill="#EEF3F2" text-anchor="middle"
+      font-weight="600">3. Temporal&#39;s SQL layer</text>
+  <text x="658" y="213.5" font-size="12" fill="#EEF3F2" text-anchor="middle">a new connection reset in</text>
+  <text x="658" y="228.5" font-size="12" fill="#EEF3F2" text-anchor="middle">its handshake: close the</text>
+  <text x="658" y="243.5" font-size="12" fill="#EEF3F2" text-anchor="middle">pool, dial a new one</text>
+</g>
+<polyline points="658,258 658,300 142,300" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+<line x1="142" y1="300" x2="142" y2="266" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+<polygon points="142,258 146,266 138,266" fill="#C44B32"/>
+<text x="232" y="318" font-size="11" fill="#C44B32">every new connection draws the toxic again</text>
+<g aria-label="what the sampler read, by toxicity">
+  <text x="28" y="350" font-size="11" fill="#163A44"
+      font-weight="600">Boot 2 on the lab host, an m8i.8xlarge: the sampler in each 120 s hold, 8 reads a raun, 15 to 16 s apart</text>
+  <text x="28" y="374" font-size="11" fill="#163A44" font-weight="600">toxicity</text>
+  <text x="28" y="388" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">raun-lab2-persistence-errors</text>
+  <text x="214" y="374" font-size="11" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace" font-weight="600">0.05</text>
+  <text x="214" y="388" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">-1</text>
+  <text x="307.667" y="374" font-size="11" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace" font-weight="600">0.05</text>
+  <text x="307.667" y="388" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">-2</text>
+  <text x="401.333" y="374" font-size="11" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace" font-weight="600">0.05</text>
+  <text x="401.333" y="388" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">-3</text>
+  <text x="495" y="374" font-size="11" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace" font-weight="600">0.1</text>
+  <text x="495" y="388" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">-t010</text>
+  <text x="588.667" y="374" font-size="11" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace" font-weight="600">0.3</text>
+  <text x="588.667" y="388" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">-t030</text>
+  <text x="682.333" y="374" font-size="11" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace" font-weight="600">0.5</text>
+  <text x="682.333" y="388" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">-t050</text>
+  <line x1="24" y1="392" x2="776" y2="392" fill="none" stroke="#CFE3E4"/>
+  <text x="28" y="404" font-size="11" fill="#163A44">verdict</text>
+  <text x="214" y="404" font-size="10" fill="#C44B32" font-weight="600">BLOCK</text>
+  <text x="307.667" y="404" font-size="10" fill="#C44B32" font-weight="600">BLOCK</text>
+  <text x="401.333" y="404" font-size="10" fill="#C44B32" font-weight="600">BLOCK</text>
+  <text x="495" y="404" font-size="10" fill="#C44B32" font-weight="600">BLOCK</text>
+  <text x="588.667" y="404" font-size="10" fill="#C44B32" font-weight="600">BLOCK</text>
+  <text x="682.333" y="404" font-size="10" fill="#5B9B6A" font-weight="600">ADVANCE</text>
+  <line x1="24" y1="408" x2="776" y2="408" fill="none" stroke="#CFE3E4"/>
+  <text x="28" y="420" font-size="11" fill="#163A44">landed, from the inject</text>
+  <text x="214" y="420" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">not in 120 s</text>
+  <text x="307.667" y="420" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">not in 120 s</text>
+  <text x="401.333" y="420" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">not in 120 s</text>
+  <text x="495" y="420" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">not in 120 s</text>
+  <text x="588.667" y="420" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">not in 120 s</text>
+  <text x="682.333" y="420" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">+95 s</text>
+  <line x1="24" y1="424" x2="776" y2="424" fill="none" stroke="#CFE3E4"/>
+  <text x="28" y="436" font-size="11" fill="#163A44">persistence errors a second</text>
+  <text x="214" y="436" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+  <text x="307.667" y="436" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+  <text x="401.333" y="436" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+  <text x="495" y="436" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+  <text x="588.667" y="436" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+  <text x="682.333" y="436" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0 to 1.417</text>
+  <line x1="24" y1="440" x2="776" y2="440" fill="none" stroke="#CFE3E4"/>
+  <text x="28" y="452" font-size="11" fill="#163A44">workflows completed a second</text>
+  <text x="214" y="452" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">19.96 to 20.04</text>
+  <text x="307.667" y="452" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">20 to 20.04</text>
+  <text x="401.333" y="452" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">20</text>
+  <text x="495" y="452" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">19.96 to 20.04</text>
+  <text x="588.667" y="452" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">20</text>
+  <text x="682.333" y="452" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">20</text>
+  <line x1="24" y1="456" x2="776" y2="456" fill="none" stroke="#CFE3E4"/>
+  <text x="28" y="468" font-size="11" fill="#163A44">refresh attempts in 1 m, peak</text>
+  <text x="214" y="468" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+  <text x="307.667" y="468" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+  <text x="401.333" y="468" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+  <text x="495" y="468" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+  <text x="588.667" y="468" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+  <text x="682.333" y="468" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">1738.723</text>
+  <line x1="24" y1="472" x2="776" y2="472" fill="none" stroke="#CFE3E4"/>
+  <text x="28" y="484" font-size="11" fill="#163A44">the role at that peak</text>
+  <text x="214" y="484" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">5 roles at 0</text>
+  <text x="307.667" y="484" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">5 roles at 0</text>
+  <text x="401.333" y="484" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">5 roles at 0</text>
+  <text x="495" y="484" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">5 roles at 0</text>
+  <text x="588.667" y="484" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">5 roles at 0</text>
+  <text x="682.333" y="484" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">history</text>
+  <line x1="24" y1="488" x2="776" y2="488" fill="none" stroke="#CFE3E4"/>
+  <text x="28" y="500" font-size="11" fill="#163A44">refresh failures in 1 m, peak</text>
+  <text x="214" y="500" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">no series</text>
+  <text x="307.667" y="500" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">no series</text>
+  <text x="401.333" y="500" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">no series</text>
+  <text x="495" y="500" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">no series</text>
+  <text x="588.667" y="500" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">no series</text>
+  <text x="682.333" y="500" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">68.768</text>
+  <line x1="24" y1="504" x2="776" y2="504" fill="none" stroke="#CFE3E4"/>
+  <text x="28" y="516" font-size="11" fill="#163A44">the role at that peak</text>
+  <text x="682.333" y="516" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">matching</text>
+  <line x1="24" y1="520" x2="776" y2="520" fill="none" stroke="#CFE3E4"/>
+  <text x="28" y="532" font-size="11" fill="#163A44">connections to the database</text>
+  <text x="214" y="532" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">47</text>
+  <text x="307.667" y="532" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">47</text>
+  <text x="401.333" y="532" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">48</text>
+  <text x="495" y="532" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">46 to 47</text>
+  <text x="588.667" y="532" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">45 to 47</text>
+  <text x="682.333" y="532" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">21 to 44</text>
+  <line x1="24" y1="536" x2="776" y2="536" fill="none" stroke="#CFE3E4"/>
+  <text x="28" y="548" font-size="11" fill="#163A44">failed client starts</text>
+  <text x="214" y="548" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+  <text x="307.667" y="548" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+  <text x="401.333" y="548" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+  <text x="495" y="548" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+  <text x="588.667" y="548" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+  <text x="682.333" y="548" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+</g>
+<text x="24" y="579" font-size="11"
+    fill="#163A44">BLOCK here means only that the fault never landed: its signal stayed at 0 for the whole 120 s hold.</text>
+<text x="24" y="596" font-size="10"
+    fill="#163A44">source, read and not run: Toxiproxy 2.12.0; Go&#39;s database/sql with lib/pq v1.10.9;</text>
+<text x="24" y="609" font-size="10"
+    fill="#163A44">server v1.31.0 common/persistence/sql/sqlplugin/db_handle.go:24, :157-169. The toxic: faults/catalog.yaml.</text>
+</svg>

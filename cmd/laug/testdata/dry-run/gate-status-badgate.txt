@@ -1,0 +1,7 @@
+# make: make --no-print-directory -n orchestrator-gate-status GATE=x
+# laug: laug gate status x
+# lease: absent
+# compare: refused
+cd orchestrator && go build -o bin/gate ./cmd/gate
+[[ 'x' =~ ^g[0-9]{8}-[0-9]{6}(-[0-9]+)?$ ]] || { echo "laug · make orchestrator-gate-status GATE=<gate id>: a gate id, g<date>-<time>, as make orchestrator-gate printed it" >&2; exit 2; }
+env $(compgen -e | sed -n -e 's/^TEMPORAL_SDK_FLAG_/-u &/p' -e 's/^TEMPORAL_DEBUG$/-u &/p' -e 's/^OTEL_/-u &/p') TEMPORAL_ADDRESS='127.0.0.1:7400' TEMPORAL_NAMESPACE='default' orchestrator/bin/gate -repo '$ROOT' -status 'x'

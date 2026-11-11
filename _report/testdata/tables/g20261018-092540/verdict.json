@@ -1,0 +1,337 @@
+{
+  "gate_id": "g20261018-092540",
+  "verdict": "BLOCK",
+  "class": "regression",
+  "rerun": false,
+  "class_if_quiet": null,
+  "refused": null,
+  "fake": false,
+  "server_tag": "1.32.1",
+  "incumbent": "1.31.0",
+  "laug_commit": "515e50e",
+  "tree_dirty": false,
+  "base": "515e50e",
+  "inputs": [
+    {
+      "path": "gate/plan.yaml",
+      "sha256": "ef34d8359084ad717c6e43f0f241de1f17b4e0c9b353ce14d479a0e9ab32b28c",
+      "changed_vs_base": false
+    },
+    {
+      "path": "gate/combine.sh",
+      "sha256": "33b4e89dc2ecef502e73ea88136a482fbf8694986789712fd5126e31f5faf6f0",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/steady-state.yaml",
+      "sha256": "10458cff6d61af7c6ee3e816c5862e145dc4cd2c8b981bdda3ef81ec61b6d27a",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/thresholds.sh",
+      "sha256": "d054c485bb3027a78945640c484910c2fca206573a6a9fcbf34d8c223ea4a48d",
+      "changed_vs_base": false
+    },
+    {
+      "path": "faults/catalog.yaml",
+      "sha256": "f0e73b887d68b2e28575b8146f430d3a98dbae09f96d1da8aed63404cf333a9e",
+      "changed_vs_base": false
+    },
+    {
+      "path": "cells/compose/dynamicconfig/laug.yaml",
+      "sha256": "6ecc1d5ae589a5f89049b4f15d23becb616252e567ffd6a862db7294c50e705a",
+      "changed_vs_base": false
+    },
+    {
+      "path": "cells/compose/cell.yml",
+      "sha256": "131e51d360a5808d3f4de2cbb36b0a7a1b64588f6a65d2052f9b46295d0c035d",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/releases/1.32.yaml",
+      "sha256": "d22200aedb8b3fdcaa2d7326338d7f553fcf4d002305938b225637524f23a02c",
+      "changed_vs_base": false
+    }
+  ],
+  "deadline_s": 780,
+  "items_in_plan": 3,
+  "items_limit": null,
+  "t0": {
+    "wall": 1792315540.579,
+    "mono": 11094.25
+  },
+  "t_post": {
+    "wall": 1792316128.034,
+    "mono": 11681.70
+  },
+  "elapsed_s": {
+    "wall": 587.455,
+    "mono": 587.45
+  },
+  "host": {
+    "type": "m8i.8xlarge",
+    "vcpu": 32,
+    "mem_gib": 123,
+    "mem_available_gib": 121.7
+  },
+  "rules": {
+    "R1": {
+      "name": "harness",
+      "pass": true,
+      "reasons": []
+    },
+    "R2": {
+      "name": "coverage",
+      "pass": true,
+      "reasons": []
+    },
+    "R3": {
+      "name": "contract",
+      "pass": true,
+      "reasons": []
+    },
+    "R4": {
+      "name": "outcome",
+      "pass": true,
+      "reasons": []
+    },
+    "R5": {
+      "name": "live control",
+      "pass": true,
+      "reasons": []
+    },
+    "R6": {
+      "name": "identity",
+      "pass": true,
+      "reasons": []
+    },
+    "R7": {
+      "name": "incumbent",
+      "pass": false,
+      "reasons": [
+        "steady: worse than the incumbent: persistence_latency_p99_ms 8.460 against 8.059 on incumbent, +0.401 past a tolerance of 0.35"
+      ]
+    }
+  },
+  "reasons": [
+    "R7 steady: worse than the incumbent: persistence_latency_p99_ms 8.460 against 8.059 on incumbent, +0.401 past a tolerance of 0.35"
+  ],
+  "items": [
+    {
+      "key": "incumbent",
+      "kind": "load",
+      "arm": "incumbent",
+      "expect": "ADVANCE",
+      "observed": "ADVANCE",
+      "class": null,
+      "reason": "",
+      "failed": [],
+      "run_id": "g20261018-092540-incumbent",
+      "cell": "66f92461",
+      "block": 0,
+      "exit": 0,
+      "stopped_by": null,
+      "pool_busy": null,
+      "evidence": [
+        "incumbent/g20261018-092540-incumbent.json",
+        "incumbent/g20261018-092540-incumbent.verdict.json"
+      ]
+    },
+    {
+      "key": "steady",
+      "kind": "load",
+      "arm": null,
+      "expect": "ADVANCE",
+      "observed": "ADVANCE",
+      "class": "regression",
+      "reason": "worse than the incumbent: persistence_latency_p99_ms 8.460 against 8.059 on incumbent, +0.401 past a tolerance of 0.35",
+      "failed": [
+        "R7"
+      ],
+      "run_id": "g20261018-092540-steady",
+      "cell": "41ab82ca",
+      "block": 1,
+      "exit": 0,
+      "stopped_by": null,
+      "pool_busy": null,
+      "evidence": [
+        "steady/g20261018-092540-steady.json",
+        "steady/g20261018-092540-steady.verdict.json"
+      ]
+    },
+    {
+      "key": "pl",
+      "kind": "fault",
+      "arm": null,
+      "expect": "ADVANCE",
+      "observed": "ADVANCE",
+      "class": null,
+      "reason": "",
+      "failed": [],
+      "run_id": "g20261018-092540-pl",
+      "cell": "3715ed51",
+      "block": 2,
+      "exit": 0,
+      "stopped_by": null,
+      "pool_busy": {
+        "before": 0,
+        "during": 0,
+        "drain": 0,
+        "after": 0
+      },
+      "evidence": [
+        "pl/g20261018-092540-pl.json"
+      ]
+    }
+  ],
+  "comparison": {
+    "incumbent": "incumbent",
+    "release": "steady",
+    "mode": "judging",
+    "wave": [
+      "load:incumbent workflow_with_single_noop_activity 20/s 50 5m",
+      "load workflow_with_single_noop_activity 20/s 50 5m",
+      "fault:persistence-latency workflow_with_single_noop_activity"
+    ],
+    "wave_measured": [
+      "load:incumbent workflow_with_single_noop_activity 20/s 50 5m",
+      "load workflow_with_single_noop_activity 20/s 50 5m",
+      "fault:persistence-latency workflow_with_single_noop_activity"
+    ],
+    "measured_with": "1.31.0",
+    "evidence": "cells/results/2026-10-17-lab-arm-calibration.txt",
+    "gates": 20,
+    "windows": {
+      "start_apart_s": 1,
+      "length_s": {
+        "release": 301,
+        "incumbent": 302
+      }
+    },
+    "notes": [],
+    "rows": [
+      {
+        "name": "workflow_task_schedule_to_start_p99_ms",
+        "scale": "ms",
+        "release": 16.844157829857078,
+        "incumbent": 16.30136986301379,
+        "d": 0.543,
+        "tolerance": 1.02,
+        "judged": true,
+        "result": "ok"
+      },
+      {
+        "name": "persistence_latency_p99_ms",
+        "scale": "ms",
+        "release": 8.459853989313489,
+        "incumbent": 8.058667639455804,
+        "d": 0.401,
+        "tolerance": 0.35,
+        "judged": true,
+        "result": "WORSE"
+      },
+      {
+        "name": "activity_schedule_to_start_over_10ms",
+        "scale": "share",
+        "release": null,
+        "incumbent": 0.008474576271186418,
+        "d": null,
+        "tolerance": 0.0072,
+        "judged": true,
+        "result": "not produced"
+      },
+      {
+        "name": "frontend_request_over_10ms",
+        "scale": "share",
+        "release": 0.011207388407975083,
+        "incumbent": 0.010292378831148419,
+        "d": 0.000915,
+        "tolerance": 0.0032,
+        "judged": true,
+        "result": "ok"
+      },
+      {
+        "name": "workflow_end_to_end_over_50ms",
+        "scale": "share",
+        "release": 0.013585916040458001,
+        "incumbent": 0.02762711864406786,
+        "d": -0.014041,
+        "tolerance": 0.0064,
+        "judged": true,
+        "result": "ok"
+      },
+      {
+        "name": "activity_schedule_to_start_p99_ms",
+        "scale": "ms",
+        "release": null,
+        "incumbent": 9.991355198221186,
+        "d": null,
+        "tolerance": null,
+        "judged": false,
+        "result": "recorded"
+      },
+      {
+        "name": "workflow_end_to_end_p95_ms",
+        "scale": "ms",
+        "release": 48.89253150725384,
+        "incumbent": 49.30974376852014,
+        "d": -0.417,
+        "tolerance": null,
+        "judged": false,
+        "result": "recorded"
+      },
+      {
+        "name": "service_error_rate",
+        "scale": "share",
+        "release": 0,
+        "incumbent": 0,
+        "d": 0,
+        "tolerance": null,
+        "judged": false,
+        "result": "recorded"
+      },
+      {
+        "name": "frontend_request_p99_ms",
+        "scale": "ms",
+        "release": 11.250664813240213,
+        "incumbent": 10.310822437005022,
+        "d": 0.94,
+        "tolerance": null,
+        "judged": false,
+        "result": "recorded"
+      },
+      {
+        "name": "workflow_task_schedule_to_start_over_20ms",
+        "scale": "share",
+        "release": 0.0034376351577452002,
+        "incumbent": 0.0031355932203391834,
+        "d": 0.000302,
+        "tolerance": null,
+        "judged": false,
+        "result": "recorded"
+      },
+      {
+        "name": "persistence_latency_over_10ms",
+        "scale": "share",
+        "release": 0.0013195392391114336,
+        "incumbent": 0.0012554281948919943,
+        "d": 6.4e-05,
+        "tolerance": null,
+        "judged": false,
+        "result": "recorded"
+      },
+      {
+        "name": "workflows_completed",
+        "scale": "count",
+        "release": 5948,
+        "incumbent": 5951,
+        "d": -3,
+        "tolerance": null,
+        "judged": false,
+        "result": "recorded"
+      }
+    ]
+  },
+  "host_quiet": true,
+  "host_noise": []
+}

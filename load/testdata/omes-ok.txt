@@ -1,0 +1,2 @@
+2026-10-13T14:00:00.067Z	INFO	harness/worker.go:110	Go worker will run on task queue omes-ht-ok
+2026-10-13T14:05:20.363Z	INFO	internal/internal_worker.go:1682	Worker has been stopped.

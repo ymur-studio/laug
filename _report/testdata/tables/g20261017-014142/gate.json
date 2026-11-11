@@ -1,0 +1,79 @@
+{
+  "gate_id": "g20261017-014142",
+  "server_tag": "1.31.0",
+  "laug_commit": "8298205",
+  "tree_dirty": false,
+  "base": "8298205",
+  "base_ref": "main",
+  "inputs": [
+    {
+      "path": "gate/plan.yaml",
+      "sha256": "ea5ab1c2007b28048557f5fa57fe8ff2825f35f8acbd2164d5bec741dcb2ca61",
+      "changed_vs_base": false
+    },
+    {
+      "path": "gate/combine.sh",
+      "sha256": "284a759c54557c18bcbdfc257414199c9c94bfb573e3234e2265ecf18ab5366c",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/steady-state.yaml",
+      "sha256": "eab70e1a2b1acc59615eaae00b62906180b70c84493073f5b1a9600bd9d6bf20",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/thresholds.sh",
+      "sha256": "77d5fb8a58d6b9b850f83279b8f61e988615c60dbdd5a7d0d2fa7aecd386500f",
+      "changed_vs_base": false
+    },
+    {
+      "path": "faults/catalog.yaml",
+      "sha256": "f0e73b887d68b2e28575b8146f430d3a98dbae09f96d1da8aed63404cf333a9e",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/releases/1.32.yaml",
+      "sha256": "f4a11d5c163ce31006eb50bd41e2ef4b9e5d30a6f01d10d116744f74d5ff90a7",
+      "changed_vs_base": false
+    }
+  ],
+  "host": {
+    "vcpu": 32,
+    "mem_gib": 123,
+    "mem_available_gib": 121.7
+  },
+  "refused": null,
+  "plan": "gate/plan.yaml",
+  "items_limit": null,
+  "fake": false,
+  "pool": "127.0.0.1:7700",
+  "driver": "step.sh",
+  "workflow_id": "gate-g20261017-014142",
+  "worker_commit": "8298205-dirty",
+  "wiring": [
+    {
+      "key": "steady",
+      "run_id": "g20261017-014142-steady",
+      "requester": "gate-g20261017-014142-steady",
+      "results_dir": "gate/results/g20261017-014142/steady",
+      "lease_file": "gate/results/g20261017-014142/steady/.lease.json",
+      "task_queue": "omes-g20261017-014142-steady",
+      "omes_metrics": {
+        "worker": "127.0.0.1:19100",
+        "client": "127.0.0.1:19101"
+      }
+    },
+    {
+      "key": "pl",
+      "run_id": "g20261017-014142-pl",
+      "requester": "gate-g20261017-014142-pl",
+      "results_dir": "gate/results/g20261017-014142/pl",
+      "lease_file": "gate/results/g20261017-014142/pl/.lease.json",
+      "task_queue": "omes-g20261017-014142-pl",
+      "omes_metrics": {
+        "worker": "127.0.0.1:19102",
+        "client": "127.0.0.1:19103"
+      }
+    }
+  ]
+}

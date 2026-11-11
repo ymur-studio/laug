@@ -1,0 +1,6 @@
+# make: make --no-print-directory -n replay-test HISTORY=missing.json
+# laug: laug health replay missing.json
+# lease: absent
+# compare: refused
+[ -z 'missing.json' ] || [ -s 'missing.json' ] || { echo "laug · HISTORY="'missing.json'" is not a file with a history in it" >&2; exit 2; }
+cd health && REPLAY_HISTORY='$ROOT/missing.json' go test ./... -run Replay -v -count=1 2>&1 | grep -E '^(---|ok|FAIL|go: |# |\./[^[:space:]]+\.go:[0-9]+|\s+replay_test)'

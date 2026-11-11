@@ -1,0 +1,73 @@
+# Faults for make harness-test on short windows. test-latency is the persistence-latency mechanism: the fake curl
+# answers the toxiproxy calls and makes the signal EXCEED while the toxic is on. test-dynconfig is the
+# throttle-frontend mechanism: the test sets FAKE_SIGNAL_WHEN so the signal EXCEEDs while the cell's laug.yaml says 10.
+# test-close, test-stuck and test-stuck-norestore are close-shards, stuck-shard and stuck-shard-norestore with the same
+# mechanisms, signals and recovery: the fake docker runs tdbg and psql, and the test sets FAKE_SIGNAL_WHEN on what they
+# left in FAKE_DIR, and writes history's "Acquired shard" lines. test-serverfi is the serverfi mechanism: the fake
+# docker records the compose call and turns the signal on while LAUG_FI_ERROR is set. test-disk-slow is disk-slow: the
+# fake curl answers laugd's POST /vmfault and keeps the drive body it was sent, and the test sets FAKE_SIGNAL_WHEN on
+# it.
+defaults:
+  steady_s: 60
+  hold_s: 20
+  settle_s: 30
+  after_s: 90
+  signal_range: 30s
+faults:
+  test-latency:
+    signal: persistence_latency_p99_ms
+    budget_s: 30
+    inject: toxic add latency latency=200
+    remove: toxic remove latency
+  test-dynconfig:
+    signal_query: sum(rate(service_error_with_type{error_type="serviceerror_ResourceExhausted"}[30s])) or vector(0)
+    signal_max: 0.5
+    budget_s: 30
+    inject: dynconfig frontend.rps 10
+    remove: dynconfig restore
+  test-close:
+    signal_query: sum(sharditem_removed_count{job="temporal-history"}) or vector(0)
+    signal_base: inject
+    signal_max: 63
+    budget_s: 30
+    inject: tdbg close 64 1014
+    remove: none
+    recover: shards-acquired
+    recover_from: inject
+  test-stuck:
+    signal_query: sum(shard_closed_count{job="temporal-history"}) or vector(0)
+    signal_base: inject
+    signal_max: 0
+    budget_s: 30
+    inject: pg bump seed:1014 1000
+    remove: pg restore
+    recover: shards-acquired
+    recover_from: remove
+  test-stuck-norestore:
+    signal_query: sum(shard_closed_count{job="temporal-history"}) or vector(0)
+    signal_base: inject
+    signal_max: 0
+    budget_s: 30
+    inject: pg bump seed:1014 1000
+    remove: none
+    cleanup: pg restore
+    recover: shards-acquired
+    recover_from: remove
+    self_test: did not recover
+  # The serverfi mechanism on the same windows: the fake docker records the compose call and turns the signal on
+  # while LAUG_FI_ERROR is set. Its readings are read over each window; the fake curl answers FAKE_THRESHOLD_VALUE.
+  test-serverfi:
+    signal_query: sum(rate(persistence_error_with_type{service_name="history", operation="UpdateWorkflowExecution", error_type="persistence.TimeoutError"}[30s])) or vector(0)
+    signal_max: 0
+    budget_s: 30
+    inject: serverfi on store=ExecutionStore method=UpdateWorkflowExecution error=Timeout rate=0.01 seed=6001
+    remove: serverfi off
+    readings:
+      update_shard: sum(increase(persistence_requests{service_name="history", operation="UpdateShard"}[1m])) or vector(0)
+      acquire_passes: sum(increase(acquire_shards_count[1m])) + 0 * sum(rate(acquire_shards_count[1m]))
+  test-disk-slow:
+    backend: firecracker
+    signal: persistence_latency_p99_ms
+    budget_s: 30
+    inject: vm drive ops=100
+    remove: vm drive off

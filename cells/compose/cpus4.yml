@@ -1,0 +1,44 @@
+# A compose cell on 4 CPUs, 0 to 3: a second compose file, laid over cell.yml, for a lab arm that sets a compose cell
+# beside a microVM cell's budget of 4 vCPU. The cpuset applies at create, so every process starts on the 4 CPUs and
+# reads them as all it has (nproc(1) reads the affinity mask at start, and Go 1.25 re-reads it about once a second),
+# where docker update --cpuset-cpus on a running cell pins processes that started on every CPU.
+#
+#   LAUG_COMPOSE_EXTRA=cells/compose/cpus4.yml bin/laug pool serve -backend compose    each new cell of this pool
+#
+# cells/backend-compose.sh passes it as a second -f on create's compose up when LAUG_COMPOSE_EXTRA names it. Nothing
+# reads it by default, and the gate never passes it: gate/lib.sh unsets LAUG_COMPOSE_EXTRA. cell.yml, the gate's cell
+# and an input whose sha256 gate/run.sh records, stays as it is.
+#
+# Every service of cell.yml, elasticsearch among them, which keeps cell.yml's es profile: compose merges a second file's
+# keys into the first's service by name and keeps what this file does not set, a profile included (compose merge rules;
+# docker compose config shows it). cpuset is the CPUs a container may run on, a range or a list (compose file
+# reference, services, cpuset). It sets no quota and no memory limit.
+services:
+  postgresql:
+    cpuset: "0-3"
+  elasticsearch:
+    cpuset: "0-3"
+  toxiproxy:
+    cpuset: "0-3"
+  temporal-setup:
+    cpuset: "0-3"
+  temporal-history:
+    cpuset: "0-3"
+  temporal-matching:
+    cpuset: "0-3"
+  temporal-frontend:
+    cpuset: "0-3"
+  temporal-frontend2:
+    cpuset: "0-3"
+  temporal-worker:
+    cpuset: "0-3"
+  temporal-nginx:
+    cpuset: "0-3"
+  temporal-create-namespace:
+    cpuset: "0-3"
+  temporal-ui:
+    cpuset: "0-3"
+  prometheus:
+    cpuset: "0-3"
+  grafana:
+    cpuset: "0-3"

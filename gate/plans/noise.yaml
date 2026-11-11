@@ -1,0 +1,76 @@
+# The noise runs: N plain steady items at once on one host, to see what items at once do to one
+# another's readings before the gate claims N. laug gate run 1.31.0 -plan gate/plans/noise.yaml -items N, for N from 1
+# to 8: 8 items, the most a plan may list (gate/lib.sh). Each item is gate/plan.yaml's steady item.
+#
+# A plan with no fault item has no live control, so every run of this one BLOCKs on R5, class control (internal/judge),
+# and a run cut by -items to fewer than its 8 items BLOCKs on R2 as well. Both BLOCKs are by design. What counts is each
+# item's readings in its verdict JSON, not the verdict. They are held to the quiet single-cell spread on the same host
+# (single rauns' before windows and the baselines in load/baseline.md, under its 10% rule), and host_quiet must be true.
+# If a reading leaves that spread at N = 3, the gate plan drops an item. Measured on the lab host for N
+# from 1 to 4, 11 runs (cells/results/2026-10-15-lab-gates-4-5-noise.txt). gate/plan.yaml ran 2 items until
+# 2026-10-17 and runs 3 since, the incumbent beside them (docs/DESIGN.md section 7.1).
+deadline_s: 780
+kill_grace_s: 30
+lease_ttl_s: 1200
+quiet_s: 10
+barrier_timeout_s: 60
+poll_s: 5
+harness_timeout_s: 300
+wave_min_s: 334          # steady: a 322 s window and about 12 s
+items:
+  - key: s1
+    kind: load
+    scenario: workflow_with_single_noop_activity
+    duration: 5m
+    rate: 20
+    max_concurrent: 50
+    expect: ADVANCE
+  - key: s2
+    kind: load
+    scenario: workflow_with_single_noop_activity
+    duration: 5m
+    rate: 20
+    max_concurrent: 50
+    expect: ADVANCE
+  - key: s3
+    kind: load
+    scenario: workflow_with_single_noop_activity
+    duration: 5m
+    rate: 20
+    max_concurrent: 50
+    expect: ADVANCE
+  - key: s4
+    kind: load
+    scenario: workflow_with_single_noop_activity
+    duration: 5m
+    rate: 20
+    max_concurrent: 50
+    expect: ADVANCE
+  - key: s5
+    kind: load
+    scenario: workflow_with_single_noop_activity
+    duration: 5m
+    rate: 20
+    max_concurrent: 50
+    expect: ADVANCE
+  - key: s6
+    kind: load
+    scenario: workflow_with_single_noop_activity
+    duration: 5m
+    rate: 20
+    max_concurrent: 50
+    expect: ADVANCE
+  - key: s7
+    kind: load
+    scenario: workflow_with_single_noop_activity
+    duration: 5m
+    rate: 20
+    max_concurrent: 50
+    expect: ADVANCE
+  - key: s8
+    kind: load
+    scenario: workflow_with_single_noop_activity
+    duration: 5m
+    rate: 20
+    max_concurrent: 50
+    expect: ADVANCE

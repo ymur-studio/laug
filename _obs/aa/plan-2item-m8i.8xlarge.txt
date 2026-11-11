@@ -1,0 +1,39 @@
+# The two-item A/A list: gate/plan.yaml's wave before the incumbent arm, steady and pl, both on server 1.31.0, on the
+# lab host, an m8i.8xlarge (32 vCPU). The observability stack draws this wave's band from these ids alone, and never
+# recomputes them from verdicts (docs/DESIGN.md section 9). Chosen once, 2026-10-17, from gate/results at be22e93:
+# every gate run on gate/plan.yaml with host.vcpu 32, items steady and pl, and verdict ADVANCE, found by this jq, run
+# from the repository's root:
+#   for d in gate/results/g*; do jq -r --slurpfile v "$d/verdict.json" --slurpfile p "$d/plan.json" \
+#     'select(.plan == "gate/plan.yaml" and .host.vcpu == 32 and $v[0].verdict == "ADVANCE" and ($p[0].items | map(.key)) == ["steady","pl"]) | .gate_id' "$d/gate.json"; done
+# 26 gates, 2026-10-15 to 2026-10-17, drivers run.sh and step.sh. The first 6 are the orchestrator's noise runs, judged
+# under the maxima then in force (150, 100, 300, 50, 0.001 and 100), which pass today's too; 3 of them ran with the
+# orchestrator up, and the first, g20261015-065429, on a volume just restored from a snapshot (io some 5.41%, Omes
+# built in 64.5 s; cells/results/2026-10-15-gate6-noise.txt). 3 had the worker or the server stopped mid-wave and gave
+# ADVANCE all the same (cells/results/2026-10-17-gate6-durability.txt). The other 17 are the rest of the
+# jq's list. One gate id a line; a line from # on is a comment.
+g20261015-065429
+g20261015-070530
+g20261015-071518
+g20261015-072520
+g20261015-073517
+g20261015-074521
+g20261015-214524
+g20261015-215507
+g20261015-220501
+g20261015-221451
+g20261015-222438
+g20261015-230856
+g20261016-024601
+g20261016-091701
+g20261016-203845
+g20261016-204845
+g20261016-205837
+g20261016-210833
+g20261016-211828
+g20261016-212825
+g20261016-213821
+g20261016-214818
+g20261017-011151
+g20261017-012148
+g20261017-013145
+g20261017-020417

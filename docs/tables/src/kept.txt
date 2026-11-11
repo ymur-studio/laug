@@ -1,0 +1,33 @@
+# The records kept whole in the public tree, one a line: the record's path as docs/tables/records.jsonl keys it, a
+# TAB, then what it shows in one line. report -tables marks each kept in the records table and quotes no line of
+# it, since the record itself is here; every other record rests on its rows. docs/RECORDS.md gives each record here
+# a section, its key lines quoted, and check/records_test.go's TestKept holds the two together.
+gate/results/g20261018-092540/	The A/B BLOCK: persistence p99 0.401 ms worse than the incumbent, past a 0.35 ms tolerance, while every fixed limit held.
+gate/results/g20261018-091444/	The A/B ADVANCE of the same pair 11 min earlier: d 0.140, so R7's d moves from run to run.
+gate/results/g20261018-075357/	One A/A gate, 1.31.0 beside itself, drifts d -0.074, the drift tolerances are set from.
+faults/results/raun-lab6-kill-history-1.json	Kill-history: shards owned 0.5 s after the restart, while clients failed for up to 12 s.
+faults/results/raun-lab6-kill-history-2.json	Kill-history, the second of three: the same fault, the same short shard gap.
+faults/results/raun-lab6-kill-history-3.json	Kill-history, the third of three: the same fault, the same short shard gap.
+faults/results/raun-lab2-persistence-errors-1.json	Persistence resets at 30% or less never reach Temporal: its layers retry them away.
+faults/results/raun-lab2-persistence-errors-2.json	Persistence resets, the second of three at the catalog's toxicity.
+faults/results/raun-lab2-persistence-errors-3.json	Persistence resets, the third of three at the catalog's toxicity.
+faults/results/raun-lab2-persistence-errors-t010.json	Persistence resets at a toxicity of 0.10.
+faults/results/raun-lab2-persistence-errors-t030.json	Persistence resets at a toxicity of 0.30.
+faults/results/raun-lab2-persistence-errors-t050.json	Persistence resets at a toxicity of 0.50, the raun that landed.
+faults/results/raun-lab2-persistence-latency-1.json	A raun ADVANCEd while 540 starts failed: why rauns count failed starts.
+faults/results/raun-lab2-persistence-latency-2.json	Persistence latency, the second of three.
+faults/results/raun-lab2-persistence-latency-3.json	Persistence latency, the third of three.
+load/results/lab1-v1310-1.*	A load on 1.31.0: activity schedule-to-start p99 9.99 ms.
+load/results/lab1-v1310-2.*	A load on 1.31.0, the second of three.
+load/results/lab1-v1310-3.*	A load on 1.31.0, the third of three.
+load/results/lab1-v1321-1.*	A load on 1.32.1: no activity schedule-to-start at all, and a release file let it ADVANCE.
+load/results/lab1-v1321-2.*	A load on 1.32.1, the second of three.
+load/results/lab1-v1321-3.*	A load on 1.32.1, the third of three.
+cells/results/2026-10-23-boot1.txt	Boot 1: a cell from nothing, replay recorded live, readiness, the pool, loads on two releases.
+cells/results/2026-10-23-boot2.txt	Boot 2: persistence resets at 30% or less never reach Temporal; its layers retry them away.
+cells/results/2026-10-24-boot4.txt	Boot 4: the gate as a workflow survives a killed worker and a cancel, with the same verdict.
+cells/results/2026-10-27-boot6.txt	Boot 6: runbooks checked by running them, the kill-history drain bins, 27 rauns of server fault injection.
+cells/results/2026-10-29-boot9.txt	Boot 9: the microVM backend's whole life; a restore is ready in under 5 s against about 30 s cold.
+cells/results/2026-10-24-batchE.txt	Batch E: durable timers across a step of the guest's clock, warm leases, the microVM throttle.
+cells/results/2026-11-02-frontend1.txt	The startup race with one frontend: one on the default port logged no version mismatch in 20 cells, two lost one in 3 of 20.
+cells/results/2026-11-04-judge-shell-proof.txt	The Go judge and the shell judges, before the shell judges were deleted: they agreed on every one of 158 committed runs.

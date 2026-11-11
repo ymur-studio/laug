@@ -1,0 +1,22 @@
+{
+  "run_id": "lab1-v1321-1",
+  "scenario": "workflow_with_single_noop_activity",
+  "cell": "127.0.0.1:7233",
+  "prometheus": "http://127.0.0.1:9090",
+  "project": "laug",
+  "server_tag": "1.32.1",
+  "server_version": "1.32.1",
+  "namespace": "default",
+  "start": "2026-10-23T06:59:58Z",
+  "end": "2026-10-23T07:04:59Z",
+  "omes_commit": "f0de206",
+  "iterations": "1000",
+  "duration": "5m",
+  "rate": "20",
+  "max_concurrent": "50",
+  "timeout": "420s",
+  "task_queue": "omes-lab1-v1321-1",
+  "omes_exit": 0,
+  "iterations_failed": 0,
+  "omes_tally": null
+}

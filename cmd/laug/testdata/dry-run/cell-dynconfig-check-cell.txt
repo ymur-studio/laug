@@ -1,0 +1,7 @@
+# make: make --no-print-directory -n dynconfig-check CELL=c0ffee01
+# laug: laug cell dynconfig-check -cell c0ffee01
+# lease: absent
+# compare: line cells/dynconfig-check.sh
+[[ '1.31.0' =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "laug · SERVER_TAG must be a release tag, x.y.z; got '"'1.31.0'"'" >&2; exit 2; }
+[[ 'c0ffee01' =~ ^([A-Za-z0-9][A-Za-z0-9._-]*)?$ ]] || { echo "laug · make dynconfig-check: CELL="'c0ffee01'" is not empty or one word of letters, digits, ., _ and -, from a letter or digit" >&2; exit 2; };
+NOCELL='' SERVER_TAG=1.31.0 PROJECT=laug-c0ffee01 cells/dynconfig-check.sh

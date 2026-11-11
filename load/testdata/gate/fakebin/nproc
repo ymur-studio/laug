@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Fake nproc for a fake gate (GATE_FAKE=1): FAKE_GATE_VCPU (32, the lab host's).
+echo "${FAKE_GATE_VCPU:-32}"

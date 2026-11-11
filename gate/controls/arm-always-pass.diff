@@ -1,0 +1,12 @@
+# arm-always-pass: the Go judge's v3, the version new runs get, takes R7Off, so R7 compares and records but never fails an item, as v2-r7off, the shell judge of g20261018-080445, did. make harness-test's R7 cases then fail, so the gate must BLOCK, class harness, on R1, as g20261018-080445 did on cells; on fakes too.
+diff --git a/internal/judge/registry.go b/internal/judge/registry.go
+index f9fd151..ac36cd7 100644
+--- a/internal/judge/registry.go
++++ b/internal/judge/registry.go
+@@ -72,5 +72,5 @@ var features = map[string]Features{
+ 	"v2":       {Arm: true, HostCheck: true},
+ 	"v2-r7off": {Arm: true, HostCheck: true, R7Off: true},
+-	"v3":       {Arm: true, HostCheck: true, ZeroFix: true, ToleranceText: true},
++	"v3":       {Arm: true, HostCheck: true, ZeroFix: true, ToleranceText: true, R7Off: true}, // arm-always-pass, a test branch, never main
+ }
+ 

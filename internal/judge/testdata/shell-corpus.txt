@@ -1,0 +1,1487 @@
+# The shell's answers on the mutation corpus (internal/judge/corpus_test.go), one line a case, in the corpus's
+# order: "<exit> <verdict.json> <verdict.md> <stdout> <case>", each the first 16 hex of its sha256, or - when the
+# judge wrote none or printed nothing; stdout with the run directory's path as "<dir>". A case is "<base> <edit>":
+# judging is g20261018-075357 and recording is g20261017-172556, both judged as v2; v1 is g20261014-215905. The
+# archived shell judges wrote these lines, run with bash and jq 1.7.x; TestCorpusAnswers holds Go's answers to them.
+# testdata/shell-corpus-v3.txt holds each case again, judged under v3.
+#
+# Triage. 1461 cases: 1001 judging, 75 recording, 385 v1. The shell exits 0 on 359, 1 on 997 and 2 on 105, and
+# writes 831 distinct verdict.json and 665 distinct verdict.md; 115 cases leave their base's verdict.json as it was.
+# Go and the shell agree on every case, exit, stdout and both files: 0 differences. The rules needed no change to get
+# there. The reader needed one, found in review: a NUL byte ends a number token, as in jq (internal/jsonx/read.go;
+# the 5 cases with \x00 in their names). 52 of the 105 exits 2 are an input file that is a directory or cannot be
+# read: load() prints "unreadable" twice there, the gathered input does not parse, and both judges stop
+# (internal/judge/input.go). v3 brought 5 cases whose readings sit a hair below the incumbent's, so a d rounds to -0
+# (the last 4 judging cases and the last recording case but one).
+#
+# Kept out of the corpus, each for a cause outside the judge's rules. Go and the shell differ on the first two, 11
+# cases, under v2 and under v3 alike. The shell answers on the edit as jq reads it, and Go on the edit as Gather
+# reads it.
+#   - Number spellings jq 1.7 reads and RFC 8259 does not (01, -01, 1., .5, +1, 1.e5, Infinity, nan; 10 cases): the
+#     reader refuses them on purpose (internal/jsonx/read.go; TestReaderDifferences), so the file is "unreadable" in
+#     Go and read in jq. jq or yq wrote every input a gate run holds.
+#   - An item directory whose name is not UTF-8 (1 case): an fs.FS cannot open it (fs.ValidPath), so Gather fails
+#     where the shell reads the name as U+FFFD (internal/judge/input.go). No committed run holds one.
+#   - The 28 permission edits (a file, or an item directory, its mode set so it cannot be read) when the test runs
+#     as root, who reads it whatever its mode: TestCorpusAnswers skips those cases then.
+1 bb9acf9bafac8fcc aca41e8120f51198 ffe038885cdd0607 judging gate.json gate_id=null
+1 bb9acf9bafac8fcc aca41e8120f51198 ffe038885cdd0607 judging gate.json gate_id=false
+1 84e98c76638c667f dc9441af08c80208 9bfe2d1d80b45620 judging gate.json gate_id=0
+1 9d1a6faf49e16bde 538369c5681a7f44 0f9efc240f2ce9df judging gate.json gate_id="x"
+1 fa5b8d32fc668996 3afa2d8834441194 476c2816f2b201f5 judging gate.json gate_id=[]
+1 433fd352492ee97a b6d145ea1ad40899 5f7c46e68490ebd1 judging gate.json gate_id={}
+1 bb9acf9bafac8fcc aca41e8120f51198 ffe038885cdd0607 judging gate.json gate_id deleted
+1 5eb0f56e513c180d 6fd73cd60c56ef12 3785c44a04c2148f judging gate.json server_tag=null
+1 5eb0f56e513c180d 6fd73cd60c56ef12 3785c44a04c2148f judging gate.json server_tag=false
+1 f90b17b8649f3ef7 d1cf353d946e82bd a1f0b7ac4a0adb2c judging gate.json server_tag=0
+1 458a3adef1dd6ec2 43538394ab1c7b92 73113e4149c86bf7 judging gate.json server_tag="x"
+1 b0a60830b0fbef2d b9b43c413b206409 493bf9bae68cbe7a judging gate.json server_tag=[]
+1 b3031c3b9297f166 f104dbb2c42c8fb6 e3f6f1c346a18eeb judging gate.json server_tag={}
+1 5eb0f56e513c180d 6fd73cd60c56ef12 3785c44a04c2148f judging gate.json server_tag deleted
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json refused=false
+1 1362b6609f2fc4c1 0acc2bf40a92cc77 e5f2e90feef8640a judging gate.json refused=0
+1 1e92706831c8b4c5 1fbf360f10be6459 35d7bf680ded813e judging gate.json refused="x"
+1 7246ef30f5201449 ea88756788a07e43 bbe21f767e89858f judging gate.json refused=[]
+1 e80b7f2a0cdf40c3 d5bf8c125902f3ff 8ab6f1dda161f464 judging gate.json refused={}
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json refused deleted
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json items_limit=false
+0 2c1559ba6ece1da3 4f849eddf86cf9ba d8f59d348465c8d2 judging gate.json items_limit=0
+0 af1929c1fae5f583 4d25d99954d9906f d8f59d348465c8d2 judging gate.json items_limit="x"
+0 14d14df96d6aee6d 769cfcbdbd606256 d8f59d348465c8d2 judging gate.json items_limit=[]
+0 a439083fb1c9e80f 808b7b70a41865c7 d8f59d348465c8d2 judging gate.json items_limit={}
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json items_limit deleted
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json fake=null
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json fake=0
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json fake="x"
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json fake=[]
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json fake={}
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json fake deleted
+0 733b530cf51ec20d 7d0e32ce7893f4cc d8f59d348465c8d2 judging gate.json laug_commit=null
+0 733b530cf51ec20d 7d0e32ce7893f4cc d8f59d348465c8d2 judging gate.json laug_commit=false
+0 7321473599b55f33 19f8d7318385ebc5 d8f59d348465c8d2 judging gate.json laug_commit=0
+0 bbda1a00adf978a7 15ddb83f27ed7f4d d8f59d348465c8d2 judging gate.json laug_commit="x"
+0 c7e68e203284f118 90dcc9ae035e78c6 d8f59d348465c8d2 judging gate.json laug_commit=[]
+0 8ac12153d2fabe26 f57ebbeb8b7d51f4 d8f59d348465c8d2 judging gate.json laug_commit={}
+0 733b530cf51ec20d 7d0e32ce7893f4cc d8f59d348465c8d2 judging gate.json laug_commit deleted
+0 b5fbc0904402769e 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json tree_dirty=null
+0 52c97c98d73af99a 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json tree_dirty=0
+0 30a6ae7f78780114 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json tree_dirty="x"
+0 38edbd4bb3a85c8a 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json tree_dirty=[]
+0 6139a9748b62da67 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json tree_dirty={}
+0 b5fbc0904402769e 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json tree_dirty deleted
+0 60b12ab7d3bf0abf 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json base=null
+0 60b12ab7d3bf0abf 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json base=false
+0 279ea4a929f478f3 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json base=0
+0 a87ce209942382dd 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json base="x"
+0 826fe50591b167ed 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json base=[]
+0 899158ce6843c6d1 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json base={}
+0 60b12ab7d3bf0abf 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json base deleted
+0 fa679f4be3fafe52 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json inputs=null
+0 fa679f4be3fafe52 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json inputs=false
+0 96b167759f77b23d 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json inputs=0
+0 f5480c62eef9329a 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json inputs="x"
+0 a3f717152e030dd8 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json inputs=[]
+0 29d1f7665294f00a 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json inputs={}
+0 fa679f4be3fafe52 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json inputs deleted
+1 a8559c3ef9daa099 e71216dedca11c8a 9de05633e169e67a judging gate.json host=null
+1 a8559c3ef9daa099 e71216dedca11c8a 9de05633e169e67a judging gate.json host=false
+2 - - - judging gate.json host=0
+2 - - - judging gate.json host="x"
+2 - - - judging gate.json host=[]
+1 87fd87e232a37008 e71216dedca11c8a 9de05633e169e67a judging gate.json host={}
+1 a8559c3ef9daa099 e71216dedca11c8a 9de05633e169e67a judging gate.json host deleted
+1 c9839f17d0d1b686 d54f5f6ef753eb8e fea9506eca349233 judging gate.json host.type=null
+1 7d54447ea79e212c d54f5f6ef753eb8e fea9506eca349233 judging gate.json host.type=false
+1 bbec709a4bad3255 a2f42e82c0ba8b98 292fa679676fa9b7 judging gate.json host.type=0
+1 4faec915ce255528 d5ae67a99b9d7a9d a83c798cb74dfc12 judging gate.json host.type="x"
+1 49f237689abb408d 298dde23c27bfad1 66ffe49b5ca99f26 judging gate.json host.type=[]
+1 d16e7c3510763129 9cfb54032996d070 e98546241930216b judging gate.json host.type={}
+1 f0518f36112a2ba3 d54f5f6ef753eb8e fea9506eca349233 judging gate.json host.type deleted
+1 2ff5f1ea68535017 ad04aa4ddd44c519 2770b7c26b7fd5cb judging gate.json host.vcpu=null
+1 e04359e4c752fce9 ad04aa4ddd44c519 2770b7c26b7fd5cb judging gate.json host.vcpu=false
+1 7ed020e3304c6e90 69aad890e2e2b3d9 0bd92dff5ae41a3d judging gate.json host.vcpu=0
+1 eb67614c432efbc6 eaf847867453c86d 4ee6f49bcb3e5c1c judging gate.json host.vcpu="x"
+1 e409a64975465b00 44f0369635677aba 2e59c01d0e28ae62 judging gate.json host.vcpu=[]
+1 d77d5f1829630740 46c72f346fd1be4c 43a75b618795775b judging gate.json host.vcpu={}
+1 c07425e379788a3c ad04aa4ddd44c519 2770b7c26b7fd5cb judging gate.json host.vcpu deleted
+1 1afee1d0ab23915d ec8979f89d58e707 2538bc655f3657fb judging gate.json host.mem_gib=null
+1 b6c5d3afd4dc0ee6 ec8979f89d58e707 2538bc655f3657fb judging gate.json host.mem_gib=false
+1 d650fb5a40f9bf29 6c47cd3af9064015 cd670d40357d0cae judging gate.json host.mem_gib=0
+1 c546aab5db983f5d feb2d3e287108057 29f0a2895786f313 judging gate.json host.mem_gib="x"
+1 a662798bca671088 10194d5d36af988f 74829ad7c560eec5 judging gate.json host.mem_gib=[]
+1 a8d987ea95e039df 51e63075553b10ed 7a5c5c562fe149e1 judging gate.json host.mem_gib={}
+1 242d67d285508173 ec8979f89d58e707 2538bc655f3657fb judging gate.json host.mem_gib deleted
+1 7d53111bf8f3ebc3 2f7914955bb1c5ad 6b128cc7db0b969c judging clock.json t0=null
+2 - - - judging clock.json t0=false
+2 - - - judging clock.json t0=0
+2 - - - judging clock.json t0="x"
+2 - - - judging clock.json t0=[]
+1 9d47ca404d101a36 2f7914955bb1c5ad 6b128cc7db0b969c judging clock.json t0={}
+1 7d53111bf8f3ebc3 2f7914955bb1c5ad 6b128cc7db0b969c judging clock.json t0 deleted
+1 77ecbcf94ec62755 2f7914955bb1c5ad 6b128cc7db0b969c judging clock.json t0.wall=null
+1 e4f7d97aeba3073c 2f7914955bb1c5ad 6b128cc7db0b969c judging clock.json t0.wall=false
+1 2eb29b5b2554fc7d 70973565a0f27c43 aa2e43ad3d10253f judging clock.json t0.wall=0
+1 79aaebc883e6772e 2f7914955bb1c5ad 6b128cc7db0b969c judging clock.json t0.wall="x"
+1 c7db28bf83f15520 2f7914955bb1c5ad 6b128cc7db0b969c judging clock.json t0.wall=[]
+1 ea8f3a96a3c50b00 2f7914955bb1c5ad 6b128cc7db0b969c judging clock.json t0.wall={}
+1 85c21f7cccf38052 2f7914955bb1c5ad 6b128cc7db0b969c judging clock.json t0.wall deleted
+0 d99ea7716212fa1e 7783c291805a2fbc d8f59d348465c8d2 judging clock.json t0.mono=null
+0 6bff50c48ff25352 7783c291805a2fbc d8f59d348465c8d2 judging clock.json t0.mono=false
+0 59b71b0ecf5b64e5 6eb64e98c2ed59ac d8f59d348465c8d2 judging clock.json t0.mono=0
+0 dd8a26bf34675799 7783c291805a2fbc d8f59d348465c8d2 judging clock.json t0.mono="x"
+0 b3c1ab93fba1eb6d 7783c291805a2fbc d8f59d348465c8d2 judging clock.json t0.mono=[]
+0 3618ddd46ab3bf8b 7783c291805a2fbc d8f59d348465c8d2 judging clock.json t0.mono={}
+0 bd9d5fc129270dbc 7783c291805a2fbc d8f59d348465c8d2 judging clock.json t0.mono deleted
+0 55029be1e93dd79b 7783c291805a2fbc d8f59d348465c8d2 judging clock.json t_post=null
+2 - - - judging clock.json t_post=false
+2 - - - judging clock.json t_post=0
+2 - - - judging clock.json t_post="x"
+2 - - - judging clock.json t_post=[]
+0 0565c9e7fb9dd0a0 7783c291805a2fbc d8f59d348465c8d2 judging clock.json t_post={}
+0 55029be1e93dd79b 7783c291805a2fbc d8f59d348465c8d2 judging clock.json t_post deleted
+0 f25dcbf3a3dde418 7783c291805a2fbc d8f59d348465c8d2 judging clock.json t_post.wall=null
+0 bddac018051619de 7783c291805a2fbc d8f59d348465c8d2 judging clock.json t_post.wall=false
+0 8cc1db4bbfda8ccd d2b25ebc3190f743 d8f59d348465c8d2 judging clock.json t_post.wall=0
+0 52128a6072335bbd 7783c291805a2fbc d8f59d348465c8d2 judging clock.json t_post.wall="x"
+0 aec61b065a635b9b 7783c291805a2fbc d8f59d348465c8d2 judging clock.json t_post.wall=[]
+0 d7e8f24f7cd25978 7783c291805a2fbc d8f59d348465c8d2 judging clock.json t_post.wall={}
+0 d389edf96e3615b9 7783c291805a2fbc d8f59d348465c8d2 judging clock.json t_post.wall deleted
+0 6955cb5d6814c637 7783c291805a2fbc d8f59d348465c8d2 judging clock.json t_post.mono=null
+0 dfa56fa9e6bf2723 7783c291805a2fbc d8f59d348465c8d2 judging clock.json t_post.mono=false
+0 9adca6b0fb57325a 2ca41b7616c6dd1a d8f59d348465c8d2 judging clock.json t_post.mono=0
+0 6b005830e0d51dfb 7783c291805a2fbc d8f59d348465c8d2 judging clock.json t_post.mono="x"
+0 7947526eb9a1ef70 7783c291805a2fbc d8f59d348465c8d2 judging clock.json t_post.mono=[]
+0 0482ef969ac10ceb 7783c291805a2fbc d8f59d348465c8d2 judging clock.json t_post.mono={}
+0 67fa24e57797a60d 7783c291805a2fbc d8f59d348465c8d2 judging clock.json t_post.mono deleted
+1 28e8b7d506b5f0b8 f5d278d47f29f71a 13e24cefd7a3e161 judging plan.json deadline_s=null
+1 140cfbcfc6b3def2 900bdf429bb6c69f 099b91622a34dd82 judging plan.json deadline_s=false
+1 08dcde1dc0ff6324 acf6a6cc0647b458 23f0524f016827ad judging plan.json deadline_s=0
+1 9beeb06b574a0a0f 46ecb916e20f2330 56da14fd4451d33c judging plan.json deadline_s="x"
+1 084e3c3898326fcb fe56e0529cc44aa0 6d97c183a6e3e0a7 judging plan.json deadline_s=[]
+1 98853901795de2f4 cfef77da07857c97 db3e6be975361c98 judging plan.json deadline_s={}
+1 28e8b7d506b5f0b8 f5d278d47f29f71a 13e24cefd7a3e161 judging plan.json deadline_s deleted
+1 37c3294161c5a872 4af55eeed9710cf0 9ee79df1f72aba84 judging plan.json items_in_plan=null
+1 37c3294161c5a872 4af55eeed9710cf0 9ee79df1f72aba84 judging plan.json items_in_plan=false
+1 91ae64e6c80ad180 8621924168bc5894 55b6cb43c0a3c2a4 judging plan.json items_in_plan=0
+1 c3c70fa1e1002df3 4af55eeed9710cf0 9ee79df1f72aba84 judging plan.json items_in_plan="x"
+1 5111a7e85d9aefd5 4af55eeed9710cf0 9ee79df1f72aba84 judging plan.json items_in_plan=[]
+1 5d3ec143e90a2ecf 4af55eeed9710cf0 9ee79df1f72aba84 judging plan.json items_in_plan={}
+1 37c3294161c5a872 4af55eeed9710cf0 9ee79df1f72aba84 judging plan.json items_in_plan deleted
+1 4bea7972ae6f3365 e3a47db8a456a26d a18bbbed4f83e919 judging plan.json incumbent=null
+1 4bea7972ae6f3365 e3a47db8a456a26d a18bbbed4f83e919 judging plan.json incumbent=false
+1 601aa5e3e47afb51 f97ebf3b80a4ef1e a18bbbed4f83e919 judging plan.json incumbent=0
+1 5e4184f18c966658 869aba5c5386ec20 57371bb36ad06caa judging plan.json incumbent="x"
+1 da10d6740da161f8 73845b1dbbc5d3f0 a18bbbed4f83e919 judging plan.json incumbent=[]
+1 2c713122301348d0 87b2224bebc51b08 a18bbbed4f83e919 judging plan.json incumbent={}
+1 4bea7972ae6f3365 e3a47db8a456a26d a18bbbed4f83e919 judging plan.json incumbent deleted
+1 66b30b17fac80d80 a58d2bae01f4170b cbaaaf9469a2ee74 judging plan.json items=null
+1 66b30b17fac80d80 a58d2bae01f4170b cbaaaf9469a2ee74 judging plan.json items=false
+1 66b30b17fac80d80 a58d2bae01f4170b cbaaaf9469a2ee74 judging plan.json items=0
+1 66b30b17fac80d80 a58d2bae01f4170b cbaaaf9469a2ee74 judging plan.json items="x"
+1 469f3dde8ed383b1 24cf62e7c1e7122a 352ec6c81ad8b218 judging plan.json items=[]
+1 66b30b17fac80d80 a58d2bae01f4170b cbaaaf9469a2ee74 judging plan.json items={}
+1 66b30b17fac80d80 a58d2bae01f4170b cbaaaf9469a2ee74 judging plan.json items deleted
+1 dc5ccc39064b0d25 f6f6bf7b0de6818c a2fff61415de265a judging plan.json items[0].key=null
+1 2e3b6e78e8a51ccd 8c10c382fe23e71c d87cf209c14862b5 judging plan.json items[0].key=false
+1 49bd5ed2739d233a 49fb09b24bca988b 68515ed5e2cdef59 judging plan.json items[0].key=0
+1 5b342f2e784af375 775afc013d70038d e74bcd8a56b34825 judging plan.json items[0].key="x"
+1 eb93cb7aeb823f81 6b9140665e34de8a e2066b89f2648bea judging plan.json items[0].key=[]
+1 eac0f51e7f094265 2c80d632590f5289 6edc63c13606cdb1 judging plan.json items[0].key={}
+1 dc5ccc39064b0d25 f6f6bf7b0de6818c a2fff61415de265a judging plan.json items[0].key deleted
+1 92853f4b88d36818 b0afa7f1f963d3fe 22b4b69743940928 judging plan.json items[0].kind=null
+1 015e2df48659826c bde57b44fe4a348a 8be76e0474e12ae0 judging plan.json items[0].kind=false
+1 1a34f1fca299aff8 98a246577ec801cd 5f434c992aa0f9ae judging plan.json items[0].kind=0
+1 b77266309564073b 755bef6977920c0e 737f637941db3264 judging plan.json items[0].kind="x"
+1 525a99cd08ee52da 105514ba745fa53c d00cb5bd15ca2194 judging plan.json items[0].kind=[]
+1 9efb20e6b40035f7 c393bc8e8488268d 2c1ebf0a738c818f judging plan.json items[0].kind={}
+1 92853f4b88d36818 b0afa7f1f963d3fe 22b4b69743940928 judging plan.json items[0].kind deleted
+1 8d1534d8098f95f0 fc97c719d78397a3 1b15354ca5179e7e judging plan.json items[0].expect=null
+1 80d369c8218a5875 3f82145ec77ba2fb 6e96417fd985123c judging plan.json items[0].expect=false
+1 435e0be193c37a9a ecb9ccac12130f6d 7653b92d99746720 judging plan.json items[0].expect=0
+1 033d193b45bc601e 563daafb83e81fb5 50505b182e44397f judging plan.json items[0].expect="x"
+1 80eb21da40a8273b 82bf082bbbe884d6 e9cfd45e28e205a1 judging plan.json items[0].expect=[]
+1 f33e49bc2ee711d9 78357502845c1d51 4a94ca5b2c5b7c08 judging plan.json items[0].expect={}
+1 8d1534d8098f95f0 fc97c719d78397a3 1b15354ca5179e7e judging plan.json items[0].expect deleted
+0 644aa30ea925d8c2 e17ae98f8d5423ea d8f59d348465c8d2 judging plan.json items[0].arm=null
+0 644aa30ea925d8c2 e17ae98f8d5423ea d8f59d348465c8d2 judging plan.json items[0].arm=false
+0 2f009509285d7949 e17ae98f8d5423ea d8f59d348465c8d2 judging plan.json items[0].arm=0
+0 15dec92fbd56f488 e17ae98f8d5423ea d8f59d348465c8d2 judging plan.json items[0].arm="x"
+0 accadf1aa44ca891 e17ae98f8d5423ea d8f59d348465c8d2 judging plan.json items[0].arm=[]
+0 731db2d5b3a8c8f0 e17ae98f8d5423ea d8f59d348465c8d2 judging plan.json items[0].arm={}
+0 644aa30ea925d8c2 e17ae98f8d5423ea d8f59d348465c8d2 judging plan.json items[0].arm deleted
+1 51571a3afe6bc7a9 229bfeabf6286389 7ce6e03d3494066e judging plan.json items[0].pair=null
+1 f8018f41c7d4a31f 50c0c5922e63ca78 aadf3863cbcf42c5 judging plan.json items[0].pair=false
+1 f22e8b24269f33f9 5ea17806c1e66f6b 37aa637412b5b961 judging plan.json items[0].pair=0
+1 59d23c17ba565be9 08552a79d926be46 17ece8fb728be15f judging plan.json items[0].pair="x"
+1 6757db8ee640ba3a 16f0312684e03f52 d6304cc406241faa judging plan.json items[0].pair=[]
+1 0054b752bd1b30e3 f1dd03f787adccef bd3e8f9d6262d656 judging plan.json items[0].pair={}
+1 51571a3afe6bc7a9 229bfeabf6286389 7ce6e03d3494066e judging plan.json items[0].pair deleted
+1 fd5eeb9c3fc609ed 2ed5ddb49a442c30 6f2aaf5742befe97 judging plan.json items[0].scenario=null
+1 3ffafc0d21e43c0b 6adad4a8b7275284 7d25b1c35d8aae43 judging plan.json items[0].scenario=false
+1 6769be71f8f56abf cf8a4862d8a4e647 a6dd0820dd9d6646 judging plan.json items[0].scenario=0
+1 d5fed279c1aa6f5e eff160871e32925b 3cef2f92f18f72b3 judging plan.json items[0].scenario="x"
+1 7cf4753321a12f96 a16f955df125f4b1 35901945bcfeac75 judging plan.json items[0].scenario=[]
+1 6b92a2ad4dca1a2c 21c400b7f1704f32 7cbe59baff2680c5 judging plan.json items[0].scenario={}
+1 fd5eeb9c3fc609ed 2ed5ddb49a442c30 6f2aaf5742befe97 judging plan.json items[0].scenario deleted
+1 f9156bc2d8ae1a8b 0609c094ee2a9bf3 c024f6c94c4f6e43 judging plan.json items[0].rate=null
+1 e70829fd10798e0b dfce947f5aea396f ff0afe00c0537f53 judging plan.json items[0].rate=false
+1 e7765b784695bb8e fd6a2387d49d7ae7 cb0146da738c9e02 judging plan.json items[0].rate=0
+1 cf664f4caa463902 bf97fdcb0ea9193a 6781370c5978f128 judging plan.json items[0].rate="x"
+1 0e93c31cea1ff80f 2647096b0b8d690f f5d89569694eb37e judging plan.json items[0].rate=[]
+1 875bbd3cd90c1269 ac47571257e3ea1a e8bc1db37fe62f9e judging plan.json items[0].rate={}
+1 f9156bc2d8ae1a8b 0609c094ee2a9bf3 c024f6c94c4f6e43 judging plan.json items[0].rate deleted
+1 500e1ecfb492fcf9 5583aa256292e1d8 647022ddbc266b85 judging plan.json items[0].max_concurrent=null
+1 bcdf8a4375702f73 61db52f295f54062 d8ecc2647dd2d813 judging plan.json items[0].max_concurrent=false
+1 da8adcb8ce9514e4 c9b341595a7448d2 1631582573072250 judging plan.json items[0].max_concurrent=0
+1 9c0887f78b605fe1 fbaaf38bf450d0b3 c3924359682c7e51 judging plan.json items[0].max_concurrent="x"
+1 c2342c799cb6691c 6940e9e0992df8b5 df49df7d2089b398 judging plan.json items[0].max_concurrent=[]
+1 326316a620caf7ca 670ed69c96fe0f44 9d26cbc04dfffff4 judging plan.json items[0].max_concurrent={}
+1 500e1ecfb492fcf9 5583aa256292e1d8 647022ddbc266b85 judging plan.json items[0].max_concurrent deleted
+1 585b1cb038a5799e 88e28aeda09f88b9 20e4f895c7a14ed7 judging plan.json items[0].duration=null
+1 7e5f2e4f936a6880 226e86f69e471c1a f1eab46173d3182a judging plan.json items[0].duration=false
+1 90fd1dabff70a904 28ee0b90eef062e4 aff47c9a11e2bd41 judging plan.json items[0].duration=0
+1 445e6b08e37daffb 9bdbde6e99d4bf1c 2d756e4572c9b411 judging plan.json items[0].duration="x"
+1 668c2a0ce7524bbb d74bd747192aaf2d 812185aa9ab86067 judging plan.json items[0].duration=[]
+1 60d8b70e4e6d5e50 22bd64e1606b5bd1 ae0552f3b2a38676 judging plan.json items[0].duration={}
+1 585b1cb038a5799e 88e28aeda09f88b9 20e4f895c7a14ed7 judging plan.json items[0].duration deleted
+1 32cc3aaddfb9b307 b4be0ddc4cc2c53f 1fa0d75696433cb8 judging plan.json items[1].key=null
+1 e9eff08d12260343 0e5f35f505230609 d00b3b76b95e7f6f judging plan.json items[1].key=false
+1 2688ca7dacb00dfb 336a67a95f34d2e0 6aa99735557e2249 judging plan.json items[1].key=0
+1 847a780c1f2ac2c0 dc2b167a45727bad 11ad1bd173240a2f judging plan.json items[1].key="x"
+1 9a70213384811275 19521f168dbf7750 47f86edf0c7a6a6c judging plan.json items[1].key=[]
+1 a6a9e3506b18a2ed 12e5e679073ccfa9 dd3cdae668ecfe71 judging plan.json items[1].key={}
+1 32cc3aaddfb9b307 b4be0ddc4cc2c53f 1fa0d75696433cb8 judging plan.json items[1].key deleted
+1 e293844715f9103e e17ae3b2aead98b2 76a69cfcc51f87b4 judging plan.json items[2].kind=null
+1 48edde37ede04f23 cd0710720291e593 8b00a5c51b88d42b judging plan.json items[2].kind=false
+1 275fc783a2165425 10ec8d7435c2638f 030be41fa1a0fc8b judging plan.json items[2].kind=0
+1 0830c46dbe181f1e 03b1d61178d56005 920e2c2e1d3fec7b judging plan.json items[2].kind="x"
+1 904802be424e9a76 029a167ca7ad0db7 d25543a2e059d39e judging plan.json items[2].kind=[]
+1 4f5c70b655807c38 7250c29c4ea27aee 51f8a676e27ca92e judging plan.json items[2].kind={}
+1 e293844715f9103e e17ae3b2aead98b2 76a69cfcc51f87b4 judging plan.json items[2].kind deleted
+1 5262ef6354a2bbc5 0db882a2ae0db1fb d66264d1c724092b judging plan.json items[2].fault=null
+1 7d73265d3cc52dc3 63e835d33266ff1d ca64bf404d5cdd19 judging plan.json items[2].fault=false
+1 ad9a849c4abee611 49405f57d28476fd 2b7105be97c6d7db judging plan.json items[2].fault=0
+1 b3f67c0e18e61417 8b1da92dadda011d c05fb09029355c83 judging plan.json items[2].fault="x"
+1 3dbc3d05472c9fac aa15fcc4b5c81123 f332290ae28d2f52 judging plan.json items[2].fault=[]
+1 518f6a7b80da942c a5b88abfb744f626 b244c0aa04f0a781 judging plan.json items[2].fault={}
+1 5262ef6354a2bbc5 0db882a2ae0db1fb d66264d1c724092b judging plan.json items[2].fault deleted
+1 9402e8277d590c77 1b1c9c4e8a7a372c a9932dfe0aa2580b judging plan.json items[2].scenario=null
+1 28a873ca7a09b0c1 5819fd381fa5e2d4 bf7799b7963772f0 judging plan.json items[2].scenario=false
+1 ac50a072d00a188f 12fd60089d27da31 7241b619ca983545 judging plan.json items[2].scenario=0
+1 c199113b9882cefc 891ebeebfbd37585 196f4e712de21057 judging plan.json items[2].scenario="x"
+1 049f3dc10de9adf7 5016bcc929ffaeca e357fa54a9c35396 judging plan.json items[2].scenario=[]
+1 1e603f0cb766d063 5e6331b07fec823d 8c3b68f2e3398e47 judging plan.json items[2].scenario={}
+1 9402e8277d590c77 1b1c9c4e8a7a372c a9932dfe0aa2580b judging plan.json items[2].scenario deleted
+1 69fb1931819adf57 ceb91bb4469187a2 fc8f4a373847104e judging thresholds.json thresholds=null
+1 69fb1931819adf57 ceb91bb4469187a2 fc8f4a373847104e judging thresholds.json thresholds=false
+1 69fb1931819adf57 ceb91bb4469187a2 fc8f4a373847104e judging thresholds.json thresholds=0
+1 69fb1931819adf57 ceb91bb4469187a2 fc8f4a373847104e judging thresholds.json thresholds="x"
+1 69fb1931819adf57 ceb91bb4469187a2 fc8f4a373847104e judging thresholds.json thresholds=[]
+1 69fb1931819adf57 ceb91bb4469187a2 fc8f4a373847104e judging thresholds.json thresholds={}
+1 69fb1931819adf57 ceb91bb4469187a2 fc8f4a373847104e judging thresholds.json thresholds deleted
+2 - - - judging thresholds.json thresholds[4].name=null
+2 - - - judging thresholds.json thresholds[4].name=false
+2 - - - judging thresholds.json thresholds[4].name=0
+1 d9c04c919dd8234f 2015d80eb3b45f51 fc8f4a373847104e judging thresholds.json thresholds[4].name="x"
+2 - - - judging thresholds.json thresholds[4].name=[]
+2 - - - judging thresholds.json thresholds[4].name={}
+2 - - - judging thresholds.json thresholds[4].name deleted
+1 0fb9479eaa6d3ffd 6ba6d15c49a3fe45 fc8f4a373847104e judging thresholds.json thresholds[4].max=null
+1 0fb9479eaa6d3ffd 6ba6d15c49a3fe45 fc8f4a373847104e judging thresholds.json thresholds[4].max=false
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging thresholds.json thresholds[4].max=0
+1 0fb9479eaa6d3ffd 6ba6d15c49a3fe45 fc8f4a373847104e judging thresholds.json thresholds[4].max="x"
+1 0fb9479eaa6d3ffd 6ba6d15c49a3fe45 fc8f4a373847104e judging thresholds.json thresholds[4].max=[]
+1 0fb9479eaa6d3ffd 6ba6d15c49a3fe45 fc8f4a373847104e judging thresholds.json thresholds[4].max={}
+1 0fb9479eaa6d3ffd 6ba6d15c49a3fe45 fc8f4a373847104e judging thresholds.json thresholds[4].max deleted
+1 2300d20db1ea35ad b03d1be99a2ca46c 7f7e26b5120f2b47 judging thresholds.json resolved=null
+2 - - - judging thresholds.json resolved=false
+2 - - - judging thresholds.json resolved=0
+2 - - - judging thresholds.json resolved="x"
+2 - - - judging thresholds.json resolved=[]
+1 2300d20db1ea35ad b03d1be99a2ca46c 7f7e26b5120f2b47 judging thresholds.json resolved={}
+1 2300d20db1ea35ad b03d1be99a2ca46c 7f7e26b5120f2b47 judging thresholds.json resolved deleted
+1 6d41501a815949d2 4270aed4878f25b2 db9886eb1cd3f693 judging thresholds.json resolved.release_file=false
+1 801d4d89855a534c 412bb31c1b740023 9d2875a593abca44 judging thresholds.json resolved.release_file=0
+1 4104a7910cec2a82 4128503c5f66b0f8 58e14f925dc5fb47 judging thresholds.json resolved.release_file="x"
+1 170563a065f46c0c fc36d3935018abfd 910e5948b305ee79 judging thresholds.json resolved.release_file=[]
+1 1a4d5d7683f5269c b2631912e487ac35 73248770a13a3413 judging thresholds.json resolved.release_file={}
+1 8b1f0c63e919102f f08a4067b9a85ba6 df41f91eb495d71c judging thresholds.json resolved.release_file deleted
+1 020537554eeb03f1 39c6e9a803758cb2 064229ad7e67bef2 judging thresholds.json resolved.host=null
+1 020537554eeb03f1 39c6e9a803758cb2 064229ad7e67bef2 judging thresholds.json resolved.host=false
+1 020537554eeb03f1 39c6e9a803758cb2 064229ad7e67bef2 judging thresholds.json resolved.host=0
+1 020537554eeb03f1 39c6e9a803758cb2 064229ad7e67bef2 judging thresholds.json resolved.host="x"
+1 020537554eeb03f1 39c6e9a803758cb2 064229ad7e67bef2 judging thresholds.json resolved.host=[]
+1 ca5fb868d89027e8 56b3ab38e5b40501 5e15d97330561c01 judging thresholds.json resolved.host={}
+1 020537554eeb03f1 39c6e9a803758cb2 064229ad7e67bef2 judging thresholds.json resolved.host deleted
+1 7dd54d31e074d4e4 296045bfe4727fcd c0b85b52f8fafa39 judging thresholds.json resolved.host.type=null
+1 0b6e066c86158893 1ae20d45312a6249 526662672911ba82 judging thresholds.json resolved.host.type=false
+1 ecb7d7e77ac5ac63 d3c1b5f7d1124a31 842e6109f9a75f0e judging thresholds.json resolved.host.type=0
+1 74073bccf4cae600 2c0436288546ac8c 31f470093ecc3e13 judging thresholds.json resolved.host.type="x"
+1 2b46d43a66da6733 6f4fd3094a622a83 354659f07c604059 judging thresholds.json resolved.host.type=[]
+1 1aad7bb6ebd2bb4d fcf56b11e0540814 a9e3076367e65ed3 judging thresholds.json resolved.host.type={}
+1 7dd54d31e074d4e4 296045bfe4727fcd c0b85b52f8fafa39 judging thresholds.json resolved.host.type deleted
+1 f18168a778c83b08 0006cd83873237b5 2d25c358af0253da judging thresholds.json resolved.host.mem_gib=null
+1 c6dfe1c641016b50 3552eb241f29d93f b0d9fe7a7686e7f0 judging thresholds.json resolved.host.mem_gib=false
+1 9be25435ad81d59d c5efa70651abcde4 551f62ac69fb20c9 judging thresholds.json resolved.host.mem_gib=0
+1 f0d1c2ac0c998d49 ccaeeb94caed349d d1aba3a2ece2c3b3 judging thresholds.json resolved.host.mem_gib="x"
+1 5b309f75e615b692 af1cf292f276401f 1c15cff874ca10cd judging thresholds.json resolved.host.mem_gib=[]
+1 b8ac45504d3239ea a011fdd74dafcdf2 0503664c50803509 judging thresholds.json resolved.host.mem_gib={}
+1 f18168a778c83b08 0006cd83873237b5 2d25c358af0253da judging thresholds.json resolved.host.mem_gib deleted
+0 25ad26a70dd276c0 c94983d52036af79 d8f59d348465c8d2 judging thresholds.json compare=null
+0 25ad26a70dd276c0 c94983d52036af79 d8f59d348465c8d2 judging thresholds.json compare=false
+0 25ad26a70dd276c0 c94983d52036af79 d8f59d348465c8d2 judging thresholds.json compare=0
+0 25ad26a70dd276c0 c94983d52036af79 d8f59d348465c8d2 judging thresholds.json compare="x"
+0 25ad26a70dd276c0 c94983d52036af79 d8f59d348465c8d2 judging thresholds.json compare=[]
+0 25ad26a70dd276c0 c94983d52036af79 d8f59d348465c8d2 judging thresholds.json compare={}
+0 25ad26a70dd276c0 c94983d52036af79 d8f59d348465c8d2 judging thresholds.json compare deleted
+0 95d70e44d54d4592 7477e04d5f5ea170 d8f59d348465c8d2 judging thresholds.json compare.release=null
+0 95d70e44d54d4592 7477e04d5f5ea170 d8f59d348465c8d2 judging thresholds.json compare.release=false
+0 58e399f59699c714 a2d93cbb21cf046b d8f59d348465c8d2 judging thresholds.json compare.release=0
+0 4368cc376184fd4e cc18bca2f5424985 d8f59d348465c8d2 judging thresholds.json compare.release="x"
+0 ba92ae18b711492a 263bfac8ca31edba d8f59d348465c8d2 judging thresholds.json compare.release=[]
+0 528e66a9a7d9361e 37aa9d1bec304218 d8f59d348465c8d2 judging thresholds.json compare.release={}
+0 95d70e44d54d4592 7477e04d5f5ea170 d8f59d348465c8d2 judging thresholds.json compare.release deleted
+1 1c46abc01ce17266 a6efe70afb7ee92e 1c5ffaabf893c408 judging thresholds.json compare.wave=null
+1 1c46abc01ce17266 a6efe70afb7ee92e 1c5ffaabf893c408 judging thresholds.json compare.wave=false
+2 - - - judging thresholds.json compare.wave=0
+2 - - - judging thresholds.json compare.wave="x"
+1 5a9a9770a5b30ccf a6efe70afb7ee92e 1c5ffaabf893c408 judging thresholds.json compare.wave=[]
+1 eb2633d394785a1c a6efe70afb7ee92e 1c5ffaabf893c408 judging thresholds.json compare.wave={}
+1 1c46abc01ce17266 a6efe70afb7ee92e 1c5ffaabf893c408 judging thresholds.json compare.wave deleted
+0 398222254795cc50 ecf98d1fcfced97c d8f59d348465c8d2 judging thresholds.json compare.gates=null
+0 398222254795cc50 ecf98d1fcfced97c d8f59d348465c8d2 judging thresholds.json compare.gates=false
+0 40eae4bcc8e63e8f b738040d04b99fed d8f59d348465c8d2 judging thresholds.json compare.gates=0
+0 3b26e1d02dd1d712 ce4aad5d117c1d1d d8f59d348465c8d2 judging thresholds.json compare.gates="x"
+0 51b06d5e3d6c27b6 e23d569a5ef157d6 d8f59d348465c8d2 judging thresholds.json compare.gates=[]
+0 65412b4853ab0780 fac0633055b0e7e8 d8f59d348465c8d2 judging thresholds.json compare.gates={}
+0 398222254795cc50 ecf98d1fcfced97c d8f59d348465c8d2 judging thresholds.json compare.gates deleted
+0 ae50c22646dbfa93 1b9a792c3399f071 d8f59d348465c8d2 judging thresholds.json compare.evidence=null
+0 ae50c22646dbfa93 1b9a792c3399f071 d8f59d348465c8d2 judging thresholds.json compare.evidence=false
+0 993648a0395181ef cea62e37470684c4 d8f59d348465c8d2 judging thresholds.json compare.evidence=0
+0 783d1367c1b087a2 3090c6987aa994b8 d8f59d348465c8d2 judging thresholds.json compare.evidence="x"
+0 0a0871a981ae70bf 1fbcdc5cfc0361de d8f59d348465c8d2 judging thresholds.json compare.evidence=[]
+0 3d02d0d02c98cb8e 1a2a8e7fb3b6b1ac d8f59d348465c8d2 judging thresholds.json compare.evidence={}
+0 ae50c22646dbfa93 1b9a792c3399f071 d8f59d348465c8d2 judging thresholds.json compare.evidence deleted
+0 36e582ee0f8b888d c94983d52036af79 d8f59d348465c8d2 judging thresholds.json compare.rows=null
+0 36e582ee0f8b888d c94983d52036af79 d8f59d348465c8d2 judging thresholds.json compare.rows=false
+0 36e582ee0f8b888d c94983d52036af79 d8f59d348465c8d2 judging thresholds.json compare.rows=0
+0 36e582ee0f8b888d c94983d52036af79 d8f59d348465c8d2 judging thresholds.json compare.rows="x"
+0 36e582ee0f8b888d c94983d52036af79 d8f59d348465c8d2 judging thresholds.json compare.rows=[]
+0 36e582ee0f8b888d c94983d52036af79 d8f59d348465c8d2 judging thresholds.json compare.rows={}
+0 36e582ee0f8b888d c94983d52036af79 d8f59d348465c8d2 judging thresholds.json compare.rows deleted
+0 23ede6115c8dd4ee 7e1e137b3c57d18c d8f59d348465c8d2 judging thresholds.json compare.rows[0].name=null
+0 23ede6115c8dd4ee 7e1e137b3c57d18c d8f59d348465c8d2 judging thresholds.json compare.rows[0].name=false
+0 23ede6115c8dd4ee 7e1e137b3c57d18c d8f59d348465c8d2 judging thresholds.json compare.rows[0].name=0
+1 9b378f64f084ead5 48a65cb88c5cec77 8bb160086e91b29f judging thresholds.json compare.rows[0].name="x"
+0 23ede6115c8dd4ee 7e1e137b3c57d18c d8f59d348465c8d2 judging thresholds.json compare.rows[0].name=[]
+0 23ede6115c8dd4ee 7e1e137b3c57d18c d8f59d348465c8d2 judging thresholds.json compare.rows[0].name={}
+0 23ede6115c8dd4ee 7e1e137b3c57d18c d8f59d348465c8d2 judging thresholds.json compare.rows[0].name deleted
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging thresholds.json compare.rows[0].scale=null
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging thresholds.json compare.rows[0].scale=false
+0 8fbaaa92d3cac9cd f471bad9054567b2 d8f59d348465c8d2 judging thresholds.json compare.rows[0].scale=0
+0 bbd91cd3ebac7cfe f471bad9054567b2 d8f59d348465c8d2 judging thresholds.json compare.rows[0].scale="x"
+0 a1cf75c2d6a53796 f471bad9054567b2 d8f59d348465c8d2 judging thresholds.json compare.rows[0].scale=[]
+0 7ba5bac50b79ad15 f471bad9054567b2 d8f59d348465c8d2 judging thresholds.json compare.rows[0].scale={}
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging thresholds.json compare.rows[0].scale deleted
+1 e935848bcc33087a 83801e09ef86741e 441a9d1e3af3c25c judging thresholds.json compare.rows[0].floor=null
+1 3cb77a78bc4267f9 28998d29eca25776 b055b859dee64bdf judging thresholds.json compare.rows[0].floor=false
+1 42f1992a753f92fa ca50a987720e5ec1 7f160181d87cb5b5 judging thresholds.json compare.rows[0].floor=0
+1 9ba883f5ecc3d069 cd1687fe26ef03b5 02db16ffa216efe0 judging thresholds.json compare.rows[0].floor="x"
+1 2873d42e86d4c900 84b0bd72f833f229 edac2fb6f2054040 judging thresholds.json compare.rows[0].floor=[]
+1 119127383f9c9981 7daf2afaf41579a1 5ceee0ab6b759867 judging thresholds.json compare.rows[0].floor={}
+1 e935848bcc33087a 83801e09ef86741e 441a9d1e3af3c25c judging thresholds.json compare.rows[0].floor deleted
+0 511ee756bf5dd30e 9a1a1adad7ca646f d8f59d348465c8d2 judging thresholds.json compare.rows[0].tolerance=null
+1 ad462e718b066600 26546eaa45e14026 8abd6520f093cf09 judging thresholds.json compare.rows[0].tolerance=false
+1 13ffb9f295c89ddd ffc406059a92cb16 e13ba386228b1108 judging thresholds.json compare.rows[0].tolerance=0
+1 8c40af287b1351af 4c06bc46fc1d8220 5f1ba5f3bae9bbdc judging thresholds.json compare.rows[0].tolerance="x"
+1 80090f162c49d4b4 e390d60534d43266 90988d4445841e7e judging thresholds.json compare.rows[0].tolerance=[]
+1 5e9af131a694c61a a7b2ffd1d3304ff0 caf271a66047afb4 judging thresholds.json compare.rows[0].tolerance={}
+0 511ee756bf5dd30e 9a1a1adad7ca646f d8f59d348465c8d2 judging thresholds.json compare.rows[0].tolerance deleted
+1 64c780ebb0c7dee1 c1f1c5f1f8eacbed 4d580edde13161f2 judging thresholds-incumbent.json resolved=null
+1 64c780ebb0c7dee1 c1f1c5f1f8eacbed 4d580edde13161f2 judging thresholds-incumbent.json resolved=false
+1 64c780ebb0c7dee1 c1f1c5f1f8eacbed 4d580edde13161f2 judging thresholds-incumbent.json resolved=0
+1 64c780ebb0c7dee1 c1f1c5f1f8eacbed 4d580edde13161f2 judging thresholds-incumbent.json resolved="x"
+1 64c780ebb0c7dee1 c1f1c5f1f8eacbed 4d580edde13161f2 judging thresholds-incumbent.json resolved=[]
+1 64c780ebb0c7dee1 c1f1c5f1f8eacbed 4d580edde13161f2 judging thresholds-incumbent.json resolved={}
+1 64c780ebb0c7dee1 c1f1c5f1f8eacbed 4d580edde13161f2 judging thresholds-incumbent.json resolved deleted
+1 cb293efb8cbc37ba 8db6588ce8547570 613f335169512b79 judging thresholds-incumbent.json resolved.release_file=false
+1 ca74a8883385a1bc b14c251a7b0981bf 20eb3bbd70e209fe judging thresholds-incumbent.json resolved.release_file=0
+1 fb889fdb0fb3a83e 541801514c3452e4 37d421fbafe570d2 judging thresholds-incumbent.json resolved.release_file="x"
+1 1a392d3528da1099 0b02bc8f92953e9e 1de6f88eb45f9f27 judging thresholds-incumbent.json resolved.release_file=[]
+1 b94a8bde53aa2cae 9315e3c2c8252449 25802ea67948f083 judging thresholds-incumbent.json resolved.release_file={}
+1 64c780ebb0c7dee1 c1f1c5f1f8eacbed 4d580edde13161f2 judging thresholds-incumbent.json resolved.release_file deleted
+1 5b2eacf0a7940561 1c143850269a27d3 b247f412b78dc7b9 judging harness.json exit=null
+1 ee9ffbede849f47b 2bbecbbd4b3dd2e8 de1069f6da781dba judging harness.json exit=false
+1 f9ec002dc5371b89 427b62bb8d13d59e 388d83eab49ec576 judging harness.json exit="x"
+1 4ffa91d45c5ffcf4 510e52890983b866 ae114d24efdef981 judging harness.json exit=[]
+1 3fff9dcfa4ede452 7a39ba79a155d686 3df177fac22c490e judging harness.json exit={}
+1 5b2eacf0a7940561 1c143850269a27d3 b247f412b78dc7b9 judging harness.json exit deleted
+0 d1fe1790887d0940 6681232dbd84d2d4 2945927c121faafc judging poll.jsonl [0].busy=null
+0 d1fe1790887d0940 6681232dbd84d2d4 2945927c121faafc judging poll.jsonl [0].busy=false
+0 d1fe1790887d0940 6681232dbd84d2d4 2945927c121faafc judging poll.jsonl [0].busy="x"
+0 d1fe1790887d0940 6681232dbd84d2d4 2945927c121faafc judging poll.jsonl [0].busy=[]
+0 d1fe1790887d0940 6681232dbd84d2d4 2945927c121faafc judging poll.jsonl [0].busy={}
+0 d1fe1790887d0940 6681232dbd84d2d4 2945927c121faafc judging poll.jsonl [0].busy deleted
+0 c430b4f426dbb741 6acc892a77ed6613 a627b6fa40f73fcb judging poll.jsonl [0].projects=null
+0 c430b4f426dbb741 6acc892a77ed6613 a627b6fa40f73fcb judging poll.jsonl [0].projects=false
+0 c430b4f426dbb741 6acc892a77ed6613 a627b6fa40f73fcb judging poll.jsonl [0].projects=0
+0 c430b4f426dbb741 6acc892a77ed6613 a627b6fa40f73fcb judging poll.jsonl [0].projects="x"
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging poll.jsonl [0].projects=[]
+0 c430b4f426dbb741 6acc892a77ed6613 a627b6fa40f73fcb judging poll.jsonl [0].projects={}
+0 c430b4f426dbb741 6acc892a77ed6613 a627b6fa40f73fcb judging poll.jsonl [0].projects deleted
+0 4a9e6824bd5828e8 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/lease.json id=null
+0 4a9e6824bd5828e8 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/lease.json id=false
+0 31f1ab0a40d3a240 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/lease.json id=0
+0 d997040cb69ac80f 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/lease.json id="x"
+0 066eddd0785c91c1 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/lease.json id=[]
+0 d74b25d3caf317eb 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/lease.json id={}
+0 4a9e6824bd5828e8 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/lease.json id deleted
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/lease.json project=null
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/lease.json project=false
+0 2100b3f7e10d05cd 894e298612354682 af340b06dbaa6f66 judging steady/lease.json project=0
+0 2100b3f7e10d05cd 894e298612354682 af340b06dbaa6f66 judging steady/lease.json project="x"
+0 2100b3f7e10d05cd 894e298612354682 af340b06dbaa6f66 judging steady/lease.json project=[]
+0 2100b3f7e10d05cd 894e298612354682 af340b06dbaa6f66 judging steady/lease.json project={}
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/lease.json project deleted
+0 6d0a22d2f94cdbb1 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/lease.json block=null
+0 6d0a22d2f94cdbb1 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/lease.json block=false
+0 cc90bd92804ceea7 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/lease.json block=0
+0 0c8005b05298888b 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/lease.json block="x"
+0 f367732dd1f5d67d 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/lease.json block=[]
+0 d1d66d201b8915eb 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/lease.json block={}
+0 6d0a22d2f94cdbb1 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/lease.json block deleted
+1 0bfe84def13f3d6d c13a1c835c452cbe a85d86f95f40b6db judging steady/exit.json exit=null
+1 0bfe84def13f3d6d c13a1c835c452cbe a85d86f95f40b6db judging steady/exit.json exit=false
+1 0bfe84def13f3d6d c13a1c835c452cbe a85d86f95f40b6db judging steady/exit.json exit="x"
+1 0bfe84def13f3d6d c13a1c835c452cbe a85d86f95f40b6db judging steady/exit.json exit=[]
+1 0bfe84def13f3d6d c13a1c835c452cbe a85d86f95f40b6db judging steady/exit.json exit={}
+1 0bfe84def13f3d6d c13a1c835c452cbe a85d86f95f40b6db judging steady/exit.json exit deleted
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/exit.json stopped_by=false
+1 2fe9859a6081a72b 231645b3c1e86cc5 59510d03e85bd0aa judging steady/exit.json stopped_by=0
+1 1d1e142d1def550d 8f9b91c628c7ec4c d44ba612414ce50d judging steady/exit.json stopped_by="x"
+1 6042ce6814638fd9 469197cb489444a6 305751a9bb546462 judging steady/exit.json stopped_by=[]
+1 60260ec1d32c5a96 6c3a8a4ad0dc1937 907ac79b54357da9 judging steady/exit.json stopped_by={}
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/exit.json stopped_by deleted
+1 07941d755788d322 3787e806af3cad3c 8f17ee88b629def0 judging steady/exit.json end=null
+2 - - - judging steady/exit.json end=false
+2 - - - judging steady/exit.json end=0
+2 - - - judging steady/exit.json end="x"
+2 - - - judging steady/exit.json end=[]
+1 07941d755788d322 3787e806af3cad3c 8f17ee88b629def0 judging steady/exit.json end={}
+1 07941d755788d322 3787e806af3cad3c 8f17ee88b629def0 judging steady/exit.json end deleted
+1 07941d755788d322 3787e806af3cad3c 8f17ee88b629def0 judging steady/exit.json end.wall=null
+1 07941d755788d322 3787e806af3cad3c 8f17ee88b629def0 judging steady/exit.json end.wall=false
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/exit.json end.wall=0
+1 07941d755788d322 3787e806af3cad3c 8f17ee88b629def0 judging steady/exit.json end.wall="x"
+1 07941d755788d322 3787e806af3cad3c 8f17ee88b629def0 judging steady/exit.json end.wall=[]
+1 07941d755788d322 3787e806af3cad3c 8f17ee88b629def0 judging steady/exit.json end.wall={}
+1 07941d755788d322 3787e806af3cad3c 8f17ee88b629def0 judging steady/exit.json end.wall deleted
+1 31e91053c05fe467 a24f7c71e4c41f2e 0413e24feb9e3cf3 judging steady/run server_version=null
+1 31e91053c05fe467 a24f7c71e4c41f2e 0413e24feb9e3cf3 judging steady/run server_version=false
+1 1bba85baf1ffa57d f3a5ae1b8e58ce33 3e17209e4671526f judging steady/run server_version=0
+1 98ab36ede4ffff98 de36ce7a26c1e4b3 929f35892e3ac6dd judging steady/run server_version="x"
+1 c56bfac3f61a1133 7548b6648f9aeff9 b37950288c842660 judging steady/run server_version=[]
+1 76e535cc4a0ef1c8 84fb182fe722baad e58abf690653a159 judging steady/run server_version={}
+1 31e91053c05fe467 a24f7c71e4c41f2e 0413e24feb9e3cf3 judging steady/run server_version deleted
+1 5909c9ec9966330f 347032c5c476f0a0 98a261d128b6af3c judging steady/run start=null
+1 5909c9ec9966330f 347032c5c476f0a0 98a261d128b6af3c judging steady/run start=false
+1 5909c9ec9966330f 347032c5c476f0a0 98a261d128b6af3c judging steady/run start=0
+1 5909c9ec9966330f 347032c5c476f0a0 98a261d128b6af3c judging steady/run start="x"
+1 5909c9ec9966330f 347032c5c476f0a0 98a261d128b6af3c judging steady/run start=[]
+1 5909c9ec9966330f 347032c5c476f0a0 98a261d128b6af3c judging steady/run start={}
+1 5909c9ec9966330f 347032c5c476f0a0 98a261d128b6af3c judging steady/run start deleted
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/run partial=null
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/run partial=false
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/run partial=0
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/run partial="x"
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/run partial=[]
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/run partial={}
+1 5909c9ec9966330f 347032c5c476f0a0 98a261d128b6af3c judging incumbent/run start=null
+1 5909c9ec9966330f 347032c5c476f0a0 98a261d128b6af3c judging incumbent/run start=false
+1 5909c9ec9966330f 347032c5c476f0a0 98a261d128b6af3c judging incumbent/run start=0
+1 5909c9ec9966330f 347032c5c476f0a0 98a261d128b6af3c judging incumbent/run start="x"
+1 5909c9ec9966330f 347032c5c476f0a0 98a261d128b6af3c judging incumbent/run start=[]
+1 5909c9ec9966330f 347032c5c476f0a0 98a261d128b6af3c judging incumbent/run start={}
+1 5909c9ec9966330f 347032c5c476f0a0 98a261d128b6af3c judging incumbent/run start deleted
+1 162e6da426129b90 6678faa7749a5fb8 28423b826534acba judging pl/run result=null
+1 a15783038d0b5306 6678faa7749a5fb8 28423b826534acba judging pl/run result=false
+1 0122d2836a2a33bc d4c5e81e890bfa0d 0ea519a864383665 judging pl/run result=0
+1 b86f62b1025c9820 37620927990fbe8e 569ad1f32a72e3fb judging pl/run result="x"
+1 deff9f98f6c80120 c9f622055b61f9fb 91a23b87a39eeebc judging pl/run result=[]
+1 0c516bc677f3e395 b8955682e53b2198 cede71f64088f846 judging pl/run result={}
+1 162e6da426129b90 6678faa7749a5fb8 28423b826534acba judging pl/run result deleted
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging pl/run partial=null
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging pl/run partial=false
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging pl/run partial=0
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging pl/run partial="x"
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging pl/run partial=[]
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging pl/run partial={}
+1 379f7bd4540fd2c7 679313cb179df7b8 4ac4d041c9764445 judging pl/run server_tag=null
+1 379f7bd4540fd2c7 679313cb179df7b8 4ac4d041c9764445 judging pl/run server_tag=false
+1 9105bc9269dbf34e ddf9823ceedd8bdc d8a79aa089eab4fc judging pl/run server_tag=0
+1 3571f7a728e593c8 c9f8bba100388d6c f9f5da55b9b63b09 judging pl/run server_tag="x"
+1 81aabf9a2cf54990 2638086247347fd0 04b181a06ed4b2bb judging pl/run server_tag=[]
+1 0b0f72558a4d4a14 4d0123febeae7656 54d64807599dacb0 judging pl/run server_tag={}
+1 379f7bd4540fd2c7 679313cb179df7b8 4ac4d041c9764445 judging pl/run server_tag deleted
+1 562c4e2a12a4afca 4a17d9de9f7753f1 7c06dac9e609111b judging pl/run during.service_error_rate=null
+1 562c4e2a12a4afca 4a17d9de9f7753f1 7c06dac9e609111b judging pl/run during.service_error_rate=false
+1 c843767163859602 92052d72ed3e1b63 a1b4874a111a4371 judging pl/run during.service_error_rate=0
+1 c25c1613ea11b46f be5e84c469cd59ca bf18cd60bafc6605 judging pl/run during.service_error_rate="x"
+1 e1a691c008427d42 01b78a29bd680eba a5bc67cf33b377c2 judging pl/run during.service_error_rate=[]
+1 ccece6395b4d5fec 75e0ff10cff1f37e 1c5b399f9bc0f8e5 judging pl/run during.service_error_rate={}
+1 562c4e2a12a4afca 4a17d9de9f7753f1 7c06dac9e609111b judging pl/run during.service_error_rate deleted
+0 b5904da33e9bdb35 1d5f5153a33fee15 d8f59d348465c8d2 judging pl/run pool_busy=null
+0 b5904da33e9bdb35 1d5f5153a33fee15 d8f59d348465c8d2 judging pl/run pool_busy=false
+0 da02b339b8aa7791 1d5f5153a33fee15 d8f59d348465c8d2 judging pl/run pool_busy=0
+0 c145c03f0b64b0a5 1d5f5153a33fee15 d8f59d348465c8d2 judging pl/run pool_busy="x"
+0 a466cff6f114ef41 1d5f5153a33fee15 d8f59d348465c8d2 judging pl/run pool_busy=[]
+0 82bdd6fbcfd9fe0f 1d5f5153a33fee15 d8f59d348465c8d2 judging pl/run pool_busy={}
+0 b5904da33e9bdb35 1d5f5153a33fee15 d8f59d348465c8d2 judging pl/run pool_busy deleted
+1 fc33b320a12d722c 2ca31b9ef7eeed8e fcf109ef1c2ab0f8 judging pl/run thresholds_release=false
+1 77afc8032e1c261c f6eea881b498bd6f a01ac7395c4dcaba judging pl/run thresholds_release=0
+1 28ec1590ed5274e3 67dd1f3562a26e70 83190c0c57469537 judging pl/run thresholds_release="x"
+1 bae1b843edefcdf7 0accb4794c813bd1 dd8691de1cbc14b2 judging pl/run thresholds_release=[]
+1 259431f15dd6286e 4c02f603026e80a8 2d595e8da0960f6c judging pl/run thresholds_release={}
+1 2df64e6a7a781f75 0176f562c597b68b 3d560e54494c77f3 judging pl/run thresholds_release deleted
+1 2a62916918da378e 07ad4990b73214fe 984e4998056b648a judging steady/verdict verdict=null
+1 56405852aff73038 07ad4990b73214fe 984e4998056b648a judging steady/verdict verdict=false
+1 431fd026d874fe86 c48cc192058f9c91 a92de8537e2058a7 judging steady/verdict verdict=0
+1 d6f5cfc6c7ece12b eb92b2c042d33d1a e731c65e335769f0 judging steady/verdict verdict="x"
+1 073a6e1014536890 8fd53f1b4ad026fc 7c190b63f7a1c41b judging steady/verdict verdict=[]
+1 07762885c73d9aa1 957f3a027a4bd1d0 3d2165aa3c9491f0 judging steady/verdict verdict={}
+1 2a62916918da378e 07ad4990b73214fe 984e4998056b648a judging steady/verdict verdict deleted
+1 0bc79dbaf3a547cf 8919e34bb76f9ebe 1e9c270ef366beec judging steady/verdict exit=null
+1 01e0fd1e30366bb0 ade1ceb73ece7860 cd2c14c76729d1bb judging steady/verdict exit=false
+1 31b4732c6e88462a 0d67a0c67b3365a1 c7f410591d617de2 judging steady/verdict exit="x"
+1 2d2d470fa3bb5793 d5faad2f54ebedd0 66fd91812013dcbc judging steady/verdict exit=[]
+1 36d986dbc59c2eb9 b50504369e9564ab 217799cd6dc90840 judging steady/verdict exit={}
+1 0bc79dbaf3a547cf 8919e34bb76f9ebe 1e9c270ef366beec judging steady/verdict exit deleted
+1 5f54d60eacfdc949 f3080e12eda90da5 cd407bd91b372ab0 judging steady/verdict short_window=false
+1 43b012e1f05b594b 4a5a9ff4aef0dedb 1b5f5848725d2809 judging steady/verdict short_window=0
+1 a43dc0c5c8555aa5 50935d08f6c4965f c44d837a8b1e7e0a judging steady/verdict short_window="x"
+1 a49b161016fe868d f5b1ef8aa7d53d98 22f995ec0ecdd56d judging steady/verdict short_window=[]
+1 e6b5fc91846348c4 f0bfc8e1bce398b4 2dd5ec9452898f3c judging steady/verdict short_window={}
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/verdict short_window deleted
+1 590a171489f44b96 d2155a14a0ed9abc cb711c9580ff6999 judging steady/verdict thresholds_release=false
+1 cab2ad3c95e3d1db 9d096ae301f17998 78d5872c51693592 judging steady/verdict thresholds_release=0
+1 b66a0d2236266396 6bc0d4eaf13d6d80 3981d6692d8307a9 judging steady/verdict thresholds_release="x"
+1 ffcff313a685bfe6 5bf478d4c0451b8d 1589bb33b82993a9 judging steady/verdict thresholds_release=[]
+1 47aa784d3fd9c61c 79e8356b0e3e2be6 ca14be84556ba108 judging steady/verdict thresholds_release={}
+1 2d2c63c8605d8c40 cbde16a2eb66bf52 a4da3e7020567a2d judging steady/verdict thresholds_release deleted
+1 cf2f331757f76025 636ca198974da18e f994ab3529d7c993 judging steady/verdict readings=null
+0 398cfbf35cc06bf5 dc94c104e14c5509 d8f59d348465c8d2 judging steady/verdict readings=false
+0 398cfbf35cc06bf5 dc94c104e14c5509 d8f59d348465c8d2 judging steady/verdict readings=0
+0 398cfbf35cc06bf5 dc94c104e14c5509 d8f59d348465c8d2 judging steady/verdict readings="x"
+0 398cfbf35cc06bf5 dc94c104e14c5509 d8f59d348465c8d2 judging steady/verdict readings=[]
+1 cf2f331757f76025 636ca198974da18e f994ab3529d7c993 judging steady/verdict readings={}
+1 cf2f331757f76025 636ca198974da18e f994ab3529d7c993 judging steady/verdict readings deleted
+1 ca5f56cff0f32c4d 4cf01c18e25c2523 a649ba983049dc94 judging steady/verdict readings.workflow_task_schedule_to_start_p99_ms=null
+1 ca5f56cff0f32c4d 4cf01c18e25c2523 a649ba983049dc94 judging steady/verdict readings.workflow_task_schedule_to_start_p99_ms=false
+0 92a4c5139bd9a8ce fbe8255dc8e2e1e8 d8f59d348465c8d2 judging steady/verdict readings.workflow_task_schedule_to_start_p99_ms=0
+1 ca5f56cff0f32c4d 4cf01c18e25c2523 a649ba983049dc94 judging steady/verdict readings.workflow_task_schedule_to_start_p99_ms="x"
+1 ca5f56cff0f32c4d 4cf01c18e25c2523 a649ba983049dc94 judging steady/verdict readings.workflow_task_schedule_to_start_p99_ms=[]
+1 ca5f56cff0f32c4d 4cf01c18e25c2523 a649ba983049dc94 judging steady/verdict readings.workflow_task_schedule_to_start_p99_ms={}
+1 ca5f56cff0f32c4d 4cf01c18e25c2523 a649ba983049dc94 judging steady/verdict readings.workflow_task_schedule_to_start_p99_ms deleted
+1 648f8e8dcc6f9ce8 4b43f57238228303 c17ddd4066b339ce judging steady/verdict window_s=null
+1 648f8e8dcc6f9ce8 4b43f57238228303 c17ddd4066b339ce judging steady/verdict window_s=false
+1 d8ee14ed8ddcf3e1 9282e4c7f0262e8e 62be306148d908e0 judging steady/verdict window_s=0
+1 648f8e8dcc6f9ce8 4b43f57238228303 c17ddd4066b339ce judging steady/verdict window_s="x"
+1 648f8e8dcc6f9ce8 4b43f57238228303 c17ddd4066b339ce judging steady/verdict window_s=[]
+1 648f8e8dcc6f9ce8 4b43f57238228303 c17ddd4066b339ce judging steady/verdict window_s={}
+1 648f8e8dcc6f9ce8 4b43f57238228303 c17ddd4066b339ce judging steady/verdict window_s deleted
+1 9c51f453ff1530f8 8ffbc1994e2c4855 c2144ac22b1d7e70 judging incumbent/verdict verdict=null
+1 1470a49d858e3377 8ffbc1994e2c4855 c2144ac22b1d7e70 judging incumbent/verdict verdict=false
+1 2c02da925d9f4162 bce07cb7c3f1b7e5 f5e62b4e2f923760 judging incumbent/verdict verdict=0
+1 128d7e06bb3bdc25 56759849afb6f873 883e822426c42daa judging incumbent/verdict verdict="x"
+1 529ad6cb8969f586 da6f7266e778b38f 119a41071d66be09 judging incumbent/verdict verdict=[]
+1 e313b22c96662499 f8c95281d8543744 cca2f91ab046963e judging incumbent/verdict verdict={}
+1 9c51f453ff1530f8 8ffbc1994e2c4855 c2144ac22b1d7e70 judging incumbent/verdict verdict deleted
+1 be1bd95f3dc359e9 5c8f275063b61bc9 1ed1258eba09ac2b judging incumbent/verdict readings=null
+0 398cfbf35cc06bf5 dc94c104e14c5509 d8f59d348465c8d2 judging incumbent/verdict readings=false
+0 398cfbf35cc06bf5 dc94c104e14c5509 d8f59d348465c8d2 judging incumbent/verdict readings=0
+0 398cfbf35cc06bf5 dc94c104e14c5509 d8f59d348465c8d2 judging incumbent/verdict readings="x"
+0 398cfbf35cc06bf5 dc94c104e14c5509 d8f59d348465c8d2 judging incumbent/verdict readings=[]
+1 be1bd95f3dc359e9 5c8f275063b61bc9 1ed1258eba09ac2b judging incumbent/verdict readings={}
+1 be1bd95f3dc359e9 5c8f275063b61bc9 1ed1258eba09ac2b judging incumbent/verdict readings deleted
+1 e2064cdc873a414e 4b43f57238228303 c17ddd4066b339ce judging incumbent/verdict window_s=null
+1 e2064cdc873a414e 4b43f57238228303 c17ddd4066b339ce judging incumbent/verdict window_s=false
+1 302ed9432f841eb3 57b45c957e1798e7 32cc4682dda05641 judging incumbent/verdict window_s=0
+1 e2064cdc873a414e 4b43f57238228303 c17ddd4066b339ce judging incumbent/verdict window_s="x"
+1 e2064cdc873a414e 4b43f57238228303 c17ddd4066b339ce judging incumbent/verdict window_s=[]
+1 e2064cdc873a414e 4b43f57238228303 c17ddd4066b339ce judging incumbent/verdict window_s={}
+1 e2064cdc873a414e 4b43f57238228303 c17ddd4066b339ce judging incumbent/verdict window_s deleted
+0 a685976d678547a7 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json inputs[0]={}
+0 130a192a4cdc88b9 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json inputs[0]=[]
+1 ce50b1d2fe3b876c 61b26ca2eb42aa26 e7363c1c62da071f judging plan.json items[1]={}
+1 14f2aa568f757ebf 61bf0ed04d59ed4a cad12425e5312551 judging plan.json items[1]=[]
+2 - - - judging thresholds.json thresholds[4]={}
+2 - - - judging thresholds.json thresholds[4]=[]
+2 - - - judging thresholds.json compare.rows[0]={}
+0 23ede6115c8dd4ee 7e1e137b3c57d18c d8f59d348465c8d2 judging thresholds.json compare.rows[0]=[]
+2 - - - judging thresholds.json compare.wave[0]={}
+2 - - - judging thresholds.json compare.wave[0]=[]
+0 116c6371fe0962af eb70f1fec683fd1c 22203035296549e9 judging poll.jsonl [0]={}
+0 116c6371fe0962af eb70f1fec683fd1c 22203035296549e9 judging poll.jsonl [0]=[]
+0 b8eede51432e4bd6 fd559abb4f2d5164 74ad0983a9b77b73 judging poll.jsonl [0].projects[0]={}
+0 fade6a2cf85c4f36 e35c2f7c8ed8ff58 29dbe6a53f89374c judging poll.jsonl [0].projects[0]=[]
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/verdict rows[0]={}
+2 - - - judging steady/verdict rows[0]=[]
+1 8bc672576d2454c5 b0b297dfc6ea7ab5 e7bdea00794ff67e judging gate.json removed
+1 91b841e49035eff4 93b32ec47e9ebbcc 90cbcf6cc9f44ad3 judging gate.json emptied
+1 91b841e49035eff4 93b32ec47e9ebbcc 90cbcf6cc9f44ad3 judging gate.json doubled
+1 91b841e49035eff4 93b32ec47e9ebbcc 90cbcf6cc9f44ad3 judging gate.json cut in half
+2 - - - judging gate.json a directory
+2 - - - judging gate.json unreadable
+1 637c97383f0c602a 62a86d8f50e16a58 fa608a1a6b2f1a22 judging clock.json removed
+1 c2f5bf1b963d764c 3511bb63df9bbefd 150965a7820ca62d judging clock.json emptied
+1 c2f5bf1b963d764c 3511bb63df9bbefd 150965a7820ca62d judging clock.json doubled
+1 c2f5bf1b963d764c 3511bb63df9bbefd 150965a7820ca62d judging clock.json cut in half
+2 - - - judging clock.json a directory
+2 - - - judging clock.json unreadable
+1 cb2735379293edd6 c4cac5c608d10220 4e30acba838a3383 judging plan.json removed
+1 48592ac3776a04a2 4fe2825c01edf3b4 baaf9a7d7d793b8a judging plan.json emptied
+1 48592ac3776a04a2 4fe2825c01edf3b4 baaf9a7d7d793b8a judging plan.json doubled
+1 48592ac3776a04a2 4fe2825c01edf3b4 baaf9a7d7d793b8a judging plan.json cut in half
+2 - - - judging plan.json a directory
+2 - - - judging plan.json unreadable
+1 69857ea36c59d3bf e344903aad924736 7d9d104f3a779ca9 judging thresholds.json removed
+1 bc27b2268c8659ea e6259739c4b727df 9808d31badf0ecdc judging thresholds.json emptied
+1 bc27b2268c8659ea e6259739c4b727df 9808d31badf0ecdc judging thresholds.json doubled
+1 bc27b2268c8659ea e6259739c4b727df 9808d31badf0ecdc judging thresholds.json cut in half
+2 - - - judging thresholds.json a directory
+2 - - - judging thresholds.json unreadable
+1 10c1673a153dc451 c736a31c0cafe878 031ec5490ac4b419 judging thresholds-incumbent.json removed
+1 692b6a7daa88e17b 872d68b08af581f6 02cfc1933045ebe3 judging thresholds-incumbent.json emptied
+1 692b6a7daa88e17b 872d68b08af581f6 02cfc1933045ebe3 judging thresholds-incumbent.json doubled
+1 692b6a7daa88e17b 872d68b08af581f6 02cfc1933045ebe3 judging thresholds-incumbent.json cut in half
+2 - - - judging thresholds-incumbent.json a directory
+2 - - - judging thresholds-incumbent.json unreadable
+1 6474d95311d17a6e 2a6d863f213f80da f155086f352401f7 judging harness.json removed
+1 05e3bcbc56368400 34fe815a2cb3e8d1 921a49f697a1e572 judging harness.json emptied
+1 05e3bcbc56368400 34fe815a2cb3e8d1 921a49f697a1e572 judging harness.json doubled
+1 05e3bcbc56368400 34fe815a2cb3e8d1 921a49f697a1e572 judging harness.json cut in half
+2 - - - judging harness.json a directory
+2 - - - judging harness.json unreadable
+0 54fff0db2e510427 9e7e6d0be01eeeca a0f4ed02b7b282c3 judging poll.jsonl removed
+0 4d2e22168903abc2 08d608bd82e90ee4 ef870c2fffba3133 judging poll.jsonl emptied
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging poll.jsonl doubled
+0 768a2e2abc3865eb 7820d2e73370ff9b 3f2c888aa2e14a02 judging poll.jsonl cut in half
+2 - - - judging poll.jsonl a directory
+2 - - - judging poll.jsonl unreadable
+1 9d3c1af8adb9997b b49a28b8ba9a9087 d5c97cc05ae79c52 judging incumbent/run removed
+1 46369d4829e473e7 dea87ffe4c78d7e8 caa46331dca623ee judging incumbent/run emptied
+1 46369d4829e473e7 dea87ffe4c78d7e8 caa46331dca623ee judging incumbent/run doubled
+1 46369d4829e473e7 dea87ffe4c78d7e8 caa46331dca623ee judging incumbent/run cut in half
+2 - - - judging incumbent/run a directory
+2 - - - judging incumbent/run unreadable
+1 e1213839fc4b9eb3 b7a0fdce693f9cdd 4d48b32238e2942d judging incumbent/verdict removed
+1 8b2eecdab2a49d31 fbba117c45ab93f1 e7d9332338ffea49 judging incumbent/verdict emptied
+1 8b2eecdab2a49d31 fbba117c45ab93f1 e7d9332338ffea49 judging incumbent/verdict doubled
+1 8b2eecdab2a49d31 fbba117c45ab93f1 e7d9332338ffea49 judging incumbent/verdict cut in half
+2 - - - judging incumbent/verdict a directory
+2 - - - judging incumbent/verdict unreadable
+0 6032c1d1aeea3904 894e298612354682 af340b06dbaa6f66 judging steady/lease.json removed
+0 6032c1d1aeea3904 894e298612354682 af340b06dbaa6f66 judging steady/lease.json emptied
+0 6032c1d1aeea3904 894e298612354682 af340b06dbaa6f66 judging steady/lease.json doubled
+0 6032c1d1aeea3904 894e298612354682 af340b06dbaa6f66 judging steady/lease.json cut in half
+2 - - - judging steady/lease.json a directory
+2 - - - judging steady/lease.json unreadable
+1 5e2adaf9dd3e6200 2044d51063b3c32f 78273ccd7c432d5c judging steady/exit.json removed
+1 13c927f53eb8ae85 f264019753052fad 85dca9a96b86576d judging steady/exit.json emptied
+1 13c927f53eb8ae85 f264019753052fad 85dca9a96b86576d judging steady/exit.json doubled
+1 13c927f53eb8ae85 f264019753052fad 85dca9a96b86576d judging steady/exit.json cut in half
+2 - - - judging steady/exit.json a directory
+2 - - - judging steady/exit.json unreadable
+1 05da4c1c70ad8a68 6cf0d9efbe483d0a 5f7ee23eaf67a03c judging steady/run removed
+1 6e2b001973e59eab b2bf7dae86861078 f69aa08d5018c362 judging steady/run emptied
+1 6e2b001973e59eab b2bf7dae86861078 f69aa08d5018c362 judging steady/run doubled
+1 6e2b001973e59eab b2bf7dae86861078 f69aa08d5018c362 judging steady/run cut in half
+2 - - - judging steady/run a directory
+2 - - - judging steady/run unreadable
+1 59606a70a2555995 73550f396b50d925 bec8917ead1de45c judging steady/verdict removed
+1 1ca94567fe831caa fdd85273c4e64188 e968ca11a91df460 judging steady/verdict emptied
+1 1ca94567fe831caa fdd85273c4e64188 e968ca11a91df460 judging steady/verdict doubled
+1 1ca94567fe831caa fdd85273c4e64188 e968ca11a91df460 judging steady/verdict cut in half
+2 - - - judging steady/verdict a directory
+2 - - - judging steady/verdict unreadable
+1 8bc13eef0f3d5045 71283abbf1bf3a2a 56065dd811b3f868 judging pl/exit.json removed
+1 4297ff1fa856264b 7d0384920b189bfc 184c0791b0766051 judging pl/exit.json emptied
+1 4297ff1fa856264b 7d0384920b189bfc 184c0791b0766051 judging pl/exit.json doubled
+1 4297ff1fa856264b 7d0384920b189bfc 184c0791b0766051 judging pl/exit.json cut in half
+2 - - - judging pl/exit.json a directory
+2 - - - judging pl/exit.json unreadable
+1 044d6d98275df24a 2e70c4da55988418 7672d30d861491e1 judging pl/run removed
+1 92dc295afb5b8c84 32beb79edda2a26d 16d886f5995a2ac5 judging pl/run emptied
+1 92dc295afb5b8c84 32beb79edda2a26d 16d886f5995a2ac5 judging pl/run doubled
+1 92dc295afb5b8c84 32beb79edda2a26d 16d886f5995a2ac5 judging pl/run cut in half
+2 - - - judging pl/run a directory
+2 - - - judging pl/run unreadable
+0 6c4ee9aca84ebfb4 1d5f5153a33fee15 d8f59d348465c8d2 judging clock.json t0.wall=1792310037.4480
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging clock.json t0.wall=1.792310037448e9
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging clock.json t0.wall=1792310037448e-3
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging clock.json t0.wall=1792310037.448E0
+0 3438afb4ee8f0800 5042785caca3b769 d8f59d348465c8d2 judging clock.json t0.wall=1e400
+1 b73505edb387990a 70973565a0f27c43 aa2e43ad3d10253f judging clock.json t0.wall=-0
+0 c99a7e32035214c9 1d5f5153a33fee15 d8f59d348465c8d2 judging clock.json t_post.mono=6178.160
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging clock.json t_post.mono=6.17816E+3
+0 867b934a627e12df 1d5f5153a33fee15 d8f59d348465c8d2 judging clock.json t_post.mono=6178.16000000000000000001
+0 f96a5fd67e5ccf4d 1d5f5153a33fee15 d8f59d348465c8d2 judging plan.json deadline_s=780.0
+0 0ccf324fcf95d83a 1d5f5153a33fee15 d8f59d348465c8d2 judging plan.json deadline_s=7.8e2
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging plan.json deadline_s=7.80E+2
+0 885ad98fd072650d 1d5f5153a33fee15 d8f59d348465c8d2 judging plan.json deadline_s=1e400
+1 50877bc98668ab18 cb616e265db817c6 01ecd49f361828e0 judging plan.json deadline_s=-0
+1 942f51180403be9c ba891d6b889351b6 092a8943ea3f4c80 judging plan.json deadline_s=1E-400
+1 349fb627c5ab9eb6 9bd2d8e8115c09d3 9bab1fcd0b19100a judging plan.json deadline_s=527.1
+1 5ac06fda631b2905 2d15918cfbf3324c 227570565905d455 judging plan.json deadline_s=527.0999999999999
+0 064a33896bd0f3f7 1d5f5153a33fee15 d8f59d348465c8d2 judging plan.json items_in_plan=3.0
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging plan.json items_in_plan=3e0
+0 2ca2d2790800348a 1d5f5153a33fee15 d8f59d348465c8d2 judging plan.json items_in_plan=2.9999999999999999999
+0 c15495d759f00b8a 1d5f5153a33fee15 d8f59d348465c8d2 judging plan.json items_in_plan=3.0000000000000000001
+1 a509c06c9d4a1719 6241ddafde7ea397 8ce562ce2e9e065e judging plan.json items_in_plan=4
+1 24f84b68e1a62d7f d22ce2fc8bfccade 5cacce748df2c59a judging plan.json items_in_plan=2
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging harness.json exit=0.0
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging harness.json exit=-0
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging harness.json exit=0e5
+1 fcf28df0a59d7d85 a53c202425d6b7ea 706d26c419a7acdb judging harness.json exit=1e-400
+1 26d0032a2a546a7b 3dbd1a376c728db0 606250484e50619a judging harness.json exit=1
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging thresholds.json thresholds[4].max=0.0010
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging thresholds.json thresholds[4].max=1e-3
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging thresholds.json thresholds[4].max=1E-3
+1 58c05626df5111ec d458240538da3a1f cdb322acfcea6477 judging thresholds.json thresholds[4].max=0.20962544362398816
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging thresholds.json thresholds[4].max=0.20962544362398815
+1 8ec8288f55b3a9fa 2c1c4d70a68b386f 0929e1c6580f9b2d judging thresholds.json thresholds[4].max=0.2096254436239881600001
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging pl/run during.service_error_rate=2.0962544362398816e-1
+1 6a1551f9fba6f28b 133820ecd7fa485f bf4372dee47c9fe5 judging pl/run during.service_error_rate=0.0010
+1 cd39ed95b4ea389f 72c1465d62da8874 ecc937131329b06f judging pl/run during.service_error_rate=1e-3
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging pl/run during.service_error_rate=0.0010000000000000000001
+1 a598cc39d3aad57e e22a60014d958a7d 736635bc06ac88e4 judging pl/run during.service_error_rate=-0
+0 0455478cecaeb15c 9378bdd2d9d32c02 d8f59d348465c8d2 judging thresholds.json compare.rows[0].tolerance=0.1
+1 e16d7f4efa08694c b09821744352f16d f24b768a5ab35bbe judging thresholds.json compare.rows[0].tolerance=0.09999999999999999999
+0 e34d04c0bf0f3d9b 1d5f5153a33fee15 d8f59d348465c8d2 judging thresholds.json compare.rows[0].tolerance=1.020
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging thresholds.json compare.rows[0].tolerance=1.02E0
+1 533604e0c8fbfb02 cfae750994681f81 cd4b4c6872fd907d judging thresholds.json compare.rows[0].tolerance=-0
+1 8e6a56ccdd25c803 cf40c612b6a3730e 19b1f851f6fb265c judging thresholds.json compare.rows[0].tolerance=1e-400
+0 73ece0a1ebaf2673 53d7082c50fa5c07 d8f59d348465c8d2 judging thresholds.json compare.rows[0].tolerance=0.2
+0 52331389da5317a5 53d7082c50fa5c07 d8f59d348465c8d2 judging thresholds.json compare.rows[0].tolerance=0.19999999999999999999
+1 ddad8d24bc130277 d80d06aff56b0bd9 8106b74fa74e95aa judging thresholds.json compare.rows[0].floor=-0
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging thresholds.json compare.rows[0].floor=1e-400
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging thresholds.json compare.rows[0].floor=1.02
+1 0e98a346111326eb 77c5e3bb0a2dd6f6 7e4963d4c1485e0b judging thresholds.json compare.rows[0].floor=1.0200000000000000001
+0 1d2e1001aa2637e7 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/exit.json exit=0.0
+0 750f10efbf2af950 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/exit.json exit=-0
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/exit.json exit=0e0
+1 365ac7893bc93ea8 c61fa27008c06342 617818d2248a99cb judging steady/exit.json exit=2.0
+1 bfb4564f56294c07 077041a45d9a175b 9d6dd13874aa03ea judging steady/exit.json exit=3
+1 47616cc8224e93c5 534a0f6c6d5d9b0e b6ab1060168c00ab judging steady/exit.json exit=1e-400
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/verdict exit=0.0
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/verdict exit=-0
+1 e9f6ed084851311a b58fa2344e56f2b4 0407d66f3a6e21b8 judging steady/verdict exit=1
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/verdict readings.workflow_task_schedule_to_start_p99_ms=1.6886543382355622E+1
+0 f8c72f1bb39bc732 0b2a057d214c2847 d8f59d348465c8d2 judging steady/verdict readings.workflow_task_schedule_to_start_p99_ms=17.086628703175624
+0 1192e59c2b28710f 0b2a057d214c2847 d8f59d348465c8d2 judging steady/verdict readings.workflow_task_schedule_to_start_p99_ms=17.0866287031756239
+0 de9688fa980db8f0 0b2a057d214c2847 d8f59d348465c8d2 judging steady/verdict readings.workflow_task_schedule_to_start_p99_ms=17.0866287031756241
+0 dbf1243f57c2ca98 65af93b869449ad8 d8f59d348465c8d2 judging steady/verdict readings.workflow_task_schedule_to_start_p99_ms=18.106628703175624
+0 cd5ca57a447c9c0d 65af93b869449ad8 d8f59d348465c8d2 judging steady/verdict readings.workflow_task_schedule_to_start_p99_ms=18.10662870317562
+0 4e6e9a1df1754815 0670661e61d4ba0d d8f59d348465c8d2 judging steady/verdict readings.workflow_task_schedule_to_start_p99_ms=-0
+1 480530a777784ebd 063f443cc99fbdc2 523ac5cc02fd5415 judging steady/verdict readings.workflow_task_schedule_to_start_p99_ms=1e400
+1 963595dbe98df1bf 4124f7ba93d0cebd 1b74223aa8923cba judging steady/verdict readings.activity_schedule_to_start_over_10ms=0.016465956266924724
+1 ca5b15424c117eb6 4124f7ba93d0cebd 1b74223aa8923cba judging steady/verdict readings.activity_schedule_to_start_over_10ms=0.0164659
+0 46c43380fffdfefc 41adaf6661539d24 d8f59d348465c8d2 judging steady/verdict readings.activity_schedule_to_start_over_10ms=0.009220784988040798
+0 46c43380fffdfefc 41adaf6661539d24 d8f59d348465c8d2 judging steady/verdict readings.activity_schedule_to_start_over_10ms=9.220784988040798e-3
+0 a4a3cdebbb659c6f 49dd8ec9bf7ac520 d8f59d348465c8d2 judging steady/verdict readings.workflows_completed=5954
+0 1c6230e9ca644e9c 26ac401855ea3541 d8f59d348465c8d2 judging steady/verdict readings.workflows_completed=5954.0
+0 79f9c514daefbf2f 07ce0deed57f2b03 d8f59d348465c8d2 judging steady/verdict readings.workflows_completed=1e16
+0 0ac329446fe2c804 5f7b59a9e4dca499 d8f59d348465c8d2 judging steady/verdict readings.workflows_completed=5953.5
+0 8e4775c6d832d628 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/verdict window_s=301.0
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/verdict window_s=3.01E+2
+0 0277e391306c74f4 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/verdict window_s=303
+1 5f1194973acd7793 5c7a9fca766903dc 82bb48d03b13f5a3 judging steady/verdict window_s=304
+0 3f113faa8613f477 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/verdict window_s=303.0000000000000000001
+0 e0043c4f07f5db33 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/verdict window_s=299
+0 40a5fd049922f959 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json host.mem_gib=123.0
+0 3c23fbdb2e04bea1 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json host.mem_gib=124
+1 0aa705a5a510484c dc5f4d15f5281df3 aa434af41744a002 judging gate.json host.mem_gib=124.0000000000001
+0 1de637f210ec8215 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json host.mem_gib=122
+0 2a83c43e85035c70 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json host.vcpu=32.0
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging gate.json host.vcpu=3.2e1
+1 622be78344e03b4f 771fcfe35d022c6d 7e87bee3a1f2f2a1 judging gate.json host.vcpu=31
+0 0acd7d2f2d6090d1 673cc3bf389f8562 d8f59d348465c8d2 judging gate.json items_limit=2
+0 318c3502f61edff4 83221b3fbfc28152 d8f59d348465c8d2 judging gate.json items_limit=2.0
+0 22e02b931673eee8 4ff9496122428d43 d8f59d348465c8d2 judging gate.json items_limit=3e0
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging poll.jsonl [0].busy=0.0
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging poll.jsonl [0].busy=-0
+0 4de27ba148e32084 5c91e66b0380ce59 3325c2445daddcbf judging poll.jsonl [0].busy=1e-400
+0 604c447a571cec2e f27a6aa330d284d8 7046286c74dd14c8 judging poll.jsonl [0].busy=1
+0 3b73b465adf8e36b 055b530a438a5116 8c0957a02073aa17 judging poll.jsonl [0].busy=2.50
+0 ce24aecdd3e5f6d6 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/lease.json block=1.0
+0 557526413f769b98 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/lease.json block=1e400
+0 38dbbf8291728b69 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/lease.json block=-0
+0 78e8a9716da817bb 874e959d77c98b71 97dfb8da57cc6e67 judging pl/run pool_busy.during=1
+0 8ca388fae3b17bec b48e76a7d3f216f2 31136bc6bf4e2f7f judging pl/run pool_busy.during=0.5
+0 5f61d11039bd0e21 1d5f5153a33fee15 d8f59d348465c8d2 judging pl/run pool_busy.during=-1
+0 c46b605faee86685 f7c5463763d391c4 8f863dc33497a699 judging pl/run pool_busy.during=1e-400
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging plan.json deadline_s=780\x00
+1 049fff113f937511 00c4f0f1a8922a5f a7fa26c199d70472 judging plan.json deadline_s=7\x0080
+1 48592ac3776a04a2 4fe2825c01edf3b4 baaf9a7d7d793b8a judging plan.json deadline_s=\x00780
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging poll.jsonl [0].busy=0\x001
+1 91b841e49035eff4 93b32ec47e9ebbcc 90cbcf6cc9f44ad3 judging gate.json fake=true\x00
+1 20709d00428626ee 5299b8ea079ec6ee acc02a5d10d93641 judging pl/run result="BLOCK"; pl/run reason=null
+1 20709d00428626ee 5299b8ea079ec6ee acc02a5d10d93641 judging pl/run result="BLOCK"; pl/run reason=false
+2 - - - judging pl/run result="BLOCK"; pl/run reason=0
+1 1e96f1c5450a5056 55d29803ab7426af 1b92969f2d8995e0 judging pl/run result="BLOCK"; pl/run reason="x"
+2 - - - judging pl/run result="BLOCK"; pl/run reason=[]
+2 - - - judging pl/run result="BLOCK"; pl/run reason={}
+1 20709d00428626ee 5299b8ea079ec6ee acc02a5d10d93641 judging pl/run result="BLOCK"; pl/run reason deleted
+0 1544f0817de2e81d 1d5f5153a33fee15 d8f59d348465c8d2 judging pl/lease.json id=null; pl/run cell=null
+0 1544f0817de2e81d 1d5f5153a33fee15 d8f59d348465c8d2 judging pl/lease.json id=null; pl/run cell=false
+0 4a62aee636f32367 1d5f5153a33fee15 d8f59d348465c8d2 judging pl/lease.json id=null; pl/run cell=0
+0 f8d087a7c7cd6e8f 1d5f5153a33fee15 d8f59d348465c8d2 judging pl/lease.json id=null; pl/run cell="x"
+0 974c2b9603243a28 1d5f5153a33fee15 d8f59d348465c8d2 judging pl/lease.json id=null; pl/run cell=[]
+0 8633a439e92e90db 1d5f5153a33fee15 d8f59d348465c8d2 judging pl/lease.json id=null; pl/run cell={}
+0 1544f0817de2e81d 1d5f5153a33fee15 d8f59d348465c8d2 judging pl/lease.json id=null; pl/run cell deleted
+1 ece8a77f46352714 0575fd377354c072 a2e3a45c89b00a5c judging steady/verdict readings.persistence_latency_p99_ms=null; thresholds.json thresholds[3].no_data=null
+1 ece8a77f46352714 0575fd377354c072 a2e3a45c89b00a5c judging steady/verdict readings.persistence_latency_p99_ms=null; thresholds.json thresholds[3].no_data=false
+1 ece8a77f46352714 0575fd377354c072 a2e3a45c89b00a5c judging steady/verdict readings.persistence_latency_p99_ms=null; thresholds.json thresholds[3].no_data=0
+1 ece8a77f46352714 0575fd377354c072 a2e3a45c89b00a5c judging steady/verdict readings.persistence_latency_p99_ms=null; thresholds.json thresholds[3].no_data="x"
+1 ece8a77f46352714 0575fd377354c072 a2e3a45c89b00a5c judging steady/verdict readings.persistence_latency_p99_ms=null; thresholds.json thresholds[3].no_data=[]
+1 ece8a77f46352714 0575fd377354c072 a2e3a45c89b00a5c judging steady/verdict readings.persistence_latency_p99_ms=null; thresholds.json thresholds[3].no_data={}
+1 ece8a77f46352714 0575fd377354c072 a2e3a45c89b00a5c judging steady/verdict readings.persistence_latency_p99_ms=null; thresholds.json thresholds[3].no_data deleted
+1 64b07c67af663d12 e6bf23846b6961c3 9a9ead1e929c8614 judging incumbent/verdict readings.persistence_latency_p99_ms=null; thresholds-incumbent.json thresholds=null
+1 64b07c67af663d12 e6bf23846b6961c3 9a9ead1e929c8614 judging incumbent/verdict readings.persistence_latency_p99_ms=null; thresholds-incumbent.json thresholds=false
+1 64b07c67af663d12 e6bf23846b6961c3 9a9ead1e929c8614 judging incumbent/verdict readings.persistence_latency_p99_ms=null; thresholds-incumbent.json thresholds=0
+1 64b07c67af663d12 e6bf23846b6961c3 9a9ead1e929c8614 judging incumbent/verdict readings.persistence_latency_p99_ms=null; thresholds-incumbent.json thresholds="x"
+1 64b07c67af663d12 e6bf23846b6961c3 9a9ead1e929c8614 judging incumbent/verdict readings.persistence_latency_p99_ms=null; thresholds-incumbent.json thresholds=[]
+1 64b07c67af663d12 e6bf23846b6961c3 9a9ead1e929c8614 judging incumbent/verdict readings.persistence_latency_p99_ms=null; thresholds-incumbent.json thresholds={}
+1 64b07c67af663d12 e6bf23846b6961c3 9a9ead1e929c8614 judging incumbent/verdict readings.persistence_latency_p99_ms=null; thresholds-incumbent.json thresholds deleted
+1 64b07c67af663d12 e6bf23846b6961c3 9a9ead1e929c8614 judging incumbent/verdict readings.persistence_latency_p99_ms=null; thresholds-incumbent.json thresholds[3].no_data=null
+1 64b07c67af663d12 e6bf23846b6961c3 9a9ead1e929c8614 judging incumbent/verdict readings.persistence_latency_p99_ms=null; thresholds-incumbent.json thresholds[3].no_data=false
+1 64b07c67af663d12 e6bf23846b6961c3 9a9ead1e929c8614 judging incumbent/verdict readings.persistence_latency_p99_ms=null; thresholds-incumbent.json thresholds[3].no_data=0
+1 64b07c67af663d12 e6bf23846b6961c3 9a9ead1e929c8614 judging incumbent/verdict readings.persistence_latency_p99_ms=null; thresholds-incumbent.json thresholds[3].no_data="x"
+1 64b07c67af663d12 e6bf23846b6961c3 9a9ead1e929c8614 judging incumbent/verdict readings.persistence_latency_p99_ms=null; thresholds-incumbent.json thresholds[3].no_data=[]
+1 64b07c67af663d12 e6bf23846b6961c3 9a9ead1e929c8614 judging incumbent/verdict readings.persistence_latency_p99_ms=null; thresholds-incumbent.json thresholds[3].no_data={}
+1 64b07c67af663d12 e6bf23846b6961c3 9a9ead1e929c8614 judging incumbent/verdict readings.persistence_latency_p99_ms=null; thresholds-incumbent.json thresholds[3].no_data deleted
+1 20591933151bcf6f e08a3b7d99a0a828 6d8dab8d1cbf2602 judging steady/verdict verdict="BLOCK"; steady/verdict rows=null
+1 20591933151bcf6f e08a3b7d99a0a828 6d8dab8d1cbf2602 judging steady/verdict verdict="BLOCK"; steady/verdict rows=false
+1 20591933151bcf6f e08a3b7d99a0a828 6d8dab8d1cbf2602 judging steady/verdict verdict="BLOCK"; steady/verdict rows=0
+1 20591933151bcf6f e08a3b7d99a0a828 6d8dab8d1cbf2602 judging steady/verdict verdict="BLOCK"; steady/verdict rows="x"
+1 20591933151bcf6f e08a3b7d99a0a828 6d8dab8d1cbf2602 judging steady/verdict verdict="BLOCK"; steady/verdict rows=[]
+1 20591933151bcf6f e08a3b7d99a0a828 6d8dab8d1cbf2602 judging steady/verdict verdict="BLOCK"; steady/verdict rows={}
+1 20591933151bcf6f e08a3b7d99a0a828 6d8dab8d1cbf2602 judging steady/verdict verdict="BLOCK"; steady/verdict rows deleted
+1 20591933151bcf6f e08a3b7d99a0a828 6d8dab8d1cbf2602 judging steady/verdict verdict="BLOCK"; steady/verdict rows[0].blocks=null
+1 20591933151bcf6f e08a3b7d99a0a828 6d8dab8d1cbf2602 judging steady/verdict verdict="BLOCK"; steady/verdict rows[0].blocks=false
+1 20591933151bcf6f e08a3b7d99a0a828 6d8dab8d1cbf2602 judging steady/verdict verdict="BLOCK"; steady/verdict rows[0].blocks=0
+1 20591933151bcf6f e08a3b7d99a0a828 6d8dab8d1cbf2602 judging steady/verdict verdict="BLOCK"; steady/verdict rows[0].blocks="x"
+1 20591933151bcf6f e08a3b7d99a0a828 6d8dab8d1cbf2602 judging steady/verdict verdict="BLOCK"; steady/verdict rows[0].blocks=[]
+1 20591933151bcf6f e08a3b7d99a0a828 6d8dab8d1cbf2602 judging steady/verdict verdict="BLOCK"; steady/verdict rows[0].blocks={}
+1 20591933151bcf6f e08a3b7d99a0a828 6d8dab8d1cbf2602 judging steady/verdict verdict="BLOCK"; steady/verdict rows[0].blocks deleted
+1 67352ab9d5030acd dc7dcca5bbcb83a4 d9da2fcf3badfca3 judging steady/verdict verdict="BLOCK", steady/verdict rows[0].blocks=true; steady/verdict rows[0].value=null
+1 67352ab9d5030acd dc7dcca5bbcb83a4 d9da2fcf3badfca3 judging steady/verdict verdict="BLOCK", steady/verdict rows[0].blocks=true; steady/verdict rows[0].value=false
+1 c1e79b5472ce46f7 5efb282891015b97 ec0dfab565fff753 judging steady/verdict verdict="BLOCK", steady/verdict rows[0].blocks=true; steady/verdict rows[0].value=0
+1 733556f7c9de67b2 30ea6e83ed30085c 89c1f41e3587c6e7 judging steady/verdict verdict="BLOCK", steady/verdict rows[0].blocks=true; steady/verdict rows[0].value="x"
+1 7e2a81ce2d5c5c53 12f4024da2955d34 3d9eab9cc9bb1310 judging steady/verdict verdict="BLOCK", steady/verdict rows[0].blocks=true; steady/verdict rows[0].value=[]
+1 6c30bb3954664a8a 775a59c83a55e82c a9ace529aa6c8ce5 judging steady/verdict verdict="BLOCK", steady/verdict rows[0].blocks=true; steady/verdict rows[0].value={}
+1 67352ab9d5030acd dc7dcca5bbcb83a4 d9da2fcf3badfca3 judging steady/verdict verdict="BLOCK", steady/verdict rows[0].blocks=true; steady/verdict rows[0].value deleted
+0 d9a89fe9390b4635 756c1fab5f62475f dbed7a83ab55b151 judging gate.json fake=true
+0 fb99d0ad8d369758 ad7595b2c4fb2ed1 d8f59d348465c8d2 judging gate.json tree_dirty=true
+1 3f42a3c79c61804e 96d72e735033860e 89169969a84d604b judging steady/run partial=true
+1 527b4a6a6af6f34c feb2eecc855b3ee9 04ac7a0d362fc726 judging pl/run partial=true
+1 8bc672576d2454c5 b0b297dfc6ea7ab5 e7bdea00794ff67e judging gate.json holds "[1]\n"
+1 91b841e49035eff4 93b32ec47e9ebbcc 90cbcf6cc9f44ad3 judging gate.json holds "\"unreadable\"\n"
+1 8bc672576d2454c5 b0b297dfc6ea7ab5 e7bdea00794ff67e judging gate.json holds "null\n"
+1 cb2735379293edd6 c4cac5c608d10220 4e30acba838a3383 judging plan.json holds "0\n"
+1 637c97383f0c602a 62a86d8f50e16a58 fa608a1a6b2f1a22 judging clock.json holds "[]\n"
+1 05e3bcbc56368400 34fe815a2cb3e8d1 921a49f697a1e572 judging harness.json holds " \n\t\n"
+0 b5e2118fd7b44cd2 c0ba4c8e27a31b35 b43ed88e087f8f9a judging poll.jsonl holds "{}{}\n[]\n"
+0 83e8a6347e6f17de 42cc6d627866c711 7e0fc9f004cca3ed judging poll.jsonl holds "{\"busy\":\n0,\n\"projects\":[]}\n\n\n1 2\n"
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging plan.json starts with a BOM
+1 6474d95311d17a6e 2a6d863f213f80da f155086f352401f7 judging harness.json a dangling link
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging thresholds.json a link to a copy
+1 ec30e1948bae98f7 6f2a9fa5f57b0094 ac6651a5a905c6f8 judging pl/run result="BLOCK"; pl/run reason=bytes ff fe
+1 123594d4c8910886 3257cdd55dbcbf16 3cc2fd68df4b8a28 judging pl/run result="BLOCK"; pl/run reason=a cut sequence
+1 ec30e1948bae98f7 6f2a9fa5f57b0094 ac6651a5a905c6f8 judging pl/run result="BLOCK"; pl/run reason=an overlong form
+1 123594d4c8910886 3257cdd55dbcbf16 3cc2fd68df4b8a28 judging pl/run result="BLOCK"; pl/run reason=an encoded surrogate
+1 92dc295afb5b8c84 32beb79edda2a26d 16d886f5995a2ac5 judging pl/run result="BLOCK"; pl/run reason=a lone high surrogate escape
+1 123594d4c8910886 3257cdd55dbcbf16 3cc2fd68df4b8a28 judging pl/run result="BLOCK"; pl/run reason=a lone low surrogate escape
+1 9e84afdbe85a732d ac576e8c505b982a 686f05f5fd5bc7d5 judging pl/run result="BLOCK"; pl/run reason=a surrogate pair escape
+1 ce2f9e7e2984dfe6 ad3ecc4dc4a2343a e05e76a4f10ba114 judging pl/run result="BLOCK"; pl/run reason=U+2028, <, > and &
+1 e53641f26178015a 26bee2f6fe3da6f3 4292a556089894cd judging pl/run result="BLOCK"; pl/run reason=control bytes
+1 ee8b875177e20b1f 4ab4461c6c827676 cb42649f105bef94 judging pl/run result="BLOCK"; pl/run reason=a | and a newline
+1 54070f8508e3d02a ffb5188acc80fb2d 0576f125124fd161 judging pl/run result="BLOCK"; pl/run reason=a BOM in the middle
+2 - - - judging pl/run result="BLOCK"; pl/run reason=247 nested arrays
+2 - - - judging pl/run result="BLOCK"; pl/run reason=248 nested arrays
+2 - - - judging pl/run result="BLOCK"; pl/run reason=249 nested arrays
+1 691e476b23e380f0 aa93bb00a3d48665 a852f38f092a1a2e judging pl/run result="BLOCK"; pl/run reason="recovered in 30 s, not within 20 s"
+1 fdd25182ba292678 28277d41d01bb898 7b0c4725e8ac9f23 judging pl/run result="BLOCK"; pl/run reason="recovered in x"
+1 778e0c52ed4ef64b 4265d769d989138d 21398fe6c925a9e0 judging pl/run result="BLOCK"; pl/run reason="12 failed iteration(s) after the fault"
+1 c2e78287dad58f42 36ede42601cda8dc 48f80d6e66027953 judging pl/run result="BLOCK"; pl/run reason="failed iteration(s) "
+1 fd706033c7ef0751 16bad5393cc5dcf7 57a4addfa0270fc5 judging pl/run result="BLOCK"; pl/run reason="sweep found no workflows after x"
+1 e91affb810e8bd0a 15a9e50ce01def29 97790f15104f0dea judging pl/run result="BLOCK"; pl/run reason="control: x; harness: y"
+1 dab6ed308d4019a5 b68c2409f64a3feb 44c5bd6b196cf12f judging pl/run result="BLOCK"; pl/run reason="refused: x"
+1 f15290fe590c3b48 d80bbb38bea5db3e b2c13c2bd5f2c93f judging pl/run result="BLOCK"; pl/run reason="never steady: x\n"
+1 334fd5ccb693e446 1e1f1d77a0bc163e a2e1d83ca25ac2fd judging pl/run result="BLOCK"; pl/run reason="never steady:x"
+2 - - - judging the run directory removed
+2 - - - judging the run directory a file
+1 4adbfc15c778a057 d38a21ebbedc9ccb 452d2f43304b148c judging steady/ removed
+1 ee777ef022e71682 636ff044933d8fc2 a4584de6a11d29c4 judging incumbent/ removed
+1 6e47ea05abb2ca91 0f8d642da30b0d74 05309b1d6f902bf8 judging pl/ removed
+1 4adbfc15c778a057 d38a21ebbedc9ccb 452d2f43304b148c judging steady/ a file
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/ a link to a dot directory
+1 8e19680d8e58a3e4 2563db91fa184644 23bc45bc4c1be24a judging steady/ unreadable
+1 8e19680d8e58a3e4 2563db91fa184644 23bc45bc4c1be24a judging steady/ not searchable
+1 fce519fe4a433918 521fc95980a5adf7 af76e83c83d908d2 judging an empty directory zz
+1 b030566d24948d26 c40447d99c04e715 e13d405df6787f6b judging an empty directory a
+1 7b53f571460a84bf 9b408d105d1aae32 044c4bed1ffbf5cb judging an empty directory a-b
+1 fe247f8c7d623503 b4dc7c20c6d5c964 97a09fa0d1edcdb9 judging an empty directory incumbent-2
+1 156fc269829cf14c 199864dd75558860 8efa069cd4d3e095 judging an empty directory Z
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging a dot directory with an item's files
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging a dangling link zz
+1 4a2a6a3548d3e0f3 5dfe74426530637e 5cae8a0f1c2d7226 judging empty directories a and a-b
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging a copy of steady as "steady\n" without exit.json
+1 990593a5829f0676 b3a5889def11e881 b551fcbc64ccbc14 judging a copy of pl as pl-2
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/ named "steady\n"
+1 6170afa4f5340fd2 2ca2a2d62f833c95 292943c2ec9475f8 judging steady/ renamed release/
+1 6a3c18df94f53d27 371ed71c13f6a57f c4c350e29b2b0df3 judging plan key steady renamed release
+1 044cd5143e5834a7 df82980335e21d06 1641afaed1869018 judging steady renamed release, its files too
+0 3bebfa57b9f6dd48 1876abcfe208b23e d8f59d348465c8d2 judging steady renamed release, its files and the pair too
+0 a4c33733819a679e 400d869336ab3ec3 d8f59d348465c8d2 judging incumbent renamed a, its files too
+0 acfd3d3297a4c61a 5898642d2d2aed41 d8f59d348465c8d2 judging pl renamed zz, its files too
+1 d74bb64473c433fc 559e024d02bd79c3 a7900f04c28f7a3f judging plan.json items[1].key="Steady"
+1 a455aaf6aa2bee66 a96189de04547be4 7f7546c21a04b557 judging plan.json items[1].key="steady\n"
+1 ce31b1faf59f39ec 415bb30456db7742 e7705fde01c3bdea judging plan.json items[1].key="st.eady"
+1 10104c82b0f7435c 8c5ed229fcf75838 2028985c225def2f judging plan.json items[1].key="-steady"
+1 eb84e3b6e704f5bd 5ffcf154b4ee9a37 95b3838540e81e12 judging plan.json items[1].key="steady "
+1 3f89d7c7e22d8f63 7e33565373040d44 535d35f9a4235097 judging plan.json items[1].key="incumbent"
+1 4e9e8d92524ea99a 94c162ef0ac0473a b1fdd749946e38ef judging plan.json items[1].key="pl"
+1 96ea814dba76ebff ace2dc2a964fe8e3 8f2e23ac8799ad56 judging plan.json items[0].pair="pl"
+0 289bd6669565d069 dd90ea129f9b3da9 d8f59d348465c8d2 judging plan.json items[0].pair="incumbent"
+1 42ccc655ed729ee8 e675e61d57293a09 1d3e5db7f57fab78 judging plan.json items[1].arm="incumbent"
+1 8601082f7436bc9f 58fd0693a8c4aedf 06327fa03147e842 judging plan.json items[2].kind="load"
+1 740681da83efc90d 0663273a65306149 e7917a41e2a5f4c2 judging plan.json items[1].kind="fault"
+1 b836ea69ad3eadf2 41fd3409be98c61f c421c89335b9a596 judging plan.json items[1].expect="BLOCK"
+1 56f742e792d85942 be8a57f42366c3c1 49fd294e7822f549 judging plan.json items[2].expect="BLOCK"
+1 514ef1e1ea5b104d 9d116c2b97c88729 cdf68b9a0c915e1f judging gate.json gate_id="g2"
+1 da5e473a4be34615 c7fa8985c13652fb b83d2d6a4e295ddd judging gate.json gate_id="G20261018-075357"
+0 4b0f45825a1a985b e2a310e2f600fc00 94a781e67c68f07a judging gate.json gate_id="g20261018-075357\n"
+1 64b7a0923984cab9 2b3b6e79d82a2067 a86421e8284eab44 judging gate.json gate_id=" g20261018-075357"
+1 09e10a5a68869ff5 99f5e4553e2382ac 818ac9b44c8dbe94 judging gate.json gate_id="g20261018-075357 "
+1 a92c378eb8a4f7b9 66394630d7468297 565054c7fb86e1ca judging gate.json gate_id="../g"
+0 e0f832ebcd35ff08 722f353d738bbc52 8e419961ee7b2b14 judging gate.json gate_id="g20261018-075357\u0000"
+1 d8a9d5fe615943df f8b5b7ece09da3da 5c03cb704b47ccab judging gate.json gate_id=1.50
+1 7d34bac4c61ba0c4 fcdda10a18cbd44f 89e1b0a11bf24f90 judging gate.json gate_id=true
+1 738117edb282cf18 35f835a2169dc53e 38a278407d73d2ae judging gate.json gate_id=""
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/run start="2026-10-18T7:57:42Z"
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/run start=" 2026-10-18T07:57:42Z"
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/run start="\t2026-10-18T07:57:42Z"
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/run start="2026-10-18T07: 57:42Z"
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/run start="2026-10-18T07:57:42Z\n"
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/run start="2026-10-18T07:57:42Z xyz"
+0 45a34ec4ba5c631a 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/run start="2026-10-18T07:57:42Z\njunk"
+1 5909c9ec9966330f 347032c5c476f0a0 98a261d128b6af3c judging steady/run start="2026-10-18T07:57:42Zxyz"
+1 5909c9ec9966330f 347032c5c476f0a0 98a261d128b6af3c judging steady/run start="2026-10-18T07:57:42.5Z"
+1 5909c9ec9966330f 347032c5c476f0a0 98a261d128b6af3c judging steady/run start="2026-10-18T07:57:42+00:00"
+1 5909c9ec9966330f 347032c5c476f0a0 98a261d128b6af3c judging steady/run start="2026-10-18T07:57:42"
+1 5909c9ec9966330f 347032c5c476f0a0 98a261d128b6af3c judging steady/run start="2026-10-18t07:57:42Z"
+1 5909c9ec9966330f 347032c5c476f0a0 98a261d128b6af3c judging steady/run start="2026-10-18T07:57:42z"
+1 5909c9ec9966330f 347032c5c476f0a0 98a261d128b6af3c judging steady/run start="2026-10-18 07:57:42Z"
+1 7fa0b4c55e1f5614 bf5463d7c0eb7783 80f277db77404495 judging steady/run start="2026-02-31T07:57:42Z"
+1 255caf5d8c20b793 72a5df52fe5431e3 02ad7742d1a712ed judging steady/run start="2026-10-18T07:57:60Z"
+1 736a056faad2c32f 381128533fad7610 93fd53ad0e50649a judging steady/run start="2026-10-18T07:57:61Z"
+1 5909c9ec9966330f 347032c5c476f0a0 98a261d128b6af3c judging steady/run start="2026-10-18T07:57:62Z"
+1 5909c9ec9966330f 347032c5c476f0a0 98a261d128b6af3c judging steady/run start="2026-10-18T24:00:00Z"
+1 5909c9ec9966330f 347032c5c476f0a0 98a261d128b6af3c judging steady/run start="2026-13-18T07:57:42Z"
+1 5909c9ec9966330f 347032c5c476f0a0 98a261d128b6af3c judging steady/run start="2026-10-00T07:57:42Z"
+0 8e311c9147479491 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/run start="2026-10-18T07:57:43Z"
+0 6a88e08c5bf953d4 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/run start="2026-10-18T07:57:44Z"
+1 fd90c835e724bef5 65c83759d8fcb75d b2e983b798bed6fc judging steady/run start="2026-10-18T07:57:45Z"
+0 6a88e08c5bf953d4 1d5f5153a33fee15 d8f59d348465c8d2 judging steady/run start="2026-10-18T07:57:40Z"
+1 5909c9ec9966330f 347032c5c476f0a0 98a261d128b6af3c judging steady/run start="1969-12-31T23:59:59Z"
+1 5909c9ec9966330f 347032c5c476f0a0 98a261d128b6af3c judging steady/run start="1969-12-31T23:59:58Z"
+1 185c9d12a8bd2fa2 b4ae1faa29dbf03f b821a5e68f57baa3 judging steady/run start="1969-12-31T23:59:57Z"
+1 397de8e4bac8c9cd d7c268fda5bf9656 f2b012ee1d45a69f judging steady/run start="1970-01-01T00:00:00Z"
+1 c940bc729b6bfb15 bda0d53a8e32de55 e7d725ae205301d8 judging steady/run start="0000-01-01T00:00:00Z"
+1 5909c9ec9966330f 347032c5c476f0a0 98a261d128b6af3c judging steady/run start="10000-01-01T00:00:00Z"
+1 31e20e4b5312573f c366b89f36836b7a 1688d0beaba4f0e8 judging steady/run start="2026-1-8T7:7:4Z"
+1 5909c9ec9966330f 347032c5c476f0a0 98a261d128b6af3c judging steady/run start="+2026-10-18T07:57:42Z"
+1 240424f07343c006 887a6c74062c9b40 d1c42e5f4882b100 judging steady/run start="2038-01-19T03:14:08Z"
+1 5909c9ec9966330f 347032c5c476f0a0 98a261d128b6af3c judging steady/run start=""
+1 8bc68b2328afefd8 0fbfe08bd9a2256c b2d42dade2944d90 judging both arms BLOCK
+2 - - - judging both arms BLOCK, deciding [{}]
+1 04d85ad31d978b4e b4cc2f814ec95f9a b2d42dade2944d90 judging both arms BLOCK, deciding [1,"a",null,true]
+2 - - - judging both arms BLOCK, deciding "x"
+1 1bf7cfc65411eba5 853db9e5c8f279c2 b92d62758b8fb955 judging a wave of [1,null,true] in thresholds.json
+2 - - - judging host "x" and a set with no host
+1 101ef3cc3acacf71 ab7120a08b572fb2 064229ad7e67bef2 judging host type null and a set with no host
+0 90ab85c4524e999b 8cd11179f84cfec7 d8f59d348465c8d2 judging compare release 1.30.0
+0 e09b84b4ab8073b8 e95b894dea445631 d8f59d348465c8d2 judging a reading the release lacks, not judged
+1 ece8a77f46352714 0575fd377354c072 a2e3a45c89b00a5c judging a reading the release lacks
+1 64b07c67af663d12 e6bf23846b6961c3 9a9ead1e929c8614 judging a reading the incumbent lacks
+1 1a3808aaa338c6fb 3a1e6ee38abd4e7b 742c6fb4ba2f5c5a judging two worse readings
+1 4e0370a826c08888 e4dbb43de75be4f5 def39d9062e9bf53 judging a compare row of no threshold
+0 3c6bc5b5805c1035 5321adfe66c8d29f 49a9551a1f3e5621 judging a poll of busy 2 and an unleased project
+1 b9cb5a4a0fc8936a 02cebfc6b36b5694 6456640ad2229db7 judging refused, and a fault item that BLOCKs
+1 2dd946e5cdd5f154 30e9870d6f6ff174 8054984a254ea4fa judging watchdog stopped steady
+1 0680dd1ab33b40fe eb97fa39140245d2 b0bc7475fc443d92 judging ITEMS cut the plan
+0 a059db1ff9da6853 2c43e5667c3ec551 d8f59d348465c8d2 judging steady/verdict readings.persistence_latency_p99_ms=7.9751
+0 ff7fd060bb094825 72e4eecb84c1b555 d8f59d348465c8d2 judging steady/verdict readings.activity_schedule_to_start_over_10ms=0.0092207
+0 3259712a77d2ace4 a1007911d52ea98d d8f59d348465c8d2 judging steady/verdict readings.workflow_end_to_end_p95_ms=49.3159
+0 0c551f830d0cb6e7 a5b1f32a390cf644 d8f59d348465c8d2 judging steady/verdict readings.workflows_completed=5953.6
+0 90f5269ce0ad9fb8 aae954f7590158df 9a8ce02c98f2b322 recording thresholds.json compare=null
+0 90f5269ce0ad9fb8 aae954f7590158df 9a8ce02c98f2b322 recording thresholds.json compare=false
+0 90f5269ce0ad9fb8 aae954f7590158df 9a8ce02c98f2b322 recording thresholds.json compare=0
+0 90f5269ce0ad9fb8 aae954f7590158df 9a8ce02c98f2b322 recording thresholds.json compare="x"
+0 90f5269ce0ad9fb8 aae954f7590158df 9a8ce02c98f2b322 recording thresholds.json compare=[]
+0 90f5269ce0ad9fb8 aae954f7590158df 9a8ce02c98f2b322 recording thresholds.json compare={}
+0 90f5269ce0ad9fb8 aae954f7590158df 9a8ce02c98f2b322 recording thresholds.json compare deleted
+0 bd706c5a74d14c22 eb40602d7b9a4ff6 9a8ce02c98f2b322 recording thresholds.json compare.release=null
+0 bd706c5a74d14c22 eb40602d7b9a4ff6 9a8ce02c98f2b322 recording thresholds.json compare.release=false
+0 7b538259eda5e7d0 eb40602d7b9a4ff6 9a8ce02c98f2b322 recording thresholds.json compare.release=0
+0 4db4f20cbd883068 eb40602d7b9a4ff6 9a8ce02c98f2b322 recording thresholds.json compare.release="x"
+0 1b201b77e57582c0 eb40602d7b9a4ff6 9a8ce02c98f2b322 recording thresholds.json compare.release=[]
+0 bfe05fe0b54fd356 eb40602d7b9a4ff6 9a8ce02c98f2b322 recording thresholds.json compare.release={}
+0 bd706c5a74d14c22 eb40602d7b9a4ff6 9a8ce02c98f2b322 recording thresholds.json compare.release deleted
+1 1c3414c0b52086f6 47be45f5560e6286 6eeef4f1166fefa6 recording thresholds.json compare.rows[0].tolerance=false
+1 605d8b53e820b33f 97cf44551f76bb75 11841eef0f4a6876 recording thresholds.json compare.rows[0].tolerance=0
+1 bbecaa0552552bef f200e078eac4afb0 57b078c8156ae586 recording thresholds.json compare.rows[0].tolerance="x"
+1 7e735897a2a615f7 a21860b83b422c7a 0982a45205413a34 recording thresholds.json compare.rows[0].tolerance=[]
+1 9706b42b3bb09a5b 7cf03f8755a68b9e fa6606f05c5e1719 recording thresholds.json compare.rows[0].tolerance={}
+0 23f433a2c9b638dc eb40602d7b9a4ff6 9a8ce02c98f2b322 recording thresholds.json compare.rows[0].tolerance deleted
+1 035426c2c4f6c59b f01315aaa21ace0e 00a6651c6fc51589 recording plan.json incumbent=null
+1 035426c2c4f6c59b f01315aaa21ace0e 00a6651c6fc51589 recording plan.json incumbent=false
+1 2de7e1033598e986 e219278d3463a124 00a6651c6fc51589 recording plan.json incumbent=0
+1 c65d0880a963db96 60588a8b53d177ae f09a82050a2b5a3c recording plan.json incumbent="x"
+1 6b6a3f96a18cde40 33e96654140b2994 00a6651c6fc51589 recording plan.json incumbent=[]
+1 834d1b7983be9c86 1e48ffb5fa797724 00a6651c6fc51589 recording plan.json incumbent={}
+1 035426c2c4f6c59b f01315aaa21ace0e 00a6651c6fc51589 recording plan.json incumbent deleted
+1 09ee34d35001ffe7 eec4ad96d2e3003b df91620846e8ef88 recording plan.json items[0].pair=null
+1 935c008ca0f8d336 3fc7701337c3a97c a24f9030f4ccf5d0 recording plan.json items[0].pair=false
+1 dc6097254bb695ca b9770fc6b61a2a89 d73764738845b473 recording plan.json items[0].pair=0
+1 669abe013ffdf0b3 dd5dbc895556e00c 9e34bfb350791a44 recording plan.json items[0].pair="x"
+1 99cfaa4d6cdbb851 24f22d9adb62a437 87e71c75c25c0b8b recording plan.json items[0].pair=[]
+1 368eb7222430c7bb a25ff9cd6b74bd2b 79587818283aa3d2 recording plan.json items[0].pair={}
+1 09ee34d35001ffe7 eec4ad96d2e3003b df91620846e8ef88 recording plan.json items[0].pair deleted
+1 f609e2653fdfa9b4 731376c63693f203 b3124c569d61eaf9 recording incumbent/verdict verdict=null
+1 fb517d27f459f035 731376c63693f203 b3124c569d61eaf9 recording incumbent/verdict verdict=false
+1 c9cf05e3a94ce51c 022c84b4dc8a2e18 658295b34284391f recording incumbent/verdict verdict=0
+1 6f26aec3445f070f e7a7ef6382b65082 3553df5a60d5d2f0 recording incumbent/verdict verdict="x"
+1 fdd957bc2abf0056 3a2b45c184ae17a2 370c57a06918ca1f recording incumbent/verdict verdict=[]
+1 b3e78abb67023dae d92c6a56433a2087 55359f1351d82278 recording incumbent/verdict verdict={}
+1 f609e2653fdfa9b4 731376c63693f203 b3124c569d61eaf9 recording incumbent/verdict verdict deleted
+0 e9c081871d28911d de126d9fc63578cf 9a8ce02c98f2b322 recording incumbent/verdict window_s=null
+0 e9c081871d28911d de126d9fc63578cf 9a8ce02c98f2b322 recording incumbent/verdict window_s=false
+0 5affeec6e91b5c4d de126d9fc63578cf 9a8ce02c98f2b322 recording incumbent/verdict window_s=0
+0 e9c081871d28911d de126d9fc63578cf 9a8ce02c98f2b322 recording incumbent/verdict window_s="x"
+0 e9c081871d28911d de126d9fc63578cf 9a8ce02c98f2b322 recording incumbent/verdict window_s=[]
+0 e9c081871d28911d de126d9fc63578cf 9a8ce02c98f2b322 recording incumbent/verdict window_s={}
+0 e9c081871d28911d de126d9fc63578cf 9a8ce02c98f2b322 recording incumbent/verdict window_s deleted
+0 90661211d5fa00a1 689e78ed05209259 9a8ce02c98f2b322 recording incumbent/verdict readings=null
+0 39989b4b74841b9f d881f4f8e5cad97e 9a8ce02c98f2b322 recording incumbent/verdict readings=false
+0 39989b4b74841b9f d881f4f8e5cad97e 9a8ce02c98f2b322 recording incumbent/verdict readings=0
+0 39989b4b74841b9f d881f4f8e5cad97e 9a8ce02c98f2b322 recording incumbent/verdict readings="x"
+0 39989b4b74841b9f d881f4f8e5cad97e 9a8ce02c98f2b322 recording incumbent/verdict readings=[]
+0 90661211d5fa00a1 689e78ed05209259 9a8ce02c98f2b322 recording incumbent/verdict readings={}
+0 90661211d5fa00a1 689e78ed05209259 9a8ce02c98f2b322 recording incumbent/verdict readings deleted
+1 6e7d3d2cfc376e20 5950cf65218d614e 676f1d7dee24b9c5 recording thresholds-incumbent.json removed
+1 e522384c837fc200 8431633f7976bc12 65079237114ca808 recording thresholds-incumbent.json emptied
+1 e522384c837fc200 8431633f7976bc12 65079237114ca808 recording thresholds-incumbent.json doubled
+1 e522384c837fc200 8431633f7976bc12 65079237114ca808 recording thresholds-incumbent.json cut in half
+2 - - - recording thresholds-incumbent.json a directory
+2 - - - recording thresholds-incumbent.json unreadable
+1 a13517ea0bf55948 3f3af0fa6bbe2079 eed1f53940b6f1f6 recording incumbent/verdict removed
+1 f3f60572c6cff189 057cb40889d42a2a 67fa0eab12087fc8 recording incumbent/verdict emptied
+1 f3f60572c6cff189 057cb40889d42a2a 67fa0eab12087fc8 recording incumbent/verdict doubled
+1 f3f60572c6cff189 057cb40889d42a2a 67fa0eab12087fc8 recording incumbent/verdict cut in half
+2 - - - recording incumbent/verdict a directory
+2 - - - recording incumbent/verdict unreadable
+0 e13c413ece40961d de126d9fc63578cf 9a8ce02c98f2b322 recording incumbent/run start="2026-10-17T17:29:45Z"
+0 e7e970919ff93ffa de126d9fc63578cf 9a8ce02c98f2b322 recording incumbent/run start="2026-10-17T17:29:42.5Z"
+0 e7e970919ff93ffa de126d9fc63578cf 9a8ce02c98f2b322 recording incumbent/run start="1969-12-31T23:59:59Z"
+0 c1e5a98c91edb968 de126d9fc63578cf 9a8ce02c98f2b322 recording incumbent/run start="1969-12-31T23:59:57Z"
+0 29fdb1472940fe3c eb40602d7b9a4ff6 9a8ce02c98f2b322 recording incumbent/verdict window_s=304
+0 fc42e08e60a90077 d5febb104f481486 9a8ce02c98f2b322 recording plan.json items[0].pair="pl"
+0 082894642c77a918 19be15176a22e00b 9a8ce02c98f2b322 recording steady/verdict readings.workflow_end_to_end_p95_ms=49.2638
+1 8c0a3f20d56f94e6 bc67e807dd4abb31 977bad27bfa97869 recording both arms BLOCK
+1 b50383cef9e7d978 4be0004e7fd149fa 7da21f6a8bf1138f v1 gate.json gate_id=null
+1 b50383cef9e7d978 4be0004e7fd149fa 7da21f6a8bf1138f v1 gate.json gate_id=false
+1 8eeb4fbbc0dd0656 8fb5a1e5444a4a5c 86591206d1bb043b v1 gate.json gate_id=0
+1 8ded4abe70c47615 1c27780f9342f854 463239957991e5a0 v1 gate.json gate_id="x"
+1 d099634471611909 ed1d05c0f2097de1 9cb9c7c78cc7de17 v1 gate.json gate_id=[]
+1 7cb2bfb2f0a831d7 b8df631b988d897f 4b7b10b89f4f9ebf v1 gate.json gate_id={}
+1 b50383cef9e7d978 4be0004e7fd149fa 7da21f6a8bf1138f v1 gate.json gate_id deleted
+1 7d121820c6f50311 cf97025c22a7430c 1111df5c6b7b4731 v1 gate.json server_tag=null
+1 7d121820c6f50311 cf97025c22a7430c 1111df5c6b7b4731 v1 gate.json server_tag=false
+1 d8e119433e6a17e8 c90026b1f081b7a8 f5313f6c9b5484bc v1 gate.json server_tag=0
+1 d174455b2fa898ed d57eb1db5dd1ad84 623bcb154a4837e8 v1 gate.json server_tag="x"
+1 b1e811bb19a11191 f61d5159fd8f9be0 62497ada347af301 v1 gate.json server_tag=[]
+1 d1507eaa23b5f2d1 bb994e980087f0a3 aafb6dabeb976c26 v1 gate.json server_tag={}
+1 7d121820c6f50311 cf97025c22a7430c 1111df5c6b7b4731 v1 gate.json server_tag deleted
+1 3419db51e85e4a72 9159bcf3ba10f096 47e508a8349b6e39 v1 gate.json refused=false
+1 3f1f066a1b608249 42a790a198727c9e 166a73c79eff044b v1 gate.json refused=0
+1 86855ba3b42e2d46 fadf085c9b4b2d13 ef9a6dc1119bce8c v1 gate.json refused="x"
+1 a1e8473ebe652026 ec88cd3e8ea6dbc8 e103589cbfcaaa16 v1 gate.json refused=[]
+1 f8568453ea40b437 7212e8ac05269715 1fdad0fea2dec1d0 v1 gate.json refused={}
+1 3419db51e85e4a72 9159bcf3ba10f096 47e508a8349b6e39 v1 gate.json refused deleted
+1 3419db51e85e4a72 9159bcf3ba10f096 47e508a8349b6e39 v1 gate.json items_limit=false
+1 6f0152c44ea7d59c 31ac0006a7686e14 47e508a8349b6e39 v1 gate.json items_limit=0
+1 7c3345b911ad19c4 d02cf69f75b2a441 47e508a8349b6e39 v1 gate.json items_limit="x"
+1 75419c50ca328730 203aa483e005298d 47e508a8349b6e39 v1 gate.json items_limit=[]
+1 b9c20cb4b62c92d0 84d7154166c9b801 47e508a8349b6e39 v1 gate.json items_limit={}
+1 3419db51e85e4a72 9159bcf3ba10f096 47e508a8349b6e39 v1 gate.json items_limit deleted
+1 3419db51e85e4a72 9159bcf3ba10f096 47e508a8349b6e39 v1 gate.json fake=null
+1 3419db51e85e4a72 9159bcf3ba10f096 47e508a8349b6e39 v1 gate.json fake=0
+1 3419db51e85e4a72 9159bcf3ba10f096 47e508a8349b6e39 v1 gate.json fake="x"
+1 3419db51e85e4a72 9159bcf3ba10f096 47e508a8349b6e39 v1 gate.json fake=[]
+1 3419db51e85e4a72 9159bcf3ba10f096 47e508a8349b6e39 v1 gate.json fake={}
+1 3419db51e85e4a72 9159bcf3ba10f096 47e508a8349b6e39 v1 gate.json fake deleted
+1 9348fc8417744009 9159bcf3ba10f096 47e508a8349b6e39 v1 gate.json tree_dirty=null
+1 ab026e865f2923e3 9159bcf3ba10f096 47e508a8349b6e39 v1 gate.json tree_dirty=0
+1 9dce694319e202b7 9159bcf3ba10f096 47e508a8349b6e39 v1 gate.json tree_dirty="x"
+1 21ffd2410a7861a3 9159bcf3ba10f096 47e508a8349b6e39 v1 gate.json tree_dirty=[]
+1 a502dcba631ed6c2 9159bcf3ba10f096 47e508a8349b6e39 v1 gate.json tree_dirty={}
+1 9348fc8417744009 9159bcf3ba10f096 47e508a8349b6e39 v1 gate.json tree_dirty deleted
+1 930a121ca5c914b1 9159bcf3ba10f096 47e508a8349b6e39 v1 gate.json host=null
+1 930a121ca5c914b1 9159bcf3ba10f096 47e508a8349b6e39 v1 gate.json host=false
+1 ae7140eeae7e3ec9 9159bcf3ba10f096 47e508a8349b6e39 v1 gate.json host=0
+1 733a047a1c8bc49a 9159bcf3ba10f096 47e508a8349b6e39 v1 gate.json host="x"
+1 8d3bf4dc5adea2ff 9159bcf3ba10f096 47e508a8349b6e39 v1 gate.json host=[]
+1 dbad100fa056c626 9159bcf3ba10f096 47e508a8349b6e39 v1 gate.json host={}
+1 930a121ca5c914b1 9159bcf3ba10f096 47e508a8349b6e39 v1 gate.json host deleted
+1 d3b175806518ea84 c04f6494720ed45c 7d9523b5d54f4fd9 v1 clock.json t0=null
+2 - - - v1 clock.json t0=false
+2 - - - v1 clock.json t0=0
+2 - - - v1 clock.json t0="x"
+2 - - - v1 clock.json t0=[]
+1 4881d10d8aab1f4c c04f6494720ed45c 7d9523b5d54f4fd9 v1 clock.json t0={}
+1 d3b175806518ea84 c04f6494720ed45c 7d9523b5d54f4fd9 v1 clock.json t0 deleted
+1 921e4c4bd1a7661e 059f4ab26fe5786b 47e508a8349b6e39 v1 clock.json t_post.mono=null
+1 9719cbcaea7c76fe 059f4ab26fe5786b 47e508a8349b6e39 v1 clock.json t_post.mono=false
+1 a5df2c1c089a1008 c8971f5eb53011de 47e508a8349b6e39 v1 clock.json t_post.mono=0
+1 50a23a2f94e9ba10 059f4ab26fe5786b 47e508a8349b6e39 v1 clock.json t_post.mono="x"
+1 16fe945ffa907d8e 059f4ab26fe5786b 47e508a8349b6e39 v1 clock.json t_post.mono=[]
+1 2dc924b834d9b649 059f4ab26fe5786b 47e508a8349b6e39 v1 clock.json t_post.mono={}
+1 f09e8c24b86fda6b 059f4ab26fe5786b 47e508a8349b6e39 v1 clock.json t_post.mono deleted
+1 9255c064690a9c62 991fec37caab4f78 631aaa6668fda05e v1 plan.json deadline_s=null
+1 6299eddc291046b4 5f153846f3f6380b 2c02d28599649a69 v1 plan.json deadline_s=false
+1 78192d338a050ad9 1faecd8750a31ecf c6ef03f6f540f72c v1 plan.json deadline_s=0
+1 7aa993f98e982b83 61b6182b20c221ae d2e4720cc4a75ab5 v1 plan.json deadline_s="x"
+1 1f287e842ff3a1f5 1d8e1f4e456595b3 da964ec13a673aee v1 plan.json deadline_s=[]
+1 9973172968b3ddd7 ac3b1d396a5f73c8 2fb2e927f14df76f v1 plan.json deadline_s={}
+1 9255c064690a9c62 991fec37caab4f78 631aaa6668fda05e v1 plan.json deadline_s deleted
+1 85a6a47ff1a4c848 c9454a26d3f08dee 05920eeb6dceb8fa v1 plan.json items_in_plan=null
+1 85a6a47ff1a4c848 c9454a26d3f08dee 05920eeb6dceb8fa v1 plan.json items_in_plan=false
+1 2b9d81414d4feb15 95e4ef212539c413 9efd8413b3359b91 v1 plan.json items_in_plan=0
+1 716fe42622b1a9d6 c9454a26d3f08dee 05920eeb6dceb8fa v1 plan.json items_in_plan="x"
+1 6be65b4ec27239b6 c9454a26d3f08dee 05920eeb6dceb8fa v1 plan.json items_in_plan=[]
+1 b20b7e0c9a28541e c9454a26d3f08dee 05920eeb6dceb8fa v1 plan.json items_in_plan={}
+1 85a6a47ff1a4c848 c9454a26d3f08dee 05920eeb6dceb8fa v1 plan.json items_in_plan deleted
+1 828f9925b1af9de9 9db7dc32bc10887d 60f5413636b06bb3 v1 plan.json items=null
+1 828f9925b1af9de9 9db7dc32bc10887d 60f5413636b06bb3 v1 plan.json items=false
+1 828f9925b1af9de9 9db7dc32bc10887d 60f5413636b06bb3 v1 plan.json items=0
+1 828f9925b1af9de9 9db7dc32bc10887d 60f5413636b06bb3 v1 plan.json items="x"
+1 38b1f1f23dffb12f 899e283109e787c7 764226a0dc231aa7 v1 plan.json items=[]
+1 828f9925b1af9de9 9db7dc32bc10887d 60f5413636b06bb3 v1 plan.json items={}
+1 828f9925b1af9de9 9db7dc32bc10887d 60f5413636b06bb3 v1 plan.json items deleted
+1 caeb81e5b98f6eff c628f2340ee9bb2d a9b918f90a269a59 v1 plan.json items[0].key=null
+1 6f5ba1ac6e91ef4f a3129797f24306bf 16275c31c40c6a48 v1 plan.json items[0].key=false
+1 2053313644fa3c95 85ac4bf3f7d923d0 c2360a2267038866 v1 plan.json items[0].key=0
+1 44f72503369caba1 68059119f48694ae b7fac3b6501bccdb v1 plan.json items[0].key="x"
+1 f1cc87efb0ba1726 e15b263515487eee 7ebaa11564521652 v1 plan.json items[0].key=[]
+1 bf9b2f97215dd92a e620382a00abe0b2 8eb6ab24ed976013 v1 plan.json items[0].key={}
+1 caeb81e5b98f6eff c628f2340ee9bb2d a9b918f90a269a59 v1 plan.json items[0].key deleted
+1 d7b11e25214edd06 2da29cfaf9c0ce75 02b115f255e54571 v1 plan.json items[0].kind=null
+1 e062d16a53b79249 9029d09ccf511218 b0a441bf14790db4 v1 plan.json items[0].kind=false
+1 b76ac181a954ca41 94f807e1a594cd70 59623255ffc492d7 v1 plan.json items[0].kind=0
+1 fd26f0fc90c4af22 ce9ef16808f7d131 6a7fca058be4358e v1 plan.json items[0].kind="x"
+1 ce0f9913a5a62bee cc1257b48efec563 0c308c9f48c80ec2 v1 plan.json items[0].kind=[]
+1 efd10b985f29ca00 ab319009d17412f7 e26518a1c922bbbd v1 plan.json items[0].kind={}
+1 d7b11e25214edd06 2da29cfaf9c0ce75 02b115f255e54571 v1 plan.json items[0].kind deleted
+1 4eb4cef6c82ffd52 23f443b234f199ba 589086deb05d7ded v1 plan.json items[1].expect=null
+1 1c79255f7c4f4c40 ecd0af2c60fffd72 29c582737516a027 v1 plan.json items[1].expect=false
+1 0342ad63a3488700 4802033f959891fa 97c987c7476821f8 v1 plan.json items[1].expect=0
+1 6dec251e032b3a97 c584f89c44c22ec9 c2ebb4aaee4d0602 v1 plan.json items[1].expect="x"
+1 f669f3cc52c75005 b72cef6ef27e83f5 403202edae2c2d49 v1 plan.json items[1].expect=[]
+1 019ee1db2495dfbc 161cc1b406275351 35e802a02d7799a0 v1 plan.json items[1].expect={}
+1 4eb4cef6c82ffd52 23f443b234f199ba 589086deb05d7ded v1 plan.json items[1].expect deleted
+1 a96506eded3bd72a 1f027c5211caa6dd 570e5791bb4ce8fa v1 thresholds.json thresholds=null
+1 a96506eded3bd72a 1f027c5211caa6dd 570e5791bb4ce8fa v1 thresholds.json thresholds=false
+1 a96506eded3bd72a 1f027c5211caa6dd 570e5791bb4ce8fa v1 thresholds.json thresholds=0
+1 a96506eded3bd72a 1f027c5211caa6dd 570e5791bb4ce8fa v1 thresholds.json thresholds="x"
+1 a96506eded3bd72a 1f027c5211caa6dd 570e5791bb4ce8fa v1 thresholds.json thresholds=[]
+1 a96506eded3bd72a 1f027c5211caa6dd 570e5791bb4ce8fa v1 thresholds.json thresholds={}
+1 a96506eded3bd72a 1f027c5211caa6dd 570e5791bb4ce8fa v1 thresholds.json thresholds deleted
+1 a96506eded3bd72a 1f027c5211caa6dd 570e5791bb4ce8fa v1 thresholds.json thresholds[4].max=null
+1 a96506eded3bd72a 1f027c5211caa6dd 570e5791bb4ce8fa v1 thresholds.json thresholds[4].max=false
+1 0785cedf79be8af8 56197ac96fbc0169 878d0846817d5ebb v1 thresholds.json thresholds[4].max=0
+1 a96506eded3bd72a 1f027c5211caa6dd 570e5791bb4ce8fa v1 thresholds.json thresholds[4].max="x"
+1 a96506eded3bd72a 1f027c5211caa6dd 570e5791bb4ce8fa v1 thresholds.json thresholds[4].max=[]
+1 a96506eded3bd72a 1f027c5211caa6dd 570e5791bb4ce8fa v1 thresholds.json thresholds[4].max={}
+1 a96506eded3bd72a 1f027c5211caa6dd 570e5791bb4ce8fa v1 thresholds.json thresholds[4].max deleted
+1 5928e4260e65a7ed 5845b788480816ff ab2b6eedf6b26228 v1 thresholds.json resolved=null
+1 5928e4260e65a7ed 5845b788480816ff ab2b6eedf6b26228 v1 thresholds.json resolved=false
+1 5928e4260e65a7ed 5845b788480816ff ab2b6eedf6b26228 v1 thresholds.json resolved=0
+1 5928e4260e65a7ed 5845b788480816ff ab2b6eedf6b26228 v1 thresholds.json resolved="x"
+1 5928e4260e65a7ed 5845b788480816ff ab2b6eedf6b26228 v1 thresholds.json resolved=[]
+1 5928e4260e65a7ed 5845b788480816ff ab2b6eedf6b26228 v1 thresholds.json resolved={}
+1 5928e4260e65a7ed 5845b788480816ff ab2b6eedf6b26228 v1 thresholds.json resolved deleted
+1 8b6941b9afbde9d7 e9bbbb06fe423a9b 5fece824276f2262 v1 thresholds.json resolved.release_file=false
+1 28d2e1e7657c495f a766d3d0b2816e82 773ec55b293b935c v1 thresholds.json resolved.release_file=0
+1 3e80f6ea0da89bc3 297eebc20d95c672 2a5659ba4e43e4ad v1 thresholds.json resolved.release_file="x"
+1 11ac42955b8e396b d7114b4a18de138d 39a20bc51ff3c9b4 v1 thresholds.json resolved.release_file=[]
+1 9041cc7e99919579 d010283cdde222f1 e38516019b2d8e76 v1 thresholds.json resolved.release_file={}
+1 5928e4260e65a7ed 5845b788480816ff ab2b6eedf6b26228 v1 thresholds.json resolved.release_file deleted
+1 12165f2093a3270b f0f4e3c338a0a62b ab985dfba1b05bdb v1 harness.json exit=null
+1 c69557833eef1444 2d27e25f07340ce8 1d350b9bc6f6792f v1 harness.json exit=false
+1 ba0623841a5f737d d4b113a8c3e643b3 3ac604095c4b3e81 v1 harness.json exit="x"
+1 73cd574ef5fd230f 4da6984afdaf06ca 9003ef78b43924ab v1 harness.json exit=[]
+1 9ee306e05618321e db12c87807461e9d ef6c25b9275dcfd9 v1 harness.json exit={}
+1 12165f2093a3270b f0f4e3c338a0a62b ab985dfba1b05bdb v1 harness.json exit deleted
+1 d26d18034024facd 644ebd6d12313969 72804140f2ee303f v1 poll.jsonl [0].busy=null
+1 d26d18034024facd 644ebd6d12313969 72804140f2ee303f v1 poll.jsonl [0].busy=false
+1 d26d18034024facd 644ebd6d12313969 72804140f2ee303f v1 poll.jsonl [0].busy="x"
+1 d26d18034024facd 644ebd6d12313969 72804140f2ee303f v1 poll.jsonl [0].busy=[]
+1 d26d18034024facd 644ebd6d12313969 72804140f2ee303f v1 poll.jsonl [0].busy={}
+1 d26d18034024facd 644ebd6d12313969 72804140f2ee303f v1 poll.jsonl [0].busy deleted
+1 3dfa0900e9c39233 21e850af1b289ccc 57da1920b79da137 v1 poll.jsonl [0].projects=null
+1 3dfa0900e9c39233 21e850af1b289ccc 57da1920b79da137 v1 poll.jsonl [0].projects=false
+1 3dfa0900e9c39233 21e850af1b289ccc 57da1920b79da137 v1 poll.jsonl [0].projects=0
+1 3dfa0900e9c39233 21e850af1b289ccc 57da1920b79da137 v1 poll.jsonl [0].projects="x"
+1 3419db51e85e4a72 9159bcf3ba10f096 47e508a8349b6e39 v1 poll.jsonl [0].projects=[]
+1 3dfa0900e9c39233 21e850af1b289ccc 57da1920b79da137 v1 poll.jsonl [0].projects={}
+1 3dfa0900e9c39233 21e850af1b289ccc 57da1920b79da137 v1 poll.jsonl [0].projects deleted
+1 cc1f2597c3c0d15d 9159bcf3ba10f096 47e508a8349b6e39 v1 steady/lease.json id=null
+1 cc1f2597c3c0d15d 9159bcf3ba10f096 47e508a8349b6e39 v1 steady/lease.json id=false
+1 c68c15fc148e5c5a 9159bcf3ba10f096 47e508a8349b6e39 v1 steady/lease.json id=0
+1 312a1b61be2ecad1 9159bcf3ba10f096 47e508a8349b6e39 v1 steady/lease.json id="x"
+1 431f7beece2db3c1 9159bcf3ba10f096 47e508a8349b6e39 v1 steady/lease.json id=[]
+1 0714c4cee1c1f3cd 9159bcf3ba10f096 47e508a8349b6e39 v1 steady/lease.json id={}
+1 cc1f2597c3c0d15d 9159bcf3ba10f096 47e508a8349b6e39 v1 steady/lease.json id deleted
+1 e31d5d47e122f70c 0375001cd0c376e7 4d15cab5f142439c v1 steady/exit.json exit=null
+1 e31d5d47e122f70c 0375001cd0c376e7 4d15cab5f142439c v1 steady/exit.json exit=false
+1 66efe2a50c36f207 e51d5b5334c7eaf8 09941b7cf8774883 v1 steady/exit.json exit=0
+1 e31d5d47e122f70c 0375001cd0c376e7 4d15cab5f142439c v1 steady/exit.json exit="x"
+1 e31d5d47e122f70c 0375001cd0c376e7 4d15cab5f142439c v1 steady/exit.json exit=[]
+1 e31d5d47e122f70c 0375001cd0c376e7 4d15cab5f142439c v1 steady/exit.json exit={}
+1 e31d5d47e122f70c 0375001cd0c376e7 4d15cab5f142439c v1 steady/exit.json exit deleted
+1 3419db51e85e4a72 9159bcf3ba10f096 47e508a8349b6e39 v1 steady/exit.json stopped_by=false
+1 694576301596f0ef 900aa76a0b030d6d fac5e94626379a3d v1 steady/exit.json stopped_by=0
+1 959ed35f18e334a6 e88b45f538342da1 b47f26d60bfc0da9 v1 steady/exit.json stopped_by="x"
+1 163ee79694c95583 5ec0457fab2e5ce5 8517253bc9426c2f v1 steady/exit.json stopped_by=[]
+1 1642e098e0809767 b6d1b69371781c54 2810547bdf355040 v1 steady/exit.json stopped_by={}
+1 3419db51e85e4a72 9159bcf3ba10f096 47e508a8349b6e39 v1 steady/exit.json stopped_by deleted
+1 e7430f045bb4b0d5 86d255cb6265d056 dc7ef2b179184d2b v1 steady/exit.json end.wall=null
+1 e7430f045bb4b0d5 86d255cb6265d056 dc7ef2b179184d2b v1 steady/exit.json end.wall=false
+1 3419db51e85e4a72 9159bcf3ba10f096 47e508a8349b6e39 v1 steady/exit.json end.wall=0
+1 e7430f045bb4b0d5 86d255cb6265d056 dc7ef2b179184d2b v1 steady/exit.json end.wall="x"
+1 e7430f045bb4b0d5 86d255cb6265d056 dc7ef2b179184d2b v1 steady/exit.json end.wall=[]
+1 e7430f045bb4b0d5 86d255cb6265d056 dc7ef2b179184d2b v1 steady/exit.json end.wall={}
+1 e7430f045bb4b0d5 86d255cb6265d056 dc7ef2b179184d2b v1 steady/exit.json end.wall deleted
+1 296e41ff816642d9 113c10bee1632080 3da1e2bced9d8b03 v1 steady/run server_version=null
+1 296e41ff816642d9 113c10bee1632080 3da1e2bced9d8b03 v1 steady/run server_version=false
+1 7d2d8215ac4e7ef9 e36193a967f73c96 9931615f1be52a57 v1 steady/run server_version=0
+1 ce3818ad5813f427 1dd249728c8c106f fbdbb97f33ad338e v1 steady/run server_version="x"
+1 7cea2b426a2dba34 a2eb8751012dde4c 8f26af8417bfba45 v1 steady/run server_version=[]
+1 a90f228bbbf45661 46bc49df588bf90c 17765062f53e4645 v1 steady/run server_version={}
+1 296e41ff816642d9 113c10bee1632080 3da1e2bced9d8b03 v1 steady/run server_version deleted
+1 3419db51e85e4a72 9159bcf3ba10f096 47e508a8349b6e39 v1 steady/run partial=null
+1 3419db51e85e4a72 9159bcf3ba10f096 47e508a8349b6e39 v1 steady/run partial=false
+1 3419db51e85e4a72 9159bcf3ba10f096 47e508a8349b6e39 v1 steady/run partial=0
+1 3419db51e85e4a72 9159bcf3ba10f096 47e508a8349b6e39 v1 steady/run partial="x"
+1 3419db51e85e4a72 9159bcf3ba10f096 47e508a8349b6e39 v1 steady/run partial=[]
+1 3419db51e85e4a72 9159bcf3ba10f096 47e508a8349b6e39 v1 steady/run partial={}
+1 3aa2441b61a45702 8a7c4bb70b59cfe4 b2409123d631f052 v1 pl/run result=null
+1 a8858e2c35ed337e 8a7c4bb70b59cfe4 b2409123d631f052 v1 pl/run result=false
+1 b7d9982c6cc7f87d 6a68f6d69d9c9948 c627f3a713fb609b v1 pl/run result=0
+1 104162dedfa70c2a 7a1f817e014527de 301b1944528f69db v1 pl/run result="x"
+1 1f0e7316d030fea1 2302d4fcdd6bfbe6 c825c097e698b081 v1 pl/run result=[]
+1 182c08f57f93fea6 ee2bf6b407a0eb24 806a33a03b9fe0fe v1 pl/run result={}
+1 3aa2441b61a45702 8a7c4bb70b59cfe4 b2409123d631f052 v1 pl/run result deleted
+1 bd2d30cf26b85219 375f71ee5527e42c 06bd5fe255d4c6f9 v1 pl/run reason=null
+1 bd2d30cf26b85219 375f71ee5527e42c 06bd5fe255d4c6f9 v1 pl/run reason=false
+2 - - - v1 pl/run reason=0
+1 2d7c0019b13f60ec 159c7d84a89dcecb 055c9488e2285fb0 v1 pl/run reason="x"
+2 - - - v1 pl/run reason=[]
+2 - - - v1 pl/run reason={}
+1 bd2d30cf26b85219 375f71ee5527e42c 06bd5fe255d4c6f9 v1 pl/run reason deleted
+1 3419db51e85e4a72 9159bcf3ba10f096 47e508a8349b6e39 v1 pl/run partial=null
+1 3419db51e85e4a72 9159bcf3ba10f096 47e508a8349b6e39 v1 pl/run partial=false
+1 3419db51e85e4a72 9159bcf3ba10f096 47e508a8349b6e39 v1 pl/run partial=0
+1 3419db51e85e4a72 9159bcf3ba10f096 47e508a8349b6e39 v1 pl/run partial="x"
+1 3419db51e85e4a72 9159bcf3ba10f096 47e508a8349b6e39 v1 pl/run partial=[]
+1 3419db51e85e4a72 9159bcf3ba10f096 47e508a8349b6e39 v1 pl/run partial={}
+1 773e7a4b6cd11d57 66d2bae3efecf531 e409a075ba6823a7 v1 pl/run server_tag=null
+1 773e7a4b6cd11d57 66d2bae3efecf531 e409a075ba6823a7 v1 pl/run server_tag=false
+1 4f7f192b7be02340 025ac32c92fa70ac 49ff335c34f8c7fd v1 pl/run server_tag=0
+1 ec22c490ac6c84e1 2bf4b6880f6b6691 335f0880adf9af42 v1 pl/run server_tag="x"
+1 7d6c4d617cde119b ee7717550e41701f a265d01171a59660 v1 pl/run server_tag=[]
+1 a430fdf9af9b55f0 29ca9eda45892047 386f635d44faaab7 v1 pl/run server_tag={}
+1 773e7a4b6cd11d57 66d2bae3efecf531 e409a075ba6823a7 v1 pl/run server_tag deleted
+1 3419db51e85e4a72 9159bcf3ba10f096 47e508a8349b6e39 v1 pl/run during.service_error_rate=null
+1 3419db51e85e4a72 9159bcf3ba10f096 47e508a8349b6e39 v1 pl/run during.service_error_rate=false
+1 64d88c53960ef1ce 4e4995e53e232275 ba7420d13109df51 v1 pl/run during.service_error_rate=0
+1 0196601408408017 5c209354d1c6a296 ce0e7074eaffeeae v1 pl/run during.service_error_rate="x"
+1 5a67d0c8cff6f6b7 f822a15d68fffb6b d966f9f6669a290f v1 pl/run during.service_error_rate=[]
+1 f7c7e22016b3249e 3500680a82b263bd 9795306ceca555c4 v1 pl/run during.service_error_rate={}
+1 4cf621ec0bb6aef4 9159bcf3ba10f096 47e508a8349b6e39 v1 pl/run pool_busy=null
+1 4cf621ec0bb6aef4 9159bcf3ba10f096 47e508a8349b6e39 v1 pl/run pool_busy=false
+1 72127086b7cc6a63 9159bcf3ba10f096 47e508a8349b6e39 v1 pl/run pool_busy=0
+1 9fbccb85c1ca8367 9159bcf3ba10f096 47e508a8349b6e39 v1 pl/run pool_busy="x"
+1 0ad144df47644e90 9159bcf3ba10f096 47e508a8349b6e39 v1 pl/run pool_busy=[]
+1 28c0bb9d80c544ac 9159bcf3ba10f096 47e508a8349b6e39 v1 pl/run pool_busy={}
+1 4cf621ec0bb6aef4 9159bcf3ba10f096 47e508a8349b6e39 v1 pl/run pool_busy deleted
+1 3bb15edd6d527e76 98a28061f422b952 585458ca07c3e316 v1 pl/run thresholds_release=false
+1 a6bef54a1ca0e8f3 dcadfa644b7c2b70 08e912ff824b8155 v1 pl/run thresholds_release=0
+1 bf6bc548f26859a3 d3ed44df25f9da37 3dc8bc1574407697 v1 pl/run thresholds_release="x"
+1 f8d73025fd5f225e 9d012811e824660c e4536a92d0a7cdd0 v1 pl/run thresholds_release=[]
+1 361a0a93b61de2e6 2c479860395f839f 92c17329a51d27d8 v1 pl/run thresholds_release={}
+1 9c6514a9880552ac 2e8589a2feae4bc4 20dfb7dcd9697f3f v1 pl/run thresholds_release deleted
+1 180fcca1946fcddd 92b2493141070d39 b8edaca46a298aaa v1 steady/verdict verdict=null
+1 db16629e742ecbfa 92b2493141070d39 b8edaca46a298aaa v1 steady/verdict verdict=false
+1 b1828ba490816983 f84c29d98b6d694c 455f2c8c65290974 v1 steady/verdict verdict=0
+1 0c49fd2bde5c388a dd5b74b02fa52b26 83de76047606f8d3 v1 steady/verdict verdict="x"
+1 808c572b90c85f59 a8e2725be99c95d9 c736d724284dac22 v1 steady/verdict verdict=[]
+1 36226ab2cc40efcf dccbc56d46a2b5b4 c10967634efd7606 v1 steady/verdict verdict={}
+1 180fcca1946fcddd 92b2493141070d39 b8edaca46a298aaa v1 steady/verdict verdict deleted
+1 0999a2f945687702 444ffe1325c614d6 6f6bb3c6a0947a76 v1 steady/verdict exit=null
+1 1f37fba21b0dabf7 3421b238361c51f0 9a6f6bc16489e94d v1 steady/verdict exit=false
+1 ee99bbb2ca86ea8d ffaf6c75b6a7b554 012b8aeaaf9b428c v1 steady/verdict exit=0
+1 5b7c4f4331f4822f e7729ea56912c9e4 15b333e8a1c5bf6b v1 steady/verdict exit="x"
+1 f0306ff3e2526c44 3b96b4220b5b0380 6377e34f7e726f02 v1 steady/verdict exit=[]
+1 6f4772c2409c562c fabb57bc4f9ecd25 1c41ae392fa29d76 v1 steady/verdict exit={}
+1 0999a2f945687702 444ffe1325c614d6 6f6bb3c6a0947a76 v1 steady/verdict exit deleted
+1 534a614e687a109a d8fa021207d66072 418749b9fff938fa v1 steady/verdict short_window=false
+1 f2b3e9259978e925 d951a56207e4d4b1 f9e15cf3576237cf v1 steady/verdict short_window=0
+1 3a9bac89516a271b 04c3bee33e8a2df1 fd959b6159e215b5 v1 steady/verdict short_window="x"
+1 fa52a9d8d8acabbb 0870dbc5aee3f1f1 14be59bbfe6b84c9 v1 steady/verdict short_window=[]
+1 b1eedd900e6155a0 5c6bd08386cfda10 4533575611c7c819 v1 steady/verdict short_window={}
+1 3419db51e85e4a72 9159bcf3ba10f096 47e508a8349b6e39 v1 steady/verdict short_window deleted
+1 cb966e0928a3f1cb 6cc4432e0c637bc1 7c0f683b88231d43 v1 steady/verdict rows=null
+1 cb966e0928a3f1cb 6cc4432e0c637bc1 7c0f683b88231d43 v1 steady/verdict rows=false
+1 cb966e0928a3f1cb 6cc4432e0c637bc1 7c0f683b88231d43 v1 steady/verdict rows=0
+1 cb966e0928a3f1cb 6cc4432e0c637bc1 7c0f683b88231d43 v1 steady/verdict rows="x"
+1 cb966e0928a3f1cb 6cc4432e0c637bc1 7c0f683b88231d43 v1 steady/verdict rows=[]
+1 cb966e0928a3f1cb 6cc4432e0c637bc1 7c0f683b88231d43 v1 steady/verdict rows={}
+1 cb966e0928a3f1cb 6cc4432e0c637bc1 7c0f683b88231d43 v1 steady/verdict rows deleted
+1 eef3a455c0b75e15 c87cfdacbd2483ad de4e0db1cec5f538 v1 steady/verdict rows[0].blocks=null
+1 eef3a455c0b75e15 c87cfdacbd2483ad de4e0db1cec5f538 v1 steady/verdict rows[0].blocks=false
+1 eef3a455c0b75e15 c87cfdacbd2483ad de4e0db1cec5f538 v1 steady/verdict rows[0].blocks=0
+1 eef3a455c0b75e15 c87cfdacbd2483ad de4e0db1cec5f538 v1 steady/verdict rows[0].blocks="x"
+1 eef3a455c0b75e15 c87cfdacbd2483ad de4e0db1cec5f538 v1 steady/verdict rows[0].blocks=[]
+1 eef3a455c0b75e15 c87cfdacbd2483ad de4e0db1cec5f538 v1 steady/verdict rows[0].blocks={}
+1 eef3a455c0b75e15 c87cfdacbd2483ad de4e0db1cec5f538 v1 steady/verdict rows[0].blocks deleted
+1 caa0e64ee236422c d50195fc7dd5fbe4 bdbaa698ebbb6218 v1 steady/verdict rows[0].metric=null
+1 24cbde87fbc232c2 141c8e2a6558e564 15fa2fd30ed4880f v1 steady/verdict rows[0].metric=false
+1 52fc34c5c6973453 05c2b49d10772c11 acef65c4d5ffd39c v1 steady/verdict rows[0].metric=0
+1 0941ed9fea8ffd5d 0230856c5f96a303 01082870ce144f81 v1 steady/verdict rows[0].metric="x"
+1 2b5ba1bdf793396e 42770ca9fa325769 5a9c3aed66b7e1ab v1 steady/verdict rows[0].metric=[]
+1 847e00b1040a5034 073933cf470c5705 8d45055f8f05fc3a v1 steady/verdict rows[0].metric={}
+1 caa0e64ee236422c d50195fc7dd5fbe4 bdbaa698ebbb6218 v1 steady/verdict rows[0].metric deleted
+1 cadc66d5c6c8d4ab 84a85d5dc25a4a9d 01178a854edb6c82 v1 steady/verdict rows[0].value=null
+1 cadc66d5c6c8d4ab 84a85d5dc25a4a9d 01178a854edb6c82 v1 steady/verdict rows[0].value=false
+1 3d144ebb8e78af2c 4f8779c69cce2e51 4904d789e3b5f3d7 v1 steady/verdict rows[0].value=0
+1 e27e56e7d08ba766 e0e4e1aacf84dff2 a7359f6f247f4389 v1 steady/verdict rows[0].value="x"
+1 d4ce9fcadc6ed557 2d6f96a28b8585e8 ff200ed7fb773004 v1 steady/verdict rows[0].value=[]
+1 d691065dc6e211a3 04d5489eac21bf72 dee9f3324165084c v1 steady/verdict rows[0].value={}
+1 cadc66d5c6c8d4ab 84a85d5dc25a4a9d 01178a854edb6c82 v1 steady/verdict rows[0].value deleted
+1 e8675c315c364f42 2458c86028211516 fffe46a6e1263845 v1 steady/verdict rows[0].result=null
+1 b7900be1feb12a66 fe9532121ab0deeb d5431095380e48c8 v1 steady/verdict rows[0].result=false
+1 4e550dc1c281c29d 0f8fe53b8e2e644d 85d897dc9950031a v1 steady/verdict rows[0].result=0
+1 42589b81d44201de 2c58100c1468440c 2bf955ce6e0afe2f v1 steady/verdict rows[0].result="x"
+1 b3d8a49f582e0270 2d79ca65bb4a3313 10cfb91e52ac3022 v1 steady/verdict rows[0].result=[]
+1 b565b8e0d1c43b4b 664c92830caaf360 87d7f0f8b624e32e v1 steady/verdict rows[0].result={}
+1 e8675c315c364f42 2458c86028211516 fffe46a6e1263845 v1 steady/verdict rows[0].result deleted
+1 59fd4bcbaafd68ea 99d776b7631b057c 211c71f69a0a14d7 v1 steady/verdict thresholds_release=false
+1 f908b8b81da6cfdd 532a9ab1a6acf903 399696c9507a4689 v1 steady/verdict thresholds_release=0
+1 54d72868b890b19f efe4d357e114458c 66df3791307ace27 v1 steady/verdict thresholds_release="x"
+1 d9a02fb4000e4a01 3f260f6fc9e1f435 2d9e5fe479a096f3 v1 steady/verdict thresholds_release=[]
+1 d9be959ef3825837 9948dd5c208f5cad 14ad15afb8ff5a75 v1 steady/verdict thresholds_release={}
+1 03ab98d2adeb8a2c 0a06830ca770eef1 f4633b70dcc9bcb5 v1 steady/verdict thresholds_release deleted
+1 662f222d76a7a05d 57596df7248cfd33 c0dc2eebd7dc3cf4 v1 plan.json items[0]={}
+1 685ef9423f79277a 9f3231a02edf71fd 9eede61e708e08c2 v1 plan.json items[0]=[]
+1 a96506eded3bd72a 1f027c5211caa6dd 570e5791bb4ce8fa v1 thresholds.json thresholds[4]={}
+2 - - - v1 thresholds.json thresholds[4]=[]
+1 500ea8e97c234dbb f056d4a2b3819a9b 163ee206605fc533 v1 poll.jsonl [0]={}
+1 500ea8e97c234dbb f056d4a2b3819a9b 163ee206605fc533 v1 poll.jsonl [0]=[]
+1 eef3a455c0b75e15 c87cfdacbd2483ad de4e0db1cec5f538 v1 steady/verdict rows[0]={}
+2 - - - v1 steady/verdict rows[0]=[]
+1 d31588a07f3f5c1a bb5c34f9e05a3b4e 930c6d714f8ddb80 v1 gate.json removed
+1 68cc1d457ea06d9f cbbd7a075f180e59 d6e1dda4dd48e26d v1 gate.json emptied
+1 68cc1d457ea06d9f cbbd7a075f180e59 d6e1dda4dd48e26d v1 gate.json doubled
+1 68cc1d457ea06d9f cbbd7a075f180e59 d6e1dda4dd48e26d v1 gate.json cut in half
+2 - - - v1 gate.json a directory
+2 - - - v1 gate.json unreadable
+1 47c9697ecda99a67 c010c8cd4802b672 4bd4d14a064bd13b v1 clock.json removed
+1 65e0132b982e100a b3a7627a86dc3c72 0c4c55818290e7da v1 clock.json emptied
+1 65e0132b982e100a b3a7627a86dc3c72 0c4c55818290e7da v1 clock.json doubled
+1 65e0132b982e100a b3a7627a86dc3c72 0c4c55818290e7da v1 clock.json cut in half
+2 - - - v1 clock.json a directory
+2 - - - v1 clock.json unreadable
+1 3f9d774ddcfe1d60 4d73e35c35bf39cd 414ca2ac878f3e3a v1 plan.json removed
+1 4a5cf0b23706cb55 99e90fdcf805ac19 1ab6e72ea2c569c3 v1 plan.json emptied
+1 4a5cf0b23706cb55 99e90fdcf805ac19 1ab6e72ea2c569c3 v1 plan.json doubled
+1 4a5cf0b23706cb55 99e90fdcf805ac19 1ab6e72ea2c569c3 v1 plan.json cut in half
+2 - - - v1 plan.json a directory
+2 - - - v1 plan.json unreadable
+1 03c74c0b1ccc71f3 ed51fce75aed549d 807d94958efffcd2 v1 thresholds.json removed
+1 1427c27cf7b2d2cd 935b4e939716b7a7 18812b074c6697b8 v1 thresholds.json emptied
+1 1427c27cf7b2d2cd 935b4e939716b7a7 18812b074c6697b8 v1 thresholds.json doubled
+1 1427c27cf7b2d2cd 935b4e939716b7a7 18812b074c6697b8 v1 thresholds.json cut in half
+2 - - - v1 thresholds.json a directory
+2 - - - v1 thresholds.json unreadable
+1 6c6f00e0306e9c66 85a98c7807f56056 4657b37ef7561d18 v1 harness.json removed
+1 3ecd53eaafddc431 7e6a7d1386bcda0f ee1fec6d9ebf1191 v1 harness.json emptied
+1 3ecd53eaafddc431 7e6a7d1386bcda0f ee1fec6d9ebf1191 v1 harness.json doubled
+1 3ecd53eaafddc431 7e6a7d1386bcda0f ee1fec6d9ebf1191 v1 harness.json cut in half
+2 - - - v1 harness.json a directory
+2 - - - v1 harness.json unreadable
+1 f446394c3c0573b6 b610df43ded41550 64ebab4e72582db0 v1 poll.jsonl removed
+1 25faa3768911dc3f de37f85fd0c38873 736ff949655a409a v1 poll.jsonl emptied
+1 3419db51e85e4a72 9159bcf3ba10f096 47e508a8349b6e39 v1 poll.jsonl doubled
+1 3419db51e85e4a72 9159bcf3ba10f096 47e508a8349b6e39 v1 poll.jsonl cut in half
+2 - - - v1 poll.jsonl a directory
+2 - - - v1 poll.jsonl unreadable
+1 ee6ec1a04e435c27 c4bb44f729e7bbe5 43f9ff45f290099e v1 steady/exit.json removed
+1 b2784e1194323c8b 9862ae7349dca3d5 4ade72f0f0641070 v1 steady/exit.json emptied
+1 b2784e1194323c8b 9862ae7349dca3d5 4ade72f0f0641070 v1 steady/exit.json doubled
+1 b2784e1194323c8b 9862ae7349dca3d5 4ade72f0f0641070 v1 steady/exit.json cut in half
+2 - - - v1 steady/exit.json a directory
+2 - - - v1 steady/exit.json unreadable
+1 dc2d3e310621f565 de8f482183c83110 917e1c5b8c2673fc v1 steady/verdict removed
+1 e23cda883f8d9a99 196d6cc40c979e01 6fa0aae8c4631469 v1 steady/verdict emptied
+1 e23cda883f8d9a99 196d6cc40c979e01 6fa0aae8c4631469 v1 steady/verdict doubled
+1 e23cda883f8d9a99 196d6cc40c979e01 6fa0aae8c4631469 v1 steady/verdict cut in half
+2 - - - v1 steady/verdict a directory
+2 - - - v1 steady/verdict unreadable
+1 ffa46941942ab1d7 14018b138f34e5ae e70b465a016896d2 v1 pl/run removed
+1 2348dc4401c691a0 8ef2c10e7b65ca8c 59cb5461ee4d3ff8 v1 pl/run emptied
+1 2348dc4401c691a0 8ef2c10e7b65ca8c 59cb5461ee4d3ff8 v1 pl/run doubled
+1 2348dc4401c691a0 8ef2c10e7b65ca8c 59cb5461ee4d3ff8 v1 pl/run cut in half
+2 - - - v1 pl/run a directory
+2 - - - v1 pl/run unreadable
+1 3419db51e85e4a72 9159bcf3ba10f096 47e508a8349b6e39 v1 harness.json exit=0.0
+1 810d4956fc6772c7 d7393382e4ac690f 8cd7cf760954774d v1 harness.json exit=1e-400
+1 f1d10ad572f5f088 9159bcf3ba10f096 47e508a8349b6e39 v1 plan.json deadline_s=7.8e2
+1 91c93c70df8c6eb4 27de66d2cc365ca1 a2ba11f5e636fc4b v1 plan.json deadline_s=539.5
+1 c73f0dd9810c6a1b 9159bcf3ba10f096 47e508a8349b6e39 v1 plan.json deadline_s=539.6
+1 9a7eda0728cc6764 9159bcf3ba10f096 47e508a8349b6e39 v1 pl/exit.json exit=1.0
+1 3419db51e85e4a72 9159bcf3ba10f096 47e508a8349b6e39 v1 pl/exit.json exit=1e0
+1 ec7b86daba4643cf e93efb82eb67e012 55c1a507c1e29388 v1 pl/exit.json exit=2
+1 f06de5fee523f8ce 9390622fd764ec97 ed8c3f6b98d19d5a v1 steady/verdict rows[1].value=28850.0000
+1 3419db51e85e4a72 9159bcf3ba10f096 47e508a8349b6e39 v1 steady/verdict rows[1].value=2.8850000E+4
+1 dd58bae355d84442 d1abda4068835416 7a98f0c4d76af906 v1 steady/verdict rows[1].value=null
+1 3419db51e85e4a72 9159bcf3ba10f096 47e508a8349b6e39 v1 thresholds.json thresholds[4].max=1e-3
+1 ee92156c01fb6168 dffb3127fe441b78 177e089292b3080f v1 thresholds.json thresholds[4].max=0.048283842817079384
+1 b9bc3ddfecc51270 bd931beecdc1e145 e78d3ab5253aee2d v1 pl/run during.service_error_rate=0.0010
+1 dc004b92affdc362 8a077371cc393624 1f4fc3982cfee667 v1 pl/run during.service_error_rate=1e-3
+1 fb880b354de109ea a4793c1f88ab9d81 ba5f88926da5c1cf v1 gate.json fake=true
+1 1933f9f81cf8de37 c5b91ecf2211e689 47e508a8349b6e39 v1 gate.json tree_dirty=true
+1 db8b750eb45f6d60 5a82204d12087330 654f5dbd88ee9bf9 v1 steady/run partial=true
+1 81bd5fbf4129dc2d 843220a122e62620 566db146e4251c5c v1 pl/run partial=true
+1 6ba92238207f5a9a e652b1b45da23d1b c37b7f381d4a1f9f v1 gate.json gate_id="g2"
+1 aeed47910fd0d2af 5f8f64af2a77ddaf bdb9594fa5ff6abf v1 gate.json gate_id="g20261014-215905\n"
+1 4bf5b281d3715698 ae21fa5416ae2b69 870729f78807b133 v1 steady/ renamed release/
+1 44a9f15dc3d573f2 f84f44b44ce445ea f0818ef39f43aa5c v1 steady/ removed
+1 e4aab3a5180a4ea6 3caed4fa9a0280f2 4ac58e85ca1c25de v1 an empty directory zz
+1 55aa0beef1c79308 1e358f6ba0817803 ddc1c8ece90de11f v1 a sweep that failed
+1 3419db51e85e4a72 9159bcf3ba10f096 47e508a8349b6e39 v1 an arm in a v1 plan
+1 359c455303fefdb3 9159bcf3ba10f096 47e508a8349b6e39 v1 a gate.json host of another type
+1 c40c00dd57649a52 abd5f2f0707211d3 2a8e47685d6c1877 v1 a reason of class incumbent
+1 a22746412fe7c780 87c72b99e1cacb14 26d53d3c3eb842ea v1 a reason of class not compared

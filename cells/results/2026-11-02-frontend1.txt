@@ -1,0 +1,60 @@
+laug · the startup race with one frontend: two frontends against one, both in the role order before the fix
+2026-11-02, the lab host, an m8i.8xlarge (32 vCPU, 128 GiB), server 1.31.0, tree from 2373d82. Cells made by cells/backend-compose.sh create on block 0,
+one at a time, timed to healthy by its health verb (polled, at most 180 s after create returned), counted 10 s
+later from each role's container, then destroyed. Arms interleaved, A then B, 20 pairs; one warm-up cell on cell.yml first, not counted.
+A: together.yml, cell.yml with the role order before the fix (b636f79's parent): history; matching after history
+   started; frontend (7237) and frontend2 (7236) after matching started; the worker after nginx. The record's "before".
+B: one-frontend.yml, the same order with one frontend, on 7233, the address history, matching and the worker write.
+Reading rule, fixed before the run: if A loses no cell, the race did not reproduce and B's count says nothing.
+
+== A: two frontends, started together
+cell     create   to healthy                from start    restarts                                  "version mismatch" lines (frontend / frontend2; history, matching, worker)
+f1a01    10.5 s   3.0 s                     13.5 s        none                                      0 / 0; 0, 0, 0
+f1a02    10.4 s   3.0 s                     13.4 s        none                                      0 / 0; 0, 0, 0
+f1a03    10.5 s   2.9 s                     13.5 s        none                                      0 / 0; 0, 0, 0
+f1a04    10.5 s   2.9 s                     13.4 s        none                                      0 / 0; 0, 0, 0
+f1a05    10.6 s   3.0 s                     13.5 s        none                                      0 / 0; 0, 0, 0
+f1a06    10.5 s   2.9 s                     13.4 s        temporal-frontend                         5 / 0; 0, 0, 0
+f1a07    10.5 s   62.3 s                    72.8 s        temporal-frontend                         5 / 0; 0, 0, 0
+f1a08    10.5 s   3.0 s                     13.5 s        none                                      0 / 0; 0, 0, 0
+f1a09    10.5 s   2.9 s                     13.4 s        none                                      0 / 0; 0, 0, 0
+f1a10    10.5 s   3.0 s                     13.4 s        none                                      0 / 0; 0, 0, 0
+f1a11    10.6 s   2.9 s                     13.5 s        none                                      0 / 0; 0, 0, 0
+f1a12    10.5 s   3.0 s                     13.4 s        none                                      0 / 0; 0, 0, 0
+f1a13    10.5 s   2.9 s                     13.4 s        none                                      0 / 0; 0, 0, 0
+f1a14    10.5 s   2.9 s                     13.4 s        none                                      0 / 0; 0, 0, 0
+f1a15    10.5 s   2.9 s                     13.5 s        none                                      0 / 0; 0, 0, 0
+f1a16    10.5 s   3.0 s                     13.5 s        none                                      0 / 0; 0, 0, 0
+f1a17    10.5 s   2.9 s                     13.5 s        none                                      0 / 0; 0, 0, 0
+f1a18    10.5 s   2.9 s                     13.4 s        none                                      0 / 0; 0, 0, 0
+f1a19    10.4 s   2.9 s                     13.3 s        temporal-frontend                         5 / 0; 0, 0, 0
+f1a20    10.4 s   2.9 s                     13.4 s        none                                      0 / 0; 0, 0, 0
+
+== B: one frontend, on 7233
+cell     create   to healthy                from start    restarts                                  "version mismatch" lines (frontend; history, matching, worker)
+f1b01    10.3 s   2.9 s                     13.2 s        none                                      0; 0, 0, 0
+f1b02    10.4 s   2.9 s                     13.3 s        none                                      0; 0, 0, 0
+f1b03    10.5 s   2.9 s                     13.4 s        none                                      0; 0, 0, 0
+f1b04    10.5 s   2.9 s                     13.3 s        none                                      0; 0, 0, 0
+f1b05    9.4 s    2.9 s                     12.3 s        none                                      0; 0, 0, 0
+f1b06    10.5 s   2.9 s                     13.3 s        none                                      0; 0, 0, 0
+f1b07    10.5 s   2.9 s                     13.4 s        none                                      0; 0, 0, 0
+f1b08    10.5 s   2.9 s                     13.4 s        none                                      0; 0, 0, 0
+f1b09    10.5 s   2.9 s                     13.4 s        none                                      0; 0, 0, 0
+f1b10    10.4 s   2.9 s                     13.2 s        none                                      0; 0, 0, 0
+f1b11    10.4 s   2.9 s                     13.3 s        none                                      0; 0, 0, 0
+f1b12    10.3 s   2.9 s                     13.2 s        none                                      0; 0, 0, 0
+f1b13    10.5 s   2.9 s                     13.4 s        none                                      0; 0, 0, 0
+f1b14    10.4 s   2.9 s                     13.3 s        none                                      0; 0, 0, 0
+f1b15    10.4 s   2.9 s                     13.3 s        none                                      0; 0, 0, 0
+f1b16    10.5 s   2.9 s                     13.4 s        none                                      0; 0, 0, 0
+f1b17    10.5 s   2.9 s                     13.4 s        none                                      0; 0, 0, 0
+f1b18    9.8 s    2.9 s                     12.7 s        none                                      0; 0, 0, 0
+f1b19    9.9 s    2.9 s                     12.8 s        none                                      0; 0, 0, 0
+f1b20    9.9 s    2.9 s                     12.8 s        none                                      0; 0, 0, 0
+
+== Per arm (a frontend that exited: RestartCount above 0, exited non-zero, or restarting at the count)
+A: 20 cells; 3 with a frontend that exited, 3 with any role restarted or not running; mismatch lines in 3 (15 lines); create failed in 0; healthy 20 of 20 within the cap; to healthy 2.9 to 62.3 s, median 2.9 s; from create began 13.3 to 72.8 s, median 13.4 s
+B: 20 cells; 0 with a frontend that exited, 0 with any role restarted or not running; mismatch lines in 0 (0 lines); create failed in 0; healthy 20 of 20 within the cap; to healthy 2.9 to 2.9 s, median 2.9 s; from create began 12.3 to 13.4 s, median 13.3 s
+Reading: A lost 3 of 20, B 0 of 20; one-sided Fisher exact p = 0.1154 that B loses less often than A.
+

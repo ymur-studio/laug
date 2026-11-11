@@ -1,0 +1,59 @@
+# A cancel sent to a running workflow gate, as internal/orchestrator/gate.go:237-276 (Gate: the steps on ctx, the wave
+# on waveCtx, judge, post, release and the stop path on a disconnected context), :550-629 (wave: cancelWave cancels
+# what still pends), :685-775 (stopPath: Stop, then stopped, post stopped, release stopped) and
+# internal/orchestrator/steps.go:455-463, :471-484 (Step heartbeats every 2 s through context.WithoutCancel; on a
+# cancel it returns ctx.Err() and stops nothing), :960-974 (StepOptions: HeartbeatTimeout 10 s, WaitForCancellation).
+# The ember path: a step that waits through the cancel and heartbeats on the canceled context, boot 6's X3 on the lab
+# host's dev server, timed out 10.136 s after the cancel request; X3c, the same wait beating on WithoutCancel, was not
+# (cells/results/2026-10-27-boot6.txt:238 and :266-267, SAN10, a kept record: the figure needs no row of it).
+# The panel is boot 4's F5 and F7, a fake gate canceled in each mode on the lab host's dev server
+# (_report/lessonworkflow.go, cancelsPanel; cells/results/2026-10-24-boot4.txt, F5 and F7).
+name cancel-path
+size 800 816
+title | A cancel to a running gate: each pending activity hears it at its next heartbeat
+sub | Mid-wave: workflow Gate on the orchestrator's dev server, its activities on this checkout's worker
+desc | Top row: laug gate cancel asks the dev server to cancel workflow Gate, which records the request; Gate's context
+desc | is canceled, and with it its one child, the wave's. Second row: that sends a cancel request for each activity
+desc | and timer still pending there, the wave, each item's await and the backstop; an activity learns of it only in the
+desc | answer to its next heartbeat, sent every 2 s, and Step then returns without stopping gate/step.sh. Bottom: the
+desc | stop path, on a disconnected context a cancel cannot end: Stop stops the live step by its record, then stopped
+desc | writes the trap verdict, and post and release hand it on and give the cells back. The dashed box under the
+desc | second row, at the end of a dashed arrow, is what heartbeats sent on the canceled context do to an activity that
+desc | waits through the cancel: boot 6 saw the server time one out 10.136 s after the cancel request, on the lab host's
+desc | dev server, and the gate still gave its verdict. Below, boot 4's two cancels of a fake
+desc | gate through laug gate cancel, WaitForCancellation true as the tree sets it (F5), then false in a scratch commit
+desc | (F7): across, seconds from the workflow's cancel request event. A lane's upper bar runs from the cancel requests
+desc | to the pending activities to the last of them canceled, a tick at each cancellation; the bars under it are the
+desc | activities scheduled after the request, one at a time; the dashed line is the gate timeline's watchdog TERM, the
+desc | diamonds its items' ended marks, and the thick line the workflow's completion. The events keep types and times,
+desc | not the activities' names.
+source internal/orchestrator/gate.go
+source internal/orchestrator/steps.go
+source cells/results/2026-10-27-boot6.txt
+box cancel 24 76 200 56 mono | laug gate cancel | <gate id>
+box server 262 76 236 56 | the dev server | records the cancel request
+box wf 536 76 240 64 | workflow Gate | its context canceled, | the wave's child with it
+arrow cancel server
+arrow server wf
+box reqs 536 172 240 64 | a cancel request each | for the wave, each await | and the backstop timer
+box hb 262 172 236 64 | the activity hears it | in its next heartbeat's | answer, every 2 s
+box step 24 172 200 64 | Step returns | ctx.Err(); gate/step.sh | runs on in its session
+arrow wf reqs
+arrow reqs hb
+arrow hb step
+box bad 262 268 236 64 fill=steam stroke=ember dash=4,3 | if it waits through the cancel | and beats on the canceled
+  | context: timed out 10 s later
+arrow hb bad colour=ember dash=4,3
+text 262 348 size=10 | boot 6, the lab host: timed out 10.136 s after the cancel request
+region 16 360 768 124 at=260,378 | on a disconnected context: a cancel cannot cut these short
+box stop 24 396 200 72 | Stop | stops the live step | by its record, TERM
+box stopped 262 396 236 72 | stopped | writes the trap verdict | from the records
+box release 536 396 240 72 | post and release | hand the verdict on, | give the cells back
+arrow step stop | the stop path runs
+arrow stop stopped
+arrow stopped release
+text 24 508 size=11
+  | Every activity's options set WaitForCancellation true and a 10 s heartbeat timeout (StepOptions, steps.go).
+text 24 524 size=11
+  | Step heartbeats through context.WithoutCancel(ctx), so a cancel never closes the context its beats go on.
+panel cancels 24 548 752 258

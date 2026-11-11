@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Fake temporal CLI for make harness-test: `workflow count` answers in the real CLI's -o json shape (CLI 1.9.1,
+# seen 2026-10-14) from the next file in FAKE_SWEEP (colon-separated; the last one repeats), a JSON object of status
+# to count. FAKE_TEMPORAL_EXIT nonzero fails the call. Every call's arguments go to $FAKE_DIR/temporal.args.
+# `operator cluster system` prints {"serverVersion": FAKE_SERVER_VERSION (1.31.0)}, the field the real CLI prints (seen
+# 2026-10-14 against a 1.32.1 cell), and does not count as a call.
+printf '%s\n' "$@" '--' >> "$FAKE_DIR/temporal.args"
+if [[ "${FAKE_TEMPORAL_EXIT:-0}" != 0 ]]; then echo "Error: failed connecting to Temporal server (fake)" >&2; exit "$FAKE_TEMPORAL_EXIT"; fi
+if [[ "${1:-} ${2:-} ${3:-}" == "operator cluster system" ]]; then
+  jq -n --arg v "${FAKE_SERVER_VERSION:-1.31.0}" '{serverVersion: $v, capabilities: {}}'; exit 0
+fi
+[[ "${1:-} ${2:-}" == "workflow count" ]] || { echo "fake temporal: only workflow count and operator cluster system" >&2; exit 1; }
+IFS=: read -r -a files <<<"$FAKE_SWEEP"
+n="$(cat "$FAKE_DIR/temporal.calls" 2>/dev/null || echo 0)"; echo $(( n + 1 )) > "$FAKE_DIR/temporal.calls"
+(( n < ${#files[@]} )) || n=$(( ${#files[@]} - 1 ))
+jq '([.[]] | add // 0) as $n | if $n == 0 then {} else
+      {count: ($n | tostring), groups: [to_entries[] | {groupValues: [.key], count: (.value | tostring)}]} end' "${files[$n]}"

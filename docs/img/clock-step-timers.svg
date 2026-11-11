@@ -1,0 +1,128 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="454" viewBox="0 0 800 454" role="img"
+    aria-labelledby="clock-step-timers-title clock-step-timers-desc" font-family="Inter, system-ui, sans-serif">
+<title id="clock-step-timers-title">After a 120.9 s step back, a 60 s timer fired 121.163 s late; the server saw 60.021
+    s</title>
+<desc id="clock-step-timers-desc">Three lanes, each laug health timer on one leased microVM cell of batch E; across,
+    seconds by the host&#39;s clock from the moment each timer was armed. A bar is one durable timer in two segments:
+    the first to when it was due, its length, then the second to when it fired by host time, its lateness. The dashed
+    line is the guest&#39;s clock stepped back 120.9 s, the batch&#39;s own date command in the guest; the solid line
+    the guest&#39;s clock set to the host&#39;s time. The top lane, T1, is the control: no step, 0.415 s late. In the
+    middle, T2: the step at +5.205 s, never set right while the timer ran; it fired 121.163 s late by host time while
+    the server, on the guest&#39;s clock, recorded 60.021 s. At the bottom, T3: three timers armed within 2.347 ms, a
+    step of the same size at +5.215 s, the clock set right at +90.545 s; all three fired 40.427 to 40.445 s after the
+    set, within 17.816 ms of each other, the server&#39;s view 130.911 s each. T3&#39;s lines are from its first arm.
+    Sources: docs/tables/fig-clock-step-timers.jsonl, docs/tables/src/hosts.tsv.</desc>
+<rect x="0" y="0" width="800" height="454" fill="#EEF3F2"/>
+<text x="24" y="30" font-size="14" fill="#163A44"
+    font-weight="600">After a 120.9 s step back, a 60 s timer fired 121.163 s late; the server saw 60.021 s</text>
+<text x="24" y="50" font-size="12"
+    fill="#163A44">laug health timer on a microVM cell of batch E on the lab host, an m8i.8xlarge: host seconds from each arm</text>
+<line x1="236" y1="90" x2="236" y2="380" fill="none" stroke="#CFE3E4"/>
+<line x1="313.143" y1="90" x2="313.143" y2="380" fill="none" stroke="#CFE3E4"/>
+<line x1="390.286" y1="90" x2="390.286" y2="380" fill="none" stroke="#CFE3E4"/>
+<line x1="467.429" y1="90" x2="467.429" y2="380" fill="none" stroke="#CFE3E4"/>
+<line x1="544.571" y1="90" x2="544.571" y2="380" fill="none" stroke="#CFE3E4"/>
+<line x1="621.714" y1="90" x2="621.714" y2="380" fill="none" stroke="#CFE3E4"/>
+<line x1="698.857" y1="90" x2="698.857" y2="380" fill="none" stroke="#CFE3E4"/>
+<line x1="776" y1="90" x2="776" y2="380" fill="none" stroke="#CFE3E4"/>
+<g aria-label="T1, the control">
+  <text x="24" y="106" font-size="11" fill="#163A44" font-weight="600">T1, the control: no step</text>
+  <text x="228" y="136" font-size="11" fill="#163A44" text-anchor="end"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">T1, 60 s</text>
+  <rect x="236" y="124" width="154.286" height="16" fill="#CFE3E4" stroke="#163A44"
+      stroke-width="0.5"><title>T1: armed, due 60 s later</title></rect>
+  <rect x="390.286" y="124" width="1.068" height="16" fill="#D99A3A" stroke="#163A44"
+      stroke-width="0.5"><title>T1: fired 0.415 s late by host time</title></rect>
+  <text x="236" y="152" font-size="10" fill="#163A44">late 0.415 s by host time; the server&#39;s view 60.349 s</text>
+</g>
+<g aria-label="T2, a step">
+  <text x="24" y="176" font-size="11" fill="#163A44"
+      font-weight="600">T2: the guest&#39;s clock stepped back 120.9 s at +5.205 s, set right only after the fire</text>
+  <text x="228" y="206" font-size="11" fill="#163A44" text-anchor="end"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">T2, 60 s</text>
+  <rect x="236" y="194" width="154.286" height="16" fill="#CFE3E4" stroke="#163A44"
+      stroke-width="0.5"><title>T2: armed, due 60 s later</title></rect>
+  <rect x="390.286" y="194" width="311.563" height="16" fill="#D99A3A" stroke="#163A44"
+      stroke-width="0.5"><title>T2: fired 121.163 s late by host time</title></rect>
+  <text x="236" y="222" font-size="10" fill="#163A44">late 121.163 s by host time; the server&#39;s view 60.021 s</text>
+  <line x1="249.385" y1="190" x2="249.385" y2="212" fill="none" stroke="#10181C" stroke-width="1.5" stroke-dasharray="4
+      3"><title>the guest&#39;s clock stepped back 120.9 s</title></line>
+  <line x1="701.972" y1="190" x2="701.972" y2="212" fill="none" stroke="#10181C"
+      stroke-width="1.5"><title>the guest&#39;s clock set to the host&#39;s time, 0.048 s after the fire</title></line>
+</g>
+<g aria-label="T3, a step and a set">
+  <text x="24" y="246" font-size="11" fill="#163A44"
+      font-weight="600">T3: three timers, a step back of 120.9 s at +5.215 s, the guest&#39;s clock set right at +90.545 s</text>
+  <text x="228" y="276" font-size="11" fill="#163A44" text-anchor="end"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">T3-30, 30 s</text>
+  <rect x="236" y="264" width="77.143" height="16" fill="#CFE3E4" stroke="#163A44"
+      stroke-width="0.5"><title>T3-30: armed, due 30 s later</title></rect>
+  <rect x="313.143" y="264" width="259.643" height="16" fill="#D99A3A" stroke="#163A44"
+      stroke-width="0.5"><title>T3-30: fired 100.972 s late by host time</title></rect>
+  <text x="236" y="292" font-size="10"
+      fill="#163A44">late 100.972 s by host time; the server&#39;s view 130.911 s</text>
+  <line x1="249.409" y1="260" x2="249.409" y2="282" fill="none" stroke="#10181C" stroke-width="1.5" stroke-dasharray="4
+      3"><title>the guest&#39;s clock stepped back 120.9 s</title></line>
+  <line x1="468.83" y1="260" x2="468.83" y2="282" fill="none" stroke="#10181C"
+      stroke-width="1.5"><title>the guest&#39;s clock set to the host&#39;s time; the timers fired 40.427 to 40.445 s after</title></line>
+  <text x="228" y="312" font-size="11" fill="#163A44" text-anchor="end"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">T3-45, 45 s</text>
+  <rect x="236.002" y="300" width="115.714" height="16" fill="#CFE3E4" stroke="#163A44"
+      stroke-width="0.5"><title>T3-45: armed, due 45 s later</title></rect>
+  <rect x="351.716" y="300" width="221.115" height="16" fill="#D99A3A" stroke="#163A44"
+      stroke-width="0.5"><title>T3-45: fired 85.989 s late by host time</title></rect>
+  <text x="236.002" y="328" font-size="10"
+      fill="#163A44">late 85.989 s by host time; the server&#39;s view 130.911 s</text>
+  <line x1="249.409" y1="296" x2="249.409" y2="318" fill="none" stroke="#10181C" stroke-width="1.5" stroke-dasharray="4
+      3"><title>the guest&#39;s clock stepped back 120.9 s</title></line>
+  <line x1="468.83" y1="296" x2="468.83" y2="318" fill="none" stroke="#10181C"
+      stroke-width="1.5"><title>the guest&#39;s clock set to the host&#39;s time; the timers fired 40.427 to 40.445 s after</title></line>
+  <text x="228" y="348" font-size="11" fill="#163A44" text-anchor="end"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">T3-60, 60 s</text>
+  <rect x="236.006" y="336" width="154.286" height="16" fill="#CFE3E4" stroke="#163A44"
+      stroke-width="0.5"><title>T3-60: armed, due 60 s later</title></rect>
+  <rect x="390.292" y="336" width="182.494" height="16" fill="#D99A3A" stroke="#163A44"
+      stroke-width="0.5"><title>T3-60: fired 70.97 s late by host time</title></rect>
+  <text x="236.006" y="364" font-size="10"
+      fill="#163A44">late 70.97 s by host time; the server&#39;s view 130.911 s</text>
+  <line x1="249.409" y1="332" x2="249.409" y2="354" fill="none" stroke="#10181C" stroke-width="1.5" stroke-dasharray="4
+      3"><title>the guest&#39;s clock stepped back 120.9 s</title></line>
+  <line x1="468.83" y1="332" x2="468.83" y2="354" fill="none" stroke="#10181C"
+      stroke-width="1.5"><title>the guest&#39;s clock set to the host&#39;s time; the timers fired 40.427 to 40.445 s after</title></line>
+</g>
+<line x1="236" y1="380" x2="776" y2="380" fill="none" stroke="#10181C"/>
+<line x1="236" y1="380" x2="236" y2="384" fill="none" stroke="#10181C"/>
+<text x="236" y="396" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+<line x1="313.143" y1="380" x2="313.143" y2="384" fill="none" stroke="#10181C"/>
+<text x="313.143" y="396" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">30</text>
+<line x1="390.286" y1="380" x2="390.286" y2="384" fill="none" stroke="#10181C"/>
+<text x="390.286" y="396" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">60</text>
+<line x1="467.429" y1="380" x2="467.429" y2="384" fill="none" stroke="#10181C"/>
+<text x="467.429" y="396" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">90</text>
+<line x1="544.571" y1="380" x2="544.571" y2="384" fill="none" stroke="#10181C"/>
+<text x="544.571" y="396" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">120</text>
+<line x1="621.714" y1="380" x2="621.714" y2="384" fill="none" stroke="#10181C"/>
+<text x="621.714" y="396" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">150</text>
+<line x1="698.857" y1="380" x2="698.857" y2="384" fill="none" stroke="#10181C"/>
+<text x="698.857" y="396" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">180</text>
+<line x1="776" y1="380" x2="776" y2="384" fill="none" stroke="#10181C"/>
+<text x="776" y="396" font-size="11" fill="#163A44" text-anchor="middle"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">210</text>
+<text x="506" y="412" font-size="12" fill="#163A44"
+    text-anchor="middle">seconds by the host&#39;s clock after the timer was armed</text>
+<rect x="24" y="427" width="18" height="10" fill="#CFE3E4"/>
+<text x="48" y="436" font-size="11" fill="#163A44">armed to due</text>
+<rect x="139.92" y="427" width="18" height="10" fill="#D99A3A"/>
+<text x="163.92" y="436" font-size="11" fill="#163A44">late, by host time</text>
+<line x1="292.8" y1="432" x2="310.8" y2="432" fill="none" stroke="#10181C" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="316.8" y="436" font-size="11" fill="#163A44">the guest&#39;s clock stepped back</text>
+<line x1="519.6" y1="432" x2="537.6" y2="432" fill="none" stroke="#10181C" stroke-width="1.5"/>
+<text x="543.6" y="436" font-size="11" fill="#163A44">set to the host&#39;s time</text>
+</svg>

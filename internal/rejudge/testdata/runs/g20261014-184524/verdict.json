@@ -1,0 +1,155 @@
+{
+  "gate_id": "g20261014-184524",
+  "verdict": "BLOCK",
+  "class": "harness",
+  "rerun": false,
+  "class_if_quiet": null,
+  "refused": null,
+  "fake": false,
+  "server_tag": "1.31.0",
+  "laug_commit": "e4540a8",
+  "tree_dirty": true,
+  "base": "e4540a8",
+  "inputs": [
+    {
+      "path": "gate/plans/noise.yaml",
+      "sha256": "f6207722a4dd2ac606ceddd16af29b6c470de817f4cea4e422cbc50c79f3d154",
+      "changed_vs_base": false
+    },
+    {
+      "path": "gate/combine.sh",
+      "sha256": "284a759c54557c18bcbdfc257414199c9c94bfb573e3234e2265ecf18ab5366c",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/steady-state.yaml",
+      "sha256": "3d86abd2379a92b1d6e2ce6df294d8f8737854f48364674e7305b929942bc321",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/thresholds.sh",
+      "sha256": "77d5fb8a58d6b9b850f83279b8f61e988615c60dbdd5a7d0d2fa7aecd386500f",
+      "changed_vs_base": false
+    },
+    {
+      "path": "faults/catalog.yaml",
+      "sha256": "f0e73b887d68b2e28575b8146f430d3a98dbae09f96d1da8aed63404cf333a9e",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/releases/1.32.yaml",
+      "sha256": "f4a11d5c163ce31006eb50bd41e2ef4b9e5d30a6f01d10d116744f74d5ff90a7",
+      "changed_vs_base": false
+    }
+  ],
+  "deadline_s": 780,
+  "items_in_plan": 4,
+  "items_limit": 1,
+  "t0": {
+    "wall": 1792003524.385,
+    "mono": 567262.60
+  },
+  "t_post": {
+    "wall": 1792003829.615,
+    "mono": 567567.17
+  },
+  "elapsed_s": {
+    "wall": 305.23,
+    "mono": 304.57
+  },
+  "host": {
+    "vcpu": 24,
+    "mem_gib": 47,
+    "mem_available_gib": 36.4
+  },
+  "rules": {
+    "R1": {
+      "name": "harness",
+      "pass": false,
+      "reasons": [
+        "harness: make harness-test exited 124"
+      ]
+    },
+    "R2": {
+      "name": "coverage",
+      "pass": false,
+      "reasons": [
+        "plan: cut to 1 of 4 items (ITEMS=1): 3 planned item(s) never ran",
+        "s1: no exit record: s1/exit.json is missing",
+        "s1: no JSON: s1/g20261014-184524-s1.json is missing",
+        "s1: no JSON: s1/g20261014-184524-s1.verdict.json is missing"
+      ]
+    },
+    "R3": {
+      "name": "contract",
+      "pass": false,
+      "reasons": [
+        "s1: contract: no exit code was recorded"
+      ]
+    },
+    "R4": {
+      "name": "outcome",
+      "pass": false,
+      "reasons": [
+        "s1: expected ADVANCE, observed nothing"
+      ]
+    },
+    "R5": {
+      "name": "live control",
+      "pass": false,
+      "reasons": [
+        "the plan has no fault item, so no live control ran"
+      ]
+    },
+    "R6": {
+      "name": "identity",
+      "pass": false,
+      "reasons": [
+        "s1: identity: the cell said server_version null, and the gate SERVER_TAG is 1.31.0",
+        "s1: identity: s1/g20261014-184524-s1.verdict.json records no thresholds_release"
+      ]
+    }
+  },
+  "reasons": [
+    "R1 harness: make harness-test exited 124",
+    "R2 plan: cut to 1 of 4 items (ITEMS=1): 3 planned item(s) never ran",
+    "R2 s1: no exit record: s1/exit.json is missing",
+    "R2 s1: no JSON: s1/g20261014-184524-s1.json is missing",
+    "R2 s1: no JSON: s1/g20261014-184524-s1.verdict.json is missing",
+    "R3 s1: contract: no exit code was recorded",
+    "R4 s1: expected ADVANCE, observed nothing",
+    "R5 the plan has no fault item, so no live control ran",
+    "R6 s1: identity: the cell said server_version null, and the gate SERVER_TAG is 1.31.0",
+    "R6 s1: identity: s1/g20261014-184524-s1.verdict.json records no thresholds_release"
+  ],
+  "items": [
+    {
+      "key": "s1",
+      "kind": "load",
+      "expect": "ADVANCE",
+      "observed": null,
+      "class": "invalid",
+      "reason": "no exit record: s1/exit.json is missing",
+      "failed": [
+        "R2",
+        "R3",
+        "R4",
+        "R6"
+      ],
+      "run_id": "g20261014-184524-s1",
+      "cell": "33065392",
+      "block": 0,
+      "exit": null,
+      "stopped_by": null,
+      "pool_busy": null,
+      "evidence": [
+        "s1/g20261014-184524-s1.json",
+        "s1/g20261014-184524-s1.verdict.json"
+      ]
+    }
+  ],
+  "host_quiet": false,
+  "host_noise": [
+    "poll.jsonl is missing, so the host was not seen quiet"
+  ]
+}

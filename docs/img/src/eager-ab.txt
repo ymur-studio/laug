@@ -1,0 +1,35 @@
+# Eager activity execution, 1.31.0 against 1.32.1. The mechanism as load/releases/1.32.yaml:14-21 states it:
+# system.enableActivityEagerExecution false in 1.31.0, true by default in 1.32.1 (server
+# common/dynamicconfig/constants.go, :194 at v1.31.0 and :204 at v1.32.1), and an activity on the worker's own task
+# queue starts in the reply to its workflow task, so matching never queues it. The panel's numbers are boot 1's loads
+# and the arm's A/B gates, their loads, gates and compare rows (_report/lessonpanels.go, eagerPanel).
+name eager-ab
+size 800 520
+title | Server 1.32.1 runs activities eagerly: matching records no wait for them
+sub | One activity on the worker's own task queue, on each release, then the readings on the lab host, an m8i.8xlarge
+desc | Top, server 1.31.0: the worker completes a workflow task that schedules an activity, history writes it, matching
+desc | queues it, and the worker's poll takes it; the time it waits is activity schedule-to-start. Middle, server
+desc | 1.32.1, where system.enableActivityEagerExecution is true by default (source: common/dynamicconfig/constants.go,
+desc | :194 at v1.31.0 and :204 at v1.32.1): history returns the activity in its reply to the workflow task
+desc | and the worker starts it at once, the arrow under that row, so matching, its box dashed, never queues it
+desc | (load/releases/1.32.yaml). Bottom: the
+desc | readings, a row a reading, from boot 1's loads on fresh cells and the incumbent arm's A/B gates, 1.32.1 against
+desc | 1.31.0 in one wave.
+source load/releases/1.32.yaml
+text 24 80 bold size=12 | server 1.31.0
+box w1 24 92 180 56 | the worker | completes a workflow task
+box h1 260 92 180 56 | history | writes the activity
+box m1 496 92 280 56 fill=warm | matching | queues it until a poll takes it
+arrow w1 h1 | schedule
+arrow h1 m1
+path 636,148 636,172 114,172 114,148 head colour=deep at=250,188 | the worker's poll: the wait is activity
+  | schedule-to-start
+text 24 222 bold size=12 | server 1.32.1, eager
+box w2 24 234 180 56 | the worker | completes a workflow task
+box h2 260 234 180 56 | history | writes the activity
+box m2 496 234 280 56 fill=steam dash=4,3 | matching | never sees it
+arrow w2 h2 | schedule
+path 350,290 350,314 114,314 114,290 head colour=water at=130,330 | in the reply: the worker starts it at once, no wait
+  | recorded
+text 24 368 bold size=12 | The readings on the lab host
+panel eager 24 376 752 132

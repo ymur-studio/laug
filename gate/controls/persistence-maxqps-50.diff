@@ -1,0 +1,14 @@
+# persistence-maxqps-50: history.persistenceMaxQPS 50 in every cell's dynamic config, faults/candidates.yaml persistence-starved from boot. On cells no cell gets healthy, a lease is refused, and the gate must BLOCK, class refused; no run of this form is recorded yet. On fakes it ADVANCEs: no fake cell reads it.
+diff --git a/cells/compose/dynamicconfig/laug.yaml b/cells/compose/dynamicconfig/laug.yaml
+index 9b144ec..880ec16 100644
+--- a/cells/compose/dynamicconfig/laug.yaml
++++ b/cells/compose/dynamicconfig/laug.yaml
+@@ -26,7 +26,7 @@ frontend.rps:
+ frontend.namespaceRPS:
+   - value: 2400
+ history.persistenceMaxQPS:
+-  - value: 9000
++  - value: 50   # persistence-maxqps-50: faults/candidates.yaml persistence-starved from boot, which must BLOCK
+ matching.numTaskqueueReadPartitions:
+   - value: 4
+     constraints:

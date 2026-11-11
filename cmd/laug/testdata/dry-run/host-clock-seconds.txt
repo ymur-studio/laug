@@ -1,0 +1,5 @@
+# make: make --no-print-directory -n clock-check SECONDS=5
+# laug: laug host clock -for 5s
+# lease: absent
+# compare: line cells/clock-check.sh
+cells/clock-check.sh '5'

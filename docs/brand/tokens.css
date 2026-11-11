@@ -1,0 +1,37 @@
+/* laug design tokens. Eight colors, two neutrals among them; nothing else is on brand. */
+:root {
+  --laug-basalt: #10181C; /* lava rock: dark surface, ink on light */
+  --laug-deep:   #163A44; /* deep water: text and links on light surfaces, raised cards on dark */
+  --laug-water:  #5FB3BF; /* the pool: the one accent; strokes, fills, series lines, links on dark */
+  --laug-silica: #CFE3E4; /* mineral edge: borders, secondary text on dark, table rules */
+  --laug-steam:  #EEF3F2; /* steam: light surface, ink on dark */
+  --laug-warm:   #D99A3A; /* warmth: a warm cell, a lease in progress, annotations */
+  --laug-moss:   #5B9B6A; /* advance */
+  --laug-ember:  #C44B32; /* block */
+
+  --laug-bg: var(--laug-steam);
+  --laug-fg: var(--laug-basalt);
+  --laug-link: var(--laug-deep);
+  --laug-rule: var(--laug-silica);
+  --laug-advance: var(--laug-moss);
+  --laug-block: var(--laug-ember);
+
+  --laug-font-sans: Inter, "Helvetica Neue", Arial, system-ui, sans-serif;
+  --laug-font-mono: ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --laug-bg: var(--laug-basalt);
+    --laug-fg: var(--laug-steam);
+    --laug-link: var(--laug-water);
+    --laug-rule: var(--laug-deep);
+  }
+}
+/* Verdict badges: text in steam, background by verdict. Badges and lines only; never body text. */
+.laug-advance { background: var(--laug-moss); color: var(--laug-steam); }
+.laug-block   { background: var(--laug-ember); color: var(--laug-steam); }
+.laug-warm    { background: var(--laug-warm); color: var(--laug-basalt); }
+/* The mark's state sign (docs/BRAND.md, The mark's state): the wisp, class "sign", colored by data-verdict on the
+   mark, in a live view and beside the verdict word only. The still mark never takes these. */
+.laug-mark[data-verdict="advance"] .sign { stroke: var(--laug-advance); }
+.laug-mark[data-verdict="block"]   .sign { stroke: var(--laug-block); }

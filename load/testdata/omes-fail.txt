@@ -1,0 +1,8 @@
+2026-10-13T19:30:00.067+0530	INFO	harness/worker.go:110	Go worker will run on task queue omes-ht-fail
+2026-10-13T19:30:41.100+0530	ERROR	loadgen/generic_executor.go:196	iteration 801 failed: failed to start kitchen sink workflow: context deadline exceeded
+2026-10-13T19:30:41.150+0530	ERROR	loadgen/generic_executor.go:196	iteration 802 failed: failed to start kitchen sink workflow: context deadline exceeded
+2026-10-13T19:30:41.200+0530	ERROR	loadgen/generic_executor.go:196	iteration 803 failed: failed to start kitchen sink workflow: context deadline exceeded
+2026-10-13T19:35:20.500+0530	FATAL	omes/util.go:33	scenario failed: failed scenario: run completed with 3 of 6000 iterations failed
+main.exitOnError
+	.upstream/omes/cmd/omes/util.go:33
+exit status 1

@@ -1,0 +1,317 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="558" viewBox="0 0 800 558" role="img"
+    aria-labelledby="arm-band-title arm-band-desc" font-family="Inter, system-ui, sans-serif">
+<title id="arm-band-title">The slow control: persistence p99 under its 23 ms max, d over its 0.35 ms tolerance</title>
+<desc id="arm-band-desc">Two panels over the same gates, A/A first, in their sets&#39; order, then the slow
+    control&#39;s. Top: the release cell&#39;s persistence p99, ms, against the stored max, 23 ms. Bottom: d, the
+    release&#39;s reading less the incumbent&#39;s in the same gate, ms, against R7&#39;s tolerance, 0.35 ms. A circle
+    an A/A gate, both arms server 1.31.0: d -0.181 to 0.163. A triangle a gate of the control, which delays every packet
+    into the release cell&#39;s Postgres: R7 read it WORSE in each. The 1 ms toxic&#39;s four gates of that control ran
+    in recording mode and are left out. Sources: docs/tables/compare.jsonl, docs/tables/gates.jsonl,
+    gate/sets/calibration-arm-3item-m8i.8xlarge.txt, gate/sets/control-arm-known-slow.txt,
+    gate/sets/validation-arm-3item-m8i.8xlarge.txt, load/steady-state.yaml.</desc>
+<rect x="0" y="0" width="800" height="558" fill="#EEF3F2"/>
+<text x="24" y="30" font-size="14" fill="#163A44"
+    font-weight="600">The slow control: persistence p99 under its 23 ms max, d over its 0.35 ms tolerance</text>
+<text x="24" y="50" font-size="12"
+    fill="#163A44">Its 6 judged gates read 9.6 to 9.7 ms, d 1.36 to 1.87 ms; 50 A/A gates beside; the lab host, an m8i.8xlarge</text>
+<text x="24" y="92" font-size="12" fill="#163A44" font-weight="600">the release cell&#39;s reading, ms</text>
+<g aria-label="the release cell&#39;s reading, ms">
+  <line x1="110" y1="254" x2="766" y2="254" fill="none" stroke="#CFE3E4"/>
+  <line x1="110" y1="224.885" x2="766" y2="224.885" fill="none" stroke="#CFE3E4"/>
+  <line x1="110" y1="195.77" x2="766" y2="195.77" fill="none" stroke="#CFE3E4"/>
+  <line x1="110" y1="166.655" x2="766" y2="166.655" fill="none" stroke="#CFE3E4"/>
+  <line x1="110" y1="137.54" x2="766" y2="137.54" fill="none" stroke="#CFE3E4"/>
+  <line x1="110" y1="108.425" x2="766" y2="108.425" fill="none" stroke="#CFE3E4"/>
+  <line x1="110" y1="120.071" x2="766" y2="120.071" fill="none" stroke="#C44B32" stroke-width="1.5" stroke-dasharray="4
+      3"/>
+  <text x="766" y="115.071" font-size="10" fill="#C44B32" text-anchor="end"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">max 23 ms</text>
+  <circle cx="115.857" cy="206.099" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-174403: release 8.226 ms, incumbent 8.182 ms, d 0.044 ms, recorded</title></circle>
+  <circle cx="127.571" cy="206.804" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-175458: release 8.105 ms, incumbent 8.1 ms, d 0.005 ms, recorded</title></circle>
+  <circle cx="139.286" cy="206.671" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-180552: release 8.128 ms, incumbent 8.153 ms, d -0.025 ms, recorded</title></circle>
+  <circle cx="151" cy="206.217" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-181635: release 8.206 ms, incumbent 8.304 ms, d -0.098 ms, recorded</title></circle>
+  <circle cx="162.714" cy="206.2" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-182733: release 8.209 ms, incumbent 8.149 ms, d 0.06 ms, recorded</title></circle>
+  <circle cx="174.429" cy="206.187" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-183826: release 8.211 ms, incumbent 8.178 ms, d 0.033 ms, recorded</title></circle>
+  <circle cx="186.143" cy="206.65" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-184922: release 8.131 ms, incumbent 8.147 ms, d -0.016 ms, recorded</title></circle>
+  <circle cx="197.857" cy="205.584" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-190015: release 8.315 ms, incumbent 8.331 ms, d -0.016 ms, recorded</title></circle>
+  <circle cx="209.571" cy="207.083" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-191109: release 8.057 ms, incumbent 8.034 ms, d 0.023 ms, recorded</title></circle>
+  <circle cx="221.286" cy="206.245" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-192202: release 8.201 ms, incumbent 8.266 ms, d -0.065 ms, recorded</title></circle>
+  <circle cx="233" cy="206.698" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-193258: release 8.123 ms, incumbent 8.157 ms, d -0.034 ms, recorded</title></circle>
+  <circle cx="244.714" cy="205.382" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-194350: release 8.349 ms, incumbent 8.186 ms, d 0.163 ms, recorded</title></circle>
+  <circle cx="256.429" cy="206.785" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-195440: release 8.108 ms, incumbent 8.247 ms, d -0.139 ms, recorded</title></circle>
+  <circle cx="268.143" cy="205.445" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-200534: release 8.339 ms, incumbent 8.286 ms, d 0.052 ms, recorded</title></circle>
+  <circle cx="279.857" cy="206.66" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-201631: release 8.13 ms, incumbent 8.105 ms, d 0.025 ms, recorded</title></circle>
+  <circle cx="291.571" cy="205.729" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-202724: release 8.29 ms, incumbent 8.358 ms, d -0.068 ms, recorded</title></circle>
+  <circle cx="303.286" cy="206.539" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-203815: release 8.151 ms, incumbent 8.18 ms, d -0.03 ms, recorded</title></circle>
+  <circle cx="315" cy="205.717" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-204906: release 8.292 ms, incumbent 8.343 ms, d -0.051 ms, recorded</title></circle>
+  <circle cx="326.714" cy="206.542" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-205956: release 8.15 ms, incumbent 8.261 ms, d -0.111 ms, recorded</title></circle>
+  <circle cx="338.429" cy="206.659" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-211051: release 8.13 ms, incumbent 8.275 ms, d -0.145 ms, recorded</title></circle>
+  <circle cx="350.143" cy="207.506" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-062701: release 7.985 ms, incumbent 7.994 ms, d -0.01 ms, ok</title></circle>
+  <circle cx="361.857" cy="206.176" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-064905: release 8.213 ms, incumbent 8.106 ms, d 0.107 ms, ok</title></circle>
+  <circle cx="373.571" cy="205.614" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-071048: release 8.309 ms, incumbent 8.282 ms, d 0.027 ms, ok</title></circle>
+  <circle cx="385.286" cy="204.589" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-073238: release 8.486 ms, incumbent 8.592 ms, d -0.107 ms, ok</title></circle>
+  <circle cx="397" cy="207.99" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-075357: release 7.901 ms, incumbent 7.975 ms, d -0.074 ms, ok</title></circle>
+  <circle cx="408.714" cy="207.435" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-080919: release 7.997 ms, incumbent 7.975 ms, d 0.021 ms, ok</title></circle>
+  <circle cx="420.429" cy="208.013" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-082010: release 7.897 ms, incumbent 7.844 ms, d 0.053 ms, ok</title></circle>
+  <circle cx="432.143" cy="206.6" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-083103: release 8.14 ms, incumbent 8.145 ms, d -0.005 ms, ok</title></circle>
+  <circle cx="443.857" cy="207.169" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-084154: release 8.042 ms, incumbent 8.223 ms, d -0.181 ms, ok</title></circle>
+  <circle cx="455.571" cy="206.066" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-085245: release 8.232 ms, incumbent 8.227 ms, d 0.004 ms, ok</title></circle>
+  <circle cx="467.286" cy="206.624" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-162821: release 8.136 ms, incumbent 8.105 ms, d 0.031 ms, ok</title></circle>
+  <circle cx="479" cy="206.742" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-165015: release 8.116 ms, incumbent 8.136 ms, d -0.02 ms, ok</title></circle>
+  <circle cx="490.714" cy="207.394" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-171208: release 8.004 ms, incumbent 8.029 ms, d -0.025 ms, ok</title></circle>
+  <circle cx="502.429" cy="205.752" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-173348: release 8.286 ms, incumbent 8.265 ms, d 0.021 ms, ok</title></circle>
+  <circle cx="514.143" cy="206.109" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-174432: release 8.224 ms, incumbent 8.233 ms, d -0.008 ms, ok</title></circle>
+  <circle cx="525.857" cy="206.081" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-175523: release 8.229 ms, incumbent 8.29 ms, d -0.061 ms, ok</title></circle>
+  <circle cx="537.571" cy="206.246" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-180618: release 8.201 ms, incumbent 8.164 ms, d 0.037 ms, ok</title></circle>
+  <circle cx="549.286" cy="206.091" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-181716: release 8.228 ms, incumbent 8.256 ms, d -0.028 ms, ok</title></circle>
+  <circle cx="561" cy="206.687" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-182815: release 8.125 ms, incumbent 8.223 ms, d -0.097 ms, ok</title></circle>
+  <circle cx="572.714" cy="205.549" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-183909: release 8.321 ms, incumbent 8.293 ms, d 0.027 ms, ok</title></circle>
+  <circle cx="584.429" cy="206.806" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-185000: release 8.105 ms, incumbent 8.162 ms, d -0.058 ms, ok</title></circle>
+  <circle cx="596.143" cy="206.169" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-190056: release 8.214 ms, incumbent 8.206 ms, d 0.008 ms, ok</title></circle>
+  <circle cx="607.857" cy="206.43" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-191151: release 8.169 ms, incumbent 8.168 ms, d 0.001 ms, ok</title></circle>
+  <circle cx="619.571" cy="205.594" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-192249: release 8.313 ms, incumbent 8.232 ms, d 0.081 ms, ok</title></circle>
+  <circle cx="631.286" cy="206.923" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-193339: release 8.085 ms, incumbent 8.166 ms, d -0.081 ms, ok</title></circle>
+  <circle cx="643" cy="206.741" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-194431: release 8.116 ms, incumbent 8.192 ms, d -0.076 ms, ok</title></circle>
+  <circle cx="654.714" cy="207.781" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-195529: release 7.937 ms, incumbent 7.947 ms, d -0.01 ms, ok</title></circle>
+  <circle cx="666.429" cy="206.13" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-200626: release 8.221 ms, incumbent 8.144 ms, d 0.077 ms, ok</title></circle>
+  <circle cx="678.143" cy="206.693" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-201718: release 8.124 ms, incumbent 8.182 ms, d -0.057 ms, ok</title></circle>
+  <circle cx="689.857" cy="205.598" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-202807: release 8.312 ms, incumbent 8.273 ms, d 0.039 ms, ok</title></circle>
+  <polygon points="701.571,192.441 705.901,199.941 697.241,199.941"
+      fill="#C44B32"><title>g20261018-063803: release 9.713 ms, incumbent 7.841 ms, d 1.873 ms, WORSE</title></polygon>
+  <polygon points="713.286,192.396 717.616,199.896 708.956,199.896"
+      fill="#C44B32"><title>g20261018-065958: release 9.721 ms, incumbent 7.979 ms, d 1.742 ms, WORSE</title></polygon>
+  <polygon points="725,192.341 729.33,199.841 720.67,199.841"
+      fill="#C44B32"><title>g20261018-072142: release 9.73 ms, incumbent 8.369 ms, d 1.361 ms, WORSE</title></polygon>
+  <polygon points="736.714,192.96 741.044,200.46 732.384,200.46"
+      fill="#C44B32"><title>g20261018-163914: release 9.624 ms, incumbent 8.116 ms, d 1.508 ms, WORSE</title></polygon>
+  <polygon points="748.429,193.019 752.759,200.519 744.099,200.519"
+      fill="#C44B32"><title>g20261018-170110: release 9.614 ms, incumbent 8.115 ms, d 1.499 ms, WORSE</title></polygon>
+  <polygon points="760.143,193.064 764.473,200.564 755.813,200.564"
+      fill="#C44B32"><title>g20261018-172301: release 9.606 ms, incumbent 7.962 ms, d 1.645 ms, WORSE</title></polygon>
+</g>
+<line x1="110" y1="254" x2="110" y2="104" fill="none" stroke="#10181C"/>
+<line x1="106" y1="254" x2="110" y2="254" fill="none" stroke="#10181C"/>
+<text x="104" y="258" font-size="11" fill="#163A44" text-anchor="end"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+<line x1="106" y1="224.885" x2="110" y2="224.885" fill="none" stroke="#10181C"/>
+<text x="104" y="228.885" font-size="11" fill="#163A44" text-anchor="end"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">5</text>
+<line x1="106" y1="195.77" x2="110" y2="195.77" fill="none" stroke="#10181C"/>
+<text x="104" y="199.77" font-size="11" fill="#163A44" text-anchor="end"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">10</text>
+<line x1="106" y1="166.655" x2="110" y2="166.655" fill="none" stroke="#10181C"/>
+<text x="104" y="170.655" font-size="11" fill="#163A44" text-anchor="end"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">15</text>
+<line x1="106" y1="137.54" x2="110" y2="137.54" fill="none" stroke="#10181C"/>
+<text x="104" y="141.54" font-size="11" fill="#163A44" text-anchor="end"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">20</text>
+<line x1="106" y1="108.425" x2="110" y2="108.425" fill="none" stroke="#10181C"/>
+<text x="104" y="112.425" font-size="11" fill="#163A44" text-anchor="end"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">25</text>
+<text x="82" y="179" font-size="12" fill="#163A44" text-anchor="middle" transform="rotate(-90 82 179)">ms</text>
+<text x="24" y="326" font-size="12" fill="#163A44"
+    font-weight="600">d, the release&#39;s reading less the incumbent&#39;s, ms</text>
+<g aria-label="d, the release&#39;s reading less the incumbent&#39;s, ms">
+  <line x1="110" y1="488" x2="766" y2="488" fill="none" stroke="#CFE3E4"/>
+  <line x1="110" y1="458" x2="766" y2="458" fill="none" stroke="#CFE3E4"/>
+  <line x1="110" y1="428" x2="766" y2="428" fill="none" stroke="#CFE3E4"/>
+  <line x1="110" y1="398" x2="766" y2="398" fill="none" stroke="#CFE3E4"/>
+  <line x1="110" y1="368" x2="766" y2="368" fill="none" stroke="#CFE3E4"/>
+  <line x1="110" y1="338" x2="766" y2="338" fill="none" stroke="#CFE3E4"/>
+  <line x1="110" y1="458" x2="766" y2="458" fill="none" stroke="#163A44" stroke-width="0.5"/>
+  <line x1="110" y1="437" x2="766" y2="437" fill="none" stroke="#C44B32" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <text x="766" y="432" font-size="10" fill="#C44B32" text-anchor="end"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">tolerance 0.35 ms</text>
+  <circle cx="115.857" cy="455.36" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-174403: release 8.226 ms, incumbent 8.182 ms, d 0.044 ms, recorded</title></circle>
+  <circle cx="127.571" cy="457.7" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-175458: release 8.105 ms, incumbent 8.1 ms, d 0.005 ms, recorded</title></circle>
+  <circle cx="139.286" cy="459.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-180552: release 8.128 ms, incumbent 8.153 ms, d -0.025 ms, recorded</title></circle>
+  <circle cx="151" cy="463.88" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-181635: release 8.206 ms, incumbent 8.304 ms, d -0.098 ms, recorded</title></circle>
+  <circle cx="162.714" cy="454.4" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-182733: release 8.209 ms, incumbent 8.149 ms, d 0.06 ms, recorded</title></circle>
+  <circle cx="174.429" cy="456.02" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-183826: release 8.211 ms, incumbent 8.178 ms, d 0.033 ms, recorded</title></circle>
+  <circle cx="186.143" cy="458.96" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-184922: release 8.131 ms, incumbent 8.147 ms, d -0.016 ms, recorded</title></circle>
+  <circle cx="197.857" cy="458.96" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-190015: release 8.315 ms, incumbent 8.331 ms, d -0.016 ms, recorded</title></circle>
+  <circle cx="209.571" cy="456.62" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-191109: release 8.057 ms, incumbent 8.034 ms, d 0.023 ms, recorded</title></circle>
+  <circle cx="221.286" cy="461.9" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-192202: release 8.201 ms, incumbent 8.266 ms, d -0.065 ms, recorded</title></circle>
+  <circle cx="233" cy="460.04" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-193258: release 8.123 ms, incumbent 8.157 ms, d -0.034 ms, recorded</title></circle>
+  <circle cx="244.714" cy="448.22" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-194350: release 8.349 ms, incumbent 8.186 ms, d 0.163 ms, recorded</title></circle>
+  <circle cx="256.429" cy="466.34" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-195440: release 8.108 ms, incumbent 8.247 ms, d -0.139 ms, recorded</title></circle>
+  <circle cx="268.143" cy="454.88" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-200534: release 8.339 ms, incumbent 8.286 ms, d 0.052 ms, recorded</title></circle>
+  <circle cx="279.857" cy="456.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-201631: release 8.13 ms, incumbent 8.105 ms, d 0.025 ms, recorded</title></circle>
+  <circle cx="291.571" cy="462.08" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-202724: release 8.29 ms, incumbent 8.358 ms, d -0.068 ms, recorded</title></circle>
+  <circle cx="303.286" cy="459.8" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-203815: release 8.151 ms, incumbent 8.18 ms, d -0.03 ms, recorded</title></circle>
+  <circle cx="315" cy="461.06" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-204906: release 8.292 ms, incumbent 8.343 ms, d -0.051 ms, recorded</title></circle>
+  <circle cx="326.714" cy="464.66" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-205956: release 8.15 ms, incumbent 8.261 ms, d -0.111 ms, recorded</title></circle>
+  <circle cx="338.429" cy="466.7" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261017-211051: release 8.13 ms, incumbent 8.275 ms, d -0.145 ms, recorded</title></circle>
+  <circle cx="350.143" cy="458.6" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-062701: release 7.985 ms, incumbent 7.994 ms, d -0.01 ms, ok</title></circle>
+  <circle cx="361.857" cy="451.58" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-064905: release 8.213 ms, incumbent 8.106 ms, d 0.107 ms, ok</title></circle>
+  <circle cx="373.571" cy="456.38" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-071048: release 8.309 ms, incumbent 8.282 ms, d 0.027 ms, ok</title></circle>
+  <circle cx="385.286" cy="464.42" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-073238: release 8.486 ms, incumbent 8.592 ms, d -0.107 ms, ok</title></circle>
+  <circle cx="397" cy="462.44" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-075357: release 7.901 ms, incumbent 7.975 ms, d -0.074 ms, ok</title></circle>
+  <circle cx="408.714" cy="456.74" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-080919: release 7.997 ms, incumbent 7.975 ms, d 0.021 ms, ok</title></circle>
+  <circle cx="420.429" cy="454.82" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-082010: release 7.897 ms, incumbent 7.844 ms, d 0.053 ms, ok</title></circle>
+  <circle cx="432.143" cy="458.3" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-083103: release 8.14 ms, incumbent 8.145 ms, d -0.005 ms, ok</title></circle>
+  <circle cx="443.857" cy="468.86" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-084154: release 8.042 ms, incumbent 8.223 ms, d -0.181 ms, ok</title></circle>
+  <circle cx="455.571" cy="457.76" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-085245: release 8.232 ms, incumbent 8.227 ms, d 0.004 ms, ok</title></circle>
+  <circle cx="467.286" cy="456.14" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-162821: release 8.136 ms, incumbent 8.105 ms, d 0.031 ms, ok</title></circle>
+  <circle cx="479" cy="459.2" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-165015: release 8.116 ms, incumbent 8.136 ms, d -0.02 ms, ok</title></circle>
+  <circle cx="490.714" cy="459.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-171208: release 8.004 ms, incumbent 8.029 ms, d -0.025 ms, ok</title></circle>
+  <circle cx="502.429" cy="456.74" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-173348: release 8.286 ms, incumbent 8.265 ms, d 0.021 ms, ok</title></circle>
+  <circle cx="514.143" cy="458.48" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-174432: release 8.224 ms, incumbent 8.233 ms, d -0.008 ms, ok</title></circle>
+  <circle cx="525.857" cy="461.66" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-175523: release 8.229 ms, incumbent 8.29 ms, d -0.061 ms, ok</title></circle>
+  <circle cx="537.571" cy="455.78" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-180618: release 8.201 ms, incumbent 8.164 ms, d 0.037 ms, ok</title></circle>
+  <circle cx="549.286" cy="459.68" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-181716: release 8.228 ms, incumbent 8.256 ms, d -0.028 ms, ok</title></circle>
+  <circle cx="561" cy="463.82" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-182815: release 8.125 ms, incumbent 8.223 ms, d -0.097 ms, ok</title></circle>
+  <circle cx="572.714" cy="456.38" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-183909: release 8.321 ms, incumbent 8.293 ms, d 0.027 ms, ok</title></circle>
+  <circle cx="584.429" cy="461.48" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-185000: release 8.105 ms, incumbent 8.162 ms, d -0.058 ms, ok</title></circle>
+  <circle cx="596.143" cy="457.52" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-190056: release 8.214 ms, incumbent 8.206 ms, d 0.008 ms, ok</title></circle>
+  <circle cx="607.857" cy="457.94" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-191151: release 8.169 ms, incumbent 8.168 ms, d 0.001 ms, ok</title></circle>
+  <circle cx="619.571" cy="453.14" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-192249: release 8.313 ms, incumbent 8.232 ms, d 0.081 ms, ok</title></circle>
+  <circle cx="631.286" cy="462.86" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-193339: release 8.085 ms, incumbent 8.166 ms, d -0.081 ms, ok</title></circle>
+  <circle cx="643" cy="462.56" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-194431: release 8.116 ms, incumbent 8.192 ms, d -0.076 ms, ok</title></circle>
+  <circle cx="654.714" cy="458.6" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-195529: release 7.937 ms, incumbent 7.947 ms, d -0.01 ms, ok</title></circle>
+  <circle cx="666.429" cy="453.38" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-200626: release 8.221 ms, incumbent 8.144 ms, d 0.077 ms, ok</title></circle>
+  <circle cx="678.143" cy="461.42" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-201718: release 8.124 ms, incumbent 8.182 ms, d -0.057 ms, ok</title></circle>
+  <circle cx="689.857" cy="455.66" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>g20261018-202807: release 8.312 ms, incumbent 8.273 ms, d 0.039 ms, ok</title></circle>
+  <polygon points="701.571,340.62 705.901,348.12 697.241,348.12"
+      fill="#C44B32"><title>g20261018-063803: release 9.713 ms, incumbent 7.841 ms, d 1.873 ms, WORSE</title></polygon>
+  <polygon points="713.286,348.48 717.616,355.98 708.956,355.98"
+      fill="#C44B32"><title>g20261018-065958: release 9.721 ms, incumbent 7.979 ms, d 1.742 ms, WORSE</title></polygon>
+  <polygon points="725,371.34 729.33,378.84 720.67,378.84"
+      fill="#C44B32"><title>g20261018-072142: release 9.73 ms, incumbent 8.369 ms, d 1.361 ms, WORSE</title></polygon>
+  <polygon points="736.714,362.52 741.044,370.02 732.384,370.02"
+      fill="#C44B32"><title>g20261018-163914: release 9.624 ms, incumbent 8.116 ms, d 1.508 ms, WORSE</title></polygon>
+  <polygon points="748.429,363.06 752.759,370.56 744.099,370.56"
+      fill="#C44B32"><title>g20261018-170110: release 9.614 ms, incumbent 8.115 ms, d 1.499 ms, WORSE</title></polygon>
+  <polygon points="760.143,354.3 764.473,361.8 755.813,361.8"
+      fill="#C44B32"><title>g20261018-172301: release 9.606 ms, incumbent 7.962 ms, d 1.645 ms, WORSE</title></polygon>
+</g>
+<line x1="110" y1="488" x2="110" y2="338" fill="none" stroke="#10181C"/>
+<line x1="106" y1="488" x2="110" y2="488" fill="none" stroke="#10181C"/>
+<text x="104" y="492" font-size="11" fill="#163A44" text-anchor="end"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">-0.5</text>
+<line x1="106" y1="458" x2="110" y2="458" fill="none" stroke="#10181C"/>
+<text x="104" y="462" font-size="11" fill="#163A44" text-anchor="end"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+<line x1="106" y1="428" x2="110" y2="428" fill="none" stroke="#10181C"/>
+<text x="104" y="432" font-size="11" fill="#163A44" text-anchor="end"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0.5</text>
+<line x1="106" y1="398" x2="110" y2="398" fill="none" stroke="#10181C"/>
+<text x="104" y="402" font-size="11" fill="#163A44" text-anchor="end"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">1</text>
+<line x1="106" y1="368" x2="110" y2="368" fill="none" stroke="#10181C"/>
+<text x="104" y="372" font-size="11" fill="#163A44" text-anchor="end"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">1.5</text>
+<line x1="106" y1="338" x2="110" y2="338" fill="none" stroke="#10181C"/>
+<text x="104" y="342" font-size="11" fill="#163A44" text-anchor="end"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">2</text>
+<text x="68" y="413" font-size="12" fill="#163A44" text-anchor="middle" transform="rotate(-90 68 413)">ms</text>
+<line x1="695.714" y1="100" x2="695.714" y2="488" fill="none" stroke="#163A44" stroke-dasharray="2 3"/>
+<text x="402.857" y="506" font-size="11" fill="#163A44" text-anchor="middle">50 A/A gates</text>
+<text x="730.857" y="506" font-size="11" fill="#163A44" text-anchor="middle">slow control</text>
+<circle cx="33" cy="536" r="3" fill="#5FB3BF" stroke="#163A44" stroke-width="0.5"/>
+<text x="48" y="540" font-size="11" fill="#163A44">A/A gate, both arms 1.31.0</text>
+<polygon points="235.16,531 239.49,538.5 230.83,538.5" fill="#C44B32"/>
+<text x="250.16" y="540" font-size="11" fill="#163A44">slow control, WORSE</text>
+<line x1="385.2" y1="536" x2="403.2" y2="536" fill="none" stroke="#C44B32" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="409.2" y="540" font-size="11" fill="#163A44">max and tolerance</text>
+</svg>

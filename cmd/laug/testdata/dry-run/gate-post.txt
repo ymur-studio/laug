@@ -1,0 +1,6 @@
+# make: make --no-print-directory -n gate-post GATE=g20261018-092540
+# laug: laug gate post g20261018-092540
+# lease: absent
+# compare: line gate/post.sh
+[[ 'g20261018-092540' =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || { echo "laug · make gate-post GATE=<id>: name a gate run in "'gate/results/' >&2; exit 2; }
+GATE_POST='local' gate/post.sh 'gate/results/g20261018-092540'

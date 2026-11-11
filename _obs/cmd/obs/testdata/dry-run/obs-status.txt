@@ -1,0 +1,5 @@
+# make: make --no-print-directory -n obs-status
+# obs: bin/obs status
+# lease: absent
+# compare: line obs/obs.sh
+obs/obs.sh status

@@ -1,0 +1,161 @@
+{
+  "window": "5m",
+  "server_tag": "1.31.0",
+  "host": {
+    "type": "m8i.8xlarge",
+    "vcpu": 32,
+    "mem_gib": 123
+  },
+  "thresholds": [
+    {
+      "name": "workflow_task_schedule_to_start_p99_ms",
+      "query": "histogram_quantile(0.99, sum(rate(task_schedule_to_start_latency_bucket{task_type=\"Workflow\"}[1m])) by (le)) * 1000",
+      "max": 38,
+      "no_data": "exceeds"
+    },
+    {
+      "name": "activity_schedule_to_start_p99_ms",
+      "query": "histogram_quantile(0.99, sum(rate(task_schedule_to_start_latency_bucket{task_type=\"Activity\"}[1m])) by (le)) * 1000",
+      "max": 20,
+      "no_data": "not_judged",
+      "override": {
+        "file": "load/releases/1.32.yaml",
+        "reason": "1.32 runs activities eagerly (system.enableActivityEagerExecution is true by default, false in 1.31.0): an activity on the worker's own task queue starts in the reply to its workflow task, so matching never queues it and records no schedule-to-start for it",
+        "evidence": "cells/results/2026-10-14-dev-1.32.1.txt"
+      }
+    },
+    {
+      "name": "workflow_end_to_end_p95_ms",
+      "query": "histogram_quantile(0.95, sum(rate(workflow_schedule_to_close_latency_bucket[1m])) by (le)) * 1000",
+      "max": 84,
+      "no_data": "exceeds"
+    },
+    {
+      "name": "persistence_latency_p99_ms",
+      "query": "histogram_quantile(0.99, sum(rate(persistence_latency_bucket[1m])) by (le)) * 1000",
+      "max": 23,
+      "no_data": "exceeds"
+    },
+    {
+      "name": "service_error_rate",
+      "query": "(sum(rate(service_error_with_type{error_type!=\"serviceerror_Canceled\"}[1m])) or vector(0)) / sum(rate(service_requests[1m]))",
+      "max": 0.001,
+      "no_data": "exceeds"
+    },
+    {
+      "name": "frontend_request_p99_ms",
+      "query": "histogram_quantile(0.99, sum(rate(service_latency_bucket{service_name=\"frontend\", operation!~\"Poll.*\"}[1m])) by (le)) * 1000",
+      "max": 22,
+      "no_data": "exceeds"
+    },
+    {
+      "name": "workflow_task_schedule_to_start_over_20ms",
+      "query": "1 - sum(rate(task_schedule_to_start_latency_bucket{task_type=\"Workflow\", le=\"0.02\"}[1m])) / sum(rate(task_schedule_to_start_latency_bucket{task_type=\"Workflow\", le=\"+Inf\"}[1m]))",
+      "max": null,
+      "no_data": "exceeds"
+    },
+    {
+      "name": "activity_schedule_to_start_over_10ms",
+      "query": "1 - sum(rate(task_schedule_to_start_latency_bucket{task_type=\"Activity\", le=\"0.01\"}[1m])) / sum(rate(task_schedule_to_start_latency_bucket{task_type=\"Activity\", le=\"+Inf\"}[1m]))",
+      "max": null,
+      "no_data": "not_judged",
+      "override": {
+        "file": "load/releases/1.32.yaml",
+        "reason": "1.32 runs activities eagerly (system.enableActivityEagerExecution is true by default, false in 1.31.0): matching never queues them, so there is no activity schedule-to-start to take a share of",
+        "evidence": "cells/results/2026-10-14-dev-1.32.1.txt"
+      }
+    },
+    {
+      "name": "persistence_latency_over_10ms",
+      "query": "1 - sum(rate(persistence_latency_bucket{le=\"0.01\"}[1m])) / sum(rate(persistence_latency_bucket{le=\"+Inf\"}[1m]))",
+      "max": null,
+      "no_data": "exceeds"
+    },
+    {
+      "name": "frontend_request_over_10ms",
+      "query": "1 - sum(rate(service_latency_bucket{service_name=\"frontend\", operation!~\"Poll.*\", le=\"0.01\"}[1m])) / sum(rate(service_latency_bucket{service_name=\"frontend\", operation!~\"Poll.*\", le=\"+Inf\"}[1m]))",
+      "max": null,
+      "no_data": "exceeds"
+    },
+    {
+      "name": "workflow_end_to_end_over_50ms",
+      "query": "1 - sum(rate(workflow_schedule_to_close_latency_bucket{le=\"0.05\"}[1m])) / sum(rate(workflow_schedule_to_close_latency_bucket{le=\"+Inf\"}[1m]))",
+      "max": null,
+      "no_data": "exceeds"
+    }
+  ],
+  "compare": {
+    "release": "1.31.0",
+    "wave": [
+      "load:incumbent workflow_with_single_noop_activity 20/s 50 5m",
+      "load workflow_with_single_noop_activity 20/s 50 5m",
+      "fault:persistence-latency workflow_with_single_noop_activity"
+    ],
+    "gates": 20,
+    "evidence": "cells/results/2026-10-17-lab-arm-calibration.txt",
+    "rows": [
+      {
+        "name": "workflow_task_schedule_to_start_p99_ms",
+        "scale": "ms",
+        "floor": 0.1,
+        "tolerance": 1.02
+      },
+      {
+        "name": "persistence_latency_p99_ms",
+        "scale": "ms",
+        "floor": 0.1,
+        "tolerance": 0.35
+      },
+      {
+        "name": "activity_schedule_to_start_over_10ms",
+        "scale": "share",
+        "floor": 0.0005,
+        "tolerance": 0.0072
+      },
+      {
+        "name": "frontend_request_over_10ms",
+        "scale": "share",
+        "floor": 0.0005,
+        "tolerance": 0.0032
+      },
+      {
+        "name": "workflow_end_to_end_over_50ms",
+        "scale": "share",
+        "floor": 0.0005,
+        "tolerance": 0.0064
+      }
+    ]
+  },
+  "verdict": {
+    "block_if_any_exceeds": true,
+    "flaky_list": "load/flaky.txt"
+  },
+  "resolved": {
+    "base": "load/steady-state.yaml",
+    "base_server_tag": "1.31.0",
+    "server_tag": "1.32.1",
+    "release": "1.32",
+    "release_file": "load/releases/1.32.yaml",
+    "given": false,
+    "note": "load/steady-state.yaml, the base (1.31.0 baselines), with load/releases/1.32.yaml for server 1.32.1: 2 overrides",
+    "overrides": [
+      {
+        "name": "activity_schedule_to_start_p99_ms",
+        "no_data": "not_judged",
+        "reason": "1.32 runs activities eagerly (system.enableActivityEagerExecution is true by default, false in 1.31.0): an activity on the worker's own task queue starts in the reply to its workflow task, so matching never queues it and records no schedule-to-start for it",
+        "evidence": "cells/results/2026-10-14-dev-1.32.1.txt"
+      },
+      {
+        "name": "activity_schedule_to_start_over_10ms",
+        "no_data": "not_judged",
+        "reason": "1.32 runs activities eagerly (system.enableActivityEagerExecution is true by default, false in 1.31.0): matching never queues them, so there is no activity schedule-to-start to take a share of",
+        "evidence": "cells/results/2026-10-14-dev-1.32.1.txt"
+      }
+    ],
+    "host": {
+      "type": "m8i.8xlarge",
+      "vcpu": 32,
+      "mem_gib": 123
+    }
+  }
+}

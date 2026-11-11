@@ -1,0 +1,139 @@
+# Positive controls, read by faults/candidate.sh (laug candidate <name>). A candidate is one dynamic config
+# change a release could ship. It is set in the leased cell's own laug.yaml and judged by a plain verdict
+# (load/verdict.sh: the six thresholds, the floor of 0.95 x RATE x DURATION, Omes's exit and the sweep) over 5 m of
+# load at 20/s. Up to 2026-10-14, 4 of 29 rauns BLOCKed, all 4 on harness timing, and every raun ran server 1.31.0
+# unchanged, so no run has shown a verdict BLOCK a bad cell. A candidate that expects BLOCK is that test. One that
+# expects ADVANCE checks that the procedure (edit, wait, load, restore) does not BLOCK a harmless change by itself, or
+# probes what laug at 20/s cannot see.
+#
+# An unchanged 1.31.0 cell BLOCKs too, now and then: lab131-1, 1 of 6 runs on the first lab host, an m8i.2xlarge,
+# BLOCKed on the rows in slow_cell_rows below with error rate 0, Omes exit 0 and every workflow Completed
+# (cells/results/2026-10-14-lab-host-131.txt). So candidate.sh first runs a before window on the leased cell, 90 s of
+# load whose last 60 s must pass every threshold (INVALID otherwise, and no edit), and a BLOCK candidate passes only
+# when a row in its blocks_on is among the rows that decided the BLOCK. blocks_on may not name a row in slow_cell_rows.
+#
+# Fields:
+#   name        what laug candidate takes
+#   key         a key of cells/compose/dynamicconfig/laug.yaml; the script sets its first entry, constraints kept
+#   from        the value that entry holds in the template; the script refuses a cell whose copy holds another
+#   value       the value the candidate ships
+#   expect      ADVANCE or BLOCK; laug candidate exits 0 only when the verdict is this
+#   blocks_on   BLOCK only: rows of load/verdict.sh that the change is predicted to trip and a clean slow cell does not;
+#               a BLOCK that none of them decided is INVALID, not PASS
+#   reason      why, from server 1.31.0 source
+#   prediction  what the source predicts the verdict will see, where it is not obvious
+# Source: go.temporal.io/server v1.31.0, the cells' version (go mod download), read 2026-10-14; paths are from the
+# module root. On the lab host each candidate ran 3 times on 1.31.0, and benign and persistence-starved once on
+# 1.32.1: 14 of 14 PASS, 0 FAIL, 0 INVALID (faults/results/candidate-<name>-lab3-<n>.json,
+# docs/tables/records.jsonl#cells/results/2026-10-23-boot3.txt). A run checks the verdict only, not the source lines
+# a reason cites.
+
+# The rows lab131-1 BLOCKed on, an unchanged cell: workflow task schedule-to-start p99 16 306 ms, activity 9 200 ms,
+# end-to-end p95 34.7 s, 225 completed against a floor of 5 700.
+slow_cell_rows:
+  - workflow_task_schedule_to_start_p99_ms
+  - activity_schedule_to_start_p99_ms
+  - workflow_end_to_end_p95_ms
+  - workflows_completed
+
+candidates:
+  - name: benign
+    key: frontend.rps
+    from: 2400
+    value: 2000
+    expect: ADVANCE
+    reason: >-
+      A limit a 20/s load does not reach. frontend.rps is each frontend's request rate limit, default 2400
+      (common/dynamicconfig/constants.go:638-642), read through the per-instance quota calculator
+      (service/frontend/fx.go:443-450) by limiters that re-read it once a minute
+      (service/frontend/configs/quotas.go:339-350). A workflow of workflow_with_single_noop_activity makes about 7
+      frontend calls (start, 2 workflow task polls and completions, 1 activity poll and completion; inferred, not
+      counted), so 20/s is about 140 calls/s over the cell's 2 frontends. If this BLOCKs, the verdict caught the
+      procedure, not the change.
+
+  - name: persistence-starved
+    key: history.persistenceMaxQPS
+    from: 9000
+    value: 50
+    expect: BLOCK
+    blocks_on: [service_error_rate, omes_exit]
+    reason: >-
+      History held to 50 persistence calls/s. The key is history.persistenceMaxQPS, default 9000, per history host
+      (common/dynamicconfig/constants.go:1549-1553). History reads it as a function
+      (service/history/configs/config.go:440) for its persistence client's host limiter
+      (service/history/fx.go:290-326; common/persistence/client/fx.go:115-161, quotas.go:63-95) and, at 30%, for
+      its queue readers (service/history/transfer_queue_factory.go:73-80, queue_factory_base.go:217-234;
+      history.transferProcessorMaxPollHostRPS is 0, constants.go:1977-1979). The namespace and per-shard namespace
+      limiters read it too: history.persistenceNamespaceMaxQPS and history.persistencePerShardNamespaceMaxQPS default
+      to 0, and 0 falls back to the host value (constants.go:1559-1574; common/persistence/client/quotas.go:131-155,
+      164-193; service/history/configs/config.go:442-444). A call is checked against the per-shard limiter, then the
+      namespace one, then the host one (common/persistence/persistence_rate_limited_clients.go:1165-1173). Per shard,
+      namespace default's calls stay far under 50/s on 512 shards; for the namespace as a whole they do not, so a
+      call for namespace default is refused first by the namespace limiter, with ResourceExhausted "Namespace
+      Persistence Max QPS Reached." (scope NAMESPACE, persistence_rate_limited_clients.go:29-33), which
+      IsServiceClientTransientError does not count as transient (common/util.go:312-325). A call with no namespace
+      meets the host limiter, "System Persistence Max QPS Reached." (lines 24-28). It takes effect without a restart:
+      the file client swaps in the new values on its next poll of a file with a newer mtime
+      (common/dynamicconfig/file_based_client.go:134-147, 172, 195), and each limiter reads its rate again on the
+      first call after its 1-minute timer (common/quotas/dynamic_rate_limiter_impl.go:9, 68-76, 130-139). The
+      limiters exist because the value was above 0 at start (common/persistence/client/fx.go:119); the health-aware
+      limiter beside them is off by default and allows everything (common/dynamicconfig/shared_constants.go:82-83,
+      common/persistence/client/health_request_rate_limiter.go:71-77).
+    prediction: >-
+      BLOCK on service_error_rate, which counts ResourceExhausted (only Canceled is excluded), and on the
+      schedule-to-start and end-to-end thresholds, the floor and the sweep. Every role together ran 750.2
+      persistence requests/s under the same 20/s load, history 684.3 of them (the before window of a
+      persistence-latency raun on the lab host, faults/results/raun-lab1-pl-rates.json).
+      A start whose persistence call is refused should fail the iteration, so Omes's exit too (inferred).
+
+  - name: frontend-starved
+    key: frontend.rps
+    from: 2400
+    value: 5
+    expect: BLOCK
+    blocks_on: [service_error_rate]
+    reason: >-
+      Each frontend held to 5 requests/s, about 10 for the cell's 2 frontends against about 140 calls/s at 20/s (see
+      benign). The limiter answers a call over the limit with ResourceExhausted, and re-reads frontend.rps once a
+      minute (service/frontend/configs/quotas.go:339-350). The same edit at 10, the throttle-frontend fault, read
+      service_error_rate 0.042 and 0.049 over during windows of 76 and 69 s on microVM cells on the first lab host, an
+      m8i.2xlarge, 42 and 49 times the 0.001 max (faults/results/raun-fcthrottle1.json, raun-fvthrottle3.json,
+      2026-10-13), with 154 and 144 workflows completed. Of the candidates it is the one with a measured reason to
+      BLOCK.
+    prediction: >-
+      BLOCK on service_error_rate, and on schedule-to-start, end-to-end and the floor, as throttle-frontend's during
+      windows did at 10.
+
+  - name: read-partitions
+    key: matching.numTaskqueueReadPartitions
+    from: 4
+    value: 1
+    expect: ADVANCE
+    reason: >-
+      A reach probe: a change the matching client's README says is harmful, which the source says laug at 20/s does
+      not see. Read partitions cut to 1 while write partitions stay at 4, the order the README warns against: "when
+      reducing, write partitions has to be reduced first, and then the extra partitions have to be empty before
+      reducing read partitions" (client/matching/README.md:69-70). Both default to 4
+      (common/dynamicconfig/constants.go:1222-1231, shared_constants.go:9 and 48-50), and laug.yaml sets both to 4
+      for namespace default. Frontends route each poll by the read count and history routes each task by the write
+      count, both read on every call (client/matching/loadbalancer.go:68-69, 76-90, 94-113; client.go:184-206), so
+      the change takes effect on each role's next file poll, with no limiter in between. Listed as BLOCK until
+      2026-10-14, when a review of this prediction found it predicts ADVANCE.
+    prediction: >-
+      Tasks do not strand: they reach pollers by forwarding, and the verdict should ADVANCE. Writes stay uniform over
+      4 partitions (loadbalancer.go:88-89) and every poll goes to partition 0, the parent of partitions 1 to 3
+      (common/tqid/task_queue_id.go:324-332, with matching.forwarderMaxChildrenPerNode 20,
+      constants.go:1271-1275). Every non-root partition runs a task forwarder to its
+      parent for sync-match offers and its database backlog alike (service/matching/pri_matcher.go:136-140,
+      166-248; the priority matcher is the default, matching.useNewMatcher, constants.go:1414-1419), at most
+      matching.forwarderMaxRatePerSecond 10/s with 1 forward in flight (constants.go:1261-1270, pri_matcher.go:126).
+      A backlog task forwarded to the root waits there for a poller up to matching.backlogTaskForwardTimeout 60 s
+      (constants.go:1436-1440, pri_matcher.go:412-422). At 20/s, partitions 1 to 3 each get about 5 workflow tasks/s
+      and 5 activity tasks/s, half the cap (activity eager execution is off, constants.go:193-197; the Go SDK sends the
+      second workflow task to its sticky queue: internal/internal_task_pollers.go:860-861 in the SDK Omes f0de206 builds
+      with). Forwarding is not new: a healthy cell already forwarded about 5.1 sync-match misses/s (312.8 Canceled in a
+      61 s smoke at 63.5 workflows/s on the lab host, cells/results/2026-10-23-boot1.txt, A6), and with every poller
+      at the root a forwarded task is more likely to find one waiting. Above 40/s the 3 forwarders (30/s for 3/4 of
+      the tasks) saturate, backlog on partitions 1 to 3 grows, and the sweep should find workflows Running; laug does
+      not load a cell that hard. A BLOCK at 20/s, on schedule-to-start, would show the forwarders cost more than the
+      source says.

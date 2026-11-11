@@ -1,0 +1,6 @@
+# make: make --no-print-directory -n obs-down
+# obs: bin/obs down
+# lease: absent
+# file: bin/obs #!/bin/sh
+# compare: resolved obs/obs.sh $build=ok
+build=ok; make -s --no-print-directory pool/follow || build=failed; OBS_FOLLOW_BUILD=$build obs/obs.sh down

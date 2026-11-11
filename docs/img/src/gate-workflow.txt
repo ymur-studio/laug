@@ -1,0 +1,41 @@
+# Workflow Gate, simplified: internal/orchestrator/gate.go:18-45 (the order and each activity's id and timeout),
+# :237-276 (the steps on the workflow's context; judge, post, release and the stop path on a disconnected one),
+# :448-548 (the leases in plan order; the barrier loop, quiet-<i>, Sleep, quiet-<i>), :550-629 (the wave: Step wave,
+# an AwaitItem an item and the backstop timer on waveCtx, Gate's one WithCancel child, under one Selector; then
+# cancelWave cancels what still pends, in the order it was scheduled).
+name gate-workflow
+size 800 570
+title | Workflow Gate, simplified: each step an activity, each wait a timer, one Selector
+sub | internal/orchestrator/gate.go: gate/run.sh's order, every step gate/step.sh on this checkout's worker
+desc | Workflow Gate, top to bottom. Left: the steps before the wave, each an activity of type Step with an id of its
+desc | own, the leases one an item in plan order, and the barrier, whose quiet checks are activities with a timer, a
+desc | Sleep, between them. Right: the wave, on the wave's context, Gate's one WithCancel child: the wave step, an
+desc | AwaitItem an item, and the backstop timer, scheduled together, under one Selector that takes whichever answers
+desc | first. The wave's answer or the backstop ends it, and what still pends is canceled in the order it was
+desc | scheduled. Bottom: judge, post and release on a disconnected context; on an error, the backstop or a cancel, the
+desc | stop path instead. Each activity and timer is a command history records, so each must replay the same way.
+source internal/orchestrator/gate.go
+box first 24 76 348 56 | open, preflight, omes, laugd, harness | an activity each, of type Step
+box lease 24 160 348 56 | lease-<k>, an item at a time | in plan order; incumbent first
+box barrier 24 244 348 76 | barrier, then quiet-<i> | two quiet checks quiet_s apart, | a Sleep timer between them
+box wavetime 24 348 348 44 | wave-time
+arrow first lease
+arrow lease barrier
+arrow barrier wavetime
+region 404 70 388 334 | the wave: waveCtx, Gate's one WithCancel child
+box wave 420 100 116 84 | Step wave | every item | at once
+box await 540 100 116 84 | AwaitItem <k> | an activity | an item
+box backstop 660 100 116 84 | the backstop | a timer: t0 + | deadline_s + | kill_grace_s + | 120 s
+box selector 420 230 356 66 fill=deep | one Selector | takes the first answer; the | wave's or the backstop's ends it
+arrow wave selector
+arrow await selector
+arrow backstop selector
+path 372,370 388,370 388,142 420,142 head
+text 420 330 size=10 | Then cancelWave cancels what still pends,
+text 420 344 size=10 | in the order it was scheduled.
+region 16 420 776 132 at=24,544 | on a disconnected context: a cancel cannot cut these short
+box stoppath 32 436 360 66 fill=steam stroke=ember | the stop path, on an error or a cancel
+  | Stop the live step, stopped, | post stopped, release stopped
+box judge 420 436 356 66 fill=moss | judge, post, release | Step combine, post, release
+arrow selector judge | answered
+arrow selector stoppath colour=ember at=140,410 | error, backstop or cancel

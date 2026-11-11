@@ -1,0 +1,68 @@
+# One HealthCheck through a compose cell (cells/compose/cell.yml: two frontends behind nginx, one history, one
+# matching, Postgres for persistence and visibility) and the 24 events its history holds
+# (internal/health/testdata/healthcheck_history.json, the replay fixture: the same bytes as boot 1's recording on the
+# lab host, its extra/a9-healthcheck_history.json, by cmp; A9f found the 24 event types equal, the row below and
+# cells/results/2026-10-23-boot1.txt:294-296: the signal at 3, workflow tasks completed at 5, 11, 17 and 22, timers
+# started at 18 and 23). Only those seven events are marked; the strip names no other event's type.
+# Replaces the hand-drawn healthcheck-path.png.
+name healthcheck-path
+size 800 560
+title | The worker proposes; history writes every event
+sub | One HealthCheck through a cell on server 1.31.0: every call through the frontend, every event by history
+desc | Top: the client and the worker reach the cell only through its two frontends. The worker polls (1), gets
+desc | the events so far (2), runs the code until it blocks (3) and replies with commands (4). The frontend hands
+desc | the commands to history, the filled box, which owns the workflow's shard, turns commands into events, runs
+desc | timers and writes to Postgres; it tells matching a task is ready, and matching hands it to the next poll.
+desc | Bottom: HealthCheck's 24 events in order, each numbered. Filled: a workflow task completed, at 5, 11, 17
+desc | and 22, one burst of the worker's code each. Dashed outline: the signal at 3, stored before the code read
+desc | it, and the timers started at 18 and 23. The worker wrote none of the 24.
+source cells/compose/cell.yml
+source internal/health/health.go
+source internal/health/testdata/healthcheck_history.json
+row readings-2026-10-23-boot1 A9f/r1_event_types_equal
+box client 24 76 200 76 | client | Dial | ExecuteWorkflow | SignalWorkflow
+box worker 24 184 200 104 | worker | 1 polls for a task | 2 gets the events so far
+  | 3 runs code until it blocks | 4 replies with commands
+box frontend 268 76 140 212 | frontend ×2 | behind nginx; | every client | and worker call | comes in here
+box history 476 76 300 76 fill=deep | history | owns the workflow's shard; turns | commands into events; runs timers
+box matching 476 212 300 76 | matching | holds the task queue, | hands tasks to polls
+box pg 476 312 300 48 | Postgres | persistence and visibility
+arrow client frontend
+path 224,212 268,212 head at=242,207 | 1
+path 268,240 224,240 head at=242,235 | 2
+path 224,268 268,268 head at=242,263 | 4
+path 408,114 476,114 head at=414,108 | commands
+path 408,250 476,250 head at=420,244 | polls
+arrow history matching at=632,190 | task ready
+path 776,140 788,140 788,336 776,336 head
+text 24 330 size=11 | Commands are proposals: the worker never writes an event.
+text 24 345 size=11 | Steps 1 to 4 repeat once per workflow task.
+text 24 404 bold size=12 | HealthCheck's history: 24 events, every one written by history
+box e1 24 416 27 28 | 1
+box e2 55 416 27 28 | 2
+box e3 86 416 27 28 fill=steam stroke=ember dash=4,3 | 3
+box e4 117 416 27 28 | 4
+box e5 148 416 27 28 fill=deep | 5
+box e6 179 416 27 28 | 6
+box e7 210 416 27 28 | 7
+box e8 241 416 27 28 | 8
+box e9 272 416 27 28 | 9
+box e10 303 416 27 28 | 10
+box e11 334 416 27 28 fill=deep | 11
+box e12 365 416 27 28 | 12
+box e13 396 416 27 28 | 13
+box e14 427 416 27 28 | 14
+box e15 458 416 27 28 | 15
+box e16 489 416 27 28 | 16
+box e17 520 416 27 28 fill=deep | 17
+box e18 551 416 27 28 fill=steam stroke=ember dash=4,3 | 18
+box e19 582 416 27 28 | 19
+box e20 613 416 27 28 | 20
+box e21 644 416 27 28 | 21
+box e22 675 416 27 28 fill=deep | 22
+box e23 706 416 27 28 fill=steam stroke=ember dash=4,3 | 23
+box e24 737 416 27 28 | 24
+text 24 470 size=11 | Filled: a workflow task completed, at 5, 11, 17 and 22. Each ends one burst of the worker's code: 4 bursts.
+text 24 486 size=11 | Dashed outline: the signal at 3, stored before any code ran and read later; the timers started at 18 and 23.
+text 24 502 size=11 | Event 23 is AwaitWithTimeout's 30 s timer, started although the signal it waited for was already in.
+text 24 532 size=10 | Events from internal/health/testdata/healthcheck_history.json, boot 1's recording; only those LEARNING.md names are marked.

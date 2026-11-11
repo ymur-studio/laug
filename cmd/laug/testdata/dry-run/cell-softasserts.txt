@@ -1,0 +1,5 @@
+# make: make --no-print-directory -n softasserts
+# laug: laug cell softasserts
+# lease: absent
+# compare: line cells/softasserts.sh
+cells/softasserts.sh   laug

@@ -1,0 +1,323 @@
+{"id":"cells/results/2026-10-13-ec2.txt:3","text":"Host: an EC2 m8i.2xlarge (8 vCPU, 32 GiB, nested virtualization on, /dev/kvm present), Ubuntu 24.04,"}
+{"id":"cells/results/2026-10-13-ec2.txt:73","text":"kh3   5 s     1.9 s          6 s       e2e p95 775 ms, errors 0.43%, frontend p99 314 ms     BLOCK"}
+{"id":"cells/results/2026-10-13-ec2.txt:74","text":"The load log for kh3 shows the starts issued during the outage failing at their 10 s client deadline around"}
+{"id":"cells/results/2026-10-13-firecracker-faults.txt:2","text":"Host: the lab host, an m8i.2xlarge (8 vCPU, 32 GiB). Pool: sudo make fc-pool FC_KEY_USER=<user> (min 1, max 2)."}
+{"id":"cells/results/2026-10-13-firecracker-pool.txt:33","text":"a container on the host (prom/prometheus:v2.53.0, wget) -> 10.254.0.2:9090: blocked"}
+{"id":"cells/results/2026-10-14-lab-1.32.1.txt:2","text":"Host: the lab host, an m8i.2xlarge (8 vCPU, 32 GiB) (inference: that day's lab files name it,"}
+{"id":"cells/results/2026-10-14-lab-host-131.txt:2","text":"Host: the lab host, an m8i.2xlarge (8 vCPU, 32 GiB), Ubuntu 24.04, Docker Engine 29.1.3. Each run: make cell-up (a fresh"}
+{"id":"cells/results/2026-10-15-gate6-noise.txt:27","text":"workflow task s2s p99 (ms)       150    17.3 to 18.1      17.5 to 18.2      84.1"}
+{"id":"cells/results/2026-10-15-gate6-noise.txt:28","text":"activity s2s p99 (ms)            100    10.0              10.0              55.0"}
+{"id":"cells/results/2026-10-15-gate6-noise.txt:29","text":"end-to-end p95 (ms)              300    49.0 to 49.1      49.0 to 49.1      174.6"}
+{"id":"cells/results/2026-10-15-gate6-noise.txt:30","text":"persistence p99 (ms)              50    8.8 to 8.9        8.9 to 9.0        29.5"}
+{"id":"cells/results/2026-10-15-gate6-noise.txt:48","text":"  (cells/results/2026-10-14-gate-runs.txt). The thresholds were set on the dev host, so here they leave 3 to 8 times"}
+{"id":"cells/results/2026-10-15-lab-gate-5.txt:30","text":"g20261015-223429    BLOCK, regression      518.0 s     18.3 / 18.6 s"}
+{"id":"cells/results/2026-10-15-lab-gate-5.txt:31","text":"g20261015-224343    BLOCK, regression      528.7 s     17.0 / 19.1 s"}
+{"id":"cells/results/2026-10-15-lab-gate-5.txt:32","text":"g20261015-225308    BLOCK, regression      527.2 s     19.0 / 19.1 s"}
+{"id":"cells/results/2026-10-15-lab-gate-5.txt:38","text":"g20261015-230231    BLOCK, class harness, handed on at 164.1 s: make harness-test exited 2 in 162.1 s, 806 passed,"}
+{"id":"cells/results/2026-10-15-lab-gates-1-3.txt:2","text":"2026-10-15 12:47 to 13:20 UTC. Host: the lab host, an m8i.8xlarge (32 vCPU, 128 GiB; 123 GiB seen) on demand, nothing"}
+{"id":"cells/results/2026-10-15-lab-gates-4-5-noise.txt:2","text":"2026-10-15 13:34 to 15:31 UTC. Host: the lab host, an m8i.8xlarge (32 vCPU, 128 GiB) on demand, nothing else running."}
+{"id":"cells/results/2026-10-15-startup-race.txt:12","text":"  \"SaveClusterMetadata encountered version mismatch, expected 1 but got 2\" (error-type serviceerror.Unavailable)"}
+{"id":"cells/results/2026-10-15-startup-race.txt:19","text":"(updateCurrentClusterMetadataRecord). The record's rpcAddress comes from the role's FRONTEND_GRPC_PORT"}
+{"id":"cells/results/2026-10-15-startup-race.txt:20","text":"(common/config/config_template_embedded.yaml:320, \"127.0.0.1:\" + FRONTEND_GRPC_PORT): 7233 for history, matching and the"}
+{"id":"cells/results/2026-10-15-startup-race.txt:21","text":"worker, which do not set it, and 7237 and 7236 for the cell's two frontends. So both frontends find the record wrong"}
+{"id":"cells/results/2026-10-15-startup-race.txt:22","text":"and rewrite it, at the same moment, since both waited only for matching to have started. The SQL store compares the"}
+{"id":"cells/results/2026-10-15-startup-race.txt:23","text":"record's version (common/persistence/sql/cluster_metadata.go:95); the loser gets \"version mismatch\" as Unavailable,"}
+{"id":"cells/results/2026-10-15-startup-race.txt:24","text":"fails to build the server and exits. restart: on-failure brings it back, and the second start finds the record"}
+{"id":"cells/results/2026-10-15-startup-race.txt:25","text":"already right. History and matching never lost in these runs; only frontends did."}
+{"id":"cells/results/2026-10-15-startup-race.txt:29","text":"race01   10.4 s   61.9 s       temporal-frontend   5 / 0"}
+{"id":"cells/results/2026-10-15-startup-race.txt:30","text":"race02   10.6 s   119.5 s      temporal-frontend   5 / 0"}
+{"id":"cells/results/2026-10-15-startup-race.txt:31","text":"race03   10.6 s   3.9 s        none                2 / 0"}
+{"id":"cells/results/2026-10-15-startup-race.txt:32","text":"race04   10.5 s   3.9 s        none                0 / 0"}
+{"id":"cells/results/2026-10-15-startup-race.txt:33","text":"race05   10.7 s   3.9 s        none                0 / 2"}
+{"id":"cells/results/2026-10-15-startup-race.txt:34","text":"race06   10.5 s   3.9 s        none                2 / 0"}
+{"id":"cells/results/2026-10-15-startup-race.txt:35","text":"race07   10.5 s   46.7 s       temporal-frontend2  0 / 5"}
+{"id":"cells/results/2026-10-15-startup-race.txt:36","text":"race08   10.5 s   3.9 s        none                0 / 0"}
+{"id":"cells/results/2026-10-15-startup-race.txt:37","text":"race09   9.5 s    44.5 s       temporal-frontend   5 / 0"}
+{"id":"cells/results/2026-10-15-startup-race.txt:38","text":"race10   10.9 s   3.9 s        none                0 / 0"}
+{"id":"cells/results/2026-10-15-startup-race.txt:53","text":"fix01    13.8 to 15.5 s    1.7 s        0 of 20    0 in every role of every cell"}
+{"id":"cells/results/2026-10-15-startup-race.txt:54","text":"to fix20"}
+{"id":"cells/results/2026-10-15-startup-race.txt:55","text":"A cell now answers 15.5 to 17.2 s after its create began, against 14.4 s for a cell that won the race before and 54"}
+{"id":"cells/results/2026-10-16-gate6-runs.txt:39","text":"  bad1  known-bad (frontend.rps  g20261016-215819  BLOCK, regression    518.7    177.5       equal, identical   equal to g20261014-214949 (the dev host's"}
+{"id":"cells/results/2026-10-16-gate6-runs.txt:40","text":"        5, rebased: 9e330ad)                                                                                      known-bad run); 4 of 13 fields differ from a"}
+{"id":"cells/results/2026-10-16-gate6-runs.txt:41","text":"                                                                                                                  clean run"}
+{"id":"cells/results/2026-10-16-gate6-runs.txt:42","text":"  bad2  the same                 g20261016-220739  BLOCK, regression    531.3    177.4       equal, identical   equal to g20261014-214949"}
+{"id":"cells/results/2026-10-16-gate6-runs.txt:43","text":"  aa1   always-ADVANCE verdict   g20261016-221717  BLOCK, harness       169.8    167.3       equal, identical   equal to g20261014-221743 (the dev host's"}
+{"id":"cells/results/2026-10-17-arm-pilot.txt:302","text":"     steady            17.23    10.13    49.38      8.13    0   12.25 |  0.380   1.012    0.150  1.248   2.986 | 5 918"}
+{"id":"cells/results/2026-10-17-arm-pilot.txt:306","text":"     steady            16.92    12.46    49.49      8.19    0   11.50 |  0.353   1.294    0.157  1.153   3.361 | 5 948"}
+{"id":"cells/results/2026-10-17-arm-pilot.txt:530","text":"  [06:12:04]   a1 le on incumbent's cell (http://127.0.0.1:9090), wave +120 s: wt 0.001,0.002,0.005,0.01,0.02,0.05,0.1,0.2,0.5,1,2,5,10,20,50,100,200,500,1000,+Inf|act 0.001,0.002,0.005,0.01,0.02,0.05,0.1,0.2,0.5,1,2,5,10,20,50,100,200,500,1000,+Inf|pers 0.001,0.002,0.005,0.01,0.02,0.05,0.1,0.2,0.5,1,2,5,10,20,50,100,200,500,1000,+Inf|fe 0.001,0.002,0.005,0.01,0.02,0.05,0.1,0.2,0.5,1,2,5,10,20,50,100,200,500,1000,+Inf|e2e 0.001,0.002,0.005,0.01,0.02,0.05,0.1,0.2,0.5,1,2,5,10,20,50,100,200,500,1000,+Inf"}
+{"id":"cells/results/2026-10-17-lab-arm-calibration.txt:265","text":"  persistence_latency_p99_ms                 ms     20     -0.020      0.163     0.35     0.1  holds (first half 0.060, later half 0.163, 2 sd 0.150)"}
+{"id":"cells/results/2026-10-17-lab-arm-calibration.txt:390","text":"  5.35 h, with 80 min left before the batch's own last-step bound, 00:19 UTC."}
+{"id":"cells/results/2026-10-17-lab-arm-calibration.txt:542","text":"  g20261017-174403  c1                         make gate              Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-17-lab-arm-calibration.txt:543","text":"  g20261017-175458  c2                         make orchestrator-gate Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-17-lab-arm-calibration.txt:544","text":"  g20261017-180552  c3                         make gate              Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-17-lab-arm-calibration.txt:545","text":"  g20261017-181635  c4                         make orchestrator-gate Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-17-lab-arm-calibration.txt:546","text":"  g20261017-182733  c5                         make gate              Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-17-lab-arm-calibration.txt:547","text":"  g20261017-183826  c6                         make orchestrator-gate Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-17-lab-arm-calibration.txt:548","text":"  g20261017-184922  c7                         make gate              Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-17-lab-arm-calibration.txt:549","text":"  g20261017-190015  c8                         make orchestrator-gate Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-17-lab-arm-calibration.txt:550","text":"  g20261017-191109  c9                         make gate              Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-17-lab-arm-calibration.txt:551","text":"  g20261017-192202  c10                        make orchestrator-gate Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-17-lab-arm-calibration.txt:552","text":"  g20261017-193258  c11                        make gate              Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-17-lab-arm-calibration.txt:553","text":"  g20261017-194350  c12                        make orchestrator-gate Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-17-lab-arm-calibration.txt:554","text":"  g20261017-195440  c13                        make gate              Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-17-lab-arm-calibration.txt:555","text":"  g20261017-200534  c14                        make orchestrator-gate Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-17-lab-arm-calibration.txt:556","text":"  g20261017-201631  c15                        make gate              Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-17-lab-arm-calibration.txt:557","text":"  g20261017-202724  c16                        make orchestrator-gate Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-17-lab-arm-calibration.txt:558","text":"  g20261017-203815  c17                        make gate              Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-17-lab-arm-calibration.txt:559","text":"  g20261017-204906  c18                        make orchestrator-gate Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-17-lab-arm-calibration.txt:560","text":"  g20261017-205956  c19                        make gate              Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-17-lab-arm-calibration.txt:561","text":"  g20261017-211051  c20                        make orchestrator-gate Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-17-lab-arm-calibration.txt:562","text":"  g20261017-212148  k1, known-slow 1.0         make gate              Verdict: BLOCK, class regression, rules failed R4 R5"}
+{"id":"cells/results/2026-10-17-lab-arm-calibration.txt:563","text":"  g20261017-213812  k2, known-slow 0.5         make gate              Verdict: BLOCK, class regression, rules failed R4"}
+{"id":"cells/results/2026-10-17-lab-arm-calibration.txt:564","text":"  g20261017-215534  k3, known-slow 0.25        make gate              Verdict: BLOCK, class regression, rules failed R4 R5"}
+{"id":"cells/results/2026-10-17-lab-arm-calibration.txt:565","text":"  g20261017-221200  k4, known-slow 0.125       make gate              Verdict: BLOCK, class regression, rules failed R4"}
+{"id":"cells/results/2026-10-17-lab-arm-calibration.txt:567","text":"  g20261017-223357  bad, gate5-known-bad       make gate              Verdict: BLOCK, class regression, rules failed R4 R5"}
+{"id":"cells/results/2026-10-17-lab-arm-calibration.txt:569","text":"  g20261017-225512  aa, gate5-always-advance   make gate              Verdict: BLOCK, class harness, rules failed R1 R2 R3 R4 R5 R6"}
+{"id":"cells/results/2026-10-17-lab-arm-calibration.txt:584","text":"  gates, |m| at most 0.22 of its T/4 (persistence, 0.01965 of 0.0875 ms, from the gates' d), where the pilot's six"}
+{"id":"cells/results/2026-10-17-lab-kill-history.txt:2","text":"2026-10-17 21:31:50 to 22:12:00 UTC by the box's clock. Host: the lab host, an m8i.8xlarge (32 vCPU, 128 GiB) on"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:293","text":"  persistence p99, ms          0.35     +0.212 ok         +0.140 ok         +0.401 WORSE      +0.258 recorded"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:318","text":"  +0.140 and +0.401 ms, mean +0.253, 1.69% to 4.98% of the incumbent's reading (0.140 of 8.269 to 0.401 of 8.059)."}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:320","text":"  20 calibration gates and this part's 10) persistence d ran from -0.181 to +0.163 ms, mean -0.0186, and 1 of 30 read"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:321","text":"  0.140 or more. What it means, two ways, both inference:"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:322","text":"  1. A real release difference that the arm reads. The four A/B d take ranks 1, 2, 3 and 5 of the 34; if they came"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:323","text":"     from the A/A spread, four of 34 would sit in the top five with chance 5 in 46 376 (C(5,4)/C(34,4), a rank count"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:324","text":"     made after the fact), so the shift is unlikely to be noise. Its cause is not measured: 1.32.1's cells did less"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:325","text":"     work beside it (part 6), and a release that changes which persistence calls it makes moves their p99 with no"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:326","text":"     call slower."}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:327","text":"  2. A tolerance with no effect-size floor catching a shift under 5% of the reading. T is set from A/A noise, not"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:328","text":"     from an effect size: \"v1 has no effect-size floor\" (docs/DESIGN.md section 7.1). A shift of about 0.27 ms (the"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:329","text":"     A/B mean d against the A/A mean d) on the incumbent's 8.248 ms (its mean over the four A/B gates, 8.059 to 8.374"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:330","text":"     ms), 3.3%, with 1.32.1 at the same time faster end to end, BLOCKs one gate in three because it sits at T."}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:391","text":"- v1, the box's first gate since its boot: Omes built in 5.3 s, against 1.0 to 1.9 s in the 17 gates after it, and"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:403","text":"  g20261018-062701  v1, A/A                     make gate              Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:404","text":"  g20261018-063803  k1, known-slow 50 us        make gate              Verdict: BLOCK, class regression, rules failed R7"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:405","text":"  g20261018-064905  v2, A/A                     make orchestrator-gate Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:406","text":"  g20261018-065958  ks2, known-slow 50 us       make gate              Verdict: BLOCK, class regression, rules failed R7"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:407","text":"  g20261018-071048  v3, A/A                     make gate              Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:408","text":"  g20261018-072142  ks3, known-slow 50 us       make gate              Verdict: BLOCK, class regression, rules failed R4 R7"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:409","text":"  g20261018-073238  v4, A/A                     make orchestrator-gate Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:410","text":"  g20261018-074337  bad, gate5-known-bad        make gate              Verdict: BLOCK, class regression, rules failed R4 R5 R7"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:411","text":"  g20261018-075357  v5, A/A                     make gate              Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:412","text":"  g20261018-080445  pass, arm-always-pass       make gate              Verdict: BLOCK, class harness, rules failed R1 R2 R3 R4 R5 R6"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:413","text":"  g20261018-080919  v6, A/A                     make orchestrator-gate Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:414","text":"  g20261018-082010  v7, A/A                     make gate              Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:415","text":"  g20261018-083103  v8, A/A                     make orchestrator-gate Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:416","text":"  g20261018-084154  v9, A/A                     make gate              Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:417","text":"  g20261018-085245  v10, A/A                    make orchestrator-gate Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:443","text":"- Anything of another host, wave, rate or release pair: one host, one boot, one session of 3.25 h."}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:457","text":"  [06:21:37] host: 32 vCPU, 123 GiB, uptime 51.35 s; on 7700 0, on 7400 0, laug-* projects up 0, workers 0, server 0, laugd 0, cellstat 0"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:592","text":"blocks of the volume or image layers read cold after a stop and a start). Proposed from it, not decided: every later"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:593","text":"batch opens with one warm-up gate, not counted, before its first counted gate, as docs/DESIGN.md section 9 already"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:650","text":"- The count: 20 of 20 ADVANCE, 0 R7 BLOCKs, 0 R1 to R6 BLOCKs, 10 through make gate and 10 through make"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:652","text":"  after v20, \"counted: 20 of 20 in this session, 30 of 30 in all (10 through make gate, 10 through make"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:653","text":"  orchestrator-gate); R7 BLOCKs 0\", and its \"validation\" line, \"validation: 20 of 20 in this session, 30 of 30 in"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:654","text":"  all; reruns 0 of 3\", 20:39:03). No restart. Expected (above): 0 R7 BLOCKs: 30 of 30. Held."}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:655","text":"- The bound: 0 R7 BLOCKs in 30 gates bounds R7's false-BLOCK rate at 1 - 0.05^(1/30) = 1 - 0.90497 = 0.09503, 9.5%"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:656","text":"  (95%), docs/DESIGN.md's number (section 7.1, Counts and bounds), on this host type and wave."}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:705","text":"  run  gate id           verdict, class     rules failed  release item                     incumbent  pl"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:706","text":"  ks1  g20261018-163914  BLOCK, regression  R7            ADVANCE, every max held          ADVANCE    ADVANCE"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:707","text":"  ks2  g20261018-170110  BLOCK, regression  R7            ADVANCE, every max held          ADVANCE    ADVANCE"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:708","text":"  ks3  g20261018-172301  BLOCK, regression  R7            ADVANCE, every max held          ADVANCE    ADVANCE"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:709","text":"  Handed on at 591.6, 590.5 and 590.6 s; harness 216.2, 215.9 and 215.7 s, 1105 passed in each; host_quiet true,"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:710","text":"  rerun false; the windows started 1, 1 and 0 s apart, 301 or 302 s long."}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:712","text":"  (k1, ks2, ks3 of Part 1, part 3):"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:713","text":"  row                              T        ks1               ks2               ks3               at 50 us, 3 gates"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:714","text":"  workflow task s2s p99, ms        1.02     +3.109 WORSE      +3.126 WORSE      +2.524 WORSE      +1.932 to +3.703"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:715","text":"  persistence p99, ms              0.35     +1.508 WORSE      +1.499 WORSE      +1.645 WORSE      +1.361 to +1.873"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:716","text":"  activity s2s past 10 ms          0.0072   +0.001909 ok      +0.003745 ok      +0.003053 ok      +0.003797 to +0.007522"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:817","text":"  to 16:20:37 (26.1 min, 2 gates), the relaunch 16:23:13 to 20:39:04 (4.26 h, 23 gates), against the expectations'"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:818","text":"  4.1 h for 20 gates (above)."}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:866","text":"  g20261018-162821  v1, A/A                      make gate              Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:867","text":"  g20261018-163914  ks1, known-slow 25 us        make gate              Verdict: BLOCK, class regression, rules failed R7"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:868","text":"  g20261018-165015  v2, A/A                      make orchestrator-gate Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:869","text":"  g20261018-170110  ks2, known-slow 25 us        make gate              Verdict: BLOCK, class regression, rules failed R7"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:870","text":"  g20261018-171208  v3, A/A                      make gate              Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:871","text":"  g20261018-172301  ks3, known-slow 25 us        make gate              Verdict: BLOCK, class regression, rules failed R7"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:872","text":"  g20261018-173348  v4, A/A                      make orchestrator-gate Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:873","text":"  g20261018-174432  v5, A/A                      make gate              Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:874","text":"  g20261018-175523  v6, A/A                      make orchestrator-gate Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:875","text":"  g20261018-180618  v7, A/A                      make gate              Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:876","text":"  g20261018-181716  v8, A/A                      make orchestrator-gate Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:877","text":"  g20261018-182815  v9, A/A                      make gate              Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:878","text":"  g20261018-183909  v10, A/A                     make orchestrator-gate Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:879","text":"  g20261018-185000  v11, A/A                     make gate              Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:880","text":"  g20261018-190056  v12, A/A                     make orchestrator-gate Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:881","text":"  g20261018-191151  v13, A/A                     make gate              Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:882","text":"  g20261018-192249  v14, A/A                     make orchestrator-gate Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:883","text":"  g20261018-193339  v15, A/A                     make gate              Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:884","text":"  g20261018-194431  v16, A/A                     make orchestrator-gate Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:885","text":"  g20261018-195529  v17, A/A                     make gate              Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:886","text":"  g20261018-200626  v18, A/A                     make orchestrator-gate Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:887","text":"  g20261018-201718  v19, A/A                     make gate              Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:888","text":"  g20261018-202807  v20, A/A                     make orchestrator-gate Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-18-lab-arm-validation.txt:910","text":"  Every d of the 30 sat at most 0.67 of its T."}
+{"id":"cells/results/2026-10-18-lab-obs.txt:268","text":"held, 1.195% and 409.6 MiB (the second launch's part b: 1.038% and 407.2 MiB)."}
+{"id":"cells/results/2026-10-18-lab-obs.txt:281","text":"ORCH_OTLP=127.0.0.1:7751, and one viewer from t0 to done (each run's stamps in the batch's log; d1's stack had been"}
+{"id":"cells/results/2026-10-18-lab-obs.txt:282","text":"down since 22:52:21, 713 s before its t0, and d3's, d5's and d7's 61 s). The viewer is the batch's own while make"}
+{"id":"cells/results/2026-10-18-lab-obs.txt:283","text":"obs-watch is a stub: every 10 s one pass of 40 posts, the gate run board's open rows' panels and its annotations,"}
+{"id":"cells/results/2026-10-18-lab-obs.txt:309","text":"- Each up run: \"3 of 3 federated\", and make obs-find found the gate's records \"live, ADVANCE, class none, 7 rules, 22"}
+{"id":"cells/results/2026-10-18-lab-obs.txt:310","text":"  step lines, 3 exits, incumbent's 14 readings, steady's 14 readings, pl's 50 window readings and 4 marks equal to its"}
+{"id":"cells/results/2026-10-18-lab-obs.txt:311","text":"  files\", and 1 trace. The traces held 38, 41, 41 and 38 spans (g7: 41). By name they were not counted here. On the"}
+{"id":"cells/results/2026-10-18-lab-obs.txt:327","text":"- The rule's lines, as part h printed them (01:08:49):"}
+{"id":"cells/results/2026-10-18-lab-obs.txt:328","text":"    R-a {\"runs\":9,\"advance_quiet\":9,\"poll_null\":0,\"barrier_first\":9,\"not_held\":[]}; R-b d2 true d4 true d6 true d8"}
+{"id":"cells/results/2026-10-18-lab-obs.txt:329","text":"    true g7 true; R-c up d2 true d4 true d6 true d8 true g7 true, down d1 true d3 true d5 true d7 true; R-d d2 true d4"}
+{"id":"cells/results/2026-10-18-lab-obs.txt:330","text":"    true d6 true d8 true g7 true; R-e d2 false d4 false d6 false d8 false"}
+{"id":"cells/results/2026-10-18-lab-obs.txt:331","text":"  R-a: 9 of 9 counted runs ADVANCE with host_quiet true, 0 poll lines with busy or projects null, the barrier quiet on"}
+{"id":"cells/results/2026-10-18-lab-obs.txt:332","text":"  its first pass in 9 of 9. R-b and R-d hold in 5 of 5 up runs and R-c in 9 of 9, 5 up and 4 down; no down run fell"}
+{"id":"cells/results/2026-10-18-lab-obs.txt:333","text":"  outside R-c, so the batch is not void. R-e, over each up run's wave but g7's: each cell's prometheus container under"}
+{"id":"cells/results/2026-10-18-lab-obs.txt:334","text":"  0.05 cores held, 0.014 to 0.015 at most; the five parts summed under 1.5 GiB RSS held, 553.6 to 669.0 MiB; under 5%"}
+{"id":"cells/results/2026-10-18-lab-obs.txt:335","text":"  of one CPU did not hold, 6.772 to 7.136%, in 4 of 4."}
+{"id":"cells/results/2026-10-18-lab-obs.txt:338","text":"    prometheus, % of one CPU / MiB at most         -                             4.328 to 4.744 / 224.6 to 403.4"}
+{"id":"cells/results/2026-10-18-lab-obs.txt:339","text":"    grafana, with the viewer                       -                             1.375 to 1.403 / 166.2 to 169.9"}
+{"id":"cells/results/2026-10-18-lab-obs.txt:368","text":"- At 00:49:42, 150 s into the load: \"S 4797 series federated from cell 543e76f9 (the store's series with its cell"}
+{"id":"cells/results/2026-10-18-lab-obs.txt:369","text":"  label, cellstat's and follow's own jobs aside; with them 4984), 78 families; samples a second into the store"}
+{"id":"cells/results/2026-10-18-lab-obs.txt:370","text":"  4968.477777777777; the cell's head 18953 series, the store's 88826\" (e.json holds S and the rate). The store's top"}
+{"id":"cells/results/2026-10-18-lab-obs.txt:453","text":"     pl's after window's six) equal their files to 2.0e-14 relative or closer (the five parity JSONs), so the steady"}
+{"id":"cells/results/2026-10-18-lab-obs.txt:490","text":"  g20261018-225322  w0, warm-up, the stack down  make orchestrator-gate  Verdict: ADVANCE, class null, rules failed none"}
+{"id":"cells/results/2026-10-18-lab-obs.txt:509","text":"- The store keeps a cell's readings: in 5 gates the store's 18 readings equal the files' to 2e-14, and a hand-leased"}
+{"id":"cells/results/2026-10-18-lab-obs.txt:510","text":"  cell was in the store 6 s after its lease with S 4797, its six within 0.047% of its verdict's."}
+{"id":"cells/results/2026-10-23-boot1/extra/a4-health-1.txt:15","text":"health-1792737516131  completed 1111 ms  visible 8 ms  echo=laug sum=42 signal=go"}
+{"id":"cells/results/2026-10-23-boot1/extra/a4-health-2.txt:14","text":"health-1792737562093  completed 1126 ms  visible 9 ms  echo=laug sum=42 signal=go"}
+{"id":"cells/results/2026-10-23-boot1/extra/a4-health-3.txt:15","text":"health-1792737604989  completed 1140 ms  visible 8 ms  echo=laug sum=42 signal=go"}
+{"id":"cells/results/2026-10-23-boot1/steps/D1b.txt:10","text":"--- exit 0 in 301.5 s"}
+{"id":"cells/results/2026-10-23-boot1/steps/D1b.txt:3","text":"2026-10-23T06:54:05.708Z\tINFO\tharness/worker.go:110\tGo worker will run on task queue omes-lab1-v1310-1"}
+{"id":"cells/results/2026-10-23-boot1/steps/D1b.txt:9","text":"window 2026-10-23T06:54:04Z .. 2026-10-23T06:59:05Z recorded in <clone>/load/results/lab1-v1310-1.json; Omes exit 0, 0 failed iteration(s) in its log"}
+{"id":"cells/results/2026-10-23-boot1/steps/D1c.txt:10","text":"workflow_task_schedule_to_start_p99_ms          19.104           38  ok"}
+{"id":"cells/results/2026-10-23-boot1/steps/D1c.txt:11","text":"activity_schedule_to_start_p99_ms                9.993           20  ok"}
+{"id":"cells/results/2026-10-23-boot1/steps/D1c.txt:12","text":"workflow_end_to_end_p95_ms                      49.898           84  ok"}
+{"id":"cells/results/2026-10-23-boot1/steps/D1c.txt:13","text":"persistence_latency_p99_ms                       9.235           23  ok"}
+{"id":"cells/results/2026-10-23-boot1/steps/D1c.txt:14","text":"service_error_rate                               0.000        0.001  ok"}
+{"id":"cells/results/2026-10-23-boot1/steps/D1c.txt:15","text":"frontend_request_p99_ms                         10.902           22  ok"}
+{"id":"cells/results/2026-10-23-boot1/steps/D1c.txt:16","text":"workflow_task_schedule_to_start_over_20ms      0.00194         null  no threshold yet"}
+{"id":"cells/results/2026-10-23-boot1/steps/D1c.txt:17","text":"activity_schedule_to_start_over_10ms           0.00878         null  no threshold yet"}
+{"id":"cells/results/2026-10-23-boot1/steps/D1c.txt:18","text":"persistence_latency_over_10ms                  0.00067         null  no threshold yet"}
+{"id":"cells/results/2026-10-23-boot1/steps/D1c.txt:19","text":"frontend_request_over_10ms                     0.01091         null  no threshold yet"}
+{"id":"cells/results/2026-10-23-boot1/steps/D1c.txt:20","text":"workflow_end_to_end_over_50ms                  0.04677         null  no threshold yet"}
+{"id":"cells/results/2026-10-23-boot1/steps/D1c.txt:21","text":""}
+{"id":"cells/results/2026-10-23-boot1/steps/D1c.txt:22","text":"lost work                                        value        limit  result"}
+{"id":"cells/results/2026-10-23-boot1/steps/D1c.txt:23","text":"workflows_completed                               5906      >= 5700  ok (0.95 x 20/s x 300 s)"}
+{"id":"cells/results/2026-10-23-boot1/steps/D1c.txt:24","text":"omes_exit                                            0            0  ok"}
+{"id":"cells/results/2026-10-23-boot1/steps/D1c.txt:25","text":"iterations_failed                                    0               not judged apart from omes_exit"}
+{"id":"cells/results/2026-10-23-boot1/steps/D1c.txt:26","text":"workflows_not_completed                              0            0  ok (5385 started before 2026-10-23T06:58:35Z, all Completed)"}
+{"id":"cells/results/2026-10-23-boot1/steps/D1c.txt:27","text":""}
+{"id":"cells/results/2026-10-23-boot1/steps/D1c.txt:28","text":"VERDICT: ADVANCE"}
+{"id":"cells/results/2026-10-23-boot1/steps/D1c.txt:29","text":"--- exit 0 in 0.4 s"}
+{"id":"cells/results/2026-10-23-boot1/steps/D1c.txt:9","text":"metric                                           value          max  result"}
+{"id":"cells/results/2026-10-23-boot1/steps/D1d.txt:37","text":"--- exit 0 in 2.3 s"}
+{"id":"cells/results/2026-10-23-boot2/steps/R-persistence-latency-1.txt:10","text":"failed      before 0, during 540, drain 6, after 0, late 0, unplaced 0 iteration(s), by window"}
+{"id":"cells/results/2026-10-23-boot2/steps/R-persistence-latency-1.txt:11","text":"sweep       Completed 4092 started before 2026-10-23T16:28:52Z"}
+{"id":"cells/results/2026-10-23-boot2/steps/R-persistence-latency-1.txt:12","text":"softassert  before 0, during 0, drain 0, after 0, by window (recorded, not judged)"}
+{"id":"cells/results/2026-10-23-boot2/steps/R-persistence-latency-1.txt:13","text":"ADVANCE"}
+{"id":"cells/results/2026-10-23-boot2/steps/R-persistence-latency-1.txt:16","text":"[raun-lab2-persistence-latency-1] 16:23:26Z thresholds: load/steady-state.yaml, the base (1.31.0 baselines), unchanged: no load/releases/1.31.yaml for server 1.31.0"}
+{"id":"cells/results/2026-10-23-boot2/steps/R-persistence-latency-1.txt:17","text":"[raun-lab2-persistence-latency-1] 16:23:26Z fault persistence-latency on cell 3cbccad6, server 1.31.0: signal persistence_latency_p99_ms > 23; steady 90s hold 120s budget 60s after 90s; load 480s at 20/s"}
+{"id":"cells/results/2026-10-23-boot2/steps/R-persistence-latency-1.txt:18","text":"[raun-lab2-persistence-latency-1] 16:24:57Z before: {\"workflow_task_schedule_to_start_p99_ms\":18.86075949367091,\"activity_schedule_to_start_p99_ms\":9.984008528784651,\"workflow_end_to_end_p95_ms\":49.409005628517825,\"persistence_latency_p99_ms\":9.065897275078294,\"service_error_rate\":0,\"frontend_request_p99_ms\":10.578772558240846,\"workflow_task_schedule_to_start_over_20ms\":0.001818181818181941,\"activity_schedule_to_start_over_10ms\":0.007272727272727431,\"persistence_latency_over_10ms\":0.0008479685806302983,\"frontend_request_over_10ms\":0.010570969231288752,\"workflow_end_to_end_over_50ms\":0.030909090909090997,\"workflows_completed\":1200,\"counter_resets\":0}"}
+{"id":"cells/results/2026-10-23-boot2/steps/R-persistence-latency-1.txt:19","text":"[raun-lab2-persistence-latency-1] 16:24:57Z injected"}
+{"id":"cells/results/2026-10-23-boot2/steps/R-persistence-latency-1.txt:4","text":"laug · fault persistence-latency on raun raun-lab2-persistence-latency-1"}
+{"id":"cells/results/2026-10-23-boot2/steps/R-persistence-latency-1.txt:5","text":"server      1.31.0"}
+{"id":"cells/results/2026-10-23-boot2/steps/R-persistence-latency-1.txt:6","text":"thresholds  load/steady-state.yaml, the base (1.31.0 baselines), unchanged: no load/releases/1.31.yaml for server 1.31.0"}
+{"id":"cells/results/2026-10-23-boot2/steps/R-persistence-latency-1.txt:7","text":"pool        no busy cell at laugd before the load; busy cells by window, most at once: before 0, during 0, drain 0, after 0"}
+{"id":"cells/results/2026-10-23-boot2/steps/R-persistence-latency-1.txt:8","text":"landed      10 s after inject; signal peak 9344.545454545456 (max 23)"}
+{"id":"cells/results/2026-10-23-boot2/steps/R-persistence-latency-1.txt:9","text":"recovered   25 s after removal (budget 60 s); the removal ran 0 s after the hold ended"}
+{"id":"cells/results/2026-10-23-boot3.txt:177","text":"Stands beside: the dev host's three, workflow task s2s p99 49.0 to 49.1 ms, e2e p95 173 to 175 ms, 5 925 to 5 934"}
+{"id":"cells/results/2026-10-23-boot3.txt:178","text":"completed (cells/results/2026-10-14-controls-and-shards.txt:9): 18.94 to 19.18 ms, 49.65 to 57.06 ms, 5940 to 5962"}
+{"id":"cells/results/2026-10-23-boot3.txt:222","text":"Stands beside: the dev host's three, 48.8 to 49.1 ms, 173 to 176 ms, 5 899 to 5 936 completed"}
+{"id":"cells/results/2026-10-23-boot3.txt:223","text":"(cells/results/2026-10-14-controls-and-shards.txt:11): 19.08 to 19.19 ms, 49.55 to 49.91 ms, 5923 to 5962 here."}
+{"id":"cells/results/2026-10-23-boot3.txt:3","text":"started at 19:09:57. Host: the lab host, an m8i.8xlarge (32 vCPU, 128 GiB; bin/laug host type read 32 vCPU and 123"}
+{"id":"cells/results/2026-10-23-fresh-clone.txt:21","text":"  make test                  01:16:34          0     345.2   test-go 88.7, harness-test 255.5, lint 1.0"}
+{"id":"cells/results/2026-10-24-boot4/steps/F12.txt:94","text":"  negative control: numshards_gauge left the exposition at 10:37:44.7 UTC; kill-history read 512 missing on the cell at +3.0 s; the store read 0, recovered, at each of its 297 reads to +296.7 s, and first read 512 at +297.7 s, when the 5 m lookback let the last sample go"}
+{"id":"cells/results/2026-10-27-boot6/steps/S5b.txt:1368","text":"1187 passed, 0 failed"}
+{"id":"cells/results/2026-10-27-boot6/steps/S5b.txt:1370","text":"time=2026-10-27T04:09:01.689Z level=WARN msg=\"--yaml-fix-merge-anchor-to-spec is false; causing merge anchors to override the existing values which isn't to the yaml spec. This flag will default to true in late 2025. See https://mikefarah.gitbook.io/yq/operators/traverse-read for more details.\""}
+{"id":"cells/results/2026-10-27-boot6/steps/S5b.txt:473","text":"  ok    every catalog mechanism is a verb faults/run.sh knows"}
+{"id":"cells/results/2026-10-29-boot10.txt:3","text":"started at 08:39:19 and ran 352 min 20 s (batch-log.txt:6, :733; computed). Host: the lab host, an m8i.8xlarge (32 vCPU,"}
+{"id":"cells/results/2026-10-29-boot10.txt:351","text":"  C4    10  ADVANCE 10  49.23 (49.10 to 49.30)   0.0249 (0.0207 to 0.0274)  9.99 (9.98 to 10.00)     0.0080"}
+{"id":"cells/results/2026-10-29-boot10.txt:352","text":"  F     10  ADVANCE 10  76.64 (62.53 to 79.96)   0.0975 (0.0647 to 0.1096)  17.48 (16.34 to 17.73)   0.0288"}
+{"id":"cells/results/2026-10-29-boot10.txt:493","text":"After round 6: DS-K, J-K's command, exit 0 in 86.1 s, unjailed, Unsafe, frozen, Sync, taken 12:42:51Z"}
+{"id":"cells/results/2026-10-29-boot10.txt:494","text":"(batch-log.txt:535-537; extra/fc-snapshot-DS.json); a jailed pool, env FC_JAIL=1 FC_KEY_USER=<the box user>"}
+{"id":"cells/results/2026-10-29-boot10.txt:495","text":"FC_CACHE_TYPE=Unsafe FC_IO_ENGINE=Sync bin/laug pool serve -backend firecracker -min 0 -max 1 (batch-log.txt:538-539)."}
+{"id":"cells/results/2026-10-29-boot10.txt:496","text":"Three times: a lease, a create on block 0; 120 s from the lease's return with nothing run; bin/laug fault disk-slow"}
+{"id":"cells/results/2026-10-29-boot10.txt:517","text":"  the drive while fully limited, a second      100.1 (6008 in 60)  100.0 (5998)        100.0 (6000)        c, line 6"}
+{"id":"cells/results/2026-10-29-boot10.txt:518","text":"  the drive in the minute before the inject    406.9               415.6               416.9               c, line 4"}
+{"id":"cells/results/2026-10-29-boot10.txt:643","text":"boot 9's rate, 3 of 3 steady by chance is (14/52)^3 = 0.0195; pooled as one urn of 55, 0.026 (computed). On frontend p99"}
+{"id":"cells/results/2026-10-29-boot11.txt:216","text":"  X2    Fx2-60  lab11-Fx2-60-load  72ea07e8  4     true    3605.8 3666.9   3634.4265  -         22:05:21, 22:11:34"}
+{"id":"cells/results/2026-10-29-boot11.txt:239","text":"  Fx2-60  86.00  0.1506  0.0342  BLOCK   2.58 (1.37)   C-6   50.00  0.0499 C4-8   49.35  0.0288 +36.01; +0.1006; +0.0241"}
+{"id":"cells/results/2026-10-29-boot11.txt:3","text":"batch itself started at 19:37:14 and ran 387 min 23 s (batch-log.txt:6, :779; computed). Host: the lab host, an"}
+{"id":"cells/results/2026-10-29-boot11.txt:399","text":"  F           5   ADVANCE 5          74.93 (69.62 to 79.86)      0.0909 (0.0765 to 0.1116)  0.0298 (0.0258 to 0.0321) 4"}
+{"id":"cells/results/2026-10-29-boot11.txt:4","text":"m8i.8xlarge (32 vCPU, 128 GiB), nested: /dev/kvm present, grep -cw vmx /proc/cpuinfo 64, a count of lines on a 32 vCPU"}
+{"id":"cells/results/2026-10-29-boot11.txt:400","text":"  F8          10  ADVANCE 10         49.45 (49.31 to 49.70)      0.0322 (0.0276 to 0.0404)  0.0106 (0.0079 to 0.0118) 8"}
+{"id":"cells/results/2026-10-29-boot11.txt:402","text":"  C4          10  ADVANCE 10         49.25 (49.15 to 49.35)      0.0258 (0.0222 to 0.0288)  0.0082 (0.0065 to 0.0088) 4"}
+{"id":"cells/results/2026-10-29-boot11.txt:466","text":"jumps, F8's creates 2.57 to 2.71 s, F8 - F paired mean -24.87 ms over 9 rounds, 1 left out; Fx jump 153.9358 to"}
+{"id":"cells/results/2026-10-29-boot11.txt:467","text":"3634.8342 s, create 1.43 to 2.90 s; gomaxprocs C 32, C4 4, Fx 4, F8 8, F 4; age rule 1; samplers 24; harness failures"}
+{"id":"cells/results/2026-10-29-boot11.txt:500","text":"With the clock set before the cell runs, a snapshot's age from 2 to 60 min left no trend in a 5 min load that two frozen"}
+{"id":"cells/results/2026-10-29-boot11.txt:542","text":"Gain: F8 - F paired -24.87 ms end-to-end p95 (t [-27.77, -21.98]; load level [-30.93, -18.82]), -0.0585 of the share"}
+{"id":"cells/results/2026-10-29-boot11.txt:543","text":"(load level [-0.0791, -0.0379]); frontend p99 -6.62 ms, activity -5.60, workflow task -3.11, persistence -1.98, every t"}
+{"id":"cells/results/2026-10-29-boot11.txt:544","text":"interval clear of 0 (F8). On medians F8 0.0322 of the share against F's 0.0909 and C4's 0.0258: F8 closes 0.90 of F -"}
+{"id":"cells/results/2026-10-29-boot11.txt:550","text":"Cost on this host: host busy CPUs under load 6.17 to 6.23 against 3.94 to 3.96, +2.24 a loaded cell at the medians"}
+{"id":"cells/results/2026-10-29-boot7.txt:3","text":"itself started at 23:54:16. Host: the lab host, an m8i.8xlarge (32 vCPU, 128 GiB), nested: /dev/kvm present, grep -cw"}
+{"id":"cells/results/2026-10-29-boot8.txt:125","text":"== R11c: runbooks 2, 3 and 6 under laug runbook check -cell, 02:07:15 to 02:45:53"}
+{"id":"cells/results/2026-10-29-boot8.txt:126","text":"Before each call a quiet check: laug projects 0 and cells left 0 after 0.1 s, nothing swept (batch-log.txt:60-61, :67,"}
+{"id":"cells/results/2026-10-29-boot8.txt:127","text":":71; ports_quiet to ports_quiet_6); each page's ready check exit 0 (steps/R11c-2-pre.txt:2-5, the same for -3 and -6)."}
+{"id":"cells/results/2026-10-29-boot8.txt:128","text":"  docs/runbooks/2-lease-and-load.md  7 of 7 blocks held, exit 0 in 349.3 s; the long block at :308, 349.0 s, one of"}
+{"id":"cells/results/2026-10-29-boot8.txt:129","text":"                                     4 that need a cell (steps/R11c-2.txt:3-11)"}
+{"id":"cells/results/2026-10-29-boot8.txt:130","text":"  docs/runbooks/3-raun.md            5 of 5 blocks held, exit 0 in 396.9 s; the long block at :277, 396.6 s, one of"}
+{"id":"cells/results/2026-10-29-boot8.txt:131","text":"                                     2 that need a cell (steps/R11c-3.txt:3-9)"}
+{"id":"cells/results/2026-10-29-boot8.txt:132","text":"  docs/runbooks/6-add-a-fault.md     7 of 7 blocks held, exit 0 in 1568.8 s; the cell blocks at :287, 392.6 s, and"}
+{"id":"cells/results/2026-10-29-boot8.txt:133","text":"                                     :401, 1176.1 s (steps/R11c-6.txt:3-11)"}
+{"id":"cells/results/2026-10-29-boot8.txt:135","text":"block printed. After each call, 0 of everything (batch-log.txt:66, :70, :74)."}
+{"id":"cells/results/2026-10-29-boot8.txt:136","text":"The files the blocks wrote: 8, each ignored by git where it landed (steps/R11c-files.txt:2-11; clone-status.txt lists"}
+{"id":"cells/results/2026-10-29-boot8.txt:137","text":"none of them), kept as extra/rb-*:"}
+{"id":"cells/results/2026-10-29-boot8.txt:138","text":"  runbook 2  rb-rb2-20261029-020716.json, .verdict.json, .baseline.json: the load 02:07:34 to 02:12:43, Omes exit 0, 0"}
+{"id":"cells/results/2026-10-29-boot8.txt:139","text":"             failed; ADVANCE, exit 0, window 309 s; persistence p99 9.218 ms; end-to-end p95 56.75 ms; workflow task"}
+{"id":"cells/results/2026-10-29-boot8.txt:140","text":"             schedule-to-start p99 19.25 ms; 5900 completed (jq)"}
+{"id":"cells/results/2026-10-29-boot8.txt:141","text":"  runbook 3  rb-raun-rb3-20261029-021308.json: ADVANCE; landed 10 s, recovered 25 s; failed 0/544/8/0 (before, during,"}
+{"id":"cells/results/2026-10-29-boot8.txt:142","text":"             drain, after); signal peak 9888.6 ms; sweep 4106; before window end-to-end p95 62.84 ms (jq)"}
+{"id":"cells/results/2026-10-29-boot8.txt:143","text":"  runbook 6  rb-raun-rb6-20261029-021944-1.json, step 3's: ADVANCE; landed 5 s, recovered 20 s; failed 0/542/6/0;"}
+{"id":"cells/results/2026-10-29-boot8.txt:144","text":"             before window 60.14 ms. rb-raun-rb6-20261029-022616-2.json to -4.json, step 4's three: each ADVANCE;"}
+{"id":"cells/results/2026-10-29-boot8.txt:145","text":"             landed 11, 10 and 10 s; recovered 25, 26 and 25 s; failed during 544, 541 and 541, drain 0, 6 and 5,"}
+{"id":"cells/results/2026-10-29-boot8.txt:146","text":"             after 0; before windows 58.96, 57.03 and 61.27 ms (jq)"}
+{"id":"cells/results/2026-10-29-boot8.txt:147","text":"  landed: .landed_at - .inject_at; recovered: .time_to_recover_s; every raun backend compose, pool_busy 0"}
+{"id":"cells/results/2026-10-29-boot8.txt:148","text":"The expected lines, against what the lab host printed:"}
+{"id":"cells/results/2026-10-29-boot8.txt:149","text":"- Runbook 2, \"On the lab host the verdict is ADVANCE\" (2-lease-and-load.md:303-304): ADVANCE. Persistence p99 9.218 ms"}
+{"id":"cells/results/2026-10-29-boot8.txt:150","text":"  against the page's 9.235 (:210); completed 5900 against the 5700 floor (:441)."}
+{"id":"cells/results/2026-10-29-boot8.txt:151","text":"- Runbook 3, step 7's line \"like step 3's four: ADVANCE, an empty reason, 0 completed during, about 540 failed starts"}
+{"id":"cells/results/2026-10-29-boot8.txt:152","text":"  during, a few in the drain, 0 after, and about 25 s to recover\" (3-raun.md:327-329): so. The timeline from the run"}
+{"id":"cells/results/2026-10-29-boot8.txt:153","text":"  id's 02:13:08: injected 1:47, landed 1:57, removed 3:47, recovered 4:12, after window ended 6:12, the block ended"}
+{"id":"cells/results/2026-10-29-boot8.txt:154","text":"  6:35, against the page's 1:47, 1:57, 3:47, 4:12, 6:13 and 6:35 (3-raun.md:348-354; computed from .inject_at,"}
+{"id":"cells/results/2026-10-29-boot8.txt:155","text":"  .landed_at, .remove_at, .recovered_at, .after_end and batch-log.txt:68)."}
+{"id":"cells/results/2026-10-29-boot8.txt:156","text":"- Runbook 6, step 4: \"three ADVANCE, landed in 5 to 10 s, recovered in 20 to 25 s, none failed after\""}
+{"id":"cells/results/2026-10-29-boot8.txt:157","text":"  (6-add-a-fault.md:429-430), the same ranges at :364, :365 and :395-396, each boot 6's. Two misses, by 1 s each: run"}
+{"id":"cells/results/2026-10-29-boot8.txt:158","text":"  -2 landed in 11 s, run -3 recovered in 26 s. The block held: runbook check holds the jq lines' shape, not these"}
+{"id":"cells/results/2026-10-29-boot8.txt:159","text":"  numbers. Failed during 541 to 544, inside the page's 536 to 546 (:396)."}
+{"id":"cells/results/2026-10-29-boot8.txt:160","text":"- The five rauns' before windows read end-to-end p95 57.03 to 62.84 ms on these compose cells, the share over 50 ms"}
+{"id":"cells/results/2026-10-29-boot8.txt:161","text":"  0.0582 to 0.0673 (jq), and runbook 2's 309 s load read 56.75 ms at 0.0578; the pages give the lab host's step 3 and"}
+{"id":"cells/results/2026-10-29-boot8.txt:162","text":"  boot 6's before windows at 49.3 to 49.9 ms (3-raun.md:406-408; 6-add-a-fault.md:474-476). Each raun's p95 equals 50 +"}
+{"id":"cells/results/2026-10-29-boot8.txt:163","text":"  50 x (s - 0.05) / s, s the share over 50 ms (computed, to the third decimal; runbook 2's load reads 56.75 against"}
+{"id":"cells/results/2026-10-29-boot8.txt:164","text":"  56.73 by it): the p95 sits just past the 50 ms bucket's edge, 7 to 13 ms past it because the bucket from 50 to 100 ms"}
+{"id":"cells/results/2026-10-29-boot8.txt:165","text":"  is wide (inference). Under 84 either way."}
+{"id":"cells/results/2026-10-29-boot8.txt:166","text":"Shows: the three pages' 19 blocks held on the lab host, every verdict ADVANCE, where boot 7 ran none. The pages'"}
+{"id":"cells/results/2026-10-29-boot8.txt:167","text":"runbook 6 ranges are boot 6's four alone; the lab host's eight now span landed 5 to 11 s and recovered 20 to 26 s."}
+{"id":"cells/results/2026-10-29-boot8.txt:168","text":"Does not show: the lines each block printed, or the walks' logs (Omes's .log, the raun's .load.log, the pool's log);"}
+{"id":"cells/results/2026-10-29-boot8.txt:169","text":"the batch kept none. Why the share over 50 ms rose from boot 6's."}
+{"id":"cells/results/2026-10-29-boot8.txt:170","text":""}
+{"id":"cells/results/2026-10-29-boot8.txt:3","text":"started at 01:58:44 and ran 83 min 26 s (computed). Host: the lab host, an m8i.8xlarge (32 vCPU, 128 GiB), nested:"}
+{"id":"cells/results/2026-10-30-boot12.txt:3","text":"batch itself started at 23:48:01 and ran 387 min 33 s (batch-log.txt:6, :907; computed). Host: the metal host, an"}
+{"id":"cells/results/2026-10-30-boot12.txt:303","text":"  F              6   ADVANCE 6     48.76 (48.73 to 48.77)       0.0090 (0.0080 to 0.0095)   0.0036       4.88 to 4.89"}
+{"id":"cells/results/2026-10-30-boot12.txt:304","text":"  F8             6   ADVANCE 6     48.71 (48.68 to 48.75)       0.0074 (0.0064 to 0.0086)   0.0033       4.87 to 4.88"}
+{"id":"cells/results/2026-10-30-boot12.txt:307","text":"  C4             6   ADVANCE 6     74.40 (69.83 to 75.98)       0.0977 (0.0829 to 0.1041)   0.0064       9.54 to 9.56"}
+{"id":"cells/results/2026-10-30-boot12.txt:308","text":"  C              6   BLOCK 6       178.62 (177.62 to 179.62)    0.9971 (0.9949 to 0.9975)   0.7937       19.18 to 19.19"}
+{"id":"cells/results/2026-10-30-boot12.txt:4","text":"m8id.metal-48xl (192 vCPU, 768 GiB), bare metal: DMI product_name m8id.metal-48xl; hypervisor on 0 of the flags lines of"}
+{"id":"cells/results/2026-10-30-boot12.txt:440","text":"Shows: no age step on the metal host from 3.8 s to 30 min: each step is under F's own span, and the design could see a"}
+{"id":"cells/results/2026-10-30-boot12.txt:5","text":"/proc/cpuinfo, vmx on 192; 192 CPUs on 96 cores, 2 a core, 1 socket, 3 NUMA nodes of 64 (node 0 CPUs 0-31 and 96-127);"}
+{"id":"cells/results/2026-11-01-boot13.txt:269","text":"  C@S0           C-1, C-8      B 2       181.68 (181.23 to 182.13)  0.99662 (0.99661 to 0.99663)  0.79908  0.83041"}
+{"id":"cells/results/2026-11-01-boot13.txt:270","text":"  C@numa         C-2, C-6      B 2       181.34 (180.30 to 182.38)  0.99596 (0.99513 to 0.99679)  0.79948  0.83150"}
+{"id":"cells/results/2026-11-01-boot13.txt:271","text":"  C@idle         C-3, -5, -7   A 3       48.649 (48.606 to 48.674)  0.00520 (0.00371 to 0.00607)  0.00245  0.00185"}
+{"id":"cells/results/2026-11-01-boot13.txt:274","text":"  C4@idle        C4-1, -2, -4  A 3       48.744 (48.743 to 48.747)  0.00847 (0.00845 to 0.00858)  0.00330  0.00237"}
+{"id":"cells/results/2026-11-01-boot13.txt:275","text":"  F@idle         F-1, -2, -3   A 3       48.610 (48.601 to 48.663)  0.00385 (0.00353 to 0.00570)  0.00320  0.00385"}
+{"id":"cells/results/2026-11-01-boot13.txt:3","text":"started at 11:08:16 and ran 129 min 34 s (batch-log.txt:6, :340; computed). Host: the metal host, an m8id.metal-48xl"}
+{"id":"cells/results/2026-11-01-boot13.txt:4","text":"(192 vCPU, 768 GiB), boot 12's instance started again, bare metal: DMI product_name m8id.metal-48xl; hypervisor on 0 of"}
+{"id":"cells/results/2026-11-01-boot13.txt:5","text":"the flags lines of /proc/cpuinfo, vmx on 192; 192 CPUs on 96 cores, 2 a core, 1 socket, 3 NUMA nodes of 64 (node 0 CPUs"}
+{"id":"cells/results/2026-11-01-boot13.txt:61","text":"The count. The batch marked all 15 counted units \"upgrade running\" and counted them apart (batch-log.txt:340). A read of"}
+{"id":"cells/results/2026-11-01-boot13.txt:62","text":"the box's logs after the batch, upgrade-check.txt, finds one process of that name on the instance's next start:"}
+{"id":"cells/results/2026-11-01-boot13.txt:63","text":"unattended-upgrades' shutdown helper, unattended-upgrade-shutdown --wait-for-signal, from an enabled unit"}
+{"id":"cells/results/2026-11-01-boot13.txt:64","text":"(upgrade-check.txt:1, :3-8). That this helper was the process the batch's check counted, and so that the mark is a false"}
+{"id":"cells/results/2026-11-01-boot13.txt:65","text":"positive of the check, is inference. One real upgrade ran, from 11:51:16 to 11:53:01, and overlapped the last 36 s of"}
+{"id":"cells/results/2026-11-01-boot13.txt:66","text":"one load, C-3's (BOX and V3). The owner decided, on 2026-11-01, that all 15 loads are counted. This record follows that"}

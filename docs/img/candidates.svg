@@ -1,0 +1,1082 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="714" viewBox="0 0 800 714" role="img"
+    aria-labelledby="candidates-title candidates-desc" font-family="Inter, system-ui, sans-serif">
+<title id="candidates-title">4 dynamic config changes in 14 runs: 14 PASS, 7 ADVANCE and 7 BLOCK</title>
+<desc id="candidates-desc">A row a run of laug candidate, grouped by candidate in the batch&#39;s order, each
+    group&#39;s line naming the key it changes, from and to, and the verdict it expects. Each run leases a compose cell,
+    changes the key in the cell&#39;s dynamic config, waits 126 s, 2 re-read periods of 63 s, runs a 5m load at 20
+    workflows/s with 50 in flight and restores the key; the verdict judges the load&#39;s window, 301 to 422 s. At the
+    left, each run&#39;s id and server, then its outcome and verdict: PASS when the verdict is the candidate&#39;s
+    expect and, for a BLOCK, a row its blocks_on names is among the rows that decided it. Across, each row the verdict
+    judges against a limit, s2s standing for schedule-to-start, the limit under it as the rows record it. In each cell
+    the reading as its row records it, over the load&#39;s window; under it a meter from 0 to twice the limit, the
+    reading its dot, the limit its tick at the middle, and a triangle at the right end for a reading past twice the
+    limit. A tinted cell is a row that decided the verdict; outlined, a row the candidate&#39;s blocks_on names too. A
+    floor&#39;s dot left of its tick is short of it: workflows completed. A limit of 0 has no meter: Omes exit,
+    workflows not completed. A cell that reads not produced is a row with no value, which decided nothing; its result:
+    activity schedule-to-start p99, ms, &quot;not produced on this release (load/releases/1.32.yaml)&quot;. The
+    batch&#39;s warm-up run is not among them (boot 3&#39;s readings, the step C-benign-lab3-warmup). Sources:
+    docs/tables/rauns.jsonl, docs/tables/readings-2026-10-23-boot3.jsonl, docs/tables/src/hosts.tsv.</desc>
+<rect x="0" y="0" width="800" height="714" fill="#EEF3F2"/>
+<text x="24" y="30" font-size="14" fill="#163A44"
+    font-weight="600">4 dynamic config changes in 14 runs: 14 PASS, 7 ADVANCE and 7 BLOCK</text>
+<text x="24" y="50" font-size="12"
+    fill="#163A44">One key changed, then a 5m load at 20 workflows/s; servers 1.31.0 and 1.32.1; the lab host, an m8i.8xlarge</text>
+<text x="24" y="102" font-size="9" fill="#163A44">run, server</text>
+<text x="24" y="116" font-size="9" fill="#163A44">outcome, verdict</text>
+<text x="168" y="80" font-size="9" fill="#163A44">workflow</text>
+<text x="168" y="91" font-size="9" fill="#163A44">task s2s</text>
+<text x="168" y="102" font-size="9" fill="#163A44">p99, ms</text>
+<text x="168" y="116" font-size="9" fill="#C44B32"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">max 38</text>
+<text x="236" y="80" font-size="9" fill="#163A44">activity</text>
+<text x="236" y="91" font-size="9" fill="#163A44">s2s</text>
+<text x="236" y="102" font-size="9" fill="#163A44">p99, ms</text>
+<text x="236" y="116" font-size="9" fill="#C44B32"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">max 20</text>
+<text x="304" y="80" font-size="9" fill="#163A44">workflow</text>
+<text x="304" y="91" font-size="9" fill="#163A44">end-to-end</text>
+<text x="304" y="102" font-size="9" fill="#163A44">p95, ms</text>
+<text x="304" y="116" font-size="9" fill="#C44B32"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">max 84</text>
+<text x="372" y="91" font-size="9" fill="#163A44">persistence</text>
+<text x="372" y="102" font-size="9" fill="#163A44">p99, ms</text>
+<text x="372" y="116" font-size="9" fill="#C44B32"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">max 23</text>
+<text x="440" y="91" font-size="9" fill="#163A44">service</text>
+<text x="440" y="102" font-size="9" fill="#163A44">error rate</text>
+<text x="440" y="116" font-size="9" fill="#C44B32"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">max 0.001</text>
+<text x="508" y="91" font-size="9" fill="#163A44">frontend</text>
+<text x="508" y="102" font-size="9" fill="#163A44">p99, ms</text>
+<text x="508" y="116" font-size="9" fill="#C44B32"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">max 22</text>
+<text x="576" y="91" font-size="9" fill="#163A44">workflows</text>
+<text x="576" y="102" font-size="9" fill="#163A44">completed</text>
+<text x="576" y="116" font-size="9" fill="#C44B32"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">&gt;= 5700</text>
+<text x="644" y="91" font-size="9" fill="#163A44">Omes</text>
+<text x="644" y="102" font-size="9" fill="#163A44">exit</text>
+<text x="644" y="116" font-size="9" fill="#C44B32"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">max 0</text>
+<text x="712" y="80" font-size="9" fill="#163A44">workflows</text>
+<text x="712" y="91" font-size="9" fill="#163A44">not</text>
+<text x="712" y="102" font-size="9" fill="#163A44">completed</text>
+<text x="712" y="116" font-size="9" fill="#C44B32"
+    font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">max 0</text>
+<line x1="24" y1="124" x2="776" y2="124" fill="none" stroke="#10181C"/>
+<line x1="24" y1="128" x2="776" y2="128" fill="none" stroke="#CFE3E4"/>
+<text x="24" y="144" font-size="11" fill="#163A44"
+    font-weight="600">benign: frontend.rps 2400 to 2000, expect ADVANCE</text>
+<g aria-label="benign-lab3-1: PASS, ADVANCE">
+  <text x="24" y="165" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">lab3-1</text>
+  <text x="96" y="165" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">1.31.0</text>
+  <text x="24" y="178" font-size="10" fill="#163A44" font-weight="600">PASS</text>
+  <text x="96" y="178" font-size="10" fill="#5B9B6A" font-weight="600">ADVANCE</text>
+  <rect x="166" y="154" width="64" height="26"
+      fill="#EEF3F2"><title>benign-lab3-1, workflow task schedule-to-start p99, ms: 19.040 against 38, ok</title></rect>
+  <text x="168" y="165" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">19.040</text>
+  <rect x="170" y="172" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="198" y1="168" x2="198" y2="179" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="184.029" cy="173.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>19.040 against 38</title></circle>
+  <rect x="234" y="154" width="64" height="26"
+      fill="#EEF3F2"><title>benign-lab3-1, activity schedule-to-start p99, ms: 9.990 against 20, ok</title></rect>
+  <text x="236" y="165" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">9.990</text>
+  <rect x="238" y="172" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="266" y1="168" x2="266" y2="179" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="251.986" cy="173.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>9.990 against 20</title></circle>
+  <rect x="302" y="154" width="64" height="26"
+      fill="#EEF3F2"><title>benign-lab3-1, workflow end-to-end p95, ms: 49.977 against 84, ok</title></rect>
+  <text x="304" y="165" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">49.977</text>
+  <rect x="306" y="172" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="334" y1="168" x2="334" y2="179" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="322.659" cy="173.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>49.977 against 84</title></circle>
+  <rect x="370" y="154" width="64" height="26"
+      fill="#EEF3F2"><title>benign-lab3-1, persistence p99, ms: 9.250 against 23, ok</title></rect>
+  <text x="372" y="165" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">9.250</text>
+  <rect x="374" y="172" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="402" y1="168" x2="402" y2="179" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="385.261" cy="173.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>9.250 against 23</title></circle>
+  <rect x="438" y="154" width="64" height="26"
+      fill="#EEF3F2"><title>benign-lab3-1, service error rate: 0.000 against 0.001, ok</title></rect>
+  <text x="440" y="165" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0.000</text>
+  <rect x="442" y="172" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="470" y1="168" x2="470" y2="179" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="442" cy="173.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>0.000 against 0.001</title></circle>
+  <rect x="506" y="154" width="64" height="26"
+      fill="#EEF3F2"><title>benign-lab3-1, frontend p99, polls left out, ms: 11.180 against 22, ok</title></rect>
+  <text x="508" y="165" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">11.180</text>
+  <rect x="510" y="172" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="538" y1="168" x2="538" y2="179" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="524.229" cy="173.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>11.180 against 22</title></circle>
+  <rect x="574" y="154" width="64" height="26"
+      fill="#EEF3F2"><title>benign-lab3-1, workflows completed: 5942 against &gt;= 5700, ok (0.95 x 20/s x 300 s)</title></rect>
+  <text x="576" y="165" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">5942</text>
+  <rect x="578" y="172" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="606" y1="168" x2="606" y2="179" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="607.189" cy="173.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>5942 against &gt;= 5700</title></circle>
+  <rect x="642" y="154" width="64" height="26"
+      fill="#EEF3F2"><title>benign-lab3-1, Omes exit: 0 against 0, ok</title></rect>
+  <text x="644" y="165" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+  <rect x="710" y="154" width="64" height="26"
+      fill="#EEF3F2"><title>benign-lab3-1, workflows not completed: 0 against 0, ok (5386 started before 2026-10-23, all Completed)</title></rect>
+  <text x="712" y="165" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+</g>
+<g aria-label="benign-lab3-2: PASS, ADVANCE">
+  <text x="24" y="195" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">lab3-2</text>
+  <text x="96" y="195" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">1.31.0</text>
+  <text x="24" y="208" font-size="10" fill="#163A44" font-weight="600">PASS</text>
+  <text x="96" y="208" font-size="10" fill="#5B9B6A" font-weight="600">ADVANCE</text>
+  <rect x="166" y="184" width="64" height="26"
+      fill="#EEF3F2"><title>benign-lab3-2, workflow task schedule-to-start p99, ms: 19.183 against 38, ok</title></rect>
+  <text x="168" y="195" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">19.183</text>
+  <rect x="170" y="202" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="198" y1="198" x2="198" y2="209" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="184.135" cy="203.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>19.183 against 38</title></circle>
+  <rect x="234" y="184" width="64" height="26"
+      fill="#EEF3F2"><title>benign-lab3-2, activity schedule-to-start p99, ms: 9.997 against 20, ok</title></rect>
+  <text x="236" y="195" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">9.997</text>
+  <rect x="238" y="202" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="266" y1="198" x2="266" y2="209" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="251.996" cy="203.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>9.997 against 20</title></circle>
+  <rect x="302" y="184" width="64" height="26"
+      fill="#EEF3F2"><title>benign-lab3-2, workflow end-to-end p95, ms: 57.058 against 84, ok</title></rect>
+  <text x="304" y="195" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">57.058</text>
+  <rect x="306" y="202" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="334" y1="198" x2="334" y2="209" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="325.019" cy="203.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>57.058 against 84</title></circle>
+  <rect x="370" y="184" width="64" height="26"
+      fill="#EEF3F2"><title>benign-lab3-2, persistence p99, ms: 9.266 against 23, ok</title></rect>
+  <text x="372" y="195" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">9.266</text>
+  <rect x="374" y="202" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="402" y1="198" x2="402" y2="209" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="385.28" cy="203.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>9.266 against 23</title></circle>
+  <rect x="438" y="184" width="64" height="26"
+      fill="#EEF3F2"><title>benign-lab3-2, service error rate: 0.000 against 0.001, ok</title></rect>
+  <text x="440" y="195" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0.000</text>
+  <rect x="442" y="202" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="470" y1="198" x2="470" y2="209" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="442" cy="203.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>0.000 against 0.001</title></circle>
+  <rect x="506" y="184" width="64" height="26"
+      fill="#EEF3F2"><title>benign-lab3-2, frontend p99, polls left out, ms: 9.999 against 22, ok</title></rect>
+  <text x="508" y="195" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">9.999</text>
+  <rect x="510" y="202" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="538" y1="198" x2="538" y2="209" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="522.726" cy="203.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>9.999 against 22</title></circle>
+  <rect x="574" y="184" width="64" height="26"
+      fill="#EEF3F2"><title>benign-lab3-2, workflows completed: 5940 against &gt;= 5700, ok (0.95 x 20/s x 300 s)</title></rect>
+  <text x="576" y="195" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">5940</text>
+  <rect x="578" y="202" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="606" y1="198" x2="606" y2="209" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="607.179" cy="203.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>5940 against &gt;= 5700</title></circle>
+  <rect x="642" y="184" width="64" height="26"
+      fill="#EEF3F2"><title>benign-lab3-2, Omes exit: 0 against 0, ok</title></rect>
+  <text x="644" y="195" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+  <rect x="710" y="184" width="64" height="26"
+      fill="#EEF3F2"><title>benign-lab3-2, workflows not completed: 0 against 0, ok (5387 started before 2026-10-23, all Completed)</title></rect>
+  <text x="712" y="195" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+</g>
+<g aria-label="benign-lab3-3: PASS, ADVANCE">
+  <text x="24" y="225" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">lab3-3</text>
+  <text x="96" y="225" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">1.31.0</text>
+  <text x="24" y="238" font-size="10" fill="#163A44" font-weight="600">PASS</text>
+  <text x="96" y="238" font-size="10" fill="#5B9B6A" font-weight="600">ADVANCE</text>
+  <rect x="166" y="214" width="64" height="26"
+      fill="#EEF3F2"><title>benign-lab3-3, workflow task schedule-to-start p99, ms: 18.937 against 38, ok</title></rect>
+  <text x="168" y="225" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">18.937</text>
+  <rect x="170" y="232" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="198" y1="228" x2="198" y2="239" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="183.954" cy="233.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>18.937 against 38</title></circle>
+  <rect x="234" y="214" width="64" height="26"
+      fill="#EEF3F2"><title>benign-lab3-3, activity schedule-to-start p99, ms: 9.983 against 20, ok</title></rect>
+  <text x="236" y="225" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">9.983</text>
+  <rect x="238" y="232" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="266" y1="228" x2="266" y2="239" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="251.976" cy="233.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>9.983 against 20</title></circle>
+  <rect x="302" y="214" width="64" height="26"
+      fill="#EEF3F2"><title>benign-lab3-3, workflow end-to-end p95, ms: 49.652 against 84, ok</title></rect>
+  <text x="304" y="225" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">49.652</text>
+  <rect x="306" y="232" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="334" y1="228" x2="334" y2="239" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="322.551" cy="233.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>49.652 against 84</title></circle>
+  <rect x="370" y="214" width="64" height="26"
+      fill="#EEF3F2"><title>benign-lab3-3, persistence p99, ms: 9.240 against 23, ok</title></rect>
+  <text x="372" y="225" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">9.240</text>
+  <rect x="374" y="232" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="402" y1="228" x2="402" y2="239" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="385.249" cy="233.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>9.240 against 23</title></circle>
+  <rect x="438" y="214" width="64" height="26"
+      fill="#EEF3F2"><title>benign-lab3-3, service error rate: 0.000 against 0.001, ok</title></rect>
+  <text x="440" y="225" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0.000</text>
+  <rect x="442" y="232" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="470" y1="228" x2="470" y2="239" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="442" cy="233.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>0.000 against 0.001</title></circle>
+  <rect x="506" y="214" width="64" height="26"
+      fill="#EEF3F2"><title>benign-lab3-3, frontend p99, polls left out, ms: 9.998 against 22, ok</title></rect>
+  <text x="508" y="225" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">9.998</text>
+  <rect x="510" y="232" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="538" y1="228" x2="538" y2="239" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="522.725" cy="233.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>9.998 against 22</title></circle>
+  <rect x="574" y="214" width="64" height="26"
+      fill="#EEF3F2"><title>benign-lab3-3, workflows completed: 5962 against &gt;= 5700, ok (0.95 x 20/s x 300 s)</title></rect>
+  <text x="576" y="225" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">5962</text>
+  <rect x="578" y="232" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="606" y1="228" x2="606" y2="239" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="607.287" cy="233.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>5962 against &gt;= 5700</title></circle>
+  <rect x="642" y="214" width="64" height="26"
+      fill="#EEF3F2"><title>benign-lab3-3, Omes exit: 0 against 0, ok</title></rect>
+  <text x="644" y="225" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+  <rect x="710" y="214" width="64" height="26"
+      fill="#EEF3F2"><title>benign-lab3-3, workflows not completed: 0 against 0, ok (5386 started before 2026-10-23, all Completed)</title></rect>
+  <text x="712" y="225" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+</g>
+<g aria-label="benign-lab3-v1321: PASS, ADVANCE">
+  <text x="24" y="255" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">lab3-v1321</text>
+  <text x="96" y="255" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">1.32.1</text>
+  <text x="24" y="268" font-size="10" fill="#163A44" font-weight="600">PASS</text>
+  <text x="96" y="268" font-size="10" fill="#5B9B6A" font-weight="600">ADVANCE</text>
+  <rect x="166" y="244" width="64" height="26"
+      fill="#EEF3F2"><title>benign-lab3-v1321, workflow task schedule-to-start p99, ms: 19.075 against 38, ok</title></rect>
+  <text x="168" y="255" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">19.075</text>
+  <rect x="170" y="262" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="198" y1="258" x2="198" y2="269" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="184.055" cy="263.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>19.075 against 38</title></circle>
+  <rect x="234" y="244" width="64" height="26"
+      fill="#EEF3F2"><title>benign-lab3-v1321, activity schedule-to-start p99, ms: not produced against 20, not produced on this release (load/releases/1.32.yaml)</title></rect>
+  <text x="236" y="255" font-size="9" fill="#163A44">not produced</text>
+  <rect x="302" y="244" width="64" height="26"
+      fill="#EEF3F2"><title>benign-lab3-v1321, workflow end-to-end p95, ms: 48.909 against 84, ok</title></rect>
+  <text x="304" y="255" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">48.909</text>
+  <rect x="306" y="262" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="334" y1="258" x2="334" y2="269" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="322.303" cy="263.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>48.909 against 84</title></circle>
+  <rect x="370" y="244" width="64" height="26"
+      fill="#EEF3F2"><title>benign-lab3-v1321, persistence p99, ms: 9.277 against 23, ok</title></rect>
+  <text x="372" y="255" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">9.277</text>
+  <rect x="374" y="262" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="402" y1="258" x2="402" y2="269" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="385.294" cy="263.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>9.277 against 23</title></circle>
+  <rect x="438" y="244" width="64" height="26"
+      fill="#EEF3F2"><title>benign-lab3-v1321, service error rate: 0.000 against 0.001, ok</title></rect>
+  <text x="440" y="255" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0.000</text>
+  <rect x="442" y="262" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="470" y1="258" x2="470" y2="269" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="442" cy="263.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>0.000 against 0.001</title></circle>
+  <rect x="506" y="244" width="64" height="26"
+      fill="#EEF3F2"><title>benign-lab3-v1321, frontend p99, polls left out, ms: 11.003 against 22, ok</title></rect>
+  <text x="508" y="255" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">11.003</text>
+  <rect x="510" y="262" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="538" y1="258" x2="538" y2="269" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="524.004" cy="263.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>11.003 against 22</title></circle>
+  <rect x="574" y="244" width="64" height="26"
+      fill="#EEF3F2"><title>benign-lab3-v1321, workflows completed: 5922 against &gt;= 5700, ok (0.95 x 20/s x 300 s)</title></rect>
+  <text x="576" y="255" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">5922</text>
+  <rect x="578" y="262" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="606" y1="258" x2="606" y2="269" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="607.091" cy="263.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>5922 against &gt;= 5700</title></circle>
+  <rect x="642" y="244" width="64" height="26"
+      fill="#EEF3F2"><title>benign-lab3-v1321, Omes exit: 0 against 0, ok</title></rect>
+  <text x="644" y="255" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+  <rect x="710" y="244" width="64" height="26"
+      fill="#EEF3F2"><title>benign-lab3-v1321, workflows not completed: 0 against 0, ok (5393 started before 2026-10-23, all Completed)</title></rect>
+  <text x="712" y="255" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+</g>
+<line x1="24" y1="272" x2="776" y2="272" fill="none" stroke="#CFE3E4"/>
+<text x="24" y="288" font-size="11" fill="#163A44"
+    font-weight="600">read-partitions: matching.numTaskqueueReadPartitions 4 to 1, expect ADVANCE</text>
+<g aria-label="read-partitions-lab3-1: PASS, ADVANCE">
+  <text x="24" y="309" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">lab3-1</text>
+  <text x="96" y="309" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">1.31.0</text>
+  <text x="24" y="322" font-size="10" fill="#163A44" font-weight="600">PASS</text>
+  <text x="96" y="322" font-size="10" fill="#5B9B6A" font-weight="600">ADVANCE</text>
+  <rect x="166" y="298" width="64" height="26"
+      fill="#EEF3F2"><title>read-partitions-lab3-1, workflow task schedule-to-start p99, ms: 19.083 against 38, ok</title></rect>
+  <text x="168" y="309" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">19.083</text>
+  <rect x="170" y="316" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="198" y1="312" x2="198" y2="323" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="184.061" cy="317.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>19.083 against 38</title></circle>
+  <rect x="234" y="298" width="64" height="26"
+      fill="#EEF3F2"><title>read-partitions-lab3-1, activity schedule-to-start p99, ms: 9.985 against 20, ok</title></rect>
+  <text x="236" y="309" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">9.985</text>
+  <rect x="238" y="316" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="266" y1="312" x2="266" y2="323" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="251.979" cy="317.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>9.985 against 20</title></circle>
+  <rect x="302" y="298" width="64" height="26"
+      fill="#EEF3F2"><title>read-partitions-lab3-1, workflow end-to-end p95, ms: 49.547 against 84, ok</title></rect>
+  <text x="304" y="309" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">49.547</text>
+  <rect x="306" y="316" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="334" y1="312" x2="334" y2="323" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="322.516" cy="317.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>49.547 against 84</title></circle>
+  <rect x="370" y="298" width="64" height="26"
+      fill="#EEF3F2"><title>read-partitions-lab3-1, persistence p99, ms: 9.244 against 23, ok</title></rect>
+  <text x="372" y="309" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">9.244</text>
+  <rect x="374" y="316" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="402" y1="312" x2="402" y2="323" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="385.254" cy="317.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>9.244 against 23</title></circle>
+  <rect x="438" y="298" width="64" height="26"
+      fill="#EEF3F2"><title>read-partitions-lab3-1, service error rate: 0.000 against 0.001, ok</title></rect>
+  <text x="440" y="309" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0.000</text>
+  <rect x="442" y="316" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="470" y1="312" x2="470" y2="323" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="442" cy="317.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>0.000 against 0.001</title></circle>
+  <rect x="506" y="298" width="64" height="26"
+      fill="#EEF3F2"><title>read-partitions-lab3-1, frontend p99, polls left out, ms: 9.997 against 22, ok</title></rect>
+  <text x="508" y="309" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">9.997</text>
+  <rect x="510" y="316" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="538" y1="312" x2="538" y2="323" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="522.723" cy="317.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>9.997 against 22</title></circle>
+  <rect x="574" y="298" width="64" height="26"
+      fill="#EEF3F2"><title>read-partitions-lab3-1, workflows completed: 5962 against &gt;= 5700, ok (0.95 x 20/s x 300 s)</title></rect>
+  <text x="576" y="309" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">5962</text>
+  <rect x="578" y="316" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="606" y1="312" x2="606" y2="323" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="607.287" cy="317.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>5962 against &gt;= 5700</title></circle>
+  <rect x="642" y="298" width="64" height="26"
+      fill="#EEF3F2"><title>read-partitions-lab3-1, Omes exit: 0 against 0, ok</title></rect>
+  <text x="644" y="309" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+  <rect x="710" y="298" width="64" height="26"
+      fill="#EEF3F2"><title>read-partitions-lab3-1, workflows not completed: 0 against 0, ok (5398 started before 2026-10-23, all Completed)</title></rect>
+  <text x="712" y="309" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+</g>
+<g aria-label="read-partitions-lab3-2: PASS, ADVANCE">
+  <text x="24" y="339" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">lab3-2</text>
+  <text x="96" y="339" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">1.31.0</text>
+  <text x="24" y="352" font-size="10" fill="#163A44" font-weight="600">PASS</text>
+  <text x="96" y="352" font-size="10" fill="#5B9B6A" font-weight="600">ADVANCE</text>
+  <rect x="166" y="328" width="64" height="26"
+      fill="#EEF3F2"><title>read-partitions-lab3-2, workflow task schedule-to-start p99, ms: 19.188 against 38, ok</title></rect>
+  <text x="168" y="339" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">19.188</text>
+  <rect x="170" y="346" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="198" y1="342" x2="198" y2="353" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="184.139" cy="347.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>19.188 against 38</title></circle>
+  <rect x="234" y="328" width="64" height="26"
+      fill="#EEF3F2"><title>read-partitions-lab3-2, activity schedule-to-start p99, ms: 9.986 against 20, ok</title></rect>
+  <text x="236" y="339" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">9.986</text>
+  <rect x="238" y="346" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="266" y1="342" x2="266" y2="353" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="251.98" cy="347.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>9.986 against 20</title></circle>
+  <rect x="302" y="328" width="64" height="26"
+      fill="#EEF3F2"><title>read-partitions-lab3-2, workflow end-to-end p95, ms: 49.912 against 84, ok</title></rect>
+  <text x="304" y="339" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">49.912</text>
+  <rect x="306" y="346" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="334" y1="342" x2="334" y2="353" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="322.637" cy="347.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>49.912 against 84</title></circle>
+  <rect x="370" y="328" width="64" height="26"
+      fill="#EEF3F2"><title>read-partitions-lab3-2, persistence p99, ms: 9.260 against 23, ok</title></rect>
+  <text x="372" y="339" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">9.260</text>
+  <rect x="374" y="346" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="402" y1="342" x2="402" y2="353" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="385.273" cy="347.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>9.260 against 23</title></circle>
+  <rect x="438" y="328" width="64" height="26"
+      fill="#EEF3F2"><title>read-partitions-lab3-2, service error rate: 0.000 against 0.001, ok</title></rect>
+  <text x="440" y="339" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0.000</text>
+  <rect x="442" y="346" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="470" y1="342" x2="470" y2="353" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="442" cy="347.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>0.000 against 0.001</title></circle>
+  <rect x="506" y="328" width="64" height="26"
+      fill="#EEF3F2"><title>read-partitions-lab3-2, frontend p99, polls left out, ms: 10.495 against 22, ok</title></rect>
+  <text x="508" y="339" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">10.495</text>
+  <rect x="510" y="346" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="538" y1="342" x2="538" y2="353" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="523.357" cy="347.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>10.495 against 22</title></circle>
+  <rect x="574" y="328" width="64" height="26"
+      fill="#EEF3F2"><title>read-partitions-lab3-2, workflows completed: 5923 against &gt;= 5700, ok (0.95 x 20/s x 300 s)</title></rect>
+  <text x="576" y="339" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">5923</text>
+  <rect x="578" y="346" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="606" y1="342" x2="606" y2="353" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="607.095" cy="347.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>5923 against &gt;= 5700</title></circle>
+  <rect x="642" y="328" width="64" height="26"
+      fill="#EEF3F2"><title>read-partitions-lab3-2, Omes exit: 0 against 0, ok</title></rect>
+  <text x="644" y="339" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+  <rect x="710" y="328" width="64" height="26"
+      fill="#EEF3F2"><title>read-partitions-lab3-2, workflows not completed: 0 against 0, ok (5392 started before 2026-10-23, all Completed)</title></rect>
+  <text x="712" y="339" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+</g>
+<g aria-label="read-partitions-lab3-3: PASS, ADVANCE">
+  <text x="24" y="369" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">lab3-3</text>
+  <text x="96" y="369" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">1.31.0</text>
+  <text x="24" y="382" font-size="10" fill="#163A44" font-weight="600">PASS</text>
+  <text x="96" y="382" font-size="10" fill="#5B9B6A" font-weight="600">ADVANCE</text>
+  <rect x="166" y="358" width="64" height="26"
+      fill="#EEF3F2"><title>read-partitions-lab3-3, workflow task schedule-to-start p99, ms: 19.081 against 38, ok</title></rect>
+  <text x="168" y="369" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">19.081</text>
+  <rect x="170" y="376" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="198" y1="372" x2="198" y2="383" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="184.06" cy="377.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>19.081 against 38</title></circle>
+  <rect x="234" y="358" width="64" height="26"
+      fill="#EEF3F2"><title>read-partitions-lab3-3, activity schedule-to-start p99, ms: 9.992 against 20, ok</title></rect>
+  <text x="236" y="369" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">9.992</text>
+  <rect x="238" y="376" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="266" y1="372" x2="266" y2="383" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="251.989" cy="377.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>9.992 against 20</title></circle>
+  <rect x="302" y="358" width="64" height="26"
+      fill="#EEF3F2"><title>read-partitions-lab3-3, workflow end-to-end p95, ms: 49.682 against 84, ok</title></rect>
+  <text x="304" y="369" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">49.682</text>
+  <rect x="306" y="376" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="334" y1="372" x2="334" y2="383" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="322.561" cy="377.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>49.682 against 84</title></circle>
+  <rect x="370" y="358" width="64" height="26"
+      fill="#EEF3F2"><title>read-partitions-lab3-3, persistence p99, ms: 9.249 against 23, ok</title></rect>
+  <text x="372" y="369" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">9.249</text>
+  <rect x="374" y="376" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="402" y1="372" x2="402" y2="383" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="385.26" cy="377.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>9.249 against 23</title></circle>
+  <rect x="438" y="358" width="64" height="26"
+      fill="#EEF3F2"><title>read-partitions-lab3-3, service error rate: 0.000 against 0.001, ok</title></rect>
+  <text x="440" y="369" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0.000</text>
+  <rect x="442" y="376" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="470" y1="372" x2="470" y2="383" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="442" cy="377.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>0.000 against 0.001</title></circle>
+  <rect x="506" y="358" width="64" height="26"
+      fill="#EEF3F2"><title>read-partitions-lab3-3, frontend p99, polls left out, ms: 9.998 against 22, ok</title></rect>
+  <text x="508" y="369" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">9.998</text>
+  <rect x="510" y="376" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="538" y1="372" x2="538" y2="383" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="522.725" cy="377.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>9.998 against 22</title></circle>
+  <rect x="574" y="358" width="64" height="26"
+      fill="#EEF3F2"><title>read-partitions-lab3-3, workflows completed: 5945 against &gt;= 5700, ok (0.95 x 20/s x 300 s)</title></rect>
+  <text x="576" y="369" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">5945</text>
+  <rect x="578" y="376" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="606" y1="372" x2="606" y2="383" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="607.204" cy="377.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>5945 against &gt;= 5700</title></circle>
+  <rect x="642" y="358" width="64" height="26"
+      fill="#EEF3F2"><title>read-partitions-lab3-3, Omes exit: 0 against 0, ok</title></rect>
+  <text x="644" y="369" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+  <rect x="710" y="358" width="64" height="26"
+      fill="#EEF3F2"><title>read-partitions-lab3-3, workflows not completed: 0 against 0, ok (5400 started before 2026-10-23, all Completed)</title></rect>
+  <text x="712" y="369" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+</g>
+<line x1="24" y1="386" x2="776" y2="386" fill="none" stroke="#CFE3E4"/>
+<text x="24" y="402" font-size="11" fill="#163A44"
+    font-weight="600">frontend-starved: frontend.rps 2400 to 5, expect BLOCK on service_error_rate</text>
+<g aria-label="frontend-starved-lab3-1: PASS, BLOCK">
+  <text x="24" y="423" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">lab3-1</text>
+  <text x="96" y="423" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">1.31.0</text>
+  <text x="24" y="436" font-size="10" fill="#163A44" font-weight="600">PASS</text>
+  <text x="96" y="436" font-size="10" fill="#C44B32" font-weight="600">BLOCK</text>
+  <rect x="166" y="412" width="64" height="26" fill="#C44B32"
+      fill-opacity="0.15"><title>frontend-starved-lab3-1, workflow task schedule-to-start p99, ms: 186309.999 against 38, EXCEEDS; it decided the verdict</title></rect>
+  <text x="168" y="423" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">186309.999</text>
+  <rect x="170" y="430" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="198" y1="426" x2="198" y2="437" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <polygon points="220,427.5 226,431.5 220,435.5"
+      fill="#C44B32"><title>186309.999, 4902.895 times the limit</title></polygon>
+  <rect x="234" y="412" width="64" height="26" fill="#C44B32"
+      fill-opacity="0.15"><title>frontend-starved-lab3-1, activity schedule-to-start p99, ms: 47976.814 against 20, EXCEEDS; it decided the verdict</title></rect>
+  <text x="236" y="423" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">47976.814</text>
+  <rect x="238" y="430" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="266" y1="426" x2="266" y2="437" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <polygon points="288,427.5 294,431.5 288,435.5"
+      fill="#C44B32"><title>47976.814, 2398.841 times the limit</title></polygon>
+  <rect x="302" y="412" width="64" height="26" fill="#C44B32"
+      fill-opacity="0.15"><title>frontend-starved-lab3-1, workflow end-to-end p95, ms: 175431.895 against 84, EXCEEDS; it decided the verdict</title></rect>
+  <text x="304" y="423" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">175431.895</text>
+  <rect x="306" y="430" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="334" y1="426" x2="334" y2="437" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <polygon points="356,427.5 362,431.5 356,435.5"
+      fill="#C44B32"><title>175431.895, 2088.475 times the limit</title></polygon>
+  <rect x="370" y="412" width="64" height="26"
+      fill="#EEF3F2"><title>frontend-starved-lab3-1, persistence p99, ms: 9.105 against 23, ok</title></rect>
+  <text x="372" y="423" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">9.105</text>
+  <rect x="374" y="430" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="402" y1="426" x2="402" y2="437" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="385.084" cy="431.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>9.105 against 23</title></circle>
+  <rect x="438" y="412" width="64" height="26" fill="#C44B32" fill-opacity="0.15" stroke="#C44B32"
+      stroke-width="1.5"><title>frontend-starved-lab3-1, service error rate: 0.070 against 0.001, EXCEEDS; it decided the verdict</title></rect>
+  <text x="440" y="423" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0.070</text>
+  <rect x="442" y="430" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="470" y1="426" x2="470" y2="437" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <polygon points="492,427.5 498,431.5 492,435.5" fill="#C44B32"><title>0.070, 70 times the limit</title></polygon>
+  <rect x="506" y="412" width="64" height="26"
+      fill="#EEF3F2"><title>frontend-starved-lab3-1, frontend p99, polls left out, ms: 14.311 against 22, ok</title></rect>
+  <text x="508" y="423" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">14.311</text>
+  <rect x="510" y="430" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="538" y1="426" x2="538" y2="437" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="528.214" cy="431.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>14.311 against 22</title></circle>
+  <rect x="574" y="412" width="64" height="26" fill="#C44B32"
+      fill-opacity="0.15"><title>frontend-starved-lab3-1, workflows completed: 285 against &gt;= 5700, BELOW (0.95 x 20/s x 300 s); it decided the verdict</title></rect>
+  <text x="576" y="423" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">285</text>
+  <rect x="578" y="430" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="606" y1="426" x2="606" y2="437" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="579.4" cy="431.5" r="3" fill="#C44B32" stroke="#163A44"
+      stroke-width="0.5"><title>285 against &gt;= 5700</title></circle>
+  <rect x="642" y="412" width="64" height="26"
+      fill="#EEF3F2"><title>frontend-starved-lab3-1, Omes exit: 0 against 0, ok</title></rect>
+  <text x="644" y="423" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+  <rect x="710" y="412" width="64" height="26"
+      fill="#EEF3F2"><title>frontend-starved-lab3-1, workflows not completed: 0 against 0, ok (294 started before 2026-10-23, all Completed)</title></rect>
+  <text x="712" y="423" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+</g>
+<g aria-label="frontend-starved-lab3-2: PASS, BLOCK">
+  <text x="24" y="453" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">lab3-2</text>
+  <text x="96" y="453" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">1.31.0</text>
+  <text x="24" y="466" font-size="10" fill="#163A44" font-weight="600">PASS</text>
+  <text x="96" y="466" font-size="10" fill="#C44B32" font-weight="600">BLOCK</text>
+  <rect x="166" y="442" width="64" height="26" fill="#C44B32"
+      fill-opacity="0.15"><title>frontend-starved-lab3-2, workflow task schedule-to-start p99, ms: 183779.126 against 38, EXCEEDS; it decided the verdict</title></rect>
+  <text x="168" y="453" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">183779.126</text>
+  <rect x="170" y="460" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="198" y1="456" x2="198" y2="467" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <polygon points="220,457.5 226,461.5 220,465.5"
+      fill="#C44B32"><title>183779.126, 4836.293 times the limit</title></polygon>
+  <rect x="234" y="442" width="64" height="26" fill="#C44B32"
+      fill-opacity="0.15"><title>frontend-starved-lab3-2, activity schedule-to-start p99, ms: 47070.243 against 20, EXCEEDS; it decided the verdict</title></rect>
+  <text x="236" y="453" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">47070.243</text>
+  <rect x="238" y="460" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="266" y1="456" x2="266" y2="467" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <polygon points="288,457.5 294,461.5 288,465.5"
+      fill="#C44B32"><title>47070.243, 2353.512 times the limit</title></polygon>
+  <rect x="302" y="442" width="64" height="26" fill="#C44B32"
+      fill-opacity="0.15"><title>frontend-starved-lab3-2, workflow end-to-end p95, ms: 175963.872 against 84, EXCEEDS; it decided the verdict</title></rect>
+  <text x="304" y="453" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">175963.872</text>
+  <rect x="306" y="460" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="334" y1="456" x2="334" y2="467" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <polygon points="356,457.5 362,461.5 356,465.5"
+      fill="#C44B32"><title>175963.872, 2094.808 times the limit</title></polygon>
+  <rect x="370" y="442" width="64" height="26"
+      fill="#EEF3F2"><title>frontend-starved-lab3-2, persistence p99, ms: 9.224 against 23, ok</title></rect>
+  <text x="372" y="453" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">9.224</text>
+  <rect x="374" y="460" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="402" y1="456" x2="402" y2="467" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="385.229" cy="461.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>9.224 against 23</title></circle>
+  <rect x="438" y="442" width="64" height="26" fill="#C44B32" fill-opacity="0.15" stroke="#C44B32"
+      stroke-width="1.5"><title>frontend-starved-lab3-2, service error rate: 0.076 against 0.001, EXCEEDS; it decided the verdict</title></rect>
+  <text x="440" y="453" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0.076</text>
+  <rect x="442" y="460" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="470" y1="456" x2="470" y2="467" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <polygon points="492,457.5 498,461.5 492,465.5" fill="#C44B32"><title>0.076, 76 times the limit</title></polygon>
+  <rect x="506" y="442" width="64" height="26"
+      fill="#EEF3F2"><title>frontend-starved-lab3-2, frontend p99, polls left out, ms: 13.694 against 22, ok</title></rect>
+  <text x="508" y="453" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">13.694</text>
+  <rect x="510" y="460" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="538" y1="456" x2="538" y2="467" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="527.429" cy="461.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>13.694 against 22</title></circle>
+  <rect x="574" y="442" width="64" height="26" fill="#C44B32"
+      fill-opacity="0.15"><title>frontend-starved-lab3-2, workflows completed: 290 against &gt;= 5700, BELOW (0.95 x 20/s x 300 s); it decided the verdict</title></rect>
+  <text x="576" y="453" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">290</text>
+  <rect x="578" y="460" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="606" y1="456" x2="606" y2="467" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="579.425" cy="461.5" r="3" fill="#C44B32" stroke="#163A44"
+      stroke-width="0.5"><title>290 against &gt;= 5700</title></circle>
+  <rect x="642" y="442" width="64" height="26"
+      fill="#EEF3F2"><title>frontend-starved-lab3-2, Omes exit: 0 against 0, ok</title></rect>
+  <text x="644" y="453" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+  <rect x="710" y="442" width="64" height="26"
+      fill="#EEF3F2"><title>frontend-starved-lab3-2, workflows not completed: 0 against 0, ok (296 started before 2026-10-23, all Completed)</title></rect>
+  <text x="712" y="453" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+</g>
+<g aria-label="frontend-starved-lab3-3: PASS, BLOCK">
+  <text x="24" y="483" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">lab3-3</text>
+  <text x="96" y="483" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">1.31.0</text>
+  <text x="24" y="496" font-size="10" fill="#163A44" font-weight="600">PASS</text>
+  <text x="96" y="496" font-size="10" fill="#C44B32" font-weight="600">BLOCK</text>
+  <rect x="166" y="472" width="64" height="26" fill="#C44B32"
+      fill-opacity="0.15"><title>frontend-starved-lab3-3, workflow task schedule-to-start p99, ms: 90450.003 against 38, EXCEEDS; it decided the verdict</title></rect>
+  <text x="168" y="483" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">90450.003</text>
+  <rect x="170" y="490" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="198" y1="486" x2="198" y2="497" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <polygon points="220,487.5 226,491.5 220,495.5"
+      fill="#C44B32"><title>90450.003, 2380.263 times the limit</title></polygon>
+  <rect x="234" y="472" width="64" height="26" fill="#C44B32"
+      fill-opacity="0.15"><title>frontend-starved-lab3-3, activity schedule-to-start p99, ms: 96662.792 against 20, EXCEEDS; it decided the verdict</title></rect>
+  <text x="236" y="483" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">96662.792</text>
+  <rect x="238" y="490" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="266" y1="486" x2="266" y2="497" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <polygon points="288,487.5 294,491.5 288,495.5"
+      fill="#C44B32"><title>96662.792, 4833.14 times the limit</title></polygon>
+  <rect x="302" y="472" width="64" height="26" fill="#C44B32"
+      fill-opacity="0.15"><title>frontend-starved-lab3-3, workflow end-to-end p95, ms: 124736.893 against 84, EXCEEDS; it decided the verdict</title></rect>
+  <text x="304" y="483" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">124736.893</text>
+  <rect x="306" y="490" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="334" y1="486" x2="334" y2="497" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <polygon points="356,487.5 362,491.5 356,495.5"
+      fill="#C44B32"><title>124736.893, 1484.963 times the limit</title></polygon>
+  <rect x="370" y="472" width="64" height="26"
+      fill="#EEF3F2"><title>frontend-starved-lab3-3, persistence p99, ms: 9.042 against 23, ok</title></rect>
+  <text x="372" y="483" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">9.042</text>
+  <rect x="374" y="490" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="402" y1="486" x2="402" y2="497" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="385.008" cy="491.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>9.042 against 23</title></circle>
+  <rect x="438" y="472" width="64" height="26" fill="#C44B32" fill-opacity="0.15" stroke="#C44B32"
+      stroke-width="1.5"><title>frontend-starved-lab3-3, service error rate: 0.064 against 0.001, EXCEEDS; it decided the verdict</title></rect>
+  <text x="440" y="483" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0.064</text>
+  <rect x="442" y="490" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="470" y1="486" x2="470" y2="497" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <polygon points="492,487.5 498,491.5 492,495.5" fill="#C44B32"><title>0.064, 64 times the limit</title></polygon>
+  <rect x="506" y="472" width="64" height="26"
+      fill="#EEF3F2"><title>frontend-starved-lab3-3, frontend p99, polls left out, ms: 11.946 against 22, ok</title></rect>
+  <text x="508" y="483" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">11.946</text>
+  <rect x="510" y="490" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="538" y1="486" x2="538" y2="497" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="525.204" cy="491.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>11.946 against 22</title></circle>
+  <rect x="574" y="472" width="64" height="26" fill="#C44B32"
+      fill-opacity="0.15"><title>frontend-starved-lab3-3, workflows completed: 283 against &gt;= 5700, BELOW (0.95 x 20/s x 300 s); it decided the verdict</title></rect>
+  <text x="576" y="483" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">283</text>
+  <rect x="578" y="490" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="606" y1="486" x2="606" y2="497" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="579.39" cy="491.5" r="3" fill="#C44B32" stroke="#163A44"
+      stroke-width="0.5"><title>283 against &gt;= 5700</title></circle>
+  <rect x="642" y="472" width="64" height="26"
+      fill="#EEF3F2"><title>frontend-starved-lab3-3, Omes exit: 0 against 0, ok</title></rect>
+  <text x="644" y="483" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+  <rect x="710" y="472" width="64" height="26"
+      fill="#EEF3F2"><title>frontend-starved-lab3-3, workflows not completed: 0 against 0, ok (282 started before 2026-10-23, all Completed)</title></rect>
+  <text x="712" y="483" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0</text>
+</g>
+<line x1="24" y1="500" x2="776" y2="500" fill="none" stroke="#CFE3E4"/>
+<text x="24" y="516" font-size="11" fill="#163A44"
+    font-weight="600">persistence-starved: history.persistenceMaxQPS 9000 to 50, expect BLOCK on service_error_rate or omes_exit</text>
+<g aria-label="persistence-starved-lab3-1: PASS, BLOCK">
+  <text x="24" y="537" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">lab3-1</text>
+  <text x="96" y="537" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">1.31.0</text>
+  <text x="24" y="550" font-size="10" fill="#163A44" font-weight="600">PASS</text>
+  <text x="96" y="550" font-size="10" fill="#C44B32" font-weight="600">BLOCK</text>
+  <rect x="166" y="526" width="64" height="26" fill="#C44B32"
+      fill-opacity="0.15"><title>persistence-starved-lab3-1, workflow task schedule-to-start p99, ms: 15553.846 against 38, EXCEEDS; it decided the verdict</title></rect>
+  <text x="168" y="537" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">15553.846</text>
+  <rect x="170" y="544" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="198" y1="540" x2="198" y2="551" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <polygon points="220,541.5 226,545.5 220,549.5"
+      fill="#C44B32"><title>15553.846, 409.312 times the limit</title></polygon>
+  <rect x="234" y="526" width="64" height="26"
+      fill="#EEF3F2"><title>persistence-starved-lab3-1, activity schedule-to-start p99, ms: 18.109 against 20, ok</title></rect>
+  <text x="236" y="537" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">18.109</text>
+  <rect x="238" y="544" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="266" y1="540" x2="266" y2="551" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="263.353" cy="545.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>18.109 against 20</title></circle>
+  <rect x="302" y="526" width="64" height="26" fill="#C44B32"
+      fill-opacity="0.15"><title>persistence-starved-lab3-1, workflow end-to-end p95, ms: 413333.333 against 84, EXCEEDS; it decided the verdict</title></rect>
+  <text x="304" y="537" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">413333.333</text>
+  <rect x="306" y="544" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="334" y1="540" x2="334" y2="551" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <polygon points="356,541.5 362,545.5 356,549.5"
+      fill="#C44B32"><title>413333.333, 4920.635 times the limit</title></polygon>
+  <rect x="370" y="526" width="64" height="26"
+      fill="#EEF3F2"><title>persistence-starved-lab3-1, persistence p99, ms: 8.058 against 23, ok</title></rect>
+  <text x="372" y="537" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">8.058</text>
+  <rect x="374" y="544" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="402" y1="540" x2="402" y2="551" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="383.81" cy="545.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>8.058 against 23</title></circle>
+  <rect x="438" y="526" width="64" height="26" fill="#C44B32" fill-opacity="0.15" stroke="#C44B32"
+      stroke-width="1.5"><title>persistence-starved-lab3-1, service error rate: 0.069 against 0.001, EXCEEDS; it decided the verdict</title></rect>
+  <text x="440" y="537" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0.069</text>
+  <rect x="442" y="544" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="470" y1="540" x2="470" y2="551" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <polygon points="492,541.5 498,545.5 492,549.5" fill="#C44B32"><title>0.069, 69 times the limit</title></polygon>
+  <rect x="506" y="526" width="64" height="26"
+      fill="#EEF3F2"><title>persistence-starved-lab3-1, frontend p99, polls left out, ms: 16.884 against 22, ok</title></rect>
+  <text x="508" y="537" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">16.884</text>
+  <rect x="510" y="544" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="538" y1="540" x2="538" y2="551" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="531.489" cy="545.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>16.884 against 22</title></circle>
+  <rect x="574" y="526" width="64" height="26" fill="#C44B32"
+      fill-opacity="0.15"><title>persistence-starved-lab3-1, workflows completed: 210 against &gt;= 5700, BELOW (0.95 x 20/s x 300 s); it decided the verdict</title></rect>
+  <text x="576" y="537" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">210</text>
+  <rect x="578" y="544" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="606" y1="540" x2="606" y2="551" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="579.032" cy="545.5" r="3" fill="#C44B32" stroke="#163A44"
+      stroke-width="0.5"><title>210 against &gt;= 5700</title></circle>
+  <rect x="642" y="526" width="64" height="26" fill="#C44B32" fill-opacity="0.15" stroke="#C44B32"
+      stroke-width="1.5"><title>persistence-starved-lab3-1, Omes exit: 1 against 0, EXCEEDS (Omes failed; its log is faults/results/load/candidate-persistence-starved-lab3-1.log); it decided the verdict</title></rect>
+  <text x="644" y="537" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">1</text>
+  <rect x="710" y="526" width="64" height="26" fill="#C44B32"
+      fill-opacity="0.15"><title>persistence-starved-lab3-1, workflows not completed: 2 against 0, EXCEEDS (Running=2 of 212 started before 2026-10-23); it decided the verdict</title></rect>
+  <text x="712" y="537" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">2</text>
+</g>
+<g aria-label="persistence-starved-lab3-2: PASS, BLOCK">
+  <text x="24" y="567" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">lab3-2</text>
+  <text x="96" y="567" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">1.31.0</text>
+  <text x="24" y="580" font-size="10" fill="#163A44" font-weight="600">PASS</text>
+  <text x="96" y="580" font-size="10" fill="#C44B32" font-weight="600">BLOCK</text>
+  <rect x="166" y="556" width="64" height="26" fill="#C44B32"
+      fill-opacity="0.15"><title>persistence-starved-lab3-2, workflow task schedule-to-start p99, ms: 11957.143 against 38, EXCEEDS; it decided the verdict</title></rect>
+  <text x="168" y="567" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">11957.143</text>
+  <rect x="170" y="574" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="198" y1="570" x2="198" y2="581" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <polygon points="220,571.5 226,575.5 220,579.5"
+      fill="#C44B32"><title>11957.143, 314.662 times the limit</title></polygon>
+  <rect x="234" y="556" width="64" height="26"
+      fill="#EEF3F2"><title>persistence-starved-lab3-2, activity schedule-to-start p99, ms: 17.412 against 20, ok</title></rect>
+  <text x="236" y="567" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">17.412</text>
+  <rect x="238" y="574" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="266" y1="570" x2="266" y2="581" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="262.377" cy="575.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>17.412 against 20</title></circle>
+  <rect x="302" y="556" width="64" height="26" fill="#C44B32"
+      fill-opacity="0.15"><title>persistence-starved-lab3-2, workflow end-to-end p95, ms: 413333.333 against 84, EXCEEDS; it decided the verdict</title></rect>
+  <text x="304" y="567" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">413333.333</text>
+  <rect x="306" y="574" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="334" y1="570" x2="334" y2="581" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <polygon points="356,571.5 362,575.5 356,579.5"
+      fill="#C44B32"><title>413333.333, 4920.635 times the limit</title></polygon>
+  <rect x="370" y="556" width="64" height="26"
+      fill="#EEF3F2"><title>persistence-starved-lab3-2, persistence p99, ms: 8.118 against 23, ok</title></rect>
+  <text x="372" y="567" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">8.118</text>
+  <rect x="374" y="574" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="402" y1="570" x2="402" y2="581" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="383.883" cy="575.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>8.118 against 23</title></circle>
+  <rect x="438" y="556" width="64" height="26" fill="#C44B32" fill-opacity="0.15" stroke="#C44B32"
+      stroke-width="1.5"><title>persistence-starved-lab3-2, service error rate: 0.069 against 0.001, EXCEEDS; it decided the verdict</title></rect>
+  <text x="440" y="567" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0.069</text>
+  <rect x="442" y="574" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="470" y1="570" x2="470" y2="581" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <polygon points="492,571.5 498,575.5 492,579.5" fill="#C44B32"><title>0.069, 69 times the limit</title></polygon>
+  <rect x="506" y="556" width="64" height="26"
+      fill="#EEF3F2"><title>persistence-starved-lab3-2, frontend p99, polls left out, ms: 10.302 against 22, ok</title></rect>
+  <text x="508" y="567" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">10.302</text>
+  <rect x="510" y="574" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="538" y1="570" x2="538" y2="581" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="523.112" cy="575.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>10.302 against 22</title></circle>
+  <rect x="574" y="556" width="64" height="26" fill="#C44B32"
+      fill-opacity="0.15"><title>persistence-starved-lab3-2, workflows completed: 210 against &gt;= 5700, BELOW (0.95 x 20/s x 300 s); it decided the verdict</title></rect>
+  <text x="576" y="567" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">210</text>
+  <rect x="578" y="574" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="606" y1="570" x2="606" y2="581" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="579.032" cy="575.5" r="3" fill="#C44B32" stroke="#163A44"
+      stroke-width="0.5"><title>210 against &gt;= 5700</title></circle>
+  <rect x="642" y="556" width="64" height="26" fill="#C44B32" fill-opacity="0.15" stroke="#C44B32"
+      stroke-width="1.5"><title>persistence-starved-lab3-2, Omes exit: 1 against 0, EXCEEDS (Omes failed; its log is faults/results/load/candidate-persistence-starved-lab3-2.log); it decided the verdict</title></rect>
+  <text x="644" y="567" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">1</text>
+  <rect x="710" y="556" width="64" height="26" fill="#C44B32"
+      fill-opacity="0.15"><title>persistence-starved-lab3-2, workflows not completed: 4 against 0, EXCEEDS (Running=4 of 214 started before 2026-10-23); it decided the verdict</title></rect>
+  <text x="712" y="567" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">4</text>
+</g>
+<g aria-label="persistence-starved-lab3-3: PASS, BLOCK">
+  <text x="24" y="597" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">lab3-3</text>
+  <text x="96" y="597" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">1.31.0</text>
+  <text x="24" y="610" font-size="10" fill="#163A44" font-weight="600">PASS</text>
+  <text x="96" y="610" font-size="10" fill="#C44B32" font-weight="600">BLOCK</text>
+  <rect x="166" y="586" width="64" height="26" fill="#C44B32"
+      fill-opacity="0.15"><title>persistence-starved-lab3-3, workflow task schedule-to-start p99, ms: 14330.000 against 38, EXCEEDS; it decided the verdict</title></rect>
+  <text x="168" y="597" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">14330.000</text>
+  <rect x="170" y="604" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="198" y1="600" x2="198" y2="611" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <polygon points="220,601.5 226,605.5 220,609.5"
+      fill="#C44B32"><title>14330.000, 377.105 times the limit</title></polygon>
+  <rect x="234" y="586" width="64" height="26"
+      fill="#EEF3F2"><title>persistence-starved-lab3-3, activity schedule-to-start p99, ms: 18.258 against 20, ok</title></rect>
+  <text x="236" y="597" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">18.258</text>
+  <rect x="238" y="604" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="266" y1="600" x2="266" y2="611" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="263.561" cy="605.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>18.258 against 20</title></circle>
+  <rect x="302" y="586" width="64" height="26" fill="#C44B32"
+      fill-opacity="0.15"><title>persistence-starved-lab3-3, workflow end-to-end p95, ms: 415270.270 against 84, EXCEEDS; it decided the verdict</title></rect>
+  <text x="304" y="597" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">415270.270</text>
+  <rect x="306" y="604" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="334" y1="600" x2="334" y2="611" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <polygon points="356,601.5 362,605.5 356,609.5"
+      fill="#C44B32"><title>415270.270, 4943.694 times the limit</title></polygon>
+  <rect x="370" y="586" width="64" height="26"
+      fill="#EEF3F2"><title>persistence-starved-lab3-3, persistence p99, ms: 8.088 against 23, ok</title></rect>
+  <text x="372" y="597" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">8.088</text>
+  <rect x="374" y="604" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="402" y1="600" x2="402" y2="611" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="383.846" cy="605.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>8.088 against 23</title></circle>
+  <rect x="438" y="586" width="64" height="26" fill="#C44B32" fill-opacity="0.15" stroke="#C44B32"
+      stroke-width="1.5"><title>persistence-starved-lab3-3, service error rate: 0.072 against 0.001, EXCEEDS; it decided the verdict</title></rect>
+  <text x="440" y="597" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0.072</text>
+  <rect x="442" y="604" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="470" y1="600" x2="470" y2="611" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <polygon points="492,601.5 498,605.5 492,609.5" fill="#C44B32"><title>0.072, 72 times the limit</title></polygon>
+  <rect x="506" y="586" width="64" height="26"
+      fill="#EEF3F2"><title>persistence-starved-lab3-3, frontend p99, polls left out, ms: 13.136 against 22, ok</title></rect>
+  <text x="508" y="597" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">13.136</text>
+  <rect x="510" y="604" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="538" y1="600" x2="538" y2="611" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="526.719" cy="605.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>13.136 against 22</title></circle>
+  <rect x="574" y="586" width="64" height="26" fill="#C44B32"
+      fill-opacity="0.15"><title>persistence-starved-lab3-3, workflows completed: 212 against &gt;= 5700, BELOW (0.95 x 20/s x 300 s); it decided the verdict</title></rect>
+  <text x="576" y="597" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">212</text>
+  <rect x="578" y="604" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="606" y1="600" x2="606" y2="611" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="579.041" cy="605.5" r="3" fill="#C44B32" stroke="#163A44"
+      stroke-width="0.5"><title>212 against &gt;= 5700</title></circle>
+  <rect x="642" y="586" width="64" height="26" fill="#C44B32" fill-opacity="0.15" stroke="#C44B32"
+      stroke-width="1.5"><title>persistence-starved-lab3-3, Omes exit: 1 against 0, EXCEEDS (Omes failed; its log is faults/results/load/candidate-persistence-starved-lab3-3.log); it decided the verdict</title></rect>
+  <text x="644" y="597" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">1</text>
+  <rect x="710" y="586" width="64" height="26" fill="#C44B32"
+      fill-opacity="0.15"><title>persistence-starved-lab3-3, workflows not completed: 4 against 0, EXCEEDS (Running=4 of 216 started before 2026-10-23); it decided the verdict</title></rect>
+  <text x="712" y="597" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">4</text>
+</g>
+<g aria-label="persistence-starved-lab3-v1321: PASS, BLOCK">
+  <text x="24" y="627" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">lab3-v1321</text>
+  <text x="96" y="627" font-size="10" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">1.32.1</text>
+  <text x="24" y="640" font-size="10" fill="#163A44" font-weight="600">PASS</text>
+  <text x="96" y="640" font-size="10" fill="#C44B32" font-weight="600">BLOCK</text>
+  <rect x="166" y="616" width="64" height="26" fill="#C44B32"
+      fill-opacity="0.15"><title>persistence-starved-lab3-v1321, workflow task schedule-to-start p99, ms: 14609.091 against 38, EXCEEDS; it decided the verdict</title></rect>
+  <text x="168" y="627" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">14609.091</text>
+  <rect x="170" y="634" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="198" y1="630" x2="198" y2="641" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <polygon points="220,631.5 226,635.5 220,639.5"
+      fill="#C44B32"><title>14609.091, 384.45 times the limit</title></polygon>
+  <rect x="234" y="616" width="64" height="26"
+      fill="#EEF3F2"><title>persistence-starved-lab3-v1321, activity schedule-to-start p99, ms: not produced against 20, not produced on this release (load/releases/1.32.yaml)</title></rect>
+  <text x="236" y="627" font-size="9" fill="#163A44">not produced</text>
+  <rect x="302" y="616" width="64" height="26" fill="#C44B32"
+      fill-opacity="0.15"><title>persistence-starved-lab3-v1321, workflow end-to-end p95, ms: 405540.541 against 84, EXCEEDS; it decided the verdict</title></rect>
+  <text x="304" y="627" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">405540.541</text>
+  <rect x="306" y="634" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="334" y1="630" x2="334" y2="641" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <polygon points="356,631.5 362,635.5 356,639.5"
+      fill="#C44B32"><title>405540.541, 4827.864 times the limit</title></polygon>
+  <rect x="370" y="616" width="64" height="26"
+      fill="#EEF3F2"><title>persistence-starved-lab3-v1321, persistence p99, ms: 7.994 against 23, ok</title></rect>
+  <text x="372" y="627" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">7.994</text>
+  <rect x="374" y="634" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="402" y1="630" x2="402" y2="641" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="383.732" cy="635.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>7.994 against 23</title></circle>
+  <rect x="438" y="616" width="64" height="26" fill="#C44B32" fill-opacity="0.15" stroke="#C44B32"
+      stroke-width="1.5"><title>persistence-starved-lab3-v1321, service error rate: 0.063 against 0.001, EXCEEDS; it decided the verdict</title></rect>
+  <text x="440" y="627" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">0.063</text>
+  <rect x="442" y="634" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="470" y1="630" x2="470" y2="641" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <polygon points="492,631.5 498,635.5 492,639.5" fill="#C44B32"><title>0.063, 63 times the limit</title></polygon>
+  <rect x="506" y="616" width="64" height="26"
+      fill="#EEF3F2"><title>persistence-starved-lab3-v1321, frontend p99, polls left out, ms: 15.853 against 22, ok</title></rect>
+  <text x="508" y="627" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">15.853</text>
+  <rect x="510" y="634" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="538" y1="630" x2="538" y2="641" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="530.177" cy="635.5" r="3" fill="#5FB3BF" stroke="#163A44"
+      stroke-width="0.5"><title>15.853 against 22</title></circle>
+  <rect x="574" y="616" width="64" height="26" fill="#C44B32"
+      fill-opacity="0.15"><title>persistence-starved-lab3-v1321, workflows completed: 235 against &gt;= 5700, BELOW (0.95 x 20/s x 300 s); it decided the verdict</title></rect>
+  <text x="576" y="627" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">235</text>
+  <rect x="578" y="634" width="56" height="3" fill="#CFE3E4"/>
+  <line x1="606" y1="630" x2="606" y2="641" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+  <circle cx="579.154" cy="635.5" r="3" fill="#C44B32" stroke="#163A44"
+      stroke-width="0.5"><title>235 against &gt;= 5700</title></circle>
+  <rect x="642" y="616" width="64" height="26" fill="#C44B32" fill-opacity="0.15" stroke="#C44B32"
+      stroke-width="1.5"><title>persistence-starved-lab3-v1321, Omes exit: 1 against 0, EXCEEDS (Omes failed; its log is faults/results/load/candidate-persistence-starved-lab3-v1321.log); it decided the verdict</title></rect>
+  <text x="644" y="627" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">1</text>
+  <rect x="710" y="616" width="64" height="26" fill="#C44B32"
+      fill-opacity="0.15"><title>persistence-starved-lab3-v1321, workflows not completed: 2 against 0, EXCEEDS (Running=2 of 237 started before 2026-10-23); it decided the verdict</title></rect>
+  <text x="712" y="627" font-size="9" fill="#163A44"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">2</text>
+</g>
+<rect x="24" y="660" width="18" height="12" fill="#C44B32" fill-opacity="0.15"/>
+<text x="48" y="670" font-size="11" fill="#163A44">a row that decided the verdict</text>
+<rect x="250.8" y="660" width="18" height="12" fill="#C44B32" fill-opacity="0.15" stroke="#C44B32" stroke-width="1.5"/>
+<text x="274.8" y="670" font-size="11" fill="#163A44">and one its blocks_on names</text>
+<line x1="468.12" y1="660" x2="468.12" y2="672" fill="none" stroke="#C44B32" stroke-width="1.5"/>
+<text x="483.12" y="670" font-size="11" fill="#163A44">the limit</text>
+<rect x="24" y="686.5" width="18" height="3" fill="#CFE3E4"/>
+<circle cx="30" cy="688" r="3" fill="#5FB3BF" stroke="#163A44" stroke-width="0.5"/>
+<text x="48" y="692" font-size="11" fill="#163A44">the reading, 0 to twice the limit</text>
+<polygon points="279.28,684 285.28,688 279.28,692" fill="#C44B32"/>
+<text x="293.28" y="692" font-size="11" fill="#163A44">past twice the limit</text>
+<text x="776" y="692" font-size="11" fill="#163A44" text-anchor="end">s2s: schedule-to-start</text>
+</svg>

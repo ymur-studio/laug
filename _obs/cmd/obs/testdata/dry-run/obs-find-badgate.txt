@@ -1,0 +1,6 @@
+# make: make --no-print-directory -n obs-find GATE=nope
+# obs: bin/obs find nope
+# lease: absent
+# compare: refused
+[[ 'nope' =~ ^g[0-9]{8}-[0-9]{6}(-[0-9]+)?$ ]] || { echo "laug · make obs-find GATE=<gate id>: a gate id, g<date>-<time>, as make orchestrator-gate printed it" >&2; exit 2; }
+obs/obs.sh find

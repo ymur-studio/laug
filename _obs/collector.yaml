@@ -1,0 +1,84 @@
+# The stack's OpenTelemetry Collector, core 0.162.0 (_obs/README.md). bin/obs up copies this file into
+# OBS_DIR/conf and writes, where it reads them, @OBS_DISK@ (the block device under OBS_DIR) and @OBS_MOUNT@ (OBS_DIR's
+# mount point); make obs-test runs otelcol validate on that copy, and its own checks, since validate let an unknown key
+# under the OTLP receiver's http pass (seen 2026-10-17, the dev host). Component names are the ones otelcol components
+# lists at 0.162.0 (host_metrics, otlp_http, memory_limiter: seen the same day). Every listener is 127.0.0.1: OTLP over
+# HTTP on 7751 (no gRPC: one protocol, one port), the host's metrics on 7752, its own on 7753.
+receivers:
+  otlp:
+    protocols:
+      http:
+        endpoint: 127.0.0.1:7751       # the orchestrator's worker and starter, only when ORCH_OTLP is set
+  # Memory, paging, load, the root volume's operations and time busy, and OBS_DIR's filesystem. No cpu scraper:
+  # cellstat reads /proc/stat, schedstat and pressure at 5 s, and two sources would disagree on one board. No network
+  # scraper: Docker's veth names come and go with every container (inference). No process scraper: it carries command
+  # lines and paths.
+  host_metrics:
+    collection_interval: 15s
+    scrapers:
+      memory: {}
+      paging: {}
+      load: {}
+      disk:
+        include:
+          devices: ["@OBS_DISK@"]
+          match_type: strict
+      filesystem:
+        include_mount_points:
+          mount_points: ["@OBS_MOUNT@"]
+          match_type: strict
+
+processors:
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 256
+    spike_limit_mib: 64
+  # A guard: laug's worker sets service.name only, so none of these should arrive; if one does, it goes here.
+  resource:
+    attributes:
+      - { key: host.name, action: delete }
+      - { key: host.id, action: delete }
+      - { key: os.description, action: delete }
+      - { key: process.command_line, action: delete }
+      - { key: process.command_args, action: delete }
+      - { key: process.executable.path, action: delete }
+      - { key: process.owner, action: delete }
+      - { key: container.id, action: delete }
+  # A guard behind the interceptor's DisableQueryTracing: no query span reaches the store.
+  filter:
+    error_mode: ignore
+    traces:
+      span:
+        - 'IsMatch(name, "^QueryWorkflow:")'
+        - 'IsMatch(name, "^HandleQuery:")'
+  batch: {}
+
+exporters:
+  otlp_http:
+    endpoint: http://127.0.0.1:7760    # Jaeger's OTLP receiver; the exporter adds /v1/traces
+  prometheus:
+    endpoint: 127.0.0.1:7752
+
+service:
+  telemetry:
+    logs:
+      level: warn
+    traces:
+      level: none                      # its own spans off, as Jaeger's are (_obs/jaeger.yaml)
+    metrics:
+      level: basic
+      readers:
+        - pull:
+            exporter:
+              prometheus:
+                host: 127.0.0.1
+                port: 7753
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, resource, filter, batch]
+      exporters: [otlp_http]
+    metrics:
+      receivers: [host_metrics]
+      processors: [memory_limiter, batch]
+      exporters: [prometheus]

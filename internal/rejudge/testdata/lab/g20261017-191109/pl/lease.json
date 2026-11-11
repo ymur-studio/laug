@@ -1,0 +1,16 @@
+{
+  "id": "ca3d847b",
+  "address": "127.0.0.1:7253",
+  "ui": "http://127.0.0.1:8100",
+  "grafana": "http://127.0.0.1:3020",
+  "prometheus": "http://127.0.0.1:9110",
+  "toxiproxy": "http://127.0.0.1:8494",
+  "project": "laug-ca3d847b",
+  "dynconfig": "cells/run/laug-ca3d847b/dynamicconfig/laug.yaml",
+  "server_tag": "1.31.0",
+  "block": 2,
+  "state": "leased",
+  "requester": "gate-g20261017-191109-pl",
+  "leased_at": "2026-10-17T19:12:00.241389948Z",
+  "expires_at": "2026-10-17T19:32:00.241389948Z"
+}

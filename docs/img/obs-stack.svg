@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="520" viewBox="0 0 800 520" role="img"
+    aria-labelledby="obs-stack-title obs-stack-desc" font-family="Inter, system-ui, sans-serif">
+<title id="obs-stack-title">The stack: one store outside every cell, each cell&#39;s series named from outside</title>
+<desc id="obs-stack-desc">Left: each leased cell&#39;s own Prometheus, which dies with its cell, and bin/obs follow,
+    which writes a target file a cell with the labels that outlive it. Middle: the stack&#39;s store federates each cell
+    every 5 s and keeps the cell&#39;s own timestamps; with track_timestamps_staleness true a series the cell stops
+    serving goes stale at the next pass, not 5 minutes on. It scrapes cellstat, follow, the host and the
+    orchestrator&#39;s dev server too. Bottom: workflow Gate&#39;s worker and starter send traces over OTLP to the
+    Collector, which hands them to Jaeger. Right: Grafana reads both. Every address is 127.0.0.1 (_obs/prometheus.yml,
+    _obs/collector.yaml, _obs/jaeger.yaml). Sources: _obs/collector.yaml, _obs/grafana/grafana.ini,
+    _obs/grafana/provisioning/datasources/stack.yml, _obs/jaeger.yaml, _obs/prometheus.yml, _obs/versions.txt,
+    cells/compose/cell.yml, docs/img/src/obs-stack.txt.</desc>
+<rect x="0" y="0" width="800" height="520" fill="#EEF3F2"/>
+<text x="24" y="30" font-size="14" fill="#163A44"
+    font-weight="600">The stack: one store outside every cell, each cell&#39;s series named from outside</text>
+<text x="24" y="50" font-size="12"
+    fill="#163A44">bin/obs up: Prometheus, the Collector, Jaeger and Grafana, every listener on 127.0.0.1</text>
+<g aria-label="cell 0&#39;s Prometheus, 127.0.0.1:9090">
+  <rect x="24" y="92" width="220" height="56" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="134" y="116.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-weight="600">cell 0&#39;s Prometheus</text>
+  <text x="134" y="131.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">127.0.0.1:9090</text>
+</g>
+<g aria-label="cell 1&#39;s Prometheus, 127.0.0.1:9100">
+  <rect x="24" y="168" width="220" height="56" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="134" y="192.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-weight="600">cell 1&#39;s Prometheus</text>
+  <text x="134" y="207.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">127.0.0.1:9100</text>
+</g>
+<g aria-label="bin/obs follow, 7720, a target file a cell: cell,, block, gate_id, item, arm">
+  <rect x="24" y="244" width="220" height="80" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="134" y="273" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">bin/obs follow, 7720</text>
+  <text x="134" y="288" font-size="12" fill="#163A44" text-anchor="middle">a target file a cell: cell,</text>
+  <text x="134" y="303" font-size="12" fill="#163A44" text-anchor="middle">block, gate_id, item, arm</text>
+</g>
+<g aria-label="the stack&#39;s store, Prometheus 2.53.0, 127.0.0.1:7730">
+  <rect x="300" y="112" width="220" height="196" fill="#163A44" stroke="#163A44"/>
+  <text x="410" y="199" font-size="12" fill="#EEF3F2" text-anchor="middle"
+      font-weight="600">the stack&#39;s store</text>
+  <text x="410" y="214" font-size="12" fill="#EEF3F2" text-anchor="middle">Prometheus 2.53.0</text>
+  <text x="410" y="229" font-size="12" fill="#EEF3F2" text-anchor="middle">127.0.0.1:7730</text>
+</g>
+<g aria-label="Grafana, 127.0.0.1:7740, the boards">
+  <rect x="576" y="112" width="200" height="196" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="676" y="199" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">Grafana</text>
+  <text x="676" y="214" font-size="12" fill="#163A44" text-anchor="middle">127.0.0.1:7740</text>
+  <text x="676" y="229" font-size="12" fill="#163A44" text-anchor="middle">the boards</text>
+</g>
+<line x1="244" y1="130" x2="292" y2="130" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="300,130 292,134 292,126" fill="#163A44"/>
+<line x1="244" y1="196" x2="292" y2="196" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="300,196 292,200 292,192" fill="#163A44"/>
+<line x1="244" y1="276" x2="292" y2="276" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="300,276 292,280 292,272" fill="#163A44"/>
+<line x1="520" y1="210" x2="576" y2="210" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<text x="548" y="204" font-size="11" fill="#163A44" text-anchor="middle">read by</text>
+<text x="300" y="330" font-size="10" fill="#163A44">Each cell through /federate, every 5 s:</text>
+<text x="300" y="344" font-size="10" fill="#163A44">honor_labels, honor_timestamps and</text>
+<text x="300" y="358" font-size="10" fill="#163A44">track_timestamps_staleness, each true.</text>
+<text x="300" y="378" font-size="10" fill="#163A44">Scraped too: cellstat 7710, the host 7752,</text>
+<text x="300" y="392" font-size="10" fill="#163A44">the orchestrator&#39;s dev server 7402.</text>
+<g aria-label="Gate&#39;s worker, starter, OTLP over HTTP">
+  <rect x="24" y="420" width="220" height="66" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="134" y="449.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-weight="600">Gate&#39;s worker, starter</text>
+  <text x="134" y="464.5" font-size="12" fill="#163A44" text-anchor="middle">OTLP over HTTP</text>
+</g>
+<g aria-label="the Collector, 127.0.0.1:7751">
+  <rect x="300" y="420" width="220" height="66" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="410" y="449.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">the Collector</text>
+  <text x="410" y="464.5" font-size="12" fill="#163A44" text-anchor="middle">127.0.0.1:7751</text>
+</g>
+<g aria-label="Jaeger, OTLP 7760, from the, Collector; query 7761">
+  <rect x="576" y="420" width="200" height="66" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="676" y="442" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">Jaeger</text>
+  <text x="676" y="457" font-size="12" fill="#163A44" text-anchor="middle">OTLP 7760, from the</text>
+  <text x="676" y="472" font-size="12" fill="#163A44" text-anchor="middle">Collector; query 7761</text>
+</g>
+<line x1="244" y1="453" x2="292" y2="453" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="300,453 292,457 292,449" fill="#163A44"/>
+<line x1="520" y1="453" x2="568" y2="453" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="576,453 568,457 568,449" fill="#163A44"/>
+<line x1="676" y1="420" x2="676" y2="308" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<text x="682" y="368" font-size="11" fill="#163A44">read by</text>
+</svg>

@@ -1,0 +1,26 @@
+  laug · arm-tolerance: 6 gate(s), PAIR=incumbent:steady: a look at two plain items, not a tolerance
+  d = steady minus incumbent, per gate; T = max(m + 2 x (largest d - m), floor), rounded up to 0.01 ms or 0.0001
+  gates: g20261017-060633 run.sh 0eda8a3, g20261017-061717 run.sh 0eda8a3, g20261017-062801 run.sh 0eda8a3, g20261017-063843 run.sh 0eda8a3, g20261017-064925 run.sh 0eda8a3, g20261017-070006 run.sh 0eda8a3
+
+  reading                                    scale   n          m    largest        T   floor  jump
+  workflow_task_schedule_to_start_p99_ms     ms      6     -0.251     -0.061     0.13     0.1  not checked: n under 20
+  persistence_latency_p99_ms                 ms      6     -0.016      0.066     0.15     0.1  not checked: n under 20
+  activity_schedule_to_start_over_10ms       share   6  -0.000589   0.001930   0.0045  0.0005  not checked: n under 20
+  frontend_request_over_10ms                 share   6  -0.000230   0.000903   0.0021  0.0005  not checked: n under 20
+  workflow_end_to_end_over_50ms              share   6  -0.000494   0.001017   0.0026  0.0005  not checked: n under 20
+
+  recorded, not compared:
+  activity_schedule_to_start_p99_ms          ms      6     -0.020      1.471
+  workflow_end_to_end_p95_ms                 ms      6     -0.015      0.031
+  service_error_rate                         share   6   0.000000   0.000000
+  frontend_request_p99_ms                    ms      6     -0.270      0.526
+  workflow_task_schedule_to_start_over_20ms  share   6  -0.000090   0.000910
+  persistence_latency_over_10ms              share   6   0.000058   0.000156
+  workflows_completed                        count   6         21         68
+
+  mean d by driver (standard error); make gate runs run.sh, make orchestrator-gate step.sh:
+    run.sh: workflow_task_schedule_to_start_p99_ms n 6 m -0.251 (0.140); persistence_latency_p99_ms n 6 m -0.016 (0.024); activity_schedule_to_start_over_10ms n 6 m -0.000589 (0.000749); frontend_request_over_10ms n 6 m -0.000230 (0.000412); workflow_end_to_end_over_50ms n 6 m -0.000494 (0.000441)
+  mean d by session, the UTC date in the gate id (standard error):
+    20261017: workflow_task_schedule_to_start_p99_ms n 6 m -0.251 (0.140); persistence_latency_p99_ms n 6 m -0.016 (0.024); activity_schedule_to_start_over_10ms n 6 m -0.000589 (0.000749); frontend_request_over_10ms n 6 m -0.000230 (0.000412); workflow_end_to_end_over_50ms n 6 m -0.000494 (0.000441)
+  to the owner:
+    position: |mean d| 0.251 is over a quarter of T, 0.033, on workflow_task_schedule_to_start_p99_ms (docs/DESIGN.md section 7.1, protocol 5)

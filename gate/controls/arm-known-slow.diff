@@ -1,0 +1,65 @@
+# arm-known-slow: netem holds every packet into the release cell's Postgres ARM_SLOW_US microseconds (100 unless set) for the release's load, under every max. On cells the gate must BLOCK, class regression, on R7, as g20261018-163914, g20261018-170110 and g20261018-172301 did at 25. On fakes it ADVANCEs: the fake item replaces the one that sets it.
+diff --git a/gate/lib.sh b/gate/lib.sh
+index 9be93f8..cb58603 100644
+--- a/gate/lib.sh
++++ b/gate/lib.sh
+@@ -487,6 +487,59 @@ launch_item() { # launch_item <index> <key>: the item's script under setsid, in
+     [[ "$(jq -r '.max_concurrent // ""' <<<"$it")" == "" ]] || env_+=(MAX_CONCURRENT="$(jq -r .max_concurrent <<<"$it")")
+     cmd=(faults/run.sh "$scen" "$(jq -r .fault <<<"$it")" "$(rel "$lease")")
+   fi
++  # arm-known-slow, a test branch, never main: a release-only slowdown under every max, the gap the arm closes. For
++  # the release's whole load every packet into the release cell's Postgres waits ARM_SLOW_US us (100): a netem qdisc,
++  # sudo -n tc qdisc replace dev <veth> root netem delay <us>us, on this host's end of the cell's postgresql
++  # container's veth, the interface whose ifindex is the container's eth0 iflink. It goes with the veth when the cell
++  # is destroyed at release, so nothing removes it. (iproute2 6.1.0's tc-netem(8), delay, "adds the chosen delay to the
++  # packets outgoing", and LIMITATIONS, "timer granularity"; tc(8), TIMES, "us, usec, usecs or a bare number",
++  # Microseconds; netem waits on a qdisc_watchdog, an hrtimer, net/sched/sch_netem.c.) Not
++  # toxiproxy: seen on the lab host on 2026-10-17, its latency toxic of 1 ms gave persistence p99 d of 40.4, 39.3,
++  # 34.3 and 10.7 ms at toxicity 1.0, 0.5, 0.25 and 0.125, every gate over a max (whole ms, and toxicity picks whole
++  # connections). Its slicer keeps a gap of delay after each chunk, so a chunk later than that passes undelayed
++  # (toxics/slicer.go at v2.12.0), and a Go timer under 1 ms waited 1.04 ms in an idle Go process on the dev host:
++  # neither is a uniform shift. The slicer stays for a host without sudo: ARM_SLOW_TOXIC=slicer (default netem), slices
++  # of ARM_SLOW_SIZE bytes (65536). Either way the setup runs in the item's own process, at most 2 s, so no other
++  # item's launch waits for it; it writes <key>/known-slow.json, {instrument, ok, ...}, which marks the gate as this
++  # branch's (laug gate tolerance refuses it). On a failure it says why there and on stderr, and the load runs anyway.
++  # pl's toxic is named latency and sits on another cell. The fake gate replaces cmd below, so no fake runs it.
++  if [[ "$kind" == load && "$(jq -r '.arm // ""' <<<"$it")" != incumbent ]]; then
++    arm_slow_on() { # run by the item's own bash, from ARM_SLOW_SH: the delay on, its record in ARM_SLOW_OUT; 1 on a failure
++      local us="$ARM_SLOW_US" t="$ARM_SLOW_TOXIC" c peer veth f e q a
++      emit() { jq -cn --arg i "$t" --arg us "$us" "$@" > "$ARM_SLOW_OUT"; }
++      fail() { emit --arg e "$1" '{instrument: $i, ok: false, delay_us: ($us | tonumber? // $us), error: $e}'; return 1; }
++      [[ "$us" =~ ^[1-9][0-9]*$ ]] || { fail "ARM_SLOW_US is a whole number of microseconds, not '$us'"; return; }
++      case "$t" in
++        netem)
++          [[ -z "$ARM_SLOW_SSH" ]] || { fail "a microVM cell: its Postgres runs in the guest, out of this host's tc"; return; }
++          c="$(docker ps -q --filter "label=com.docker.compose.project=$ARM_SLOW_PROJECT" --filter label=com.docker.compose.service=postgresql 2>&1)" \
++            && [[ "$c" =~ ^[0-9a-f]+$ ]] || { fail "not one postgresql container in project '$ARM_SLOW_PROJECT': $c"; return; }
++          peer="$(docker exec "$c" cat /sys/class/net/eth0/iflink 2>&1)" && [[ "$peer" =~ ^[0-9]+$ ]] \
++            || { fail "docker exec $c cat /sys/class/net/eth0/iflink: $peer"; return; }
++          veth=; for f in /sys/class/net/*/ifindex; do [[ "$(< "$f")" == "$peer" ]] && { veth="${f%/ifindex}"; veth="${veth##*/}"; break; }; done
++          [[ -n "$veth" ]] || { fail "no interface of this host has ifindex $peer, the container's eth0 iflink"; return; }
++          e="$(sudo -n tc qdisc replace dev "$veth" root netem delay "${us}us" 2>&1)" \
++            || { fail "sudo -n tc qdisc replace dev $veth root netem delay ${us}us: $e"; return; }
++          q="$(sudo -n tc qdisc show dev "$veth" 2>&1)"
++          emit --arg c "$c" --arg v "$veth" --arg cmd "tc qdisc replace dev $veth root netem delay ${us}us" --arg e "$e" --arg q "$q" \
++            '{instrument: $i, ok: true, delay_us: ($us | tonumber), container: $c, veth: $v, command: $cmd, answer: $e, qdisc: $q}' ;;
++        slicer)
++          a="$(curl -sf -m 1 -X POST "$ARM_SLOW_URL" -d "$ARM_SLOW_BODY")" && jq -e . <<<"$a" >/dev/null 2>&1 \
++            || { fail "the POST of the slicer to $ARM_SLOW_URL failed"; return; }
++          emit --argjson a "$a" '{instrument: $i, ok: true, delay_us: ($us | tonumber), answer: $a}' ;;
++        *) fail "ARM_SLOW_TOXIC is netem or slicer, not '$t'" ;;
++      esac; }
++    env_+=(ARM_SLOW_TOXIC="${ARM_SLOW_TOXIC:-netem}" ARM_SLOW_US="${ARM_SLOW_US:-100}" ARM_SLOW_OUT="$(rel "$kd/known-slow.json")"
++           ARM_SLOW_PROJECT="$(jq -r '.project // ""' "$lease")" ARM_SLOW_SSH="$(jq -r '.ssh // ""' "$lease")"
++           ARM_SLOW_URL="$(jq -r .toxiproxy "$lease")/proxies/postgres/toxics"
++           ARM_SLOW_BODY="$(jq -cn --argjson s "${ARM_SLOW_SIZE:-65536}" --argjson u "${ARM_SLOW_US:-100}" '{name: "known-slow", type: "slicer", attributes: {average_size: $s, size_variation: 0, delay: $u}, toxicity: 1.0}')"
++           ARM_SLOW_SH="$(declare -f arm_slow_on)"$'\n'arm_slow_on)
++    # timeout TERMs the setup's process group at 1.5 s and KILLs it at 2 s.
++    # shellcheck disable=SC2016  # expanded by the item's own bash
++    cmd=(bash -c 'timeout -k 0.5 1.5 bash -c "$ARM_SLOW_SH" || { [[ -s "$ARM_SLOW_OUT" ]] || jq -cn --arg t "$ARM_SLOW_TOXIC" "{instrument: \$t, ok: false, error: \"no record from the setup in 1.5 s\"}" > "$ARM_SLOW_OUT"
++                  echo "arm-known-slow: the $ARM_SLOW_TOXIC delay did not go on: $(head -c 400 "$ARM_SLOW_OUT")" >&2; }
++                  rc=0; load/run-omes.sh "$1" || rc=$?; echo "$rc" > "$2"; exec load/verdict.sh "$3"' gate-load "$scen" "$(rel "$kd/load.exit")" "$run_id")
++  fi
+   [[ "$fake" != 1 ]] || cmd=("$root/load/testdata/gate/fake-item.sh" "$kind" "$k" "$scen" "$(jq -r '.fault // "-"' <<<"$it")" "$(rel "$lease")")
+   item_start[$k]="$(stamp)"
+   "${sigdefault[@]}" "${env_[@]}" setsid "${cmd[@]}" > "$kd/item.log" 2>&1 8>&- 9>&- &

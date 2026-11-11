@@ -1,0 +1,144 @@
+{
+  "gate_id": "g20261015-065429",
+  "verdict": "ADVANCE",
+  "class": null,
+  "rerun": false,
+  "class_if_quiet": null,
+  "refused": null,
+  "fake": false,
+  "server_tag": "1.31.0",
+  "laug_commit": "8fdec56",
+  "tree_dirty": false,
+  "base": "8fdec56",
+  "inputs": [
+    {
+      "path": "gate/plan.yaml",
+      "sha256": "4f63c5f50d03d976dfbef656cd1991f783bafd85143f549fd9ce64ed79d962ea",
+      "changed_vs_base": false
+    },
+    {
+      "path": "gate/combine.sh",
+      "sha256": "284a759c54557c18bcbdfc257414199c9c94bfb573e3234e2265ecf18ab5366c",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/steady-state.yaml",
+      "sha256": "3d86abd2379a92b1d6e2ce6df294d8f8737854f48364674e7305b929942bc321",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/thresholds.sh",
+      "sha256": "77d5fb8a58d6b9b850f83279b8f61e988615c60dbdd5a7d0d2fa7aecd386500f",
+      "changed_vs_base": false
+    },
+    {
+      "path": "faults/catalog.yaml",
+      "sha256": "f0e73b887d68b2e28575b8146f430d3a98dbae09f96d1da8aed63404cf333a9e",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/releases/1.32.yaml",
+      "sha256": "f4a11d5c163ce31006eb50bd41e2ef4b9e5d30a6f01d10d116744f74d5ff90a7",
+      "changed_vs_base": false
+    }
+  ],
+  "deadline_s": 780,
+  "items_in_plan": 2,
+  "items_limit": null,
+  "t0": {
+    "wall": 1792047269.971,
+    "mono": 629.31
+  },
+  "t_post": {
+    "wall": 1792047879.186,
+    "mono": 1238.53
+  },
+  "elapsed_s": {
+    "wall": 609.215,
+    "mono": 609.22
+  },
+  "host": {
+    "vcpu": 32,
+    "mem_gib": 123,
+    "mem_available_gib": 122.1
+  },
+  "rules": {
+    "R1": {
+      "name": "harness",
+      "pass": true,
+      "reasons": []
+    },
+    "R2": {
+      "name": "coverage",
+      "pass": true,
+      "reasons": []
+    },
+    "R3": {
+      "name": "contract",
+      "pass": true,
+      "reasons": []
+    },
+    "R4": {
+      "name": "outcome",
+      "pass": true,
+      "reasons": []
+    },
+    "R5": {
+      "name": "live control",
+      "pass": true,
+      "reasons": []
+    },
+    "R6": {
+      "name": "identity",
+      "pass": true,
+      "reasons": []
+    }
+  },
+  "reasons": [],
+  "items": [
+    {
+      "key": "steady",
+      "kind": "load",
+      "expect": "ADVANCE",
+      "observed": "ADVANCE",
+      "class": null,
+      "reason": "",
+      "failed": [],
+      "run_id": "g20261015-065429-steady",
+      "cell": "3ccc5fc1",
+      "block": 0,
+      "exit": 0,
+      "stopped_by": null,
+      "pool_busy": null,
+      "evidence": [
+        "steady/g20261015-065429-steady.json",
+        "steady/g20261015-065429-steady.verdict.json"
+      ]
+    },
+    {
+      "key": "pl",
+      "kind": "fault",
+      "expect": "ADVANCE",
+      "observed": "ADVANCE",
+      "class": null,
+      "reason": "",
+      "failed": [],
+      "run_id": "g20261015-065429-pl",
+      "cell": "b2d8a219",
+      "block": 1,
+      "exit": 0,
+      "stopped_by": null,
+      "pool_busy": {
+        "before": 0,
+        "during": 0,
+        "drain": 0,
+        "after": 0
+      },
+      "evidence": [
+        "pl/g20261015-065429-pl.json"
+      ]
+    }
+  ],
+  "host_quiet": true,
+  "host_noise": []
+}

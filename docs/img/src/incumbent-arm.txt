@@ -1,0 +1,31 @@
+# The incumbent arm: gate/plan.yaml:22-57 (incumbent 1.31.0; the three items, incumbent leased first; 5m at 20/s, 50
+# at once), internal/judge/rules.go:369-379 (R4 outcome, R7 incumbent), and load/steady-state.yaml:96-112 (d, rounding,
+# only worse BLOCKs; the tolerances, read by the panel, _report/lessonpanels.go, tolerancesPanel).
+name incumbent-arm
+size 800 470
+title | The incumbent arm: the release judged against the one it replaces, in one wave
+sub | gate/plan.yaml's wave on one host: three items at once, each on a cell of its own from laug pool serve
+desc | One gate's wave. Three items run at once on one host, each on a cell leased from laug pool serve: incumbent,
+desc | leased first, runs the plan's incumbent release; steady runs the release under test with the same load;
+desc | persistence-latency, the plan's item pl, runs the release under that fault. R4 holds when each item's result is
+desc | its expect. R7 compares
+desc | steady with incumbent: d is the release's reading less the incumbent's, for each compared reading, and only worse
+desc | BLOCKs, when d is over that reading's tolerance (gate/plan.yaml, load/steady-state.yaml).
+source gate/plan.yaml
+source load/steady-state.yaml
+source internal/judge/rules.go
+box pool 24 72 260 44 mono | laug pool serve | 127.0.0.1:7700
+text 300 92 | leases three cells, incumbent's first
+region 16 128 768 132 | one wave on one host
+box inc 24 156 236 92 | incumbent | server 1.31.0, the plan's | incumbent; a load, 5 m | at 20/s, 50 at once
+box steady 282 156 236 92 | steady | the release under test, | SERVER_TAG; the same load
+box pl 540 156 236 92 | persistence-latency | the release under test, | under that fault, | the plan's item pl
+box r4 24 300 236 80 | R4, outcome | each item's result is | its expect: ADVANCE, here, | for all three
+box r7 282 300 236 80 fill=deep | R7, incumbent | d: steady's reading less | incumbent's; WORSE when d
+  | is over its tolerance
+arrow inc r7
+arrow steady r7
+panel tolerances 540 292 236 104
+text 24 424 size=11
+  | Only worse BLOCKs: a d under its tolerance, or below zero, passes. In an A/A gate both arms run one release.
+text 24 442 size=11 | incumbent and steady share the host, the hour and the load.

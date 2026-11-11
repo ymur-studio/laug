@@ -1,0 +1,30 @@
+# The incumbent arm's 20 calibration gates: the calibration session's A/A gates of gate/plan.yaml's wave incumbent,
+# steady and pl, all on server 1.31.0, the plan's incumbent, in recording mode, on the lab host, an m8i.8xlarge
+# (32 vCPU). The tolerances in load/steady-state.yaml's compare: block were set from these 20 (the transcript's
+# section 3). gate.json cannot tell them from g20261017-172556, which ran the same plan, release and host in recording
+# mode and ADVANCEd too: the gate after the session's first gate since the boot, not counted. _report, the renderer, reads
+# this list.
+# 20 gates, drivers run.sh and step.sh, 10 each.
+# One gate id a line; a line starting with # is a comment. A line "# <file>:<lines>, ..." names the transcript lines
+# that record the ids after it (TestSets).
+# cells/results/2026-10-17-lab-arm-calibration.txt:542-561, c1 to c20
+g20261017-174403
+g20261017-175458
+g20261017-180552
+g20261017-181635
+g20261017-182733
+g20261017-183826
+g20261017-184922
+g20261017-190015
+g20261017-191109
+g20261017-192202
+g20261017-193258
+g20261017-194350
+g20261017-195440
+g20261017-200534
+g20261017-201631
+g20261017-202724
+g20261017-203815
+g20261017-204906
+g20261017-205956
+g20261017-211051

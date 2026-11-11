@@ -1,0 +1,48 @@
+# The Firecracker pool's network, two cells of it. The layout, the DNAT, the one way out of the guest and the deny
+# rules: cells/backend-firecracker.sh:7-22 and :231-244. What each piece is made by and when it goes: its create and
+# destroy. The guest's and the tap's addresses are named, not written: the shape scan passes
+# no IPv4 address but 127.0.0.1, 0.0.0.0 and 10.254.<block>.2.
+name fc-network
+size 800 520
+title | The Firecracker pool's network: a namespace a clone, held by its own process
+sub | Two microVM cells, blocks 0 and 1, restored from one snapshot: one machine inside, apart outside
+desc | Two cells of the microVM pool, blocks 0 and 1, each a firecracker process in network and mount namespaces that
+desc | only it holds. laugfc<b> on the host and veth0, 10.254.<b>.2, inside the cell's namespace are the two ends of a
+desc | veth pair. Inside, a DNAT rule sends what the host sends to 10.254.<b>.2 on through tap0 to the guest, whose
+desc | address is the same in every clone, so two guests never meet. The guest can start one kind of connection: to the
+desc | host's SDK metrics ports, 9091 to 9093. Deny rules on the host drop anything forwarded to or from laugfc+. Arrows
+desc | run the way a connection from the host goes.
+source cells/backend-firecracker.sh
+# SECURITY.md's section Firecracker and root: what a cell publishes, the deny rules and the guest's one way out.
+source SECURITY.md
+text 24 82 bold size=12 | the host
+text 276 82 bold size=12 | each cell's network namespace
+text 618 82 bold size=12 | the guest
+region 260 92 330 176 | cell 0's namespace, held by its process
+box host0 24 132 200 44 mono | laugfc0 | the veth's host end
+box veth0 276 132 130 44 mono | veth0 | 10.254.0.2/30
+box dnat0 446 132 140 44 | DNAT | to the guest
+box tap0 446 206 140 44 | tap0 | the guest's gateway
+box guest0 618 198 158 60 | eth0 | one address, the same | in every clone
+arrow host0 veth0 at=230,148 | veth
+arrow veth0 dnat0
+arrow dnat0 tap0
+link tap0 guest0
+region 260 290 330 176 | cell 1's namespace, held by its process
+box host1 24 330 200 44 mono | laugfc1 | the veth's host end
+box veth1 276 330 130 44 mono | veth0 | 10.254.1.2/30
+box dnat1 446 330 140 44 | DNAT | to the guest
+box tap1 446 404 140 44 | tap0 | the guest's gateway
+box guest1 618 396 158 60 | eth0 | one address, the same | in every clone
+arrow host1 veth1 at=230,346 | veth
+arrow veth1 dnat1
+arrow dnat1 tap1
+link tap1 guest1
+box deny 24 404 200 62 fill=steam stroke=ember | deny rules | FORWARD, DOCKER-USER: | drop to or from laugfc+
+text 24 102 | The pool and every client dial
+text 24 116 | 10.254.<b>.2 from this host.
+text 618 282 size=10 | From the guest, one way out:
+text 618 295 size=10 | the host's SDK metrics ports,
+text 618 308 size=10 | 9091 to 9093, through tap0.
+text 24 494 size=11
+  | Kill a cell's process and the kernel frees its namespace, its veth pair and its tap; destroy removes its disk.

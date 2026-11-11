@@ -1,0 +1,635 @@
+laug · boot 9 on the lab host: Firecracker run 1 under Unsafe, frozen, io_engine Sync
+2026-10-29, 04:13:28 to 07:09:29 UTC by the box's clock (batch-log.txt, its first and last lines); the batch itself
+started at 04:13:33 and ran 175 min 56 s (computed). Host: the lab host, an m8i.8xlarge (32 vCPU, 128 GiB), nested:
+/dev/kvm present, grep -cw vmx /proc/cpuinfo 64, a count of lines on a 32 vCPU host (batchE.txt:64-65), kvm_intel
+nested, ept, enable_shadow_vmcs and enable_apicv all Y, kernel 7.0.0-1014-aws (steps/H2.txt:2-5). Up 40.21 s when the
+batch started, so booted at about 04:12:53 (computed); 90G free on /; 0 on 7700, 0 laug projects, 0 laugd, 0 pool
+serve, 0 cellstat, 0 dev servers, 0 firecracker, nothing listening on 7400 to 7402, 8400 or 7700 to 7799
+(batch-log.txt:8). Tree: 35fb6ce, pushed to the box, which commits a pushed tree itself: 63f3c8a, "tree 041322 from
+35fb6ce", whose 5535 files hash as 35fb6ce's on the dev host, with no other file (batch-log.txt:1, :6, :19). Every laug
+command ran in a fresh clone of it, bin/laug stamped 63f3c8a (batch-log.txt:30). This record is committed on a later
+tree: 9f1ed20 (fc-image makes the guest's own ssh host keys) and 3f31d84 (LAUG_COMPOSE_EXTRA) came after 35fb6ce and
+did not run here. Go: go1.26.0, already in /usr/local/go; apt's is go1.22.2 (batch-log.txt:2). The batch ran as root;
+every step that needs no root ran as the box user through runuser (batch-log.txt:9). The launcher moved the image,
+snapshot and firecracker binary it found to /opt/fc/old-20261029-041328 (batch-log.txt:1). The safety stop was set
+for 12:12 UTC; the boot's budget was 422 min from 04:13:33 (batch-log.txt:7).
+What the batch asked (boot 9, Firecracker run 1 whole): every catalog row but disk-slow, which is run 2's, on microVM
+cells under boot 8's arm A setting (cells/results/2026-10-29-boot8.txt, A, B, C): FC_CACHE_TYPE Unsafe, FREEZE 1,
+FC_IO_ENGINE Sync. The knobs: RUN1_SERVERFI 1, RUN1_NEVER 1, RUN1_RERUN4 1, F_ORDER F5 F4 FS, WARMUP_STOP 0, RUN_PORTS
+0, RUN_RUNBOOKS 0 (batch-log.txt:11). In order: pre, L0, S, H, I, K, R, D, P, T, F0, F5, F4, FS, E (groups.txt:1-15).
+P's pool was -min 2 -max 6 (batch-log.txt:64). F's was -min 0 -max 1 (batch-log.txt:89), so every raun's lease was a
+create and its load began about 5 s after the cell's resume (F). F0 is the warm-up raun, never counted; under
+WARMUP_STOP 0 its reading is logged and stops nothing (batch-log.txt:97, :100). Then the 52 counted rauns: F5, "the 5
+rows never scheduled, 13 rauns" (batch-log.txt:101); F4, "the 4 rows batch E ran under Unsafe, 3 each" (:128); FS,
+"serverfi: a warm-up raun, then the 9 rows 3 times each, on microVM leases" (:153). No gate runs on microVM cells
+(batchE.txt:27-28).
+Files. faults/results/raun-lab9-<row>-<n>.json are the 52 counted rauns' JSONs; raun-lab9-warmup.json (F0) and
+raun-lab9-fi-warmup.json (FS's warm-up) are the two warm-ups', never counted, as raun-lab7-warmup.json and
+raun-lab8-*-warmup.json are; load/results/lab9-fc-load.json is P7's 1 min load. Each sits at the tree path laug wrote it
+in the clone; the clone's git status after the batch lists these 55 and a 56th, load/results/lab9-fc-load.baseline.json,
+untracked, and no other path (clone-status.txt:1-56). The 56th is not kept: it is 0 bytes, laug baseline's exit 3 on
+a 69 s window (P7), boot 7's case (cells/results/2026-10-29-boot7.txt, Files). The JSONs name the drive's cache_type,
+Unsafe in all 55, and neither the freeze nor the I/O engine: no key of any of them names io_engine or frozen (grep).
+K3's snapshot.json, which every create loaded (readings.json:2410, a raun reading's "how"), reads cache_type Unsafe,
+io_engine Sync, frozen true (extra/fc-snapshot-K3.json), and P6b's GET /vm/config read Unsafe and Sync
+(steps/P6b.txt:2). So this file, not the JSONs, is the record that ties the 54 raun JSONs to "frozen, Sync"; read
+alone, they look like batch E's but for "Unsafe".
+cells/results/2026-10-29-boot9/ holds the batch's own records, 2692507 bytes, scrubbed of the box's paths and name
+before they left it (a path shows as <clone>, <box tree>, <FC_DIR> or <out>; /opt/fc, /opt/laug and /run/laug stay):
+  batch-log.txt     70134 bytes, 217 lines: one line a command, with its exit and seconds, a summary line a raun, UTC
+  steps/            348013 bytes, 128 files: each command's stdout and stderr, one file a step: the 121 of steps.tsv,
+                    the two pools' own logs, P1.txt and F-pool.txt, and S1.txt, L-build.txt, PGID-probe.txt,
+                    L0-before.txt and L0-after.txt
+  steps.tsv         2801 bytes: step, exit, seconds, ok or fail: the 121 commands
+  runs.tsv          5753 bytes: step, run id, the file the step wrote, exit: 56 lines, P7's load and baseline and the
+                    54 rauns
+  readings.json     168272 bytes: the 112 readings the batch took, each with its step, how it was read and when
+  groups.txt        37 bytes: the 15 step groups, in order
+  clone-status.txt  2944 bytes: the clone's git status after the batch, 56 lines
+  extra/            2094553 bytes, 156 files: fc-metrics-<id>.json, the VMM metrics of each of the 84 cells the two
+                    pools created, and of I's first boot (fc-metrics-I.json), 85 files, 308 JSON lines in all, each the
+                    counters' change since the line before; fc-vmm-*.txt, 65 VMM logs (I, K1 to K3, R1's last restore,
+                    P's two kept, fc-vmm-P.txt and -P-b2.txt, the last of blocks 1, 3 and 4, the timer's cell, the two
+                    warm-ups and the 52 counted rauns); fc-snapshot-K1.json to K3.json; f-vmm-load.jsonl, F0's leased
+                    VMM memory every 15 s, 6 lines; fc-chroot-summary.txt; fc-guest-key-fingerprint.txt
+The raun JSONs: 54 files, 198665 bytes, in faults/results; lab9-fc-load.json, 690 bytes, in load/results.
+The pack's extra/ held 161 files; 5 are not kept here. fc-vmm-b0-last.txt and fc-vmm-b2-last.txt are byte for byte
+fc-vmm-lab9-history-recreate-3.txt and fc-vmm-P-b2.txt (cmp), as boot 8 left out its copies (boot8.txt:50-52).
+fc-events-lab9-oom-history-1.txt to -3.txt are each 0 bytes: the guest's docker events in oom-history's rauns, empty
+because no oom-history raun reached its fault (F4); their counts, oom 0, die 0 and start 0, are in readings.json
+(raun_lab9_oom_history_1 to _3, readings.json:2403-2407, :2460-2464, :2517-2521). E-gather's "VMM logs in extra/: 67"
+(steps/E-gather.txt:2) counts the two copies.
+Every table below is read from those files with jq, or quoted from them. Tags: a number with a file beside it is seen in
+that file; "computed" marks arithmetic on such numbers; "inference" marks reasoning; "verify" marks what comes from
+documentation or source not run here. A step's file is steps/<step>.txt; a reading is readings.json's entry of that
+name, with its line where a table needs it (readings.json:N). J:N is line N of a raun's
+faults/results/raun-lab9-<label>.json; in all 54 the before window's end-to-end p95 is J:38, persistence p99 J:39 and
+frontend p99 J:41. "Batch E" is cells/results/2026-10-24-batchE.txt (batchE.txt:N), Unsafe by Firecracker's default, no
+cache_type sent (verify: Firecracker v1.17 block-caching.md), not frozen, on warm leases of a -min 2 -max 6 pool;
+"boot 7" and "boot 8" are cells/results/2026-10-29-boot7.txt and -boot8.txt (boot7.txt:N, boot8.txt:N). "A" is boot 8's
+arm A, the same setting as this batch, its cell leased from a -min 0 -max 1 pool and left idle 120 s before its load
+(cells/results/2026-10-29-boot8/batch-log.txt:88-91).
+
+== pre and L0: the box tree's checks and the leftover, 04:13:33 to 04:13:34
+pre: the box tree's own checks, exit 0 in 0.2 s: the three runbooks' blocks, 7, 5 and 7, of which 4, 2 and 2 need a
+cell; 18 of the catalog's rows, disk-slow there too and not run (run 2); serverfi's microVM refusal 0 times;
+FC_CACHE_TYPE Writeback by default; FC_IO_ENGINE Sync by default and in vm_boot's drive PUT; the sha256 pins 3 of 3;
+FREEZE 1 by default; the vmmetrics and vmfault verbs; icmp_ratelimit 0 in each namespace; guest_thaw in
+backend-firecracker.sh and restore.sh (steps/pre.txt:2-20). The tree's default drive is Writeback; every K and both pool
+starts here passed Unsafe and Sync (batch-log.txt:46, :48, :50, :64, :89).
+L0-before: 0 projects, cells left 0 (steps/L0-before.txt:1). bin/laug pool down, bare, exit 2: "nothing to stop or
+remove" (steps/L0-list-pool.txt:3-4). L0-sweep, pool down -remove-cells: exit 0 in 0.1 s, "left: 0 containers, 0
+volumes, 0 networks, 0 per-cell dirs" (steps/L0-sweep.txt:2-3). After: the same as before, 0.4 s in all
+(steps/L0-after.txt:1; batch-log.txt:17).
+Shows: nothing of laug's was on the box before S; boot 8's L0 swept boot 7's leftover (boot8.txt:73-77), and none came
+back.
+
+== S and H: the start and the host, 04:13:34 to 04:19:56
+  S1   git clone <box tree> <clone>      63f3c8a, 5535 files (steps/S1.txt:2-3)
+  S2   make build                        exit 0, 2.0 s (batch-log.txt:20)
+  S3   bin/laug upstream -url ...        exit 0, 2.5 s: Omes f0de206 (batch-log.txt:21)
+  S4   bin/laug deps -lab -json          exit 0, 1.3 s, 0 missing (batch-log.txt:22-23)
+  S5a  make test-go                      exit 0, 84.2 s, 15 ok lines (batch-log.txt:24-25)
+  S5b  make harness-test                 exit 0, 290.0 s: 1315 passed, 0 failed (batch-log.txt:26)
+  S5c  make lint                         exit 0, 0.7 s (batch-log.txt:28)
+  S6   bin/laug version -json            commit 63f3c8a, go1.26.0, server_tag 1.31.0, Omes f0de206 (batch-log.txt:30)
+  S7   git status, the owner             clean; the box user (steps/S7.txt:2-3)
+H1 and H1b: m8i.8xlarge declared, 32 vCPU, 123 GiB, virtualized, passes (batch-log.txt:34-35). H0-pgid: the same
+group, 675347 (batch-log.txt:37). H2: as the head; 125061 of 126751 MiB available; 90 GB free on FC_DIR's filesystem,
+ext4; 7 old-* dirs under FC_DIR (steps/H2.txt:6-8). H3: the 8 images of 1.31.0, none absent (steps/H3.txt:2-9). PORTS
+and R11c were skipped by knob, RUN_PORTS 0 and RUN_RUNBOOKS 0 (batch-log.txt:40-41).
+Shows: make test by part on a fresh lab clone of 35fb6ce: 84.2 + 290.0 + 0.7 = 374.9 s (computed), against boot 8's
+385.7 s at the same tree (boot8.txt:95). make harness-test alone, 290.0 s, is 10.0 s under the 300 s gate/plan.yaml
+gives R1 (gate/plan.yaml:31), where boot 8's 301.5 s was over (boot8.txt:96-98); the batch logged its warning at 270 s
+(batch-log.txt:27). The host is boot 8's in every read but the free space and the old-* dirs.
+Does not show: a gate's R1 at this tree; none ran.
+
+== I: the cell image, built again, 04:19:56 to 04:21:37
+I1, as root: make -C <clone> fc-image, exit 0 in 100.2 s, "built in 100.19 s" (steps/I1.txt:10, :14): firecracker
+v1.17.0, jailer v1.17.0, kernel vmlinux-6.18.51, base firecracker-ci/20261008-40f3a4819490-0 ubuntu-24.04; 8 images;
+first boot ssh after 3.03 s; docker load 44 s (steps/I1.txt:4-8). I-sums: kernel and base squashfs ok, both found;
+the binary fetched and checked against FC_SHA256_TGZ and the release's .sha256.txt; the guest host key ED25519, 256
+bits, SHA256:CFmF+BYjJ9iZO2s/kvQKuCJZY/sb50E6MZFzb/9OkWs (steps/I-sums.txt:2-5). chroot.log held 328 lines and stayed
+on the box (extra/fc-chroot-summary.txt:2). I's first boot flushed 2370 times (extra/fc-metrics-I.json,
+block.flush_count summed).
+Shows: the image rebuilt with every pin checked, in 100.19 s against boot 8's 101.45 s, boot 7's 99.35 s and batch E's
+79.65 s (boot8.txt:172; boot7.txt:115; batchE.txt:104); docker load 44 s against 43, 43 and 27 s. The host key's
+fingerprint is boot 7's and boot 8's (boot7.txt:122; boot8.txt:176): three builds, one key. This tree is 35fb6ce, before
+9f1ed20, so it is the base rootfs's key a third time (inference, as boot8.txt:179-180), and a build with new keys has
+still not run on the lab host.
+Does not show: chroot.log itself. No VMM ran jailed: no create line of the 87 names a jail (steps/P1.txt,
+steps/F-pool.txt; grep).
+
+== K: three cold boots under Unsafe, frozen, Sync, and snapshots, 04:21:37 to 04:26:52
+K1 to K3, as root: env FC_CACHE_TYPE=Unsafe FREEZE=1 FC_IO_ENGINE=Sync make -C <clone> fc-snapshot; the third's
+snapshot is the one R and both pools restore (steps/K1.txt to K3.txt:4-14, :18; cold_boot_1 to cold_boot_3,
+readings.json:190-309). A beside (boot8.txt:252-258), batch E's three (batchE.txt:127-143):
+                                     K1       K2       K3       A          batch E K1 to K3
+  disk: copy of the image, s         22.14    37.04    2.18     29.74      2.05 to 32.09
+  boot to ssh, s                     2.87     2.86     2.89     2.94       2.85 to 3.89
+  dockerd ready, s                   3.55     3.54     3.62                3.54 to 4.54
+  from compose up, s:
+    compose up returned              12.60    12.65    12.63               12.61 to 12.64
+    cluster health                   12.90    12.70    12.67               12.68 to 12.79
+    shards owned                     13.60    13.17    13.15               13.13 to 13.32
+    namespace                        24.03    24.29    24.15               24.10 to 24.28
+    HealthCheck done                 27.36    25.51    25.37    25.62      25.31 to 27.52
+    its attempt                      2        1        1        1          2, 1, 1
+    the call that passed, ms         1130     1132     1133     1131       1118 to 1132
+  guest memory used, MiB of 3938     942      937      941                 924 to 961
+  froze 11 containers in, s          0.31     0.30     0.29     0.31       none
+  paused, s                          0.01     0.01     0.01                0.01 to 0.06
+  snapshot/create, s                 33.77    33.92    33.63    33.74      33.90 to 47.72
+  the step, s                        108.1    121.3    86.1     114.1      99.6 to 115.8
+Each: vm.mem 4.1G, vm.snap 68K, golden disk 5.1G (steps/K1.txt to K3.txt:14); known_hosts the image's
+(batch-log.txt:47, :49, :51). Each snapshot.json: cache_type Unsafe, io_engine Sync, 4 vCPU, 4096 MiB, v1.17.0,
+vmlinux-6.18.51, frozen true, taken 04:23:25Z, 04:25:26Z and 04:26:52Z (extra/fc-snapshot-K1.json to K3.json).
+Cold microVM to warm, dockerd ready plus compose up to HealthCheck (batchE.txt:147-148's measure): 30.91, 29.05 and
+28.99 s, against batch E's 32.06, 28.85 and 29.10 s (computed). Boot 7's, under Writeback: 57.71 to 92.85 s
+(boot7.txt:151).
+Shows: a frozen Unsafe cold boot reaches warm as batch E's unfrozen ones did. The freeze stopped 11 containers in 0.29
+to 0.31 s, and snapshot/create took 33.63 to 33.92 s, a 0.29 s spread against batch E's 13.82 s (computed). K1 passed
+on its second HealthCheck call, as batch E's K1 did. The step follows the image copy: K2's copy took 34.86 s more than
+K3's and its step 35.2 s more (computed).
+Does not show: why K1's and K2's copies took 22.14 and 37.04 s against K3's 2.18 s; batch E's K2 took 32.09 s once
+(batchE.txt:128). Why batch E's snapshot/create spread wider.
+
+== R: twelve restores, 04:26:52 to 04:27:57
+R1, as root: make -C <clone> fc-restore RESTORES=12, exit 0 in 64.8 s, 12 of 12, from K3's snapshot, "snapshot
+cache_type Unsafe", "snapshot frozen true" (steps/R1.txt:4-5, :128; restore_1 to restore_12, readings.json:323-538).
+Each: a reflink copy, snapshot/load with resume, ssh, the clock read and set, the thaw, then the warm checks; in s from
+snapshot/load but the disk, the copy's own time (steps/R1.txt:6-125):
+  n   disk  load  ssh   behind  set   thaw  thawed at  after set  round trip  health  ns    shards  HC done  HC call
+  1   0.01  0.01  0.41  35.2    0.85  1.27  2.35       -0.114     0.214       2.42    2.47  3.01    4.71     1543 ms
+  2   0.02  0.01  0.39  40.6    0.83  1.18  2.23       -0.102     0.215       2.36    2.41  2.95    4.60     1518 ms
+  3   0.02  0.01  0.40  45.9    0.84  1.25  2.30       -0.116     0.205       2.38    2.42  2.97    4.64     1530 ms
+  4   0.01  0.01  0.40  51.3    0.84  1.24  2.30       -0.099     0.216       2.39    2.45  3.00    4.67     1533 ms
+  5   0.01  0.01  0.39  56.7    0.84  1.22  2.29       -0.111     0.223       2.38    2.44  2.98    4.63     1506 ms
+  6   0.01  0.01  0.40  62.1    0.84  1.22  2.28       -0.111     0.208       2.37    2.43  2.97    4.63     1528 ms
+  7   0.02  0.01  0.39  67.5    0.85  1.32  2.39       -0.116     0.208       2.47    2.52  3.05    4.68     1476 ms
+  8   0.01  0.01  0.39  72.9    0.84  1.22  2.28       -0.103     0.214       2.38    2.44  3.05    4.67     1469 ms
+  9   0.01  0.01  0.40  78.3    0.83  1.25  2.30       -0.105     0.211       2.37    2.42  2.99    4.66     1539 ms
+  10  0.02  0.01  0.39  83.7    0.84  1.25  2.31       -0.109     0.204       2.38    2.43  2.99    4.67     1532 ms
+  11  0.02  0.01  0.40  89.1    0.84  1.26  2.33       -0.110     0.212       2.40    2.45  2.97    4.64     1518 ms
+  12  0.01  0.01  0.39  94.5    0.84  1.26  2.32       -0.100     0.216       2.41    2.46  3.02    4.72     1544 ms
+  behind: the guest clock behind the host; set: when the set returned; thaw: 11 containers each; health: cluster
+  health; ns: namespace; HC done the HealthCheck that passed, attempt 1 in all 12; HC call its completed ms, visible 33
+  to 61 ms
+The clock behind grew 5.3 to 5.4 s from one restore to the next; 64.8 s over 12 is 5.4 s (computed).
+Shows: a restore from a frozen Unsafe snapshot reaches warm in 4.60 to 4.72 s, every first HealthCheck passing, against
+batch E's unfrozen 4.38 to 4.63 s (batchE.txt:191) and boot 7's frozen Writeback 4.85 to 5.01 s (boot7.txt:180). The
+thaw, 1.18 to 1.32 s, runs after the clock set, yet warm sits only 0.09 to 0.22 s above batch E's (computed, range
+ends): ssh answered in 0.39 to 0.41 s against batch E's 0.89 to 1.32 s. The passing call took 1469 to 1544 ms against
+1350 to 1382 ms; the clock ran 35.2 to 94.5 s behind, then 0.099 to 0.116 s behind after the set, round trip 0.204 to
+0.223 s, against batch E's 35.1 to 92.4 s and 0.140 to 0.255 s; the step took 64.8 s against batch E's 62.6 s and boot
+7's 68.4 s (batchE.txt:164-183; boot7.txt:161, :181-184).
+Does not show: the split of the warm path after the thaw; that frozen containers leave the guest's CPU to sshd at the
+resume is inference.
+
+== D: disk copies, plain and reflink, 04:27:57 to 04:30:21
+D1, three times as root: sync, echo 3 > /proc/sys/vm/drop_caches, cp --reflink=never of /opt/fc/disks/golden.ext4 to
+/opt/fc/copy-plain.ext4, timed by $EPOCHREALTIME, removed: 46.79, 47.25 and 47.15 s (batch-log.txt:56-58;
+disk_copy_plain_s, readings.json:539). golden.ext4: 17179869184 bytes apparent, 5411889152 allocated, 5.04 GiB
+(golden_size, readings.json:552; computed), so 110.3, 109.2 and 109.5 MiB/s (computed). D2, three times: cp
+--reflink=always on the same volume: 7.2, 3.4 and 3.2 ms by the stamps (batch-log.txt:59-61; computed). D-fs: xfs_info
+of the disks volume reflink=1, bsize=4096; FC_DIR on /dev/nvme0n1p1, ext4 (steps/D-fs.txt:2-3).
+Shows: plain 46.79 to 47.25 s against batch E's 51.10 to 52.71 s (batchE.txt:206) and boot 7's 40.68 to 50.96 s
+(boot7.txt:189); reflink 3 to 7 ms, batch E's range, against boot 7's 11 to 20 ms (boot7.txt:194).
+Does not show: the EBS volume's type or IOPS: an AWS call outside the batch.
+
+== P: the Firecracker pool, -min 2 -max 6, and its one-offs, 04:30:21 to 04:34:57
+-- P1: env FC_KEY_USER=<the box user> FC_CACHE_TYPE=Unsafe FC_IO_ENGINE=Sync bin/laug pool serve -backend firecracker
+-min 2 -max 6, in the background as root (batch-log.txt:64). Its log runs to P-down: prep's "4 deny rules", then
+"listening on 127.0.0.1:7700 (min 2, max 6, ...)", 32 creates and 30 destroys (steps/P1.txt:2-3; grep). PORTS-fc:
+7700 on 127.0.0.1 true; listeners on a 10.254 address 0; none new or gone since P1-before but 7700 (batch-log.txt:66;
+ports_fc, readings.json:633).
+The creates, P1's 32 and F's 55 (steps/P1.txt, steps/F-pool.txt; computed over the 87 lines; batch-log.txt:213): the
+first, 1181158b on b0, up in 5.70 s, reflink 0.00 s, load and resume 0.13 s, ssh 1.44 s, thawed in 3.34 s
+(steps/P1.txt:4); the other 86 up in 2.35 to 2.94 s, reflink 0.01 s in 80 and 0.13 to 0.19 s in 6, load and resume
+0.08 to 0.10 s, ssh 0.46 to 0.64 s, 11 containers thawed in 1.20 to 1.72 s. Every line cache_type Unsafe. The guest
+clock read 243.8 to 9690.6 s behind before the set and 1.5 to 5.5 ms behind after it, round trip 2.3 to 4.1 ms. The 12
+ADVANCE rauns' cells, held 311 to 415 s, lost 5.8 to 8.0 ppm (computed: the destroy's offset less the create's, over
+the age; the timer's cell, stepped by hand, left out). Batch E's 45: the first 7.78 s, the rest 2.10 to 3.20 s, ssh
+0.97 to 2.11 s, 1.8 to 23.4 ms behind after the set, 6.9 to 11.2 ppm (batchE.txt:230-236). Boot 7's 34: the first
+6.48 s, the rest 2.42 to 3.05 s, ssh 0.45 to 0.62 s, thaw 1.29 to 1.84 s (boot7.txt:200-205).
+-- P2: the bench, 04:30:42 to 04:33:12
+bin/laug pool bench 127.0.0.1:7700: exit 0 in 150.5 s (steps/P2.txt:35; fc_bench, readings.json:648). The batch waited
+for 2 create lines before it (steps/P1-prep.txt:3), so "min warm (2 cells) reached 0.0 s" (steps/P2.txt:5) measures
+nothing. 20 lease cycles from warm, 0 to 1 ms each; its table: p50 0 ms, p95 0 ms, max 1 ms; cold lease, pool drained,
+5.4 s; TTL 30 s to the cell gone from /status 38.0 s (steps/P2.txt:27-34). T's cold lease split: 4.9 s, create 2.45 s
+and health 2.45 s (cold_lease_split, readings.json:948). Batch E: 18.3 s to 2 warm, 0, 1 and 2 ms, 7.8 s, 40.0 s
+(batchE.txt:242-247); boot 7: 0, 1 and 2 ms, 5.8 s, 38.5 s (boot7.txt:211-212).
+-- P3: three resets on one lease, 04:33:12 to 04:33:29
+bin/laug lease -requester lab9-reset: d0c57c2e on block 1, 10.254.1.2:7233 (steps/P3-lease.txt:2). bin/laug reset
+-last -json three times: 5.8, 5.3 and 5.5 s (fc_reset_s, readings.json:667), each answer the same id, block and address,
+a new leased_at and the same expires_at, 05:03:12 (steps/P3-reset-1.txt to -3.txt:2). In the pool's log each is a
+destroy and a create of d0c57c2e on b1, up in 2.79, 2.46 and 2.47 s (steps/P1.txt:57, :59, :61). The release: 0.5 s
+(batch-log.txt:72). Batch E: 6.6, 6.2 and 6.3 s (batchE.txt:250); boot 7: 6.0, 5.6 and 5.7 s (boot7.txt:216).
+-- P4: the idle VMMs' memory, 04:33:30
+/proc/<pid>/smaps_rollup of each idle pool VMM (steps/P4.txt:2; vmm_idle, readings.json:680; MiB computed over 1024):
+  block  Pss          Rss          shared clean  private dirty
+  0      934.3 MiB    1232.2 MiB   595.8 MiB     533.3 MiB
+  2      760.3 MiB    1058.6 MiB   596.5 MiB     329.2 MiB
+Batch E: Pss 894.4 and 861.0 MiB, private dirty 537.9 and 481.1 MiB (batchE.txt:255-257); boot 7: Pss 940.1 and 744.4
+MiB, shared clean 608.4 MiB each (boot7.txt:221-223).
+-- P6: two leases, A (a7a09ee0, block 0) and B (c0fe3883, block 2), each with cache_type Unsafe in the answer
+(steps/P6-lease-a.txt:2, P6-lease-b.txt:2; leases, readings.json:704).
+P6a, VMGenID and the guests: "crng reseeded" once in A and once in B, and /dev/urandom read different bytes
+(steps/P6a.txt:4; vmgenid, readings.json:779). Each guest: kernel 6.18.51+, the image built 04:20:30Z, one nameserver,
+the tap address, no search, clocksource tsc with kvm-clock available (steps/P6a.txt:2-3). Boot 7 read the same reseeds
+(boot7.txt:228-230); batch E did not check.
+P6b, the drive in A: write_cache "write through", the flush feature false, GET /vm/config cache_type Unsafe and
+io_engine Sync; dd of 1000 4 KiB writes with oflag=dsync, exit 0 in 0.209 s; the VMM's flush_count +0
+(steps/P6b.txt:2; drive, readings.json:792). So 0.209 ms a synced write (computed), against boot 8's rung e under
+Unsafe, 0.206 ms fresh (boot8.txt:204), and boot 7's 14.706 ms under Writeback (boot7.txt:232-233).
+P6c, isolation, 11 of 11 held: both guests' eth0 the same /30; a file synced in A absent in B; each VMM's open files on
+its own disk, none on golden.ext4; golden.ext4's mtime and the host's mounts unchanged since P1; the host reaches A's
+9090 and B's 8474; from A, B's 9090, the host end of A's veth on 22 and an internet address on 443 blocked; a container
+on the host to A's 9090 blocked (steps/P6c.txt:2-13; isolation, readings.json:812). Boot 7: 11 of 11
+(boot7.txt:237-240).
+P5, a missing name in A, three lookups each: at net.ipv4.icmp_ratelimit 0, 0.004, 0.005 and 0.005 s; at the host's
+1000, 0.004, 5.008 and 0.004 s; set back to 0 (steps/P5.txt:2; fc_dns, readings.json:892). Boot 7: 0.005, 0.003 and
+0.003 s; 0.003, 5.009 and 0.005 s (boot7.txt:241-242). Batch E: one lookup, 5.011 s (batchE.txt:264-265).
+-- P7: item 4 on A
+bin/laug cell dynconfig-check -cell a7a09ee0: exit 0 in 1.2 s, the server's own validator in the guest
+(steps/P7-dynconfig.txt:2-5). bin/laug load -duration 1m -rate 20 -run-id lab9-fc-load: exit 0 in 69.1 s, Omes exit 0,
+0 failed, window 04:33:46 to 04:34:55 (steps/P7-load.txt:10-11; load/results/lab9-fc-load.json:14-15, :23-24). bin/laug
+baseline lab9-fc-load: exit 3 in 0.4 s, "window is 69 s; steady-state.yaml trusts nothing shorter than 300 s"
+(steps/P7-baseline.txt:5; item4, readings.json:921), and the file it names is empty (Files).
+-- P8 and the pool down
+vmmetrics on A: 6 lines (steps/P8.txt:2). The releases 0.5 s each (batch-log.txt:83-84). P-down: pool down -backend
+firecracker -remove-cells, exit 0 in 1.2 s: 2 cells and 2 VMMs swept, b1 and b3, each guest clock 0.0024 s behind at
+86 and 82 s; 0 left of firecracker, links, cell disks, block dirs and deny rules (steps/P-down.txt:2-8;
+batch-log.txt:86-87). The pool's last line: "stopped with 2 cells in its table, none destroyed" (steps/P1.txt:67).
+Shows: the pool through laug, frozen and Unsafe: a lease from warm 0 to 1 ms, a cold lease 5.4 s, a reset 5.3 to 5.8
+s, a create 2.35 to 2.94 s after the first, ssh 0.46 to 0.64 s, the guest clock within 5.5 ms of the host after the set.
+The drive is Unsafe as asked, read four ways: each snapshot.json, GET /vm/config, the guest's write_cache and flush
+feature, and the create lines; P6b's synced writes sent no flush. VMGenID reseeds a fork; 11 isolation checks hold.
+With icmp_ratelimit 0 a missing name failed in 4 to 5 ms, 3 of 3; at the host's default one of three waited 5.008 s,
+the shape boot 7 read.
+Does not show: serve to 2 warm: the bench began on a warm pool. That the rate limit dropped the reply a 5 s wait waited
+for is inference (verify: icmp_ratelimit is per network namespace). Why 6 creates reflinked in 0.13 to 0.19 s against
+0.01 s in the rest.
+
+== T: timers across a guest clock step, 04:34:57 to 04:41:19
+F's pool: env FC_KEY_USER=<the box user> FC_CACHE_TYPE=Unsafe FC_IO_ENGINE=Sync bin/laug pool serve -backend firecracker
+-min 0 -max 1 (batch-log.txt:89; steps/F-pool.txt:3). bin/laug lease -requester lab9-timer: da00b1bf on block 0,
+10.254.0.2:7233, 4.9 s, a create on demand (steps/T-lease.txt:2; batch-log.txt:90): up in 2.45 s, the guest clock
+519.61 s behind before the set, 0.0029 s after (steps/F-pool.txt:4). bin/laug health timer on it, the JSON on line 3 of
+each step file; the readings agree (timer_control to timer_set_60, readings.json:961-1023):
+  T1, the control: 60 s, no step. Late 0.503 s by host time; the server's view 60.389 s; the server's clock 0.079 s
+  ahead (steps/T1.txt:3). Batch E: 0.415 s, 60.349 s; boot 7: 0.304 s, 60.099 s (batchE.txt:430-431;
+  boot7.txt:270-271).
+  T2, a step: 60 s, armed at 04:36:03.619 by host time; date -u -s set the guest's clock to 04:34:07.924
+  (steps/T2-step.txt:1), about 121.17 s back (computed from the four stamps of steps/T2.txt:3). Fired at 04:39:07.690:
+  late 124.071 s; the server's view 62.898 s (steps/T2.txt:3). The set, at 04:39:07.740, 0.050 s after the fire
+  (steps/T2-set.txt:1; computed). Batch E: 121.163 s, 60.021 s; boot 7: 123.518 s, 60.081 s (batchE.txt:432-435;
+  boot7.txt:272-275).
+  T3, a step and a set: three timers armed at 04:39:08.052 to 04:39:08.073, 30, 45 and 60 s; the guest stepped to
+  04:37:12.377 (steps/T3-step.txt:1) and set to the host's time at 04:40:38.612, 90.56 s after the 30 s timer's arm
+  (steps/T3-set.txt:1; computed):
+    timer  late, host time  server's view  fired, host time  after the set  after the arm
+    30 s   100.991 s        130.913 s      04:41:19.043      40.431 s       130.991 s
+    45 s   85.996 s         130.912 s      04:41:19.049      40.437 s       130.996 s
+    60 s   70.974 s         130.911 s      04:41:19.047      40.435 s       130.974 s
+  The three fired within 5.2 ms of each other by host time (computed). Batch E: late 100.972, 85.989 and 70.970 s,
+  130.911 s, 40.427 to 40.445 s after the set, within 17.8 ms (batchE.txt:436-442); boot 7: 101.099, 86.110 and 71.098
+  s, 130.928 to 130.934 s (boot7.txt:280-283).
+Each timer's stderr holds 2 to 6 warnings "Failed to poll for task ... 204 (No Content)", and each exited 0
+(steps/T1.txt, T2.txt, T3-30.txt to T3-60.txt). The release: 0.5 s (batch-log.txt:96).
+Shows: on a frozen Unsafe cell the timers behave as on batch E's and boot 7's: a timer across a 121.2 s step back fired
+124.1 s late by host time; after the set, the overdue three fired together, 40.4 s later, 130.9 s by the server's
+clock.
+Does not show: why T2's server recorded 62.898 s, 2.9 s past due on its own clock, where batch E's read 60.021 s; one
+reading.
+
+== F0: the warm-up raun, 04:41:19 to 04:42:59, never counted
+bin/laug raun persistence-latency -run-id lab9-warmup, as the box user, on F's pool. Its cell, 021b6951 on block 0,
+10.254.0.2, was a create: up in 2.40 s, the guest clock 901.24 s behind before the set, 0.0038 s after, 11 containers
+thawed in 1.30 s (steps/F-pool.txt:6). Resumed at 04:41:19.860 (extra/fc-vmm-lab9-warmup.txt:18); the load started at
+04:41:25 (steps/F0.txt:15-16) and the before window was read at 04:42:55 (steps/F0.txt:17): 5.1 and 95.1 s after the
+resume, the raun's stamps being whole seconds (computed). No busy cell at laugd before the load; thresholds
+load/steady-state.yaml, the base, unchanged for 1.31.0 (steps/F0.txt:6-7).
+The before window, 60 s (faults/results/raun-lab9-warmup.json:35-50), beside A's
+(faults/results/raun-lab8-A-warmup.json, .before), batch E's warm-up e0 and its 12 counted rauns E12, and boot 7's
+warm-up (boot7.txt:301-312; boot8.txt:273-285):
+  reading                                    max    boot 9  A       e0      E12               boot 7
+  workflow task schedule-to-start p99, ms    38     31.07   31.79   41.00   19.86 to 35.00    934.12
+  activity schedule-to-start p99, ms         20     16.52   15.00   16.79   12.30 to 17.50    63.57
+  workflow end-to-end p95, ms                84     80.41   88.30   89.56   62.50 to 90.52    499.83
+  persistence latency p99, ms                23     8.62    8.98    9.23    7.90 to 8.95      48.47
+  frontend request p99, ms                   22     42.64   18.81   18.83   16.02 to 18.42    78.49
+  service error rate                         0.001  0       0       0       0                 0
+  end-to-end over 50 ms                      -      10.36%  16.91%  16.36%  6.36% to 22.09%   100%
+  persistence over 10 ms                     -      0.278%  0.263%  0.283%  0.150% to 0.241%  24.88%
+  frontend over 10 ms                        -      4.36%   4.26%   4.37%   2.11% to 3.47%    99.91%
+  workflows completed                        -      1200    1200    1200    1199 to 1201      1223
+  counter resets                             -      0       0       0       0                 0
+  result                                            BLOCK   BLOCK   BLOCK   8 ADVANCE,        BLOCK
+                                                                            4 BLOCK
+  maxima: load/steady-state.yaml:32, :35, :40, :43, :57, :65; "-": no max
+BLOCK, exit 1 in 99.0 s: "never steady: frontend_request_p99_ms=42.636245055516945" (steps/F0.txt:10-11;
+steps.tsv:64). No fault was injected; failed iterations before 0 (raun-lab9-warmup.json, .iterations_failed). F0-read:
+"end-to-end p95 80.41 ms, persistence p99 8.62 ms, under the 84 ms max: the rauns run" (batch-log.txt:100; warmup_read,
+readings.json:1091): the read judges those two readings only, so it said "run" over a warm-up that failed on frontend
+p99.
+The leased VMM's memory every 15 s, 04:41:34 to 04:42:50 (extra/f-vmm-load.jsonl:1-6; vmm_load, readings.json:1024):
+private dirty 572.8 to 1169.0 MiB, 7.85 MiB/s; Pss 1242.1 to 1863.7 MiB; shared clean 8 kB, one VMM on the host
+(computed over 1024). Boot 7's warm-up: private dirty 564.2 to 1194.4 MiB, 8.40 MiB/s (boot7.txt:328-329); batch E's
+first counted raun, 26 samples over 6 min 16 s, Pss 2249.8 MiB at the last (batchE.txt:258-261), not the same measure.
+Shows: F0 is the first frozen Unsafe warm-up under 84 ms on end-to-end, 80.41 against A's 88.30, and every reading but
+one sits inside the Unsafe windows on record (e0, E12 and A). The one is frontend p99: 42.64 ms, 2.27 times A's 18.81
+(computed), with the share of frontend requests over 10 ms the same, 4.36% against 4.26%.
+Does not show: what lifts the frontend p99 here and not in A, which had the same setting and 120 s of idle before its
+load; F and What it shows take it up.
+
+== F: the 52 counted rauns on microVM cells, 04:42:59 to 07:09:28
+Each: bin/laug raun <row> -run-id lab9-<row>-<n> as the box user, at its defaults: 20 workflows/s, a 30 min lease. Each
+leased a create of F's -min 0 -max 1 pool on block 0 and gave it back, destroyed (batch-log.txt:102-208;
+steps/F-pool.txt, 55 creates, all b0). Judged by load/steady-state.yaml, the base, unchanged for 1.31.0 (each JSON's
+.thresholds_note). The before window is the last 60 s of 90 s of load before any fault (faults/catalog.yaml:26;
+faults/run.sh:3, :645). Over all 54 rauns the load began 4.4 to 5.7 s after the cell's resume and the before window
+ended 94.8 to 96.2 s after it (computed: the "fault <row> on cell" and "before:" stamps of each step file, whole
+seconds, against the 'resume vm' line of extra/fc-vmm-lab9-<label>.txt). Every before window of the 54 read service
+error rate 0, counter resets 0, 1199 to 1201 completed in 60 s, 0 failed before, persistence p99 8.32 to 8.82 ms
+against 23, workflow task schedule-to-start 19.95 to 34.57 ms against 38 and activity 11.54 to 17.69 ms against 20;
+pool_quiet_wait_s 0 and pool_busy 0 in every window (J, jq over the 54). Every JSON reads backend firecracker,
+cache_type Unsafe and host_virtualized true (J:7, :9-10).
+The tables, a row a raun in run order:
+  e2e, fe, pers: the before window's end-to-end p95 (J:38), frontend p99 (J:41) and persistence p99 (J:39), ms,
+  against maxima of 84, 22 and 23 (load/steady-state.yaml:40, :65, :43). reason: NS fe, NS e2e or NS fe+e2e, "never
+  steady" on the reading or readings named in .reason; not landed, "did not land: signal custom stayed at 0 over 120s";
+  "-", none. landed: .landed_at - .inject_at, s; ttr: .time_to_recover_s; failed: .iterations_failed before, during,
+  drain and after; after: the after window's frontend p99, ms (J:89). "-": the window never opened, null in the JSON
+-- F5: the 5 rows never scheduled, 13 rauns, 04:42:59 to 05:25:30
+  raun                           cell      result   reason      e2e    fe     pers  landed  ttr  failed      after
+  persistence-timeout-1          e0c6fd16  ADVANCE  -           81.86  18.23  8.58  10      30   0/550/41/0  17.26
+  persistence-timeout-2          a7d7aeba  ADVANCE  -           76.54  19.82  8.52  10      30   0/553/40/0  17.54
+  persistence-timeout-3          9096ecf4  BLOCK    NS fe       73.26  33.43  8.37  -       -    0/-/-/-     -
+  persistence-errors-1           3dedac04  BLOCK    not landed  82.11  18.31  8.53  -       -    0/0/-/-     -
+  persistence-errors-2           7cba2223  BLOCK    NS fe       77.70  36.99  8.67  -       -    0/-/-/-     -
+  persistence-errors-3           d3705696  BLOCK    not landed  79.05  17.67  8.43  -       -    0/0/-/-     -
+  close-shards-1                 e677b91e  BLOCK    NS fe       77.27  28.24  8.67  -       -    0/-/-/-     -
+  close-shards-2                 bb25d80f  ADVANCE  -           80.34  19.64  8.67  9       1    0/0/0/0     16.93
+  close-shards-3                 10e7d9ec  BLOCK    NS fe       82.29  23.03  8.70  -       -    0/-/-/-     -
+  stuck-shard-1                  33f4606e  BLOCK    NS fe+e2e   84.27  22.47  8.74  -       -    0/-/-/-     -
+  stuck-shard-2                  2ff9319f  BLOCK    NS fe       82.63  29.93  8.68  -       -    0/-/-/-     -
+  stuck-shard-3                  d0a40798  ADVANCE  -           74.72  19.91  8.39  11      23   0/6/0/0     17.41
+  stuck-shard-norestore-1        d99e1e61  BLOCK    NS fe       80.26  30.37  8.58  -       -    0/-/-/-     -
+  persistence-timeout-1 and -2: exit 0 in 370.4 and 370.3 s; 0 completed in the 110 s during window, failed 550 and
+  553 during, 41 and 40 in the drain, 0 after; after 1800 in 90 s each (batch-log.txt:102-105; J). persistence-errors-1
+  and -3: "injected" at 04:58:35 and 05:03:53, "removed: toxic remove reset_peer" 122 and 123 s later, 0 failed during,
+  the during window empty, .inject_error null, exit 1 in 219.5 s each (steps/F-persistence-errors-1.txt:18-19 and
+  -3.txt:18-19; J). close-shards-2: 64 shards closed, all back by 46 s after the inject, 0 failed, 1600 completed in the
+  81 s during window (J .mechanisms, .shards_acquired). stuck-shard-3: shard 379 bumped, then acquired 18 s after the
+  restore; failed 6 during, 2195 completed in the 109 s during window (J .mechanisms, .shards_acquired).
+  stuck-shard-norestore-1: never steady, so its self-test did not pass, "BLOCKed for another reason" (J .self_test).
+-- F4: the 4 rows batch E ran under Unsafe, 3 each, 05:25:30 to 05:55:56
+  raun                           cell      result   reason      e2e    fe     pers  landed  ttr  failed      after
+  persistence-latency-1          e2930a45  BLOCK    NS fe       73.84  36.06  8.47  -       -    0/-/-/-     -
+  persistence-latency-2          c0920e17  BLOCK    NS fe       79.32  34.84  8.74  -       -    0/-/-/-     -
+  persistence-latency-3          b14ed30f  BLOCK    NS fe       81.67  37.93  8.59  -       -    0/-/-/-     -
+  kill-history-1                 cd6482e8  BLOCK    NS fe+e2e   84.35  28.80  8.70  -       -    0/-/-/-     -
+  kill-history-2                 2051ea45  BLOCK    NS fe       74.16  24.90  8.37  -       -    0/-/-/-     -
+  kill-history-3                 c246855a  BLOCK    NS fe       83.72  36.57  8.69  -       -    0/-/-/-     -
+  throttle-frontend-1            69b6d984  BLOCK    NS fe       77.62  26.08  8.51  -       -    0/-/-/-     -
+  throttle-frontend-2            051430d2  ADVANCE  -           81.69  18.24  8.60  56      76   0/0/0/0     16.59
+  throttle-frontend-3            c7ebd84e  ADVANCE  -           79.65  18.40  8.64  56      76   0/0/0/0     16.21
+  oom-history-1                  a3814130  BLOCK    NS fe       81.85  27.81  8.65  -       -    0/-/-/-     -
+  oom-history-2                  c0553585  BLOCK    NS fe       79.83  25.85  8.53  -       -    0/-/-/-     -
+  oom-history-3                  62ebdd56  BLOCK    NS e2e      84.23  18.21  8.79  -       -    0/-/-/-     -
+  throttle-frontend-2 and -3: exit 0 in 415.8 and 415.6 s; 0 failed; 123 and 145 completed in the 64 s during window;
+  signal peak 2.96 and 3.56 ResourceExhausted a second against 0.5 (J .signal_peak). oom-history's three never
+  reached the fault, so the guest's docker events were empty (Files).
+  Beside batch E's same 12 (batchE.txt:315-367): persistence-latency 3 of 3 ADVANCE there, 0 of 3 here; kill-history 3
+  of 3 there, 0 of 3 here; throttle-frontend 2 of 3 there, landed 26 to 41 s and recovered 60 to 116 s, 2 of 3 here,
+  landed 56 s and recovered 76 s each; oom-history 0 of 3 in both, batch E's on end-to-end p95 and its after window.
+  Here 10 of the 12 never reached the fault.
+-- FS: serverfi, a warm-up and the 9 rows 3 times each, 05:55:56 to 07:09:28
+FS-warmup: bin/laug raun persistence-latency -run-id lab9-fi-warmup on 55a3b909: BLOCK, exit 1 in 98.9 s, "never steady:
+frontend_request_p99_ms=39.34160795109757"; before window end-to-end p95 80.70 ms, persistence p99 8.55 ms; never
+counted (batch-log.txt:154-155; faults/results/raun-lab9-fi-warmup.json:38-41).
+  raun                           cell      result   reason      e2e    fe     pers  landed  ttr  failed      after
+  wf-update-ownership-lost-1     a6af32f4  ADVANCE  -           83.94  21.07  8.72  17      25   0/0/0/0     15.91
+  wf-update-ownership-lost-2     446e6d49  BLOCK    NS fe       83.97  32.28  8.72  -       -    0/-/-/-     -
+  wf-update-ownership-lost-3     85c891b8  BLOCK    NS fe       77.10  36.35  8.41  -       -    0/-/-/-     -
+  wf-update-deadline-1           887527f7  ADVANCE  -           83.21  19.69  8.66  16      30   0/0/0/0     16.41
+  wf-update-deadline-2           d1681f1d  BLOCK    NS fe       80.19  32.33  8.52  -       -    0/-/-/-     -
+  wf-update-deadline-3           ddff5e49  BLOCK    NS fe+e2e   84.29  33.00  8.73  -       -    0/-/-/-     -
+  wf-update-timeout-1            0afabddf  ADVANCE  -           72.35  19.46  8.40  21      30   0/0/0/0     14.72
+  wf-update-timeout-2            0bdf0930  ADVANCE  -           76.73  20.83  8.65  17      25   0/0/0/0     15.77
+  wf-update-timeout-3            5800514b  BLOCK    NS fe       77.42  26.47  8.44  -       -    0/-/-/-     -
+  wf-update-execute-timeout-1    94ced62e  BLOCK    NS fe       75.27  33.85  8.42  -       -    0/-/-/-     -
+  wf-update-execute-timeout-2    0c448422  BLOCK    NS fe+e2e   84.89  30.88  8.67  -       -    0/-/-/-     -
+  wf-update-execute-timeout-3    aebb0533  BLOCK    NS fe       80.80  29.17  8.55  -       -    0/-/-/-     -
+  wf-update-resource-exhausted-1 decb9219  BLOCK    NS fe       83.08  31.52  8.71  -       -    0/-/-/-     -
+  wf-update-resource-exhausted-2 251a952e  BLOCK    NS fe       83.74  36.79  8.63  -       -    0/-/-/-     -
+  wf-update-resource-exhausted-3 191aa6b6  ADVANCE  -           78.64  19.72  8.63  22      25   0/0/0/0     15.51
+  wf-update-unavailable-1        f2980526  ADVANCE  -           81.67  19.68  8.52  17      25   0/0/0/0     15.35
+  wf-update-unavailable-2        761356ea  BLOCK    NS fe       74.70  30.31  8.45  -       -    0/-/-/-     -
+  wf-update-unavailable-3        e342520f  BLOCK    NS fe       79.36  31.08  8.39  -       -    0/-/-/-     -
+  acquire-lost-1                 07774c12  BLOCK    NS fe       81.08  26.66  8.82  -       -    0/-/-/-     -
+  acquire-lost-2                 521984db  BLOCK    NS fe       78.10  24.21  8.61  -       -    0/-/-/-     -
+  acquire-lost-3                 549696d6  BLOCK    NS fe       69.90  29.19  8.32  -       -    0/-/-/-     -
+  persistence-chaos-1            821d0988  BLOCK    NS fe       79.82  24.97  8.47  -       -    0/-/-/-     -
+  persistence-chaos-2            0a70976c  BLOCK    NS fe       74.44  24.25  8.34  -       -    0/-/-/-     -
+  persistence-chaos-3            d92409dd  BLOCK    NS e2e      85.00  18.47  8.78  -       -    0/-/-/-     -
+  history-recreate-1             2fd6c9ea  BLOCK    NS fe       81.14  34.22  8.68  -       -    0/-/-/-     -
+  history-recreate-2             02e6205e  BLOCK    NS fe       76.67  29.26  8.63  -       -    0/-/-/-     -
+  history-recreate-3             d350165a  BLOCK    NS fe       79.88  35.34  8.63  -       -    0/-/-/-     -
+  The 6 ADVANCEs: exit 0 in 368.8 to 374.9 s; 0 failed in every window; history's shards ready 5.5 to 5.7 s after the
+  recreate (J .history_shards_ready_s); 1995 to 2100 completed in the 98 to 104 s during window. During
+  wf-update-resource-exhausted-3's fault its frontend p99 read 46.25 ms (J:57). The 21 never-steady serverfi rauns
+  ended before the inject (J: .inject_at empty).
+  persistence-chaos-2: the raun's release was refused, "the pool on 127.0.0.1:7700 refused 0a70976c: exit status 1 (409
+  Conflict); bin/laug release 0a70976c gives it back" (steps/F-persistence-chaos-2.txt:22; batch-log.txt:200). The pool
+  logged the cell's destroy, 99 s after create, then "fc destroy 0a70976c b0: left after clean: pid 830721"
+  (steps/F-pool.txt:105-106), the one such line in either pool's log (grep). The next create, d92409dd on b0, followed
+  (steps/F-pool.txt:107), and E left 0 firecracker (E). The raun's JSON is whole, its .cleanup_error null, its BLOCK
+  never steady as its neighbours' were. That the pool's own destroy met the raun's release on the same cell is
+  inference; whether pid 830721 outlived the next create is not read.
+Shows: 52 counted rauns under one lease shape, a create loaded 4.4 to 5.7 s after its resume: 12 ADVANCE in 9 rows, 2
+did not land, 38 never steady before any fault, 0 harness failures; What it shows reads them by row.
+Does not show: a reading after the before window on any of the 38 never-steady cells; why the pool refused
+persistence-chaos-2's release.
+
+== E: the pool down and the gather, 07:09:28 to 07:09:29
+bin/laug pool down -backend firecracker -remove-cells, as root: pool serve, pid 710149, stopped; 0 microVM cells, 0
+VMMs; 0 left of firecracker, laugfc links, cell disks, block dirs and deny rules; 0.3 s (steps/E1-pool-down.txt:2-5).
+E1-check {"firecracker":0,"links":0,"block_dirs":0,"deny_rule":false} (steps/E1-check.txt:2; fc_pool_down,
+readings.json:4241). E1-net: tap0 DOWN, 1 MASQUERADE rule for the single VM's subnet, ip_forward 1, 2 FORWARD rules
+naming tap0 (steps/E1-net.txt:2; fc_host_net, readings.json:4255), what the scripts leave by design
+(cells/rootfs/README.md:34-36). The 87 create lines: the guest clock 243.77 to 9690.55 s behind before the set
+(batch-log.txt:213; fc_creates, readings.json:4269). E-gather: 84 metrics files, the last VMM log of 5 blocks, 67 VMM
+logs in extra/ (steps/E-gather.txt:2). The end: 0 on 7700, laug projects 0, 0 laugd, 0 pool serve, 0 cellstat, 0 dev
+servers, 0 firecracker, nothing listening on the checked ports, cells left 0; 261 min left, up 176 min
+(batch-log.txt:216).
+Shows: nothing of laug's left running or listening; the VMM logged as left after its destroy's clean (FS) was gone by
+here. Batch E's E: 2 cells swept, 0 left (batchE.txt:461-468).
+
+== The end line
+The batch's last line (batch-log.txt:217), its clauses on what ran: setting cache_type Unsafe, frozen, io_engine Sync;
+leftover 0 projects, 0 containers before, 0 and 0 after; ports, the dev server and the runbooks not run, by knob;
+ports-fc holds; image exit 0 in 100.2 s, sums tgz ok, fetched, kernel ok, rootfs ok, the host key; cold boots 3 of 3,
+warm 25.37 to 27.36 s; restores 12 of 12, warm 4.60 to 4.72 s, thaw 1.18 to 1.32 s; disk plain 46.79 to 47.25 s,
+reflink 0.003 to 0.007 s; bench exit 0; resets 3; the drive's P6b reads; VMGenID 1 and 1; isolation 11 of 11; the
+lookups; dynconfig-check exit 0, baseline exit 3; vmmetrics 6 lines; the timers; warm-up BLOCK, end-to-end 80.41 ms,
+persistence 8.62 ms, WARMUP_STOP 0; F order F5 F4 FS; never run 13 of 13, serverfi 27 of 27, rows run before 12 of 12,
+each row's k/n; ADVANCE 12, BLOCK 40; catalog rows run 18 of 18, disk-slow not run (run 2); harness failures 0;
+metrics files 84, VMM logs 67; pool down left 0; readings 112; skipped 2.
+- "cold boots ... warm 25.37 to 27.36 s": HealthCheck done from compose up. From a cold microVM, 28.99 to 30.91 s (K).
+- "BLOCK 40": 38 never steady and 2 did not land (F); the end line does not split them.
+- "metrics files 84, VMM logs 67": the 84 cells' files, I's an 85th in extra/; the 67 count 2 byte copies, and extra/
+  here keeps 65 (Files).
+- 0 harness failures: every raun exited 0 or 1, the longest 415.8 s (steps.tsv:64-117). persistence-chaos-2's 409 is a
+  refused release, not a failure (FS).
+- steps.tsv counts 120 ok and 1 fail: P7-baseline, exit 3 (steps.tsv:48). The 40 BLOCKs and the 2 warm-ups, exit 1,
+  and L0-list-pool's bare listing, exit 2, count ok (steps.tsv:2, :64-117).
+
+== The batch's time, against the plan
+The lab plan's minutes for each group, kept outside the tree, against the batch's, from batch-log.txt's stamps at each
+group's first line (computed):
+  group                            planned min  actual min  actual over planned  batch-log.txt
+  the boot to the batch's start    6            0.67        0.11                 the boot at about 04:12:53 to :10
+  pre, L0, S, H                    6            6.38        1.06                 :10 to :42
+  I                                2            1.68        0.84                 :42 to :45
+  K                                6            5.25        0.88                 :45 to :52
+  R                                1.5          1.08        0.72                 :52 to :55
+  D                                3            2.40        0.80                 :55 to :63
+  P                                8            4.60        0.58                 :63 to :88
+  F's pool and T                   7.5          6.37        0.85                 :88 to :97
+  F0                               7            1.67        0.24                 :97 to :101
+  F5, 13 rauns                     76.7         42.52       0.55                 :101 to :128
+  F4, 12 rauns                     70.2         30.43       0.43                 :128 to :153
+  FS, the warm-up and 27 rauns     185.4        73.53       0.40                 :153 to :210
+  E and the end                    2            0.02        0.01                 :210 to :217
+  the boot to the batch's end      381          176.60      0.46                 :216, "up 176 min"
+F took 146.48 min of a planned 332.3: 38 counted rauns ended never steady in 98.8 to 99.8 s, 2 did not land in 219.5 s
+each, and 12 ADVANCEd in 310.9 to 415.8 s, mean 372.7 s (steps.tsv:65-117; computed). The 52 counted rauns sum 8685.9 s
+and the FS warm-up 98.9 s, so F's 8789 s held 4.2 s outside the 53 rauns (computed, from whole-second stamps). 52 rauns
+at the ADVANCEs' mean would be 323.0 min, near the plan: the plan's unit holds for a raun that runs whole (inference).
+Every group but pre, L0, S and H (6.38 min against 6, 1.06) took less than its plan, and the batch fit: the stop rule's
+437 min had 261 left (batch-log.txt:7, :216), the boot's 422 min budget 246.1 (computed). Skipped: PORTS and R11c, by
+knob (batch-log.txt:215).
+
+== What it shows
+-- Run 1's verdict, by row (J .result and .reason; jq), batch E's beside (batchE.txt:379-386)
+  class                                      rows                                                         count
+  a microVM ADVANCE here                     persistence-timeout 2 of 3, throttle-frontend 2 of 3,        9
+                                             close-shards 1, stuck-shard 1, wf-update-ownership-lost 1,
+                                             wf-update-deadline 1, wf-update-timeout 2,
+                                             wf-update-resource-exhausted 1, wf-update-unavailable 1
+  reached its fault, did not land            persistence-errors, 2 of 3; the third never steady           1
+  no steady raun here, a batch E microVM     persistence-latency (batch E 3 of 3 ADVANCE), kill-history   3
+  raun that reached its fault                (3 of 3), oom-history (batch E's run 2 landed, BLOCKed in
+                                             its after window)
+  never a steady microVM raun in any batch   stuck-shard-norestore, wf-update-execute-timeout,            5
+                                             acquire-lost, persistence-chaos, history-recreate
+  not run                                    disk-slow (run 2)                                            1
+So 18 of the 19 rows have counted microVM rauns: 52 here, 12 ADVANCE in 9 rows, 2 did not land, 38 never steady before
+any fault, 0 harness failures. With batch E's, 11 rows have a microVM ADVANCE and 13 a microVM raun that reached its
+fault (computed). serverfi's guest path ran on a real guest for the first time: 6 ADVANCEs, history's shards ready 5.5
+to 5.7 s after the recreate, landed 16 to 22 s against boot 6's compose 10 to 18 s, recovered 25 to 30 s against 23 to
+28 s (J; faults/README.md:62-67). The verdicts are all under one lease shape, a create loaded about 5 s after its
+resume, where batch E's 8 of 12 came on warm leases idle 99 s or more (below): 12 of 52 here does not say these cells
+are worse than batch E's (inference).
+-- The never-steady pattern
+38 of the 52 counted rauns, 40 of 54 with the warm-ups, failed a max in the before window (J .reason; jq):
+  rule failed                        counted  readings                          margin over the max
+  frontend p99 alone (max 22)        32       23.03 to 37.93 ms                 +1.03 to +15.93 ms
+  frontend p99 and end-to-end p95    4        fe 22.47 to 33.00, e2e 84.27      fe +0.47 to +11.00, e2e +0.27 to
+                                              to 84.89 ms                       +0.89 ms
+  end-to-end p95 alone (max 84)      2        84.23 and 85.00 ms                +0.23 and +1.00 ms
+  any other max                      0
+So frontend p99 failed in 36, at 22.47 to 37.93 ms, and end-to-end p95 in 6, at 84.23 to 85.00 ms, 4 of them both. The
+two warm-ups failed on frontend alone, 42.64 and 39.34 ms. Over the 52 counted, frontend p99 read 17.67 to 37.93 ms,
+median 27.24; 45 of 52 sat above batch E's highest, 18.83 (jq). Batch E's 13 windows read 16.02 to 18.83 ms
+(boot8.txt:279), and compose's 27 in boot 2 read 9.98 to 12.73 ms (faults/results/raun-lab2-*.json, .before; jq).
+Besides frontend p99, nothing moved. The 14 steady windows against the 40 never steady, means: frontend p99 19.33
+against 30.35 ms; frontend share over 10 ms 3.61% against 4.22%; end-to-end p95 79.46 against 79.76 ms; persistence
+p99 8.57 against 8.59 ms (jq over the 54). End-to-end p95 over the 54 read 69.90 to 85.00 ms, inside batch E's 62.50 to
+90.52 (F0).
+The frontend p99 sits at the 20 ms bucket edge (the edges seen on a running cell of server 1.31.0,
+load/steady-state.yaml:74-78). If no frontend request passed 50 ms, which the pack does not record, a p99 of 22 ms means
+1.07% of non-poll frontend requests past 20 ms (computed: 20 + 30 x (s - 0.01) / s = 22, under histogram_quantile's
+linear interpolation inside a bucket; verify). The share past 20 ms is not recorded; the share past 10 ms reads 3.61%
+against 4.22%, so the never-steady windows differ by a fraction of a percent of requests past 20 ms (inference).
+Within a cell the reading falls with time. Each of the 12 ADVANCEs read lower in its after window, about 211 to 407 s
+into its load, than in its before window: 14.72 to 17.54 ms, lower by 0.96 to 5.16 ms, mean 3.26 (J:41, :89; computed:
+.after_start and .after_end less .inject_at, plus the 90 s before it). With 6 drain windows (persistence-timeout-1 and
+-2, close-shards-2, stuck-shard-3, throttle-frontend-2 and -3) and the 2 during windows of faults that leave the
+frontend alone (close-shards-2, stuck-shard-3), 20 later windows on these cells read 14.72 to 19.28 ms, every one
+under 22 (J:57, :73, :89; jq). Batch E's 10 after windows read 15.43 to 18.32 ms (faults/results/raun-lab5-*.json,
+.after; jq). A never-steady raun stops at its before window (faults/run.sh:645), so the 38 have no later reading.
+Run order is the one recorded axis with a tilt: the last 11 rauns, 06:51 to 07:09, were all never steady, and the
+counted rauns by thirds of run order were steady 6 of 17, 6 of 17 and 2 of 18 (computed). Age, hour and run order are
+one variable here (below). A lead, not a finding.
+-- The causes tested
+  cause                             verdict             the numbers
+  work on the host beside the raun  refuted             the VMM's own host calls cost the same in the 16 of the 54
+                                                        windows at or under 22 ms frontend p99 and the 38 over it
+                                                        (36 counted, 2 warm-ups): a block write 8.70 against
+                                                        8.94 us, a tap write 11.13 against 11.10 us (extra/
+                                                        fc-metrics-<cell>.json line 3, write_agg.sum_us over the
+                                                        count; computed); F's pool ran one VMM at a time; 12 of 12
+                                                        ADVANCEs read lower later. Not excluded: a box-wide
+                                                        condition; the pack holds no host CPU, pressure or steal
+  the snapshot's age                refuted             one K served every create, so the age is run order: 1000.9
+                                                        to 9690.6 s over the 52 (steps/F-pool.txt, the clock before
+                                                        the set); frontend p99 against it, Spearman 0.153
+                                                        (computed); F0, the youngest cell, 901.2 s, read the
+                                                        highest, 42.64 ms
+  the 22 ms rule, compose's         refuted as the      the same rule passed batch E's 13 of 13 windows, A's 18.81
+                                    cause; tight        and its 5 min load's 17.22 (boot8.txt:279, :303), and 20 of
+                                                        20 later windows on these cells. It is tight: 22 ms is 1.17
+                                                        to 1.28 times a microVM's 17.22 to 18.83, against 2.06
+                                                        times compose's 10.7 (load/steady-state.yaml:65; computed)
+  the time since the thaw           supported, not      every load here began 4.4 to 5.7 s after its cell's
+                                    tested              resume, the before window ending 94.8 to 96.2 s after it
+                                                        (F). Cells left idle first read 16.02 to 18.42 ms (batch E's
+                                                        12 counted, idle 99 to 1912 s), 18.83 (its warm-up, idle
+                                                        about 71 s) and 18.81 (A, 120 s). Boot 9 held the idle
+                                                        constant, so it cannot test it; 14 of 52 were steady at
+                                                        the same idle, so the idle would set the odds, not decide
+                                                        each raun (inference)
+  Batch E's idle: each cell's age at its destroy less its raun's seconds, 98.9 to 1911.9 s for the 12 and 70.7 s for
+  the warm-up (cells/results/2026-10-24-batchE/steps/P1.txt, the destroy lines; its steps.tsv; computed). A: "A-idle:
+  120 s, nothing run" (cells/results/2026-10-29-boot8/batch-log.txt:90)
+What the catch-up after a thaw would be, the Go runtime, the server's caches, Postgres after a clock set of 1001 to
+9691 s, the thawed roles' timers, the pack cannot say: it holds no in-guest reading of the first minutes, and the VMM's
+first-minute writes read the same in both groups, 25884 against 25898 on average (extra/fc-metrics-<cell>.json
+line 2, block_rootfs.write_count; computed). Inference: a thawed cell's first 1.5 minutes under load. The test is the
+same rauns with a fixed idle between the lease and the load.
+-- The two that did not land
+persistence-errors-1 and -3: toxic add reset_peer at toxicity 0.05 on the guest's toxiproxy (faults/catalog.yaml:48-57),
+"injected", removed 122 and 123 s later; .inject_error null, which faults/run.sh sets when the inject command fails
+(faults/run.sh:157, :686-690; read in source), so the call returned 2xx (inference). The signal,
+persistence_error_with_type, stayed at 0 over 120 s, and 0 iterations failed during (F5). Their before windows were
+steady, 18.31 and 17.67 ms. On compose the row did the same, 0 of 3 at 0.05, and at 0.1 and 0.3; 0.5 landed once
+(faults/README.md:54). Why it lands nothing is not read on either backend: a reset_peer on an idle pooled connection
+may show only when that connection is next used, and the server's pool or retry may hide it from the signal
+(inference; verify: toxiproxy's reset_peer toxic; Temporal's SQL persistence retry). Nothing guest-specific is needed to
+explain it.
+
+== What the pack lacks
+- The freeze and the I/O engine in any raun or load JSON: they name cache_type only; K3's snapshot.json and P6b say
+  the rest (Files).
+- The frontend's share past 20 ms in each window: it would say how far over the 22 ms line each BLOCK sat (F).
+- A before window on a cell left idle 60 s or more in this batch, under this setting: the test of the time since the
+  thaw (What it shows).
+- A later reading on a never-steady cell: each stops at its before window, so whether those cells fall to 15 to 19 ms
+  as the ADVANCEs' did is not read (F).
+- Inside the guest in the first minutes after a thaw: CPU, run queue, the Go runtime, the server's caches, Postgres;
+  per-method frontend latency.
+- On the host: pressure, steal, iowait, vmstat, the vCPU threads' run delay; no thread sampler ran.
+- A baseline: lab9-fc-load.baseline.json is 0 bytes, the 69 s window refused (P7).
+- Serve to 2 warm: the bench began on a warm pool (P2).
+- Why the pool refused persistence-chaos-2's release with a 409 and logged "left after clean: pid 830721"; whether
+  that VMM outlived the next create (FS).
+- Why T2's server fired 2.9 s past due on its own clock (T).
+- toxiproxy's toxic list read back during persistence-errors' hold: whether the reset_peer toxic was in place (F5).
+- Why 6 creates reflinked in 0.13 to 0.19 s against 0.01 s (P); why K1's and K2's image copies took 22.14 and 37.04 s
+  (K).
+- The guest Prometheus's first scrape after a thaw.
+- The EBS volume's type, IOPS and throughput: an AWS call, not made.
+- When the instance stopped: the pack ends with the batch.

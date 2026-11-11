@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="540" viewBox="0 0 800 540" role="img"
+    aria-labelledby="startup-race-title startup-race-desc" font-family="Inter, system-ui, sans-serif">
+<title id="startup-race-title">Started together, two frontends race to rewrite one record</title>
+<desc id="startup-race-desc">Top left, before: frontends A and B, on ports 7237 and 7236, both rewrite the one cluster
+    metadata row, which a version guards; the loser gets version mismatch, Unavailable, retries once 40 to 50 ms later,
+    loses again and exits, and Docker restarts it, the outlined box. Top right, after: each role starts only once the
+    one before it listens, and a role listens only after its write, so the next one reads a settled record. Bottom,
+    seconds from the start of create until each new cell passed laug&#39;s warm check, on one scale from 0 to 140:
+    before, 6 cells at 14.4 to 14.8 s and 4 at 54.0 to 130.1 s; after, all 20 at 15.5 to 17.2 s, with no restarts.
+    Ranges are drawn as a line between end ticks. Sources: cells/compose/cell.yml, docs/img/src/startup-race.txt,
+    docs/tables/quotes.jsonl.</desc>
+<rect x="0" y="0" width="800" height="540" fill="#EEF3F2"/>
+<text x="24" y="30" font-size="14" fill="#163A44"
+    font-weight="600">Started together, two frontends race to rewrite one record</text>
+<text x="24" y="50" font-size="12"
+    fill="#163A44">Server 1.31.0, cells made one at a time: 10 with their roles started together, then 20 in turn</text>
+<rect x="16" y="70" width="376" height="262" fill="none" stroke="#163A44" stroke-dasharray="6 4"/>
+<text x="24" y="86" font-size="11" fill="#163A44" font-weight="600">before: started together</text>
+<g aria-label="frontend A, writes :7237">
+  <rect x="36" y="96" width="160" height="44" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="116" y="114.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">frontend A</text>
+  <text x="116" y="129.5" font-size="12" fill="#163A44" text-anchor="middle">writes :7237</text>
+</g>
+<g aria-label="frontend B, writes :7236">
+  <rect x="212" y="96" width="160" height="44" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="292" y="114.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">frontend B</text>
+  <text x="292" y="129.5" font-size="12" fill="#163A44" text-anchor="middle">writes :7236</text>
+</g>
+<g aria-label="cluster metadata, one row, guarded by a version">
+  <rect x="36" y="166" width="336" height="44" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="204" y="184.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">cluster metadata</text>
+  <text x="204" y="199.5" font-size="12" fill="#163A44" text-anchor="middle">one row, guarded by a version</text>
+</g>
+<g
+    aria-label="the loser exits, version mismatch, Unavailable;, retried once 40 to 50 ms later, loses again, and exits; Docker restarts it">
+  <rect x="36" y="236" width="336" height="80" fill="#EEF3F2" stroke="#C44B32"/>
+  <text x="204" y="257.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">the loser exits</text>
+  <text x="204" y="272.5" font-size="12" fill="#163A44" text-anchor="middle">version mismatch, Unavailable;</text>
+  <text x="204" y="287.5" font-size="12" fill="#163A44"
+      text-anchor="middle">retried once 40 to 50 ms later, loses again</text>
+  <text x="204" y="302.5" font-size="12" fill="#163A44" text-anchor="middle">and exits; Docker restarts it</text>
+</g>
+<line x1="116" y1="140" x2="116" y2="158" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="116,166 112,158 120,158" fill="#163A44"/>
+<line x1="292" y1="140" x2="292" y2="158" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="292,166 288,158 296,158" fill="#163A44"/>
+<line x1="204" y1="210" x2="204" y2="228" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="204,236 200,228 208,228" fill="#163A44"/>
+<rect x="408" y="70" width="376" height="262" fill="none" stroke="#163A44" stroke-dasharray="6 4"/>
+<text x="416" y="86" font-size="11" fill="#163A44" font-weight="600">after: started in turn</text>
+<g aria-label="a role starts, and rewrites the record if it differs">
+  <rect x="428" y="96" width="336" height="44" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="596" y="114.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">a role starts</text>
+  <text x="596" y="129.5" font-size="12" fill="#163A44"
+      text-anchor="middle">and rewrites the record if it differs</text>
+</g>
+<g aria-label="it listens only after that write, so listening means the write is done">
+  <rect x="428" y="166" width="336" height="44" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="596" y="184.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-weight="600">it listens only after that write</text>
+  <text x="596" y="199.5" font-size="12" fill="#163A44" text-anchor="middle">so listening means the write is done</text>
+</g>
+<g aria-label="the next role starts, only once the one before listens,, and reads a settled record">
+  <rect x="428" y="236" width="336" height="80" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="596" y="265" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">the next role starts</text>
+  <text x="596" y="280" font-size="12" fill="#163A44" text-anchor="middle">only once the one before listens,</text>
+  <text x="596" y="295" font-size="12" fill="#163A44" text-anchor="middle">and reads a settled record</text>
+</g>
+<line x1="596" y1="140" x2="596" y2="158" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="596,166 592,158 600,158" fill="#163A44"/>
+<line x1="596" y1="210" x2="596" y2="228" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="596,236 592,228 600,228" fill="#163A44"/>
+<text x="24" y="362" font-size="12" fill="#163A44"
+    font-weight="600">Seconds until a new cell passed laug&#39;s warm check</text>
+<text x="24" y="394" font-size="12" fill="#163A44" font-weight="600">before</text>
+<text x="24" y="408" font-size="11" fill="#163A44">10 cells, roles together</text>
+<line x1="227.6" y1="388" x2="227.6" y2="404" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<line x1="227.6" y1="396" x2="229.2" y2="396" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<line x1="229.2" y1="388" x2="229.2" y2="404" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<text x="235.2" y="400" font-size="11" fill="#163A44">6 cells: 14.4 to 14.8 s</text>
+<line x1="386" y1="388" x2="386" y2="404" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<line x1="386" y1="396" x2="690.4" y2="396" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<line x1="690.4" y1="388" x2="690.4" y2="404" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<text x="392" y="390" font-size="11" fill="#163A44">4 cells: 54.0 to 130.1 s, the loser restarted</text>
+<text x="24" y="438" font-size="12" fill="#163A44" font-weight="600">after</text>
+<text x="24" y="452" font-size="11" fill="#163A44">20 cells, roles in turn</text>
+<line x1="232" y1="432" x2="232" y2="448" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<line x1="232" y1="440" x2="238.8" y2="440" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<line x1="238.8" y1="432" x2="238.8" y2="448" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<text x="244.8" y="444" font-size="11"
+    fill="#163A44">20 cells: 15.5 to 17.2 s, 0 restarts, 0 version mismatch lines</text>
+<line x1="170" y1="470" x2="730" y2="470" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<line x1="170" y1="470" x2="170" y2="474" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<text x="167" y="486" font-size="10" fill="#163A44">0</text>
+<line x1="250" y1="470" x2="250" y2="474" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<text x="244" y="486" font-size="10" fill="#163A44">20</text>
+<line x1="330" y1="470" x2="330" y2="474" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<text x="324" y="486" font-size="10" fill="#163A44">40</text>
+<line x1="410" y1="470" x2="410" y2="474" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<text x="404" y="486" font-size="10" fill="#163A44">60</text>
+<line x1="490" y1="470" x2="490" y2="474" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<text x="484" y="486" font-size="10" fill="#163A44">80</text>
+<line x1="570" y1="470" x2="570" y2="474" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<text x="561" y="486" font-size="10" fill="#163A44">100</text>
+<line x1="650" y1="470" x2="650" y2="474" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<text x="641" y="486" font-size="10" fill="#163A44">120</text>
+<line x1="730" y1="470" x2="730" y2="474" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<text x="721" y="486" font-size="10" fill="#163A44">140</text>
+<text x="170" y="502" font-size="10"
+    fill="#163A44">seconds from the start of create until laug&#39;s warm check passed, one HealthCheck included</text>
+<text x="24" y="528" font-size="10"
+    fill="#163A44">source: server v1.31.0 common/persistence/sql/cluster_metadata.go:95 and temporal/fx.go:600.</text>
+</svg>

@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Fake go for a fake gate (GATE_FAKE=1): the gate's one call, go build -o /dev/null ./cmd/omes, recorded in
+# $FAKE_GATE_DIR/go.args with the directory it ran in, then FAKE_GATE_GO_S (0) s, then exit FAKE_GATE_GO_EXIT (0).
+# Anything else exits 2.
+[[ "$*" == "build -o /dev/null ./cmd/omes" ]] || { echo "fake go: only the gate's Omes build, not: $*" >&2; exit 2; }
+printf '%s\t%s\n' "$PWD" "$*" >> "${FAKE_GATE_DIR:?}/go.args"
+sleep "${FAKE_GATE_GO_S:-0}"
+exit "${FAKE_GATE_GO_EXIT:-0}"

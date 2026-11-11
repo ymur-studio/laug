@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Fake ssh for make harness-test: the guest is this machine. Every call's arguments go to $FAKE_DIR/ssh.args, and the
+# remote command, the last argument, runs under bash here with the caller's PATH, so the docker in it is the fake
+# docker. FAKE_SSH_EXIT nonzero answers as an unreachable guest does (exit 255) without running anything.
+# FAKE_SSH_DROP_AFTER=<text>: a command holding that text runs, and then the session fails (exit 255), as a
+# connection that drops after the guest did the work would.
+printf '%s\n' "$*" >> "$FAKE_DIR/ssh.args"
+[[ "${FAKE_SSH_EXIT:-0}" == 0 ]] || exit "$FAKE_SSH_EXIT"
+if [[ -n "${FAKE_SSH_DROP_AFTER:-}" && "${!#}" == *"$FAKE_SSH_DROP_AFTER"* ]]; then bash -c "${!#}" </dev/null; exit 255; fi
+exec bash -c "${!#}" </dev/null

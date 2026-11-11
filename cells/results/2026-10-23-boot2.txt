@@ -1,0 +1,415 @@
+laug · boot 2 on the lab host: the fault catalog on compose cells, 25 rauns, Gate 4 through laug raun
+2026-10-23, 16:11:02 to 19:04:43 UTC by the box's clock (batch-log.txt, its first and last lines); the batch itself
+started at 16:11:11. Host: the lab host, an m8i.8xlarge (32 vCPU, 128 GiB; bin/laug host type read 32 vCPU and 123
+GiB, H) on demand, up 45.65 s when the batch started, nothing of laug's running: 0 listeners on 7700, 0 laug projects,
+0 laugd, 0 pool serve, 0 cellstat (batch-log.txt). Tree: 5e6b65e, the tree boot 1 ran, pushed to the box, which
+commits a pushed tree itself: e5ebc9a, "tree 161055 from 5e6b65e", whose 4277 files hash as 5e6b65e's on the dev host,
+with no other file (batch-log.txt, launch and S1). Every laug command ran in a fresh clone of it, bin/laug stamped
+e5ebc9a (S6). Go: go1.26.0, already in /usr/local/go; apt's is go1.22.2 (batch-log.txt, launch).
+What the batch asked (boot 2 of the lab boots): the catalog's faults on compose cells through laug raun, each three
+times in a row on cold leases, so the numbers the dev host gave for them are measured again here; Gate 4's three among
+them. One pool for the 26 rauns before opt, bin/laug pool serve -backend compose -min 0 -max 1: each raun leased a cell
+built for it, and no other cell was built while it ran. In order: the start (S), the host (H), the pool, a warm-up raun
+(R0), persistence-latency x3, Gate 4 (R1), persistence-timeout x3 (R2), persistence-errors at the committed toxicity
+0.05 x3 (R3) and at 0.1, 0.3 and 0.5 once each (R4), with a sampler beside each of those six, close-shards x3 (R5),
+stuck-shard x3 (R6), stuck-shard-norestore x1 (R7), throttle-frontend x3 (R8), oom-history x3 (R9), then one
+persistence-latency raun on a -min 1 -max 2 pool, for the quiet wait (opt). Each raun: bin/laug raun <fault> -run-id
+lab2-<label> at its defaults: 20 workflows/s, a 30 min lease, a quiet wait of 300 s at most (each step file's "load <n>s
+at 20/s", each lease's "until", .pool_quiet_bound_s). 25 rauns counted; the warm-up and the optional raun are not.
+Gate 4's done-when is 3 of 3 ADVANCE (batch-log.txt, the end line).
+Files. faults/results/raun-lab2-*.json are the 27 raun JSONs the verbs wrote in the clone, at their tree path: the
+clone's git status after the batch lists these 27, untracked, and no other path (clone-status.txt); runs.tsv names the
+step that wrote each.
+cells/results/2026-10-23-boot2/ holds the batch's own records, scrubbed of the box's paths and name before they left it
+(a path shows as <clone>, <out> or <box tree>):
+  batch-log.txt     the batch's log: one line a command, with its exit and seconds, a summary line a raun, UTC
+  steps/            each command's whole stdout and stderr, one file a step (39 files; L-build.txt is the launcher's
+                    make build in the box's tree, before the batch; pool.txt and pool-quiet.txt are the two pool
+                    serves' output, compose's lines for each cell they built; S1.txt is empty, git clone -q)
+  steps.tsv         step, exit, seconds, ok or fail: the 35 commands
+  runs.tsv          step, run id, the file the step wrote, exit: the 27 rauns
+  readings.json     the 37 readings the batch took, each with its step, how it was read and when
+  groups.txt        the 14 step groups, in order
+  clone-status.txt  the clone's git status after the batch: the 27 raun JSONs, untracked, one line each
+  extra/            the sampler's 6 files, pe-<label>.jsonl, one beside each persistence-errors raun, a JSON line a
+                    sample, every 15 s
+Every table below is read from those files with jq, or quoted from them. Tags: a number with a file beside it is seen in
+that file; "computed" marks arithmetic on such numbers; "inference" marks reasoning; "verify" marks what comes from
+documentation or source not run here. "replaces" names the number this run stands in for, the host it came from and
+the file and line in this tree, at db3b862, that holds it.
+The raun tables read each faults/results/raun-lab2-<label>.json: inject is .inject_at in UTC; landed .landed_at -
+.inject_at; ttr .time_to_recover_s, removal to recovered; end .after_end - .inject_at; failed .iterations_failed's
+before/during/drain/after; done, drain and after are .workflows_completed in .window_seconds of that window; sweep
+.sweep.Completed, every workflow the sweep counted (no status but Completed in any .sweep). Each raun JSON writes
+.inject_at, .landed_at and .after_end as Unix seconds in strings. Wall seconds, command to exit, are steps.tsv's.
+Soft assertions: 0 in every window that opened, every role, all 27 rauns, 485 counts (computed over .softasserts). A
+window that never opened is null (faults/run.sh:680-682).
+batch-log.txt's summary line reads "no raun JSON" for each of the 6 BLOCKs, and readings.json's raun_<label> holds null
+for the same 6: the batch's summary jq fails on a BLOCK's null softasserts windows ("null (null) has no keys", the same
+on these files). The 6 JSONs are in faults/results/, and every number below comes from the files.
+
+== S: the start, 16:11:11 to 16:16:27
+  S1  git clone -q <box tree> <clone>     e5ebc9a, 4277 files (batch-log.txt; steps/S1.txt is empty)
+  S2  make build                          exit 0, 6.2 s (steps/S2.txt)
+  S3  bin/laug upstream -url <box tree>/.upstream/omes
+                                          exit 0, 2.8 s: Omes f0de206 from the box's own copy, its proto submodule at
+                                          d96bd55 (steps/S3.txt)
+  S4  bin/laug deps -lab -json            exit 0, 1.2 s: 0 of 17 checks missing; go a note (1.26.0 here, Omes asks
+                                          1.26.5); docker engine 29.1.3, compose 2.40.3, temporal 1.9.1, jq 1.7, yq
+                                          4.54.1, /dev/kvm ok; "this host" ok against its need of 16 vCPU and 8 GiB
+                                          available (steps/S4.txt)
+  S5  make test                           exit 0, 305.6 s: 15 Go packages ok, make harness-test 1137 passed, 0
+                                          failed, make lint's four lines clean (steps/S5.txt; readings.json,
+                                          make_test_s)
+  S6  bin/laug version -json              commit e5ebc9a, go1.26.0, server_tag 1.31.0, Omes f0de206 (steps/S6.txt)
+  S7  git status --porcelain              clean (batch-log.txt, S7)
+Shows: the tree boot 1 ran builds and passes make test again on a fresh clone on the lab host; boot 1 took 307.3 s for
+it (cells/results/2026-10-23-boot1.txt, S5). The harness's floor check on the box, before any lab2 raun existed:
+"floors flag 3 committed run(s), each already BLOCK" (steps/S5.txt).
+Does not show: make test by part; the batch kept the total.
+
+== H: the host, 16:16:27 to 16:16:28
+  H2  bin/laug host type -json            declared m8i.8xlarge, 32 vCPU, 123 GiB, passes true (steps/H2.txt)
+  H4  images                              11 named, none absent (batch-log.txt, H4), each id in readings.json,
+                                          images_before
+Shows: the 10 images boot 1 read before its A1 have the same ids here, and elasticsearch:7.17.27, which boot 1's A2
+pulled, is present (computed against cells/results/2026-10-23-boot1/readings.json, images_before). No clock was read.
+
+== The pool, 16:16:28 to 18:57:22
+bin/laug pool serve -backend compose -min 0 -max 1, started under setsid: listening on 127.0.0.1:7700 (min 0, max 1,
+quota 2, max lease 2h0m0s, backend compose, server 1.31.0, visibility postgres) (batch-log.txt; steps/pool.txt, which
+holds compose's lines for the 26 cells it built, one a raun). It was never restarted (the end line: pool restarts 0).
+At 18:57:22 bin/laug pool down -remove-cells stopped it: exit 0 in 0.2 s, 0 pool cells; left 0 containers, 0 volumes,
+0 networks, 0 per-cell dirs; after it 0 on 7700, 0 laug projects, 0 laugd, 0 pool serve, 0 cellstat (steps/pool-end.txt;
+batch-log.txt).
+The catalog copies for R4 (batch-log.txt, 16:16:28): faults/catalog.yaml with the toxicity line changed, each 2 lines
+apart from it (2 expected), yq reading back "toxic add reset_peer timeout=0 toxicity=0.1", 0.3 and 0.5. CATALOG is laug
+raun's seam for a catalog file.
+
+== R0: the warm-up raun, 16:16:28 to 16:23:10, not counted
+  bin/laug raun persistence-latency -run-id lab2-warmup: ADVANCE, exit 0 in 401.8 s (steps.tsv;
+  faults/results/raun-lab2-warmup.json). It guards what follows; its numbers are not cited.
+
+== R1: persistence-latency x3, Gate 4 through laug raun, 16:23:10 to 16:42:56
+The fault: 200 ms of latency, jitter 50, on every Postgres round trip at the cell's toxiproxy (faults/catalog.yaml:35).
+Steady 90 s, hold 120 s, budget 60 s, after 90 s; the signal persistence p99 against 23 ms (each step file's stderr).
+  run                    inject    landed  peak ms  ttr  end  failed b/d/dr/a  done      drain       after       sweep
+  persistence-latency-1  16:24:57  10      9344.5   25   265  0/540/6/0        0 in 110  1056 in 55  1800 in 90  4092
+  persistence-latency-2  16:31:32  10      9829.2   25   266  0/538/7/0        0 in 110  1053 in 55  1800 in 91  4123
+  persistence-latency-3  16:38:05  5       9849.9   25   266  0/537/5/0        0 in 115  1096 in 55  1801 in 91  4105
+  peak: .signal_peak, the higher of two reads of the signal, at landing and at the hold's end (faults/run.sh:609, :616).
+  3 of 3 ADVANCE (.result), exit 0 in 395.3, 393.6 and 397.8 s. Each fault came off 120 s after its inject (.remove_at
+  - .inject_at) and the signal was back under 23 ms 25 s after that, against a budget of 60. Over the during windows:
+  persistence p99 9911.2, 9928.5 and 9921.6 ms; the service error rate 0.378, 0.249 and 0.367
+  (.during.persistence_latency_p99_ms, .during.service_error_rate). Before / after windows: persistence p99 9.07 / 9.18,
+  9.09 / 9.19 and 9.15 / 9.19 ms; 1200 workflows completed in each 60 s before window.
+  Run 1 by its step file (steps/R-persistence-latency-1.txt): leased 3cbccad6 at 16:23:26 (the lease's "until",
+  16:53:26, less 30 min), about 16 s after the command began (computed: batch-log.txt's exit stamp, 16:29:45, less
+  395.3 s); injected 16:24:57; landed 16:25:07; removed 16:26:57; recovered 16:27:22; drain read 16:27:52; after window
+  and sweep 16:29:23; exit 16:29:45. Runs 2 and 3 keep the same steps (steps/R-persistence-latency-2.txt, -3.txt).
+For gate/plan.yaml:11's wave_min_s: inject to .after_end, 265, 266 and 266 s. Before the inject, the 90 s steady load
+("steady 90s", stderr). After .after_end: the sweep's line 1, 0 and 0 s later, and the command's exit 23, 21 and 25 s
+later, the raun JSON, the release and the cell's destroy in that time (computed: the stderr stamps and batch-log.txt's
+exit stamps, whole seconds, less .after_end). The pack holds no separate time for the sweep and the JSON.
+For faults/catalog.yaml:32's hypothesis: workflows completed in each during window 0, 0 and 0
+(.during.workflows_completed); failed iterations in each during window 540, 538 and 537, so 537 to 540
+(.iterations_failed.during); failed after 0, 0 and 0 (.iterations_failed.after).
+Shows: Gate 4's done-when, 3 of 3 ADVANCE, through laug raun on the lab host, in one shape: landed 5 to 10 s after the
+inject, back 25 s after removal, 0 workflows completed while the latency held, 537 to 540 starts failed in each hold, 0
+after.
+Does not show: the persistence request rate under the latency; this row has no readings (.readings null), and boot 1's
+R3 read it.
+Replaces: "Dev-host history: 3 of 3 ADVANCE, landed 5 to 10 s, recovered 20 to 31 s, 2026-10-09" (dev host,
+STATUS.md:17): 3 of 3 through laug raun, landed 5 to 10 s, recovered 25 s. "3 of 3 ADVANCE on compose cells in dev3"
+(dev host, gate/plan.yaml:53): the three above. "271 to 281 s from inject to after_end (the dev3 rauns)" (dev host,
+gate/plan.yaml:11): 265 to 266 s. "Measured 2026-10-09 (3 runs, <...>)" (dev host, faults/catalog.yaml:32): the
+three above. Landed 5 / 10 / 6 s, recovered 20 / 31 / 25 s, "27 to 37% client errors" (dev host, 2026-10-09 by
+STATUS.md:17, docs/DESIGN.md:223): landed 10 / 10 / 5 s, recovered 25 s each, service error rate 0.249 to 0.378, a rate
+over every role's requests, not the client-visible one (load/steady-state.yaml:51-52). 537 to 542 failed starts per Gate
+4 raun (dev host, STATUS.md:108, docs/DESIGN.md:237; <...> as 537, 539 and 542): 537 to 540.
+Stands beside: STATUS.md:17's own record, make raun on this host type, 2026-10-15: landed 10 s, peak 9.7 to 9.9 s, 541
+to 548 failed during and 0 after, recovered 20 to 25 s, before and after 8.9 to 9.2 ms. The same shape.
+
+== R2: persistence-timeout x3, 16:42:56 to 17:03:08
+The fault: a toxiproxy timeout toxic, 5000 ms, on the Postgres link (faults/catalog.yaml:42). Steady 90 s, hold 120 s,
+budget 120 s; the signal persistence p99 against 23 ms (stderr).
+  run                    inject    landed  peak ms   ttr  end  failed b/d/dr/a  done      drain       after       sweep
+  persistence-timeout-1  16:44:44  10      192000.0  30   270  0/545/26/0       0 in 110  1190 in 60  1800 in 90  4190
+  persistence-timeout-2  16:51:27  10      187500.0  30   271  0/551/25/0       0 in 110  1174 in 60  1800 in 90  4198
+  persistence-timeout-3  16:58:11  10      187500.0  30   271  0/552/24/0       0 in 110  1169 in 60  1800 in 91  4200
+  3 of 3 ADVANCE, exit 0 in 403.8, 403.6 and 404.6 s. Removed 120, 121 and 120 s after inject. Over the during windows:
+  persistence p99 165333.3, 148500.0 and 148000.0 ms; the service error rate 0.018, 0.017 and 0.017. Before / after
+  persistence p99: 9.08 / 9.20, 9.08 / 9.25 and 9.13 / 9.18 ms.
+Shows: persistence-latency's shape, with a longer drain: 24 to 26 starts failed in the drain against 5 to 7, and back
+in 30 s against 25.
+Does not show: how long a query waited. The p99 figures sit far above the 5 s stall: they are what the histogram's
+buckets give (inference), not a measured wait.
+Replaces: "538 to 543 failed client starts while it held, 0 after", landed 10 to 11 s, recovered 32 s (dev host,
+docs/DESIGN.md:224, cells/results/2026-10-14-dev-faults.txt:51): 545 to 552 during, 0 after, landed 10 s, recovered
+30 s. "Dev host only so far" (faults/README.md:22) and "mechanism written, not run" (<...>, stale since
+the dev host's runs): these three.
+
+== R3: persistence-errors at 0.05 x3, with the sampler, 17:03:08 to 17:15:50
+The fault: a toxiproxy reset_peer toxic, timeout 0, toxicity 0.05, the committed row (faults/catalog.yaml:53). Steady
+90 s, hold 120 s, budget 60 s; the signal sum(rate(persistence_error_with_type[30s])) against 0.5
+(faults/catalog.yaml:47; .signal_max).
+  run                   inject    result  .reason                                            failed b/d  before
+  persistence-errors-1  17:04:56  BLOCK   did not land: signal custom stayed at 0 over 120s  0/0         1200 in 60
+  persistence-errors-2  17:09:09  BLOCK   did not land: signal custom stayed at 0 over 120s  0/0         1200 in 60
+  persistence-errors-3  17:13:23  BLOCK   did not land: signal custom stayed at 0 over 120s  0/0         1200 in 60
+  Each exit 1, in 253.0, 253.5 and 253.4 s. The toxic came off 120, 121 and 121 s after inject (stderr stamps, "removed:
+  toxic remove reset_peer"; .remove_at is empty in these JSONs). A raun that does not land ends there: no drain, no
+  after window, no sweep (.drain and .after {}, .sweep null, .iterations_failed.drain and .after null).
+The sampler: beside each raun from its lease to its end, every 15 s, on the leased cell's Prometheus and Postgres, one
+JSON line a sample in extra/pe-<label>.jsonl. Its queries, as the batch ran them:
+  redials           sum by (service_name) (increase(persistence_session_refresh_attempts[1m]))
+  redial failures   sum by (service_name) (increase(persistence_session_refresh_failures[1m]))
+  errors a second   sum(rate(persistence_error_with_type[30s]))
+  completions       sum(rate(workflow_success[30s]))
+  connections       select count(*) from pg_stat_activity where datname = 'temporal', in the cell's postgresql container
+What it read, 16 samples a raun, seconds from .inject_at (computed):
+  run                   in the hold: 8 samples, +0 to +107 s                       connections        after the hold
+  persistence-errors-1  errors 0; completions 19.96 to 20.04/s; redials 0, 5 roles  47 in every sample  45, then 41
+  persistence-errors-2  errors 0; completions 20 to 20.04/s; redials 0, 5 roles     47 in every sample  45, then 21
+  persistence-errors-3  errors 0; completions 20/s; redials 0, 5 roles              48 in every sample  46, then 21
+  The redials answered for server, worker, frontend, history and matching, 0 each; the redial failures had no series.
+  The two samples after the hold, at +121 to +137 s, had no Prometheus answer, while the raun gave its cell back.
+  Before the inject: errors 0.0818, 0.0427 and 0.0910/s at -75 s and 0.05, 0.04 and 0.08/s at -60 s, with
+  completions 8.4 to 9.2/s at -75 s, then 0 errors and 20 to 20.04/s from -45 s. The before window is the load's last
+  60 s before the inject (faults/catalog.yaml:23), so a 30 s rate read at -60 s covers the load's first seconds, before
+  it (computed).
+  readings.json's pe_<label> (peak redials a minute, peak errors a second, lowest completions a second, connections
+  first and last): 0, 0.0818, 8.37, 47 and 41; 0, 0.0427, 9.24, 47 and 21; 0, 0.0910, 8.95, 48 and 21. Its peak
+  errors and lowest completions are the -75 s samples, the load's first seconds, not the fault.
+Shows: at 0.05 the toxic did nothing the cell or its clients could see in 120 s: no persistence error, no pool redial
+in any of the 5 roles, 19.96 to 20.04 completions a second, and the connections to the temporal database steady at 47,
+47 and 48. The BLOCKs say the fault did not land. Nothing failed (.iterations_failed 0 before and during).
+Does not show: whether any connection drew the toxic. The count is net and read every 15 s, and a redial here is a whole
+pool's refresh, not one dial (verify: server 1.31.0 common/persistence/sql/sqlplugin/db_handle.go:94, read in source).
+The dev host's account: an armed open connection closes quietly and its query is retried, and an armed new dial makes
+the role redial its whole pool (STATUS.md:478-480; verify for this host). Here no role redialed, and the count did not
+move.
+The labels: every errors_per_s entry in the six files has an empty metric ({}). The sampler's sum kept neither
+error_type nor service_name, and no raun JSON reads them (.readings null), so the labels faults/catalog.yaml:198-199
+cites are not in this pack. The redial series kept service_name: persistence_session_refresh_attempts is exported
+under that name on a 1.31.0 cell, 5 roles answering.
+Replaces: "persistence-errors 0 of 5 (it did not land ...)" (dev host, STATUS.md:143) and "0 of 5, dev host,
+2026-10-14" (docs/DESIGN.md:225): 0 of 3 at 0.05 on the lab host, the same reason. "The value 0.05 is still untested"
+(STATUS.md:509, stale since the dev host's five): three runs here. "Dev host only so far" (faults/README.md:23) and
+"mechanism written, not run; ... the value is a guess until run" (<...>): these three, with the sampler.
+
+== R4: persistence-errors at 0.1, 0.3 and 0.5, with the sampler, 17:15:50 to 17:30:32
+The same row from a catalog copy with only the toxicity changed (env CATALOG=<out>/catalog-pe-<t>.yaml, each step
+file's first line). The raun JSON names the fault; the toxicity is in the run id, batch-log.txt and that line.
+  run                      inject    result
+  persistence-errors-t010  17:17:37  BLOCK, "did not land: signal custom stayed at 0 over 120s"; failed 0/0
+  persistence-errors-t030  17:21:51  BLOCK, the same; failed 0/0; waited 1 s for a quiet pool (.pool_quiet_wait_s)
+  persistence-errors-t050  17:26:05  ADVANCE: landed 95 s, peak 1.498/s against 0.5, removed 120 s after inject, ttr 0
+                                     (budget 60), end 241 s, failed 0/0/0/0, drain 600 in 30, after 1800 in 91, sweep
+                                     5987
+  Exit 1, 1 and 0, in 253.2, 253.8 and 374.3 s.
+The sampler in the hold, 8 samples each, +1 to +107 s (extra/pe-persistence-errors-t010.jsonl, -t030, -t050):
+  0.1  errors 0; completions 19.96 to 20.04/s; redials 0; connections 47, then 46 from +32 s
+  0.3  errors 0; completions 20/s; redials 0; connections 48, 47 at +1 s, 45 from +16 s
+  0.5  +16, +31, +46 and +61 s: history's redials 1727.2, 1730.9, 1734.8 and 1738.7 a minute, its failures 0; errors 0.
+       +76 and +92 s: redials 0, errors 0. +107 s, 17:27:52: matching's redials 64.4 a minute, its failures 68.8 a
+       minute, errors 1.42/s. Completions 20/s in all 8. Connections 44 at +1 s, 43 at +16 s, 32 from +31 to +76 s, 21
+       at +92 s, 22 at +107 s.
+  0.5, after the hold: errors 0.08/s at +122 s, 0 at +137 and +152 s, then 0 to 0.08/s to +228 s; matching's redials
+       64.4 a minute at +122 and +137 s, 4.4 at +152 s, 0 from +167 s; completions 20 to 20.04/s in every sample from
+       -45 to +228 s; connections 22, 23, then 33 from +152 s.
+  Before each inject: errors 0.0718, 0.5743 and 0.5227/s at -74 or -75 s, completions 7.2 to 8.8/s there, 0 errors
+  and 20/s from -45 s. readings.json's pe_<label>: 0, 0.0718, 8.83, 47 and 21; 0, 0.5743, 7.23, 48 and 19; 1738.7,
+  1.4165, 7.44, 47 and 16, redials first above 0 at sample 7, counting from 0 (+16 s).
+At 0.1 and 0.3: what R3 showed at 0.05. No error, no redial, 19.96 to 20.04 completions a second; the connections fell
+by 1 and 3.
+At 0.5, what the JSON says: the signal crossed 0.5 at 95 s, 25 s before the hold ended, so the during window was 25 s,
+under the 60 s faults/run.sh reads a window over (faults/run.sh:452, :617): .during is {}, no reading. The signal was
+under 0.5 at the first poll after removal (ttr 0). Nothing failed in any window.
+At 0.5, what the sampler says: completions never fell. History redialed its pool about 1730 times in a minute (a redial
+is a pool refresh, the verify in R3), none failing, and the error rate stayed 0 to +92 s. The sampler first read errors
+at +107 s, 1.42/s over the 30 s to 17:27:52, beside matching's failed redials, and 0.08/s over the 30 s to +122 s. Its
+read at +92 s was 0, and the raun's own read crossed 0.5 at +95 s (17:27:40, stderr), so the errors began between +92
+and +95 s (computed).
+Inference: history's redials came in one burst between +1 and +16 s, since its [1m] read 0 at +1 s and at +76 s
+(computed from the windows). Inference: about half the connections went, 47 to 21, as a per-connection toxicity of 0.5
+would make (verify: Toxiproxy's per-connection draw).
+Shows: at 0.1 and 0.3, what R3 showed at 0.05; at 0.5, an ADVANCE with no failed start in any window and 20 completions
+a second in every sample of the hold.
+Does not show: which role's errors landed the 0.5 signal (the sum keeps no service_name); a during reading at 0.5
+(.during {}); why history's redials all held here, when on the dev host the first armed dial stopped the role.
+Replaces: the dev host's 0.5 raun, ADVANCE, landed 10 s, recovered 27 s, peak 605 errors/s, 579 / 45 / 0 failed, 0
+completed during (dev host, cells/results/2026-10-14-dev-faults.txt:59): ADVANCE here too, landed 95 s, ttr 0, peak
+1.498/s, 0 failed, 20 completions/s throughout. The dev host's 0.1 to 0.3 rauns, "did not land, 0 errors, 0 failed
+starts, over 120 s" (dev host, dev-faults.txt:65): the same at 0.1 and 0.3 here. At 0.3 under load the dev host read
+nothing for 90 s, then 17 604 redials a minute, 656 errors/s and 0.09 completed/s at +120 s (dev host, STATUS.md:480,
+dev-faults.txt:68-70, <...>): here at 0.3, 0 redials, 0 errors and 20 completed/s at every sample of the
+hold, +1 to +106 s. 52 to 48 connections at 0.3 on an idle cell (dev host, dev-faults.txt:66, <...>): 48
+to 45 under load here.
+
+== R5: close-shards x3, 17:30:32 to 17:47:44
+The fault: tdbg closes 64 shards drawn by seed 1014, no restart (faults/catalog.yaml:131). Steady 90 s, hold 90 s,
+budget 60 s; landed when sharditem_removed_count rose past 63 since just before inject; recovered when every closed
+shard logged "Acquired shard" since inject (faults/catalog.yaml:100-129; stderr).
+  run             inject    landed  peak  ttr  end  failed b/d/dr/a  done        last back  before it / in its second
+  close-shards-1  17:32:20  7       64    0    210  0/0/0/0          1700 in 83  22 s       33 / 31 at 22 s
+  close-shards-2  17:38:04  7       64    0    210  0/0/0/0          1600 in 83  23 s       36 / 28 at 23 s
+  close-shards-3  17:43:47  7       64    0    210  0/0/0/0          1700 in 83  23 s       30 / 34 at 23 s
+  last back: .shards_acquired.last_s, seconds from inject; the shards back before that second and in it, computed
+  from .shards_acquired.acquired_s.
+  3 of 3 ADVANCE, exit 0 in 344.4, 343.3 and 343.7 s; sweeps 5377, 5368 and 5361. tdbg closed 64 of 64, 0 failed,
+  docker exit 0 (.mechanisms[0]). Every closed shard logged "Acquired shard", 64 of 64, none missing
+  (.shards_acquired.missing []).
+Shows: 64 shards gone and back inside 23 s, no failed start, no workflow the sweep found not Completed; the during
+windows completed 1600 to 1700 workflows in 83 s, against 1200 in each 60 s before window.
+Inference: the shards that came back together at the last second, 31, 28 and 34, came back on history's acquire pass,
+which runs every minute (faults/catalog.yaml:124-127; boot 1's A5c read its period); the rest on their next request.
+Does not show: what brought each shard back. .shards_acquired keeps one second per shard and no cause, so the acquire
+pass above is inference.
+Replaces: last shard back 21 to 25 s after inject, 0 failed starts (dev host, STATUS.md:647, STATUS.md:152,
+cells/results/2026-10-14-controls-and-shards.txt:27-28, <...>): 22 to 23 s, 0. Landed 8, 8 and 12 s
+(dev host, controls-and-shards.txt:20-22): 7 s each. "Dev host only so far" (faults/README.md:27): these three.
+
+== R6: stuck-shard x3, 17:47:44 to 18:07:31
+The fault: one shard's range_id column moved 1000 past the range id it holds, in Postgres, no restart, and put back at
+removal (faults/catalog.yaml:164-165). Steady 90 s, hold 120 s, budget 90 s; landed on shard_closed_count's rise since
+just before inject; recovered when the shard logged "Acquired shard" since removal (faults/catalog.yaml:134-165;
+stderr).
+  run            inject    landed  closes  ttr  back  end  failed b/d/dr/a  done         refused acquires
+  stuck-shard-1  17:49:31  30      7       25   22    267  0/4/1/0          1795 in 90   6
+  stuck-shard-2  17:56:11  30      5       21   19    261  0/2/1/0          1798 in 90   4
+  stuck-shard-3  18:02:39  20      9       26   23    266  0/6/0/0          1995 in 100  8
+  closes: .signal_peak, shard closes since just before inject. back: seconds from removal to the shard's "Acquired
+  shard" (.shards_acquired.acquired_s). refused acquires: its "Couldn't acquire shard" lines in the hold, each with a
+  "Persistent store operation failure" and an "Error acquiring shard" (.shards_acquired.held_evidence).
+  3 of 3 ADVANCE, exit 0 in 399.7, 388.0 and 399.8 s; sweeps 6500, 6388 and 6486. Shard 379 each time: range_id 1 to
+  1001 at inject, back to 1 at removal, restored true (.mechanisms); no "Acquired shard" before removal
+  (.shards_acquired.acquired_before_remove {}). Removed 121, 120 and 120 s after inject.
+Shows: one of the cell's shards held for 120 s: 2 to 6 starts failed in the hold, 3 to 6 with the drain, 0 after; the
+shard was back 19 to 23 s after the restore.
+Does not show: which starts failed, or with what error. The raun JSON counts them by window, and the load's run JSONs
+are not in the pack (clone-status.txt).
+Replaces: 4 to 8 failed starts, back 11 to 25 s after the restore (dev host, STATUS.md:648, STATUS.md:153,
+cells/results/2026-10-14-controls-and-shards.txt:29-31, <...>): 2 to 6 in the hold (3 to 6 with
+the drain), back 19 to 23 s. "Couldn't acquire shard" 5 to 10 times a run (dev host, controls-and-shards.txt:29-30): 4
+to 8. "Dev host only so far" (faults/README.md:28): these three.
+
+== R7: stuck-shard-norestore x1, 18:07:31 to 18:14:24
+The self-test: stuck-shard with a remove that does nothing. It passes only as a BLOCK that did not recover whose shard
+logged "Couldn't acquire shard" in the hold (faults/catalog.yaml:167-188).
+  stuck-shard-norestore-1, lease 174053f5: injected 18:09:19, shard 379's range_id 1 to 1001; landed 35 s, closes 6;
+  removed 18:11:19, nothing done; BLOCK, "did not recover within 150s: 1 of 1 shard(s) logged no "Acquired shard"
+  since removal: 379" (.reason); exit 1 in 412.4 s. Failed starts 0 before, 3 during, 8 in the drain; the after window
+  never opened (null). 1697 workflows completed in the 85 s during window. Cleanup at 18:13:58: pg restore, shard 379
+  back to 1 from 1001, restored true (.mechanisms[1]).
+  .self_test, whole:
+    {"expect": "did not recover",
+     "held_evidence": {"379": {"Persistent store operation failure": 5, "Error acquiring shard": 5,
+                               "Couldn't acquire shard": 5}},
+     "passed": true,
+     "why": "a BLOCK that did not recover, and every touched shard logged \"Couldn't acquire shard\" in the hold"}
+Shows: the harness reads a shard that never comes back as a BLOCK, and shows the bump held it: 5 refused acquires.
+Does not show: whether shard 379 comes back without the restore, given more time. The cleanup restored it 159 s after
+the removal (computed: .mechanisms[1].at less .remove_at).
+Replaces: "Dev host only so far" (faults/README.md:29); the dev host's run read 5 / 8 / null failed and the same reason
+(dev host, cells/results/2026-10-14-controls-and-shards.txt:26): 3 / 8 / null here.
+
+== R8: throttle-frontend x3, 18:14:24 to 18:35:43
+The fault: frontend.rps 10 in the leased cell's dynamic config copy, then the copy restored (faults/catalog.yaml:81-82).
+Steady 90 s, hold 120 s, budget 180 s; the signal, ResourceExhausted errors a second over 30 s, against 0.5
+(faults/catalog.yaml:72; stderr).
+  run                  inject    landed  RE peak  ttr  end  failed   done        error rate  wf task s2s p99
+  throttle-frontend-1  18:16:11  35      3.08/s   50   291  0/0/0/0  181 in 85   0.039       48235.6 ms
+  throttle-frontend-2  18:23:14  35      4.48/s   55   296  0/0/0/0  182 in 85   0.046       47375.0 ms
+  throttle-frontend-3  18:30:23  36      3.64/s   55   296  0/0/0/0  176 in 84   0.045       48609.9 ms
+  RE peak: .signal_peak; error rate and wf task s2s p99: .during.service_error_rate and
+  .during.workflow_task_schedule_to_start_p99_ms.
+  3 of 3 ADVANCE, exit 0 in 422.8, 429.4 and 427.2 s; sweeps 4855, 4939 and 4943. Removed 121, 121 and 120 s after
+  inject. Drain 1094, 1227 and 1165 completed in 80, 85 and 85 s; after 1800, 1800 and 1900 in 90, 90 and 91 s.
+Shows: back 50 to 55 s after removal, against the 180 s budget. While it held the cell completed 176 to 182 workflows in
+84 to 85 s, against 1200, 1200 and 1201 in the 60 s before windows (.before.workflows_completed), and no start failed.
+Does not show: when the frontend took up the new limit. The pack holds no role's log line for it, and .readings is null
+in these three.
+Replaces: on compose cells, landed 32 to 38 s, recovered 52 to 54 s, 4 of 5 ADVANCE (dev host,
+cells/results/2026-10-14-dev-faults.txt:49; "On compose cells: dev host only so far", faults/README.md:25): landed 35
+to 36 s, recovered 50 to 55 s, 3 of 3. The microVM numbers stand beside these: landed 44 to 69 s, recovered 58 to 123
+s (first lab host, an m8i.2xlarge, STATUS.md:643, docs/DESIGN.md:227); ResourceExhausted 2.3 to 4.8/s and 144 and 154
+completions (same host, docs/DESIGN.md:227); the service error rate 0.042 and 0.049 over 76 and 69 s (same host,
+faults/candidates.yaml:94-96). For faults/catalog.yaml:74-78's budget of 180 s: these three recovered in 50 to 55 s.
+
+== R9: oom-history x3, 18:35:43 to 18:57:22
+The fault: history's memory limit set to 256 MiB, then lifted and history started (faults/catalog.yaml:97-98). Steady
+90 s, hold 120 s, budget 120 s; landed on the first failed scrape of history's up; recovered after 30 s of up
+(faults/catalog.yaml:84-91; stderr).
+  run            inject    landed  ttr  shards ready  end  failed b/d/dr/a  done      drain        after
+  oom-history-1  18:37:31  45      60   32.1 s        300  0/102/206/0      0 in 75   953 in 90    1800 in 90
+  oom-history-2  18:44:45  50      61   35.1 s        301  0/107/206/0      0 in 70   842 in 91    1800 in 90
+  oom-history-3  18:52:00  50      61   29.7 s        301  0/103/153/0      0 in 70   1175 in 91   1799 in 90
+  shards ready: .history_shards_ready_s, removal to the new history's "initial shards ready".
+  3 of 3 ADVANCE, exit 0 in 434.3, 434.8 and 429.6 s; sweeps 4810, 4833 and 5046. Removed 120 s after inject in each.
+  The during windows' service error rate 0.234, 0.275 and 0.178; the drains' workflow task schedule-to-start p99 19.4,
+  18.9 and 127152.6 ms.
+Shows: nothing completed from the first failed scrape to the removal; history's shards were ready 29.7 to 35.1 s after
+the limit lifted; 153 to 206 starts failed in the drain and 0 after.
+Does not show: how many times history was killed in the hold; the pack holds no docker events.
+For faults/catalog.yaml:95-96: .history_shards_ready_s 32.1, 35.1 and 29.7 s, so 29.7 to 35.1 s.
+Replaces: "the new history owned its shards 42.6 and 45.9 s after removal" (microVM cells, first lab host, an
+m8i.2xlarge, faults/catalog.yaml:96; <...>) and 42.6 to 51.4 s (same host, STATUS.md:93, STATUS.md:649,
+docs/DESIGN.md:228): 29.7 to 35.1 s on compose cells on the lab host. On compose cells, landed 27 to 52 s, recovered
+77 to 85 s (dev host, cells/results/2026-10-14-dev-faults.txt:48; "On compose cells: dev host only so far",
+faults/README.md:26): landed 45 to 50 s, recovered 60 to 61 s.
+
+== opt: persistence-latency on a -min 1 -max 2 pool, 18:57:22 to 19:04:43
+bin/laug pool serve -backend compose -min 1 -max 2 started at 18:57:22; at 18:57:43 the pool held 1 warm cell,
+dae942e4 (batch-log.txt). bin/laug raun persistence-latency -run-id lab2-quiet-1 leased it, and the pool built a
+second cell, laug-9eba4dec (steps/pool-quiet.txt), the one busy cell the raun waited for (inference: pool-quiet.txt has
+no times). The raun, by its stderr (steps/R-quiet-1.txt):
+  18:57:43  "pool: 1 other cell(s) busy at laugd (being created, reset or destroyed); waiting up to 300 s before the
+            load"
+  18:58:03  "pool: no busy cell at laugd after 20 s; starting the load"
+  .pool_quiet_wait_s 20, .pool_quiet_bound_s 300; .pool_busy 0 in every window. ADVANCE, exit 0 in 402.6 s: inject
+  18:59:33, landed 10 s, peak 9512.9 ms, ttr 25, end 266, failed 0/550/7/0, done 0 in 110, sweep 4102.
+bin/laug pool down -remove-cells at 19:04:43: exit 0 in 17.8 s, removing laug-9eba4dec; left 0 containers, 0 volumes,
+0 networks, 0 per-cell dirs; after it 0 on 7700, 0 laug projects, 0 laugd, 0 pool serve, 0 cellstat
+(steps/pool-quiet-down.txt; batch-log.txt).
+Shows: on a live laugd, a raun waited 20 s for one busy cell, the build its own lease set off (inference, above), then
+ran with no busy cell in any window, and gave the persistence-latency shape of R1.
+Does not show: when the replacement cell finished building. steps/pool-quiet.txt holds compose's lines with no times, so
+the 20 s wait is tied to that build by inference.
+Replaces: "Proven by make harness-test only, against a fake laugd; verify on a live laugd" (STATUS.md:180-181): seen on
+a live laugd here.
+
+== The end line, and the BLOCKs
+The batch's last line (batch-log.txt, 19:04:43):
+  batch ended: rauns 25 of 25 counted (+ warm-up: ADVANCE, exit 0; opt.: ADVANCE, exit 0, pool_quiet_wait_s 20);
+  ADVANCE 19, BLOCK 6, exit 2 or more 0; by fault persistence-latency 3/3, persistence-timeout 3/3,
+  persistence-errors@0.05 0/3, persistence-errors@0.1 0/1, persistence-errors@0.3 0/1, persistence-errors@0.5 1/1,
+  close-shards 3/3, stuck-shard 3/3, stuck-shard-norestore 0/1, throttle-frontend 3/3, oom-history 3/3;
+  persistence-latency 3 of 3 (Gate 4: 3 of 3 the done-when); norestore self_test {R7's object, printed whole}
+  (result BLOCK); skipped 0; pool restarts 0; readings 37
+and before it: "end: on 7700 0, laug projects 0, laugd 0, pool serve 0, cellstat 0; cells left 0; 263 min left, up 174
+min". The safety stop was set for 00:10 UTC; the boot's budget was 236 min from 16:11:11 (batch-log.txt).
+- The 6 BLOCKs, each exit 1, which steps.tsv counts ok:
+  5 persistence-errors rauns, 0.05 x3, 0.1 and 0.3: "did not land: signal custom stayed at 0 over 120s". A fault whose
+  signal never exceeds its max cannot ADVANCE (faults/catalog.yaml:5). The sampler read 0 errors in every sample of
+  each hold, and nothing failed. They say the fault did nothing a verdict could see, not that a cell failed.
+  1 stuck-shard-norestore: "did not recover", with its self_test passed: the outcome it exists to give.
+- 0 rauns exited 2 or more; 0 steps failed (steps.tsv: 35 commands, every one ok).
+
+== What the pack lacks
+- make test's parts (test-go, harness-test, lint): the batch kept the total, 305.6 s.
+- A step file for S1 (empty, git clone -q), S7, H4 and the catalog copies' checks: their values are in batch-log.txt.
+- readings.json's raun_<label> for the 6 BLOCKs (null, the summary jq above); the JSONs hold every value.
+- The rauns' load run JSONs (faults/results/load/raun-lab2-*.json): the clone held none (clone-status.txt). The
+  rauns' logs, *.log, are never committed.
+- The error_type and service_name labels of persistence_error_with_type: the sampler summed them, and no raun JSON
+  reads them. So which role's errors landed the 0.5 raun is not here either.
+- A during reading for the 0.5 raun: its window was 25 s, and .during is {}.
+- Readings for any row: .readings is null in all 27 JSONs; no boot 2 row carried a readings map.
+- Single connection dials and closes at 0.05 to 0.3: the sampler read pool refreshes and a net connection count.
+- How many times history was killed in each oom-history hold; Docker's restart delays.
+- When the quiet raun's replacement cell finished building: steps/pool-quiet.txt holds compose's lines, with no times.
+- laug cell softasserts after each raun: laug raun gives its cell back and the pool destroys it ("given back, its cell
+  destroyed", every step file); each JSON's .softasserts counts the same lines per role and window
+  (faults/run.sh:23-24).
+- When the instance stopped: the pack ends with the batch.

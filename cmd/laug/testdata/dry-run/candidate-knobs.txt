@@ -1,0 +1,17 @@
+# make: make --no-print-directory -n candidate CANDIDATE=benign MAX_CONCURRENT=10 NAMESPACE=ns1 POOL_QUIET_WAIT_S=0 THRESHOLDS=load/steady-state.yaml
+# laug: laug candidate benign -max-concurrent 10 -namespace ns1 -quiet-wait 0s -thresholds load/steady-state.yaml
+# lease: absent
+# passes: MAX_CONCURRENT=10 POOL_QUIET_WAIT_S=0 THRESHOLDS=load/steady-state.yaml
+# compare: line faults/candidate.sh
+c="${CANDIDATE:-}"; [[ "$c" =~ ^[a-z0-9-]+$ ]] && [ "$(yq "[.candidates[] | select(.name == \"$c\")] | length" faults/candidates.yaml)" = 1 ] \
+  || { echo "laug · make candidate CANDIDATE=<name>, one of: $(yq -r '[.candidates[].name] | join(", ")' faults/candidates.yaml)" >&2; exit 2; }
+[[ 'ns1' =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || { echo "laug · make candidate: NAMESPACE="'ns1'" is not one word of letters, digits, ., _ and -, from a letter or digit" >&2; exit 2; };                
+make lease
+[[ '1800' =~ ^(0|[1-9][0-9]*)$ ]] || { echo "laug · TTL="'1800'": a whole number of seconds" >&2; exit 2; }
+tmp=$(mktemp .lease.XXXXXX); \
+if curl -s --fail-with-body -X POST 'http://127.0.0.1:7700/lease' -H 'content-type: application/json' \
+     -d "$(jq -cn --argjson ttl 1800 --arg requester 'laug' '{ttl_seconds: $ttl, requester: $requester}')" -o "$tmp"; then \
+  mv "$tmp" .last-lease.json && jq . .last-lease.json; \
+else rc=$?; echo "laug · lease refused (curl exit $rc): $(cat "$tmp")" >&2; rm -f "$tmp"; exit 1; fi
+RUN_ID=20261022-120000 POOL_ADDR='http://127.0.0.1:7700' OMES_DIR='.upstream/omes' NAMESPACE=ns1 SCENARIO=workflow_with_single_noop_activity CANDIDATE_RELEASE=1 \
+  faults/candidate.sh benign .last-lease.json

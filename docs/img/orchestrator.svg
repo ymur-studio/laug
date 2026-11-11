@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="470" viewBox="0 0 800 470" role="img"
+    aria-labelledby="orchestrator-title orchestrator-desc" font-family="Inter, system-ui, sans-serif">
+<title id="orchestrator-title">The orchestrator beside the cells it judges: its own dev server on 7400 to 7402 and
+    8400</title>
+<desc id="orchestrator-desc">Left, the gate&#39;s own Temporal: laug orchestrator server runs a dev server on
+    127.0.0.1:7400, its HTTP, metrics and UI ports pinned to 7401, 7402 and 8400, its state one SQLite file; laug
+    orchestrator worker polls it on this checkout&#39;s task queue, as laug-worker@&lt;commit&gt;, and runs gate/step.sh
+    a step at a time, which leases cells from laug pool serve on 127.0.0.1:7700. Right, the cells the gate leased, each
+    a Temporal deployment whose ports move by 10 a block. Below, the dashed box and its dashed arrow, the trap the
+    pinned ports avoid: the CLI&#39;s and the SDK&#39;s default address, 7233, is block 0&#39;s cell frontend during a
+    gate. Sources: cells/compose/cell.yml, cmd/laug/constants.go, cmd/laug/doc.go, docs/img/src/orchestrator.txt.</desc>
+<rect x="0" y="0" width="800" height="470" fill="#EEF3F2"/>
+<text x="24" y="30" font-size="14" fill="#163A44"
+    font-weight="600">The orchestrator beside the cells it judges: its own dev server on 7400 to 7402 and 8400</text>
+<text x="24" y="50" font-size="12"
+    fill="#163A44">One host during a workflow gate: laug orchestrator server and worker, laug pool serve, the gate&#39;s cells</text>
+<rect x="16" y="70" width="384" height="286" fill="none" stroke="#163A44" stroke-dasharray="6 4"/>
+<text x="24" y="86" font-size="11" fill="#163A44" font-weight="600">the gate&#39;s history: the orchestrator</text>
+<g
+    aria-label="laug orchestrator server, temporal server start-dev, 127.0.0.1:7400; HTTP 7401, metrics 7402, UI 8400; orchestrator/run/dev.db">
+  <rect x="32" y="100" width="352" height="90" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="208" y="126.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-weight="600">laug orchestrator server</text>
+  <text x="208" y="141.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">temporal server start-dev</text>
+  <text x="208" y="156.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">127.0.0.1:7400; HTTP 7401, metrics 7402</text>
+  <text x="208" y="171.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">UI 8400; orchestrator/run/dev.db</text>
+</g>
+<g
+    aria-label="laug orchestrator worker, laug-worker@&lt;commit&gt;, queue: orchestrator/run/queue, runs gate/step.sh, a step at a time">
+  <rect x="32" y="246" width="352" height="90" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="208" y="272.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-weight="600">laug orchestrator worker</text>
+  <text x="208" y="287.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">laug-worker@&lt;commit&gt;</text>
+  <text x="208" y="302.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">queue: orchestrator/run/queue</text>
+  <text x="208" y="317.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">runs gate/step.sh, a step at a time</text>
+</g>
+<line x1="208" y1="246" x2="208" y2="198" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="208,190 212,198 204,198" fill="#163A44"/>
+<text x="214" y="222" font-size="11" fill="#163A44">polls 127.0.0.1:7400</text>
+<g aria-label="laug pool serve, 127.0.0.1:7700">
+  <rect x="440" y="100" width="336" height="56" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="608" y="124.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">laug pool serve</text>
+  <text x="608" y="139.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">127.0.0.1:7700</text>
+</g>
+<rect x="424" y="196" width="368" height="160" fill="none" stroke="#163A44" stroke-dasharray="6 4"/>
+<text x="432" y="212" font-size="11" fill="#163A44" font-weight="600">the gate&#39;s cells: block b adds 10b</text>
+<g aria-label="block 0, frontend 7233, UI 8080, Prometheus 9090">
+  <rect x="440" y="230" width="160" height="98" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="520" y="260.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">block 0</text>
+  <text x="520" y="275.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">frontend 7233</text>
+  <text x="520" y="290.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">UI 8080</text>
+  <text x="520" y="305.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">Prometheus 9090</text>
+</g>
+<g aria-label="block 1, frontend 7243, UI 8090, Prometheus 9100">
+  <rect x="616" y="230" width="160" height="98" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="696" y="260.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">block 1</text>
+  <text x="696" y="275.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">frontend 7243</text>
+  <text x="696" y="290.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">UI 8090</text>
+  <text x="696" y="305.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-family="ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace">Prometheus 9100</text>
+</g>
+<polyline points="384,270 412,270 412,128" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<line x1="412" y1="128" x2="432" y2="128" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="440,128 432,132 432,124" fill="#163A44"/>
+<text x="440" y="178" font-size="11" fill="#163A44">its steps lease cells from the pool</text>
+<g aria-label="a client given no address, the CLI&#39;s and the SDK&#39;s default: 7233">
+  <rect x="32" y="384" width="352" height="56" fill="#EEF3F2" stroke="#C44B32" stroke-dasharray="4 3"/>
+  <text x="208" y="408.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-weight="600">a client given no address</text>
+  <text x="208" y="423.5" font-size="12" fill="#163A44"
+      text-anchor="middle">the CLI&#39;s and the SDK&#39;s default: 7233</text>
+</g>
+<line x1="273.684" y1="384" x2="432.641" y2="316.24" fill="none" stroke="#C44B32" stroke-width="1.5" stroke-dasharray="4
+    3"/>
+<polygon points="440,313.103 434.209,319.919 431.072,312.56" fill="#C44B32"/>
+<text x="440" y="378" font-size="11" fill="#C44B32">block 0&#39;s frontend during a gate</text>
+</svg>

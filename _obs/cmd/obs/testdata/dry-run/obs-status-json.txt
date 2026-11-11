@@ -1,0 +1,6 @@
+# make: make --no-print-directory -n obs-status JSON=1
+# obs: bin/obs status -json
+# lease: absent
+# passes: JSON=1
+# compare: line obs/obs.sh
+obs/obs.sh status

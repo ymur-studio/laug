@@ -1,0 +1,6 @@
+# make: make --no-print-directory -n cell-up
+# laug: laug cell up
+# lease: absent
+# compare: line cells/up.sh
+[[ '1.31.0' =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "laug · SERVER_TAG must be a release tag, x.y.z; got '"'1.31.0'"'" >&2; exit 2; }
+ENABLE_ES=false COMPOSE_PROFILES= BIND_ADDR='127.0.0.1' SERVER_TAG=1.31.0 FRONTEND_PORT=7233 UI_PORT=8080 PROMETHEUS_PORT=9090 GRAFANA_PORT=3000 TOXIPROXY_PORT=8474 PROJECT=laug SERVER_FI='' CELL_ADDRESS='127.0.0.1:7233' PROM_URL='http://127.0.0.1:9090' NAMESPACE=default VISIBILITY=postgres cells/up.sh

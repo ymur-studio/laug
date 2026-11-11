@@ -1,0 +1,43 @@
+# The observability stack, as its configs set it: _obs/prometheus.yml:1-25 (the store on 127.0.0.1:7730; the cells
+# federated every 5 s through /federate with honor_labels, honor_timestamps and track_timestamps_staleness true; the
+# labels follow's target files carry), :46-102 (cellstat 7710, follow 7720, the host 7752, the orchestrator 7402),
+# _obs/collector.yaml:1-11 (OTLP over HTTP on 7751), _obs/jaeger.yaml:1-5 (OTLP 7760 from the Collector),
+# _obs/grafana/grafana.ini:14-17 (127.0.0.1:7740), _obs/grafana/provisioning/datasources/stack.yml (the store, Jaeger's
+# 7761), _obs/versions.txt (the four releases), cells/compose/cell.yml:8-10 (a cell's Prometheus on 9090 + 10 a block).
+name obs-stack
+size 800 520
+title | The stack: one store outside every cell, each cell's series named from outside
+sub | bin/obs up: Prometheus, the Collector, Jaeger and Grafana, every listener on 127.0.0.1
+desc | Left: each leased cell's own Prometheus, which dies with its cell, and bin/obs follow, which writes a target
+desc | file a cell with the labels that outlive it. Middle: the stack's store federates each cell every 5 s and keeps
+desc | the cell's own timestamps; with track_timestamps_staleness true a series the cell stops serving goes stale at the
+desc | next pass, not 5 minutes on. It scrapes cellstat, follow, the host and the orchestrator's dev server too. Bottom:
+desc | workflow Gate's worker and starter send traces over OTLP to the Collector, which hands them to Jaeger. Right:
+desc | Grafana reads both. Every address is 127.0.0.1 (_obs/prometheus.yml, _obs/collector.yaml, _obs/jaeger.yaml).
+source _obs/prometheus.yml
+source _obs/collector.yaml
+source _obs/jaeger.yaml
+source _obs/grafana/grafana.ini
+source _obs/grafana/provisioning/datasources/stack.yml
+source _obs/versions.txt
+source cells/compose/cell.yml
+box cell0 24 92 220 56 mono | cell 0's Prometheus | 127.0.0.1:9090
+box cell1 24 168 220 56 mono | cell 1's Prometheus | 127.0.0.1:9100
+box follow 24 244 220 80 | bin/obs follow, 7720 | a target file a cell: cell, | block, gate_id, item, arm
+box store 300 112 220 196 fill=deep | the stack's store | Prometheus 2.53.0 | 127.0.0.1:7730
+box grafana 576 112 200 196 | Grafana | 127.0.0.1:7740 | the boards
+arrow cell0 store
+arrow cell1 store
+arrow follow store
+link store grafana | read by
+text 300 330 size=10 | Each cell through /federate, every 5 s:
+text 300 344 size=10 | honor_labels, honor_timestamps and
+text 300 358 size=10 | track_timestamps_staleness, each true.
+text 300 378 size=10 | Scraped too: cellstat 7710, the host 7752,
+text 300 392 size=10 | the orchestrator's dev server 7402.
+box workers 24 420 220 66 | Gate's worker, starter | OTLP over HTTP
+box collector 300 420 220 66 | the Collector | 127.0.0.1:7751
+box jaeger 576 420 200 66 | Jaeger | OTLP 7760, from the | Collector; query 7761
+arrow workers collector
+arrow collector jaeger
+link jaeger grafana | read by

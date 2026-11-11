@@ -1,0 +1,6 @@
+# make: make --no-print-directory -n baseline RUN_ID=r1
+# laug: laug baseline r1
+# lease: present
+# compare: line load/baseline.sh
+[[ 'r1' =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || { echo "laug · make baseline: RUN_ID="'r1'" is not one word of letters, digits, ., _ and -, from a letter or digit" >&2; exit 2; };                    
+PROM_URL='' FALLBACK_PROM_URL='http://127.0.0.1:9100'  load/baseline.sh r1

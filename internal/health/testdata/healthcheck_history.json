@@ -1,0 +1,473 @@
+{
+  "events": [
+    {
+      "eventId": "1",
+      "eventTime": "2026-10-23T06:53:14.558865519Z",
+      "eventType": "EVENT_TYPE_WORKFLOW_EXECUTION_STARTED",
+      "taskId": "1048576",
+      "workflowExecutionStartedEventAttributes": {
+        "workflowType": {
+          "name": "HealthCheck"
+        },
+        "taskQueue": {
+          "name": "cell-health",
+          "kind": "TASK_QUEUE_KIND_NORMAL"
+        },
+        "input": {
+          "payloads": [
+            {
+              "metadata": {
+                "encoding": "anNvbi9wbGFpbg=="
+              },
+              "data": "ImxhdWci"
+            }
+          ]
+        },
+        "workflowExecutionTimeout": "120s",
+        "workflowRunTimeout": "120s",
+        "workflowTaskTimeout": "10s",
+        "originalExecutionRunId": "01a16789-01be-7d32-9202-2178d8308163",
+        "identity": "laug-healthcheck",
+        "firstExecutionRunId": "01a16789-01be-7d32-9202-2178d8308163",
+        "attempt": 1,
+        "workflowExecutionExpirationTime": "2026-10-23T06:55:14.559Z",
+        "firstWorkflowTaskBackoff": "0s",
+        "header": {},
+        "workflowId": "health-1792738394555"
+      }
+    },
+    {
+      "eventId": "2",
+      "eventTime": "2026-10-23T06:53:14.558923110Z",
+      "eventType": "EVENT_TYPE_WORKFLOW_TASK_SCHEDULED",
+      "taskId": "1048577",
+      "workflowTaskScheduledEventAttributes": {
+        "taskQueue": {
+          "name": "cell-health",
+          "kind": "TASK_QUEUE_KIND_NORMAL"
+        },
+        "startToCloseTimeout": "10s",
+        "attempt": 1
+      }
+    },
+    {
+      "eventId": "3",
+      "eventTime": "2026-10-23T06:53:14.568397020Z",
+      "eventType": "EVENT_TYPE_WORKFLOW_EXECUTION_SIGNALED",
+      "taskId": "1048583",
+      "workflowExecutionSignaledEventAttributes": {
+        "signalName": "go",
+        "input": {
+          "payloads": [
+            {
+              "metadata": {
+                "encoding": "anNvbi9wbGFpbg=="
+              },
+              "data": "ImdvIg=="
+            }
+          ]
+        },
+        "identity": "laug-healthcheck",
+        "header": {}
+      }
+    },
+    {
+      "eventId": "4",
+      "eventTime": "2026-10-23T06:53:14.573896623Z",
+      "eventType": "EVENT_TYPE_WORKFLOW_TASK_STARTED",
+      "taskId": "1048585",
+      "workflowTaskStartedEventAttributes": {
+        "scheduledEventId": "2",
+        "identity": "laug-healthcheck",
+        "requestId": "04198a32-cb9d-46c0-bad7-9dcfa87148f5",
+        "historySizeBytes": "384",
+        "workerVersion": {
+          "buildId": "b0b57f5d448b5766f17788b866ee84ab"
+        }
+      }
+    },
+    {
+      "eventId": "5",
+      "eventTime": "2026-10-23T06:53:14.582620984Z",
+      "eventType": "EVENT_TYPE_WORKFLOW_TASK_COMPLETED",
+      "taskId": "1048589",
+      "workflowTaskCompletedEventAttributes": {
+        "scheduledEventId": "2",
+        "startedEventId": "4",
+        "identity": "laug-healthcheck",
+        "workerVersion": {
+          "buildId": "b0b57f5d448b5766f17788b866ee84ab"
+        },
+        "sdkMetadata": {
+          "langUsedFlags": [
+            3
+          ],
+          "sdkName": "temporal-go",
+          "sdkVersion": "1.49.0"
+        },
+        "meteringMetadata": {}
+      }
+    },
+    {
+      "eventId": "6",
+      "eventTime": "2026-10-23T06:53:14.582669676Z",
+      "eventType": "EVENT_TYPE_ACTIVITY_TASK_SCHEDULED",
+      "taskId": "1048590",
+      "activityTaskScheduledEventAttributes": {
+        "activityId": "6",
+        "activityType": {
+          "name": "Echo"
+        },
+        "taskQueue": {
+          "name": "cell-health",
+          "kind": "TASK_QUEUE_KIND_NORMAL"
+        },
+        "header": {},
+        "input": {
+          "payloads": [
+            {
+              "metadata": {
+                "encoding": "anNvbi9wbGFpbg=="
+              },
+              "data": "ImxhdWci"
+            }
+          ]
+        },
+        "scheduleToCloseTimeout": "120s",
+        "scheduleToStartTimeout": "120s",
+        "startToCloseTimeout": "10s",
+        "heartbeatTimeout": "0s",
+        "workflowTaskCompletedEventId": "5",
+        "retryPolicy": {
+          "initialInterval": "1s",
+          "backoffCoefficient": 2,
+          "maximumInterval": "100s",
+          "maximumAttempts": 3
+        },
+        "useWorkflowBuildId": true
+      }
+    },
+    {
+      "eventId": "7",
+      "eventTime": "2026-10-23T06:53:14.591246647Z",
+      "eventType": "EVENT_TYPE_ACTIVITY_TASK_STARTED",
+      "taskId": "1048596",
+      "activityTaskStartedEventAttributes": {
+        "scheduledEventId": "6",
+        "identity": "laug-healthcheck",
+        "requestId": "ba0aaa18-982e-4816-8cbe-81b06b540821",
+        "attempt": 1,
+        "workerVersion": {
+          "buildId": "b0b57f5d448b5766f17788b866ee84ab"
+        }
+      }
+    },
+    {
+      "eventId": "8",
+      "eventTime": "2026-10-23T06:53:14.596689069Z",
+      "eventType": "EVENT_TYPE_ACTIVITY_TASK_COMPLETED",
+      "taskId": "1048597",
+      "activityTaskCompletedEventAttributes": {
+        "result": {
+          "payloads": [
+            {
+              "metadata": {
+                "encoding": "anNvbi9wbGFpbg=="
+              },
+              "data": "ImxhdWci"
+            }
+          ]
+        },
+        "scheduledEventId": "6",
+        "startedEventId": "7",
+        "identity": "laug-healthcheck"
+      }
+    },
+    {
+      "eventId": "9",
+      "eventTime": "2026-10-23T06:53:14.596695323Z",
+      "eventType": "EVENT_TYPE_WORKFLOW_TASK_SCHEDULED",
+      "taskId": "1048598",
+      "workflowTaskScheduledEventAttributes": {
+        "taskQueue": {
+          "name": "host:efffaa23-c2aa-4e81-9536-ee7a91cdcf32",
+          "kind": "TASK_QUEUE_KIND_STICKY",
+          "normalName": "cell-health"
+        },
+        "startToCloseTimeout": "10s",
+        "attempt": 1
+      }
+    },
+    {
+      "eventId": "10",
+      "eventTime": "2026-10-23T06:53:14.603531631Z",
+      "eventType": "EVENT_TYPE_WORKFLOW_TASK_STARTED",
+      "taskId": "1048602",
+      "workflowTaskStartedEventAttributes": {
+        "scheduledEventId": "9",
+        "identity": "laug-healthcheck",
+        "requestId": "7e315a92-bdc3-44f2-8e29-802c66e68e2f",
+        "historySizeBytes": "1060",
+        "workerVersion": {
+          "buildId": "b0b57f5d448b5766f17788b866ee84ab"
+        }
+      }
+    },
+    {
+      "eventId": "11",
+      "eventTime": "2026-10-23T06:53:14.612298862Z",
+      "eventType": "EVENT_TYPE_WORKFLOW_TASK_COMPLETED",
+      "taskId": "1048606",
+      "workflowTaskCompletedEventAttributes": {
+        "scheduledEventId": "9",
+        "startedEventId": "10",
+        "identity": "laug-healthcheck",
+        "workerVersion": {
+          "buildId": "b0b57f5d448b5766f17788b866ee84ab"
+        },
+        "sdkMetadata": {},
+        "meteringMetadata": {}
+      }
+    },
+    {
+      "eventId": "12",
+      "eventTime": "2026-10-23T06:53:14.612327613Z",
+      "eventType": "EVENT_TYPE_ACTIVITY_TASK_SCHEDULED",
+      "taskId": "1048607",
+      "activityTaskScheduledEventAttributes": {
+        "activityId": "12",
+        "activityType": {
+          "name": "Sum"
+        },
+        "taskQueue": {
+          "name": "cell-health",
+          "kind": "TASK_QUEUE_KIND_NORMAL"
+        },
+        "header": {},
+        "input": {
+          "payloads": [
+            {
+              "metadata": {
+                "encoding": "anNvbi9wbGFpbg=="
+              },
+              "data": "MTk="
+            },
+            {
+              "metadata": {
+                "encoding": "anNvbi9wbGFpbg=="
+              },
+              "data": "MjM="
+            }
+          ]
+        },
+        "scheduleToCloseTimeout": "120s",
+        "scheduleToStartTimeout": "120s",
+        "startToCloseTimeout": "10s",
+        "heartbeatTimeout": "0s",
+        "workflowTaskCompletedEventId": "11",
+        "retryPolicy": {
+          "initialInterval": "1s",
+          "backoffCoefficient": 2,
+          "maximumInterval": "100s",
+          "maximumAttempts": 3
+        },
+        "useWorkflowBuildId": true
+      }
+    },
+    {
+      "eventId": "13",
+      "eventTime": "2026-10-23T06:53:14.617414461Z",
+      "eventType": "EVENT_TYPE_ACTIVITY_TASK_STARTED",
+      "taskId": "1048612",
+      "activityTaskStartedEventAttributes": {
+        "scheduledEventId": "12",
+        "identity": "laug-healthcheck",
+        "requestId": "22ace93c-1e87-4192-aef2-43fe632434e4",
+        "attempt": 1,
+        "workerVersion": {
+          "buildId": "b0b57f5d448b5766f17788b866ee84ab"
+        }
+      }
+    },
+    {
+      "eventId": "14",
+      "eventTime": "2026-10-23T06:53:14.622707827Z",
+      "eventType": "EVENT_TYPE_ACTIVITY_TASK_COMPLETED",
+      "taskId": "1048613",
+      "activityTaskCompletedEventAttributes": {
+        "result": {
+          "payloads": [
+            {
+              "metadata": {
+                "encoding": "anNvbi9wbGFpbg=="
+              },
+              "data": "NDI="
+            }
+          ]
+        },
+        "scheduledEventId": "12",
+        "startedEventId": "13",
+        "identity": "laug-healthcheck"
+      }
+    },
+    {
+      "eventId": "15",
+      "eventTime": "2026-10-23T06:53:14.622713658Z",
+      "eventType": "EVENT_TYPE_WORKFLOW_TASK_SCHEDULED",
+      "taskId": "1048614",
+      "workflowTaskScheduledEventAttributes": {
+        "taskQueue": {
+          "name": "host:efffaa23-c2aa-4e81-9536-ee7a91cdcf32",
+          "kind": "TASK_QUEUE_KIND_STICKY",
+          "normalName": "cell-health"
+        },
+        "startToCloseTimeout": "10s",
+        "attempt": 1
+      }
+    },
+    {
+      "eventId": "16",
+      "eventTime": "2026-10-23T06:53:14.629550254Z",
+      "eventType": "EVENT_TYPE_WORKFLOW_TASK_STARTED",
+      "taskId": "1048618",
+      "workflowTaskStartedEventAttributes": {
+        "scheduledEventId": "15",
+        "identity": "laug-healthcheck",
+        "requestId": "7f1b8c87-0a76-4213-bc6d-abf810dc5988",
+        "historySizeBytes": "1735",
+        "workerVersion": {
+          "buildId": "b0b57f5d448b5766f17788b866ee84ab"
+        }
+      }
+    },
+    {
+      "eventId": "17",
+      "eventTime": "2026-10-23T06:53:14.636571915Z",
+      "eventType": "EVENT_TYPE_WORKFLOW_TASK_COMPLETED",
+      "taskId": "1048622",
+      "workflowTaskCompletedEventAttributes": {
+        "scheduledEventId": "15",
+        "startedEventId": "16",
+        "identity": "laug-healthcheck",
+        "workerVersion": {
+          "buildId": "b0b57f5d448b5766f17788b866ee84ab"
+        },
+        "sdkMetadata": {},
+        "meteringMetadata": {}
+      }
+    },
+    {
+      "eventId": "18",
+      "eventTime": "2026-10-23T06:53:14.636589306Z",
+      "eventType": "EVENT_TYPE_TIMER_STARTED",
+      "taskId": "1048623",
+      "userMetadata": {
+        "summary": {
+          "metadata": {
+            "encoding": "anNvbi9wbGFpbg=="
+          },
+          "data": "IlNsZWVwIg=="
+        }
+      },
+      "timerStartedEventAttributes": {
+        "timerId": "18",
+        "startToFireTimeout": "1s",
+        "workflowTaskCompletedEventId": "17"
+      }
+    },
+    {
+      "eventId": "19",
+      "eventTime": "2026-10-23T06:53:15.638773022Z",
+      "eventType": "EVENT_TYPE_TIMER_FIRED",
+      "taskId": "1048626",
+      "timerFiredEventAttributes": {
+        "timerId": "18",
+        "startedEventId": "18"
+      }
+    },
+    {
+      "eventId": "20",
+      "eventTime": "2026-10-23T06:53:15.638785887Z",
+      "eventType": "EVENT_TYPE_WORKFLOW_TASK_SCHEDULED",
+      "taskId": "1048627",
+      "workflowTaskScheduledEventAttributes": {
+        "taskQueue": {
+          "name": "host:efffaa23-c2aa-4e81-9536-ee7a91cdcf32",
+          "kind": "TASK_QUEUE_KIND_STICKY",
+          "normalName": "cell-health"
+        },
+        "startToCloseTimeout": "10s",
+        "attempt": 1
+      }
+    },
+    {
+      "eventId": "21",
+      "eventTime": "2026-10-23T06:53:15.647120359Z",
+      "eventType": "EVENT_TYPE_WORKFLOW_TASK_STARTED",
+      "taskId": "1048631",
+      "workflowTaskStartedEventAttributes": {
+        "scheduledEventId": "20",
+        "identity": "laug-healthcheck",
+        "requestId": "0acc2db0-bd75-44c3-9797-14e4121eaa15",
+        "historySizeBytes": "2155",
+        "workerVersion": {
+          "buildId": "b0b57f5d448b5766f17788b866ee84ab"
+        }
+      }
+    },
+    {
+      "eventId": "22",
+      "eventTime": "2026-10-23T06:53:15.656244639Z",
+      "eventType": "EVENT_TYPE_WORKFLOW_TASK_COMPLETED",
+      "taskId": "1048635",
+      "workflowTaskCompletedEventAttributes": {
+        "scheduledEventId": "20",
+        "startedEventId": "21",
+        "identity": "laug-healthcheck",
+        "workerVersion": {
+          "buildId": "b0b57f5d448b5766f17788b866ee84ab"
+        },
+        "sdkMetadata": {},
+        "meteringMetadata": {}
+      }
+    },
+    {
+      "eventId": "23",
+      "eventTime": "2026-10-23T06:53:15.656268225Z",
+      "eventType": "EVENT_TYPE_TIMER_STARTED",
+      "taskId": "1048636",
+      "userMetadata": {
+        "summary": {
+          "metadata": {
+            "encoding": "anNvbi9wbGFpbg=="
+          },
+          "data": "IkF3YWl0V2l0aFRpbWVvdXQi"
+        }
+      },
+      "timerStartedEventAttributes": {
+        "timerId": "23",
+        "startToFireTimeout": "30s",
+        "workflowTaskCompletedEventId": "22"
+      }
+    },
+    {
+      "eventId": "24",
+      "eventTime": "2026-10-23T06:53:15.656290129Z",
+      "eventType": "EVENT_TYPE_WORKFLOW_EXECUTION_COMPLETED",
+      "taskId": "1048637",
+      "workflowExecutionCompletedEventAttributes": {
+        "result": {
+          "payloads": [
+            {
+              "metadata": {
+                "encoding": "anNvbi9wbGFpbg=="
+              },
+              "data": "eyJlY2hvZWQiOiJsYXVnIiwic3VtIjo0Miwic2lnbmFsIjoiZ28ifQ=="
+            }
+          ]
+        },
+        "workflowTaskCompletedEventId": "22"
+      }
+    }
+  ]
+}

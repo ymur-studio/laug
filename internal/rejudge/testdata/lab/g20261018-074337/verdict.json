@@ -1,0 +1,355 @@
+{
+  "gate_id": "g20261018-074337",
+  "verdict": "BLOCK",
+  "class": "regression",
+  "rerun": false,
+  "class_if_quiet": null,
+  "refused": null,
+  "fake": false,
+  "server_tag": "1.31.0",
+  "incumbent": "1.31.0",
+  "laug_commit": "d6eefcd",
+  "tree_dirty": false,
+  "base": "515e50e",
+  "inputs": [
+    {
+      "path": "gate/plan.yaml",
+      "sha256": "ef34d8359084ad717c6e43f0f241de1f17b4e0c9b353ce14d479a0e9ab32b28c",
+      "changed_vs_base": false
+    },
+    {
+      "path": "gate/combine.sh",
+      "sha256": "33b4e89dc2ecef502e73ea88136a482fbf8694986789712fd5126e31f5faf6f0",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/steady-state.yaml",
+      "sha256": "10458cff6d61af7c6ee3e816c5862e145dc4cd2c8b981bdda3ef81ec61b6d27a",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/thresholds.sh",
+      "sha256": "d054c485bb3027a78945640c484910c2fca206573a6a9fcbf34d8c223ea4a48d",
+      "changed_vs_base": false
+    },
+    {
+      "path": "faults/catalog.yaml",
+      "sha256": "f0e73b887d68b2e28575b8146f430d3a98dbae09f96d1da8aed63404cf333a9e",
+      "changed_vs_base": false
+    },
+    {
+      "path": "cells/compose/dynamicconfig/laug.yaml",
+      "sha256": "b4eedf81c7d713f13373299ad5f400ad37758079c2969c3ad172234df42a098a",
+      "changed_vs_base": true
+    },
+    {
+      "path": "cells/compose/cell.yml",
+      "sha256": "131e51d360a5808d3f4de2cbb36b0a7a1b64588f6a65d2052f9b46295d0c035d",
+      "changed_vs_base": false
+    },
+    {
+      "path": "load/releases/1.32.yaml",
+      "sha256": "d22200aedb8b3fdcaa2d7326338d7f553fcf4d002305938b225637524f23a02c",
+      "changed_vs_base": false
+    }
+  ],
+  "deadline_s": 780,
+  "items_in_plan": 3,
+  "items_limit": null,
+  "t0": {
+    "wall": 1792309417.965,
+    "mono": 4971.63
+  },
+  "t_post": {
+    "wall": 1792309977.501,
+    "mono": 5531.17
+  },
+  "elapsed_s": {
+    "wall": 559.536,
+    "mono": 559.54
+  },
+  "host": {
+    "type": "m8i.8xlarge",
+    "vcpu": 32,
+    "mem_gib": 123,
+    "mem_available_gib": 121.7
+  },
+  "rules": {
+    "R1": {
+      "name": "harness",
+      "pass": true,
+      "reasons": []
+    },
+    "R2": {
+      "name": "coverage",
+      "pass": true,
+      "reasons": []
+    },
+    "R3": {
+      "name": "contract",
+      "pass": true,
+      "reasons": []
+    },
+    "R4": {
+      "name": "outcome",
+      "pass": false,
+      "reasons": [
+        "incumbent: expected ADVANCE, observed BLOCK: incumbent: load verdict BLOCK: workflow_task_schedule_to_start_p99_ms 166591.944 EXCEEDS, activity_schedule_to_start_p99_ms 45200.136 EXCEEDS, workflow_end_to_end_p95_ms 167566.054 EXCEEDS, service_error_rate 0.065 EXCEEDS, workflows_completed 280 BELOW (0.95 x 20/s x 300 s)",
+        "steady: expected ADVANCE, observed BLOCK: load verdict BLOCK: workflow_task_schedule_to_start_p99_ms 99610.046 EXCEEDS, activity_schedule_to_start_p99_ms 82063.388 EXCEEDS, workflow_end_to_end_p95_ms 166311.215 EXCEEDS, service_error_rate 0.075 EXCEEDS, workflows_completed 283 BELOW (0.95 x 20/s x 300 s)",
+        "pl: expected ADVANCE, observed BLOCK: never steady: workflow_task_schedule_to_start_p99_ms=75500.00000000012 activity_schedule_to_start_p99_ms=19706.25 workflow_end_to_end_p95_ms=92656.25 service_error_rate=0.07246891651865008"
+      ]
+    },
+    "R5": {
+      "name": "live control",
+      "pass": false,
+      "reasons": [
+        "pl: control: service_error_rate read null in the during window, not above its max 0.001"
+      ]
+    },
+    "R6": {
+      "name": "identity",
+      "pass": true,
+      "reasons": []
+    },
+    "R7": {
+      "name": "incumbent",
+      "pass": false,
+      "reasons": [
+        "incumbent: not compared: incumbent did not ADVANCE (verdict BLOCK)"
+      ]
+    }
+  },
+  "reasons": [
+    "R4 incumbent: expected ADVANCE, observed BLOCK: incumbent: load verdict BLOCK: workflow_task_schedule_to_start_p99_ms 166591.944 EXCEEDS, activity_schedule_to_start_p99_ms 45200.136 EXCEEDS, workflow_end_to_end_p95_ms 167566.054 EXCEEDS, service_error_rate 0.065 EXCEEDS, workflows_completed 280 BELOW (0.95 x 20/s x 300 s)",
+    "R4 steady: expected ADVANCE, observed BLOCK: load verdict BLOCK: workflow_task_schedule_to_start_p99_ms 99610.046 EXCEEDS, activity_schedule_to_start_p99_ms 82063.388 EXCEEDS, workflow_end_to_end_p95_ms 166311.215 EXCEEDS, service_error_rate 0.075 EXCEEDS, workflows_completed 283 BELOW (0.95 x 20/s x 300 s)",
+    "R4 pl: expected ADVANCE, observed BLOCK: never steady: workflow_task_schedule_to_start_p99_ms=75500.00000000012 activity_schedule_to_start_p99_ms=19706.25 workflow_end_to_end_p95_ms=92656.25 service_error_rate=0.07246891651865008",
+    "R5 pl: control: service_error_rate read null in the during window, not above its max 0.001",
+    "R7 incumbent: not compared: incumbent did not ADVANCE (verdict BLOCK)"
+  ],
+  "items": [
+    {
+      "key": "incumbent",
+      "kind": "load",
+      "arm": "incumbent",
+      "expect": "ADVANCE",
+      "observed": "BLOCK",
+      "class": "invalid",
+      "reason": "incumbent: load verdict BLOCK: workflow_task_schedule_to_start_p99_ms 166591.944 EXCEEDS, activity_schedule_to_start_p99_ms 45200.136 EXCEEDS, workflow_end_to_end_p95_ms 167566.054 EXCEEDS, service_error_rate 0.065 EXCEEDS, workflows_completed 280 BELOW (0.95 x 20/s x 300 s)",
+      "failed": [
+        "R4",
+        "R7"
+      ],
+      "run_id": "g20261018-074337-incumbent",
+      "cell": "e799a37e",
+      "block": 0,
+      "exit": 1,
+      "stopped_by": null,
+      "pool_busy": null,
+      "evidence": [
+        "incumbent/g20261018-074337-incumbent.json",
+        "incumbent/g20261018-074337-incumbent.verdict.json"
+      ]
+    },
+    {
+      "key": "steady",
+      "kind": "load",
+      "arm": null,
+      "expect": "ADVANCE",
+      "observed": "BLOCK",
+      "class": "regression",
+      "reason": "load verdict BLOCK: workflow_task_schedule_to_start_p99_ms 99610.046 EXCEEDS, activity_schedule_to_start_p99_ms 82063.388 EXCEEDS, workflow_end_to_end_p95_ms 166311.215 EXCEEDS, service_error_rate 0.075 EXCEEDS, workflows_completed 283 BELOW (0.95 x 20/s x 300 s)",
+      "failed": [
+        "R4"
+      ],
+      "run_id": "g20261018-074337-steady",
+      "cell": "a68ca1b1",
+      "block": 1,
+      "exit": 1,
+      "stopped_by": null,
+      "pool_busy": null,
+      "evidence": [
+        "steady/g20261018-074337-steady.json",
+        "steady/g20261018-074337-steady.verdict.json"
+      ]
+    },
+    {
+      "key": "pl",
+      "kind": "fault",
+      "arm": null,
+      "expect": "ADVANCE",
+      "observed": "BLOCK",
+      "class": "invalid",
+      "reason": "never steady: workflow_task_schedule_to_start_p99_ms=75500.00000000012 activity_schedule_to_start_p99_ms=19706.25 workflow_end_to_end_p95_ms=92656.25 service_error_rate=0.07246891651865008",
+      "failed": [
+        "R4",
+        "R5"
+      ],
+      "run_id": "g20261018-074337-pl",
+      "cell": "d7579c5b",
+      "block": 2,
+      "exit": 1,
+      "stopped_by": null,
+      "pool_busy": {
+        "before": 0,
+        "during": null,
+        "drain": null,
+        "after": null
+      },
+      "evidence": [
+        "pl/g20261018-074337-pl.json"
+      ]
+    }
+  ],
+  "comparison": {
+    "incumbent": "incumbent",
+    "release": "steady",
+    "mode": "judging",
+    "wave": [
+      "load:incumbent workflow_with_single_noop_activity 20/s 50 5m",
+      "load workflow_with_single_noop_activity 20/s 50 5m",
+      "fault:persistence-latency workflow_with_single_noop_activity"
+    ],
+    "wave_measured": [
+      "load:incumbent workflow_with_single_noop_activity 20/s 50 5m",
+      "load workflow_with_single_noop_activity 20/s 50 5m",
+      "fault:persistence-latency workflow_with_single_noop_activity"
+    ],
+    "measured_with": "1.31.0",
+    "evidence": "cells/results/2026-10-17-lab-arm-calibration.txt",
+    "gates": 20,
+    "windows": {
+      "start_apart_s": 0,
+      "length_s": {
+        "release": 327,
+        "incumbent": 328
+      }
+    },
+    "notes": [
+      "The incumbent BLOCKed too, on workflow_task_schedule_to_start_p99_ms, activity_schedule_to_start_p99_ms, workflow_end_to_end_p95_ms, service_error_rate, workflows_completed: the host, or the cell config both arms share, is the likelier cause."
+    ],
+    "rows": [
+      {
+        "name": "workflow_task_schedule_to_start_p99_ms",
+        "scale": "ms",
+        "release": 99610.04620486172,
+        "incumbent": 166591.94431705744,
+        "d": -66981.898,
+        "tolerance": 1.02,
+        "judged": true,
+        "result": "not compared"
+      },
+      {
+        "name": "persistence_latency_p99_ms",
+        "scale": "ms",
+        "release": 8.82069602402261,
+        "incumbent": 8.893415628330521,
+        "d": -0.073,
+        "tolerance": 0.35,
+        "judged": true,
+        "result": "not compared"
+      },
+      {
+        "name": "activity_schedule_to_start_over_10ms",
+        "scale": "share",
+        "release": 0.6676698665884475,
+        "incumbent": 0.7340503580819115,
+        "d": -0.06638,
+        "tolerance": 0.0072,
+        "judged": true,
+        "result": "not compared"
+      },
+      {
+        "name": "frontend_request_over_10ms",
+        "scale": "share",
+        "release": 0.00761070170780076,
+        "incumbent": 0.01043533073175007,
+        "d": -0.002825,
+        "tolerance": 0.0032,
+        "judged": true,
+        "result": "not compared"
+      },
+      {
+        "name": "workflow_end_to_end_over_50ms",
+        "scale": "share",
+        "release": 1,
+        "incumbent": 1,
+        "d": 0,
+        "tolerance": 0.0064,
+        "judged": true,
+        "result": "not compared"
+      },
+      {
+        "name": "activity_schedule_to_start_p99_ms",
+        "scale": "ms",
+        "release": 82063.38779015113,
+        "incumbent": 45200.13641857156,
+        "d": 36863.251,
+        "tolerance": null,
+        "judged": false,
+        "result": "not compared"
+      },
+      {
+        "name": "workflow_end_to_end_p95_ms",
+        "scale": "ms",
+        "release": 166311.21483838308,
+        "incumbent": 167566.05447599312,
+        "d": -1254.84,
+        "tolerance": null,
+        "judged": false,
+        "result": "not compared"
+      },
+      {
+        "name": "service_error_rate",
+        "scale": "share",
+        "release": 0.07535432035758559,
+        "incumbent": 0.06502186772674622,
+        "d": 0.010332,
+        "tolerance": null,
+        "judged": false,
+        "result": "not compared"
+      },
+      {
+        "name": "frontend_request_p99_ms",
+        "scale": "ms",
+        "release": 9.98457199191041,
+        "incumbent": 10.453897710601158,
+        "d": -0.469,
+        "tolerance": null,
+        "judged": false,
+        "result": "not compared"
+      },
+      {
+        "name": "workflow_task_schedule_to_start_over_20ms",
+        "scale": "share",
+        "release": 0.9306969454373024,
+        "incumbent": 0.9378939534539127,
+        "d": -0.007197,
+        "tolerance": null,
+        "judged": false,
+        "result": "not compared"
+      },
+      {
+        "name": "persistence_latency_over_10ms",
+        "scale": "share",
+        "release": 0.0004899562158771076,
+        "incumbent": 0.0005380511521563269,
+        "d": -4.8e-05,
+        "tolerance": null,
+        "judged": false,
+        "result": "not compared"
+      },
+      {
+        "name": "workflows_completed",
+        "scale": "count",
+        "release": 283,
+        "incumbent": 280,
+        "d": 3,
+        "tolerance": null,
+        "judged": false,
+        "result": "not compared"
+      }
+    ]
+  },
+  "host_quiet": true,
+  "host_noise": []
+}

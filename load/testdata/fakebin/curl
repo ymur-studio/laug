@@ -1,0 +1,91 @@
+#!/usr/bin/env bash
+# Fake curl for make harness-test, no network. Answers laugd's /status (FAKE_CELL leased; busy from FAKE_UNLEASED_FROM
+# seconds past FAKE_T0 on, as a reaped or resetting cell reads; one warm cell; FAKE_POOL_BUSY, "<from>:<until>[:<n>]"
+# in seconds past FAKE_T0, comma-separated, adds n (1) other cells busy in [from, until); FAKE_POOL_DOWN,
+# "<from>:<until>", refuses /status in [from, until) as a laugd that is not running would; FAKE_POOL_JUNK, when set, is
+# the whole /status answer instead, for an answer that is not laugd's status; each /status call appends its seconds
+# past FAKE_T0 to $FAKE_DIR/status.calls) and /release (the body, one line per call, goes to
+# $FAKE_DIR/released; FAKE_RELEASE_FAIL set refuses it), /vmfault (the body, one line per call, goes to
+# $FAKE_DIR/vmfault.jsonl and its body object to $FAKE_DIR/vmdrive.json, which FAKE_SIGNAL_WHEN can read;
+# FAKE_VMFAULT_FAIL, when set, is the error a refusal names, as laugd's 502 would), toxiproxy's toxics (a POST puts the
+# toxic on, a DELETE takes it off, in $FAKE_DIR/toxic) and Prometheus's /api/v1/query, each query appended to
+# $FAKE_DIR/prom.queries:
+#   resets(...)            FAKE_RESETS (0)
+#   increase(...)          FAKE_INCREASE (0)
+#   sum(workflow_success)  FAKE_WF_RATE (20) per second since FAKE_T0, FAKE_WF_SLOW_RATE per second from FAKE_WF_SLOW_FROM
+#   a query with no time   the fault's signal: FAKE_SIGNAL_HIGH (500) while the toxic is on, or while FAKE_SIGNAL_WHEN,
+#                          "<file>|<yq expression>", holds for that file (a dynconfig fault; a relative file is under
+#                          FAKE_DIR), else 0; with FAKE_SIGNAL_NULL set, no series at all
+#   any other query        FAKE_THRESHOLD_VALUE (0); with FAKE_THRESHOLD_ONLY set, only a query holding that text,
+#                          and 0 for the others; with FAKE_THRESHOLD_FROM=<seconds past FAKE_T0>, only at that time or
+#                          later, and 0 before. With FAKE_THRESHOLD_EMPTY set, a query with a time that holds that text
+#                          has no series at all (no data), as activity schedule-to-start had on a 1.32.1 cell under load
+#   FAKE_PROM_FAIL_FROM=<seconds past FAKE_T0> fails every query with a time at or after it (exit 22), as a Prometheus
+#                          that went away would
+# Anything else fails like a refused connection (exit 7).
+method=GET url="" query="" t="" has_t=0 data=""
+while (( $# )); do
+  case "$1" in
+    -X) method="$2"; shift 2 ;;
+    -d|--data|--data-binary) data="$2"; shift 2 ;;
+    -H|-o|-m|--max-time) shift 2 ;;
+    --data-urlencode)
+      case "$2" in query=*) query="${2#query=}" ;; time=*) t="${2#time=}"; has_t=1 ;; esac
+      shift 2 ;;
+    -*) shift ;;
+    *) url="$1"; shift ;;
+  esac
+done
+counter() { # workflow_success at time $1
+  awk -v t="$1" -v t0="$FAKE_T0" -v r="${FAKE_WF_RATE:-20}" -v s="${FAKE_WF_SLOW_FROM:-}" -v sr="${FAKE_WF_SLOW_RATE:-0}" \
+    'BEGIN { if (s != "" && t > s) printf "%d", r * (s - t0) + sr * (t - s); else printf "%d", r * (t - t0) }'
+}
+case "$url" in
+  */status)
+    now=$(( $(date +%s) - FAKE_T0 )); echo "$now" >> "$FAKE_DIR/status.calls"
+    if [[ -n "${FAKE_POOL_DOWN:-}" ]] && (( now >= ${FAKE_POOL_DOWN%%:*} && now < ${FAKE_POOL_DOWN#*:} )); then
+      echo "fake curl: laugd does not answer" >&2; exit 7
+    fi
+    if [[ -n "${FAKE_POOL_JUNK+set}" ]]; then printf '%s\n' "$FAKE_POOL_JUNK"; exit 0; fi
+    st=leased; [[ -n "${FAKE_UNLEASED_FROM:-}" ]] && (( now >= FAKE_UNLEASED_FROM )) && st=busy
+    busy=0
+    IFS=, read -r -a ranges <<<"${FAKE_POOL_BUSY:-}"
+    for r in "${ranges[@]}"; do IFS=: read -r from until n <<<"$r"; (( now >= from && now < until )) && busy=$(( busy + ${n:-1} )); done
+    jq -cn --arg id "$FAKE_CELL" --arg st "$st" --argjson busy "$busy" \
+      '{cells: ([{id: $id, state: $st}, {id: "0000beef", state: "warm"}] + [range($busy) | {id: "0000b\(. + 100)", state: "busy"}])}' ;;
+  */release)
+    [[ "$method" == POST ]] || { echo "fake curl: release is a POST" >&2; exit 22; }
+    printf '%s\n' "$data" >> "$FAKE_DIR/released"
+    [[ -z "${FAKE_RELEASE_FAIL:-}" ]] || { echo '{"error":"fake: no such lease"}'; exit 22; }
+    jq -c '{id, state: "released"}' <<<"$data" ;;
+  */vmfault)
+    [[ "$method" == POST ]] || { echo "fake curl: vmfault is a POST" >&2; exit 22; }
+    printf '%s\n' "$data" >> "$FAKE_DIR/vmfault.jsonl"
+    [[ -z "${FAKE_VMFAULT_FAIL:-}" ]] || { jq -cn --arg e "$FAKE_VMFAULT_FAIL" '{error: $e}'; exit 22; }
+    jq -c .body <<<"$data" > "$FAKE_DIR/vmdrive.json"
+    echo '{"ok":true}' ;;
+  */proxies/postgres/toxics) [[ "$method" == POST ]] && echo on > "$FAKE_DIR/toxic"; echo '{}' ;;
+  */proxies/postgres/toxics/*) [[ "$method" == DELETE ]] && echo off > "$FAKE_DIR/toxic"; echo '{}' ;;
+  */api/v1/query)
+    printf '%s\n' "$query" >> "$FAKE_DIR/prom.queries"
+    if [[ -z "$t" && -n "${FAKE_SIGNAL_NULL:-}" ]]; then echo '{"status":"success","data":{"resultType":"vector","result":[]}}'; exit 0; fi
+    [[ -n "$t" ]] || t="$(date +%s)"
+    if (( has_t )) && [[ -n "${FAKE_PROM_FAIL_FROM:-}" ]] && (( ${t%%.*} >= FAKE_T0 + FAKE_PROM_FAIL_FROM )); then exit 22; fi
+    case "$query" in
+      *resets\(*) v="${FAKE_RESETS:-0}" ;;
+      *increase\(*) v="${FAKE_INCREASE:-0}" ;;
+      'sum(workflow_success)') v="$(counter "$t")" ;;
+      *) if (( has_t )) && [[ -n "${FAKE_THRESHOLD_EMPTY:-}" && "$query" == *"$FAKE_THRESHOLD_EMPTY"* ]]; then
+           echo '{"status":"success","data":{"resultType":"vector","result":[]}}'; exit 0
+         elif (( ! has_t )) && { [[ "$(cat "$FAKE_DIR/toxic" 2>/dev/null)" == on ]] \
+             || { [[ -n "${FAKE_SIGNAL_WHEN:-}" ]] && f="${FAKE_SIGNAL_WHEN%%|*}" && { [[ "$f" == /* ]] || f="$FAKE_DIR/$f"; } \
+              && yq -e "${FAKE_SIGNAL_WHEN#*|}" "$f" >/dev/null 2>&1; }; }; then
+           v="${FAKE_SIGNAL_HIGH:-500}"
+         elif (( ! has_t )); then v=0
+         elif [[ -n "${FAKE_THRESHOLD_ONLY:-}" && "$query" != *"$FAKE_THRESHOLD_ONLY"* ]]; then v=0
+         elif [[ -n "${FAKE_THRESHOLD_FROM:-}" ]] && (( ${t%%.*} < FAKE_T0 + FAKE_THRESHOLD_FROM )); then v=0
+         else v="${FAKE_THRESHOLD_VALUE:-0}"; fi ;;
+    esac
+    printf '{"status":"success","data":{"resultType":"vector","result":[{"metric":{},"value":[%s,"%s"]}]}}\n' "$t" "$v" ;;
+  *) echo "fake curl: nothing answers $url" >&2; exit 7 ;;
+esac

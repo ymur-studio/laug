@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Fake date for make harness-test: now is FAKE_T0 plus the seconds the fake sleep has slept. A call that names its
+# own date (-d) passes through to the real date.
+for a in "$@"; do case "$a" in -d|-d*|--date|--date=*) exec "$REAL_DATE" "$@" ;; esac; done
+now="$(cat "$FAKE_CLOCK" 2>/dev/null)"
+exec "$REAL_DATE" -d "@$(( FAKE_T0 + ${now:-0} ))" "$@"

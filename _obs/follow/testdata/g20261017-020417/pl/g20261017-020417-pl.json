@@ -1,0 +1,143 @@
+{
+  "run_id": "g20261017-020417-pl",
+  "fault": "persistence-latency",
+  "cell": "7ee6b0fa",
+  "address": "127.0.0.1:7243",
+  "server_tag": "1.31.0",
+  "scenario": "workflow_with_single_noop_activity",
+  "rate": 20,
+  "task_queue": "omes-g20261017-020417-pl",
+  "signal": "persistence_latency_p99_ms",
+  "signal_max": 23,
+  "signal_peak": 9812.406217944144,
+  "thresholds_release": null,
+  "thresholds_note": "load/steady-state.yaml, the base (1.31.0 baselines), unchanged: no load/releases/1.31.yaml for server 1.31.0",
+  "overrides_applied": [],
+  "not_produced": {
+    "before": [],
+    "after": []
+  },
+  "inject_at": "1792202938",
+  "landed_at": "1792202948",
+  "remove_at": "1792203059",
+  "recovered_at": "1792203089",
+  "time_to_recover_s": "30",
+  "remove_wait_s": 1,
+  "history_shards_ready_s": null,
+  "settle_s": 30,
+  "after_s": 90,
+  "after_start": "1792203119",
+  "after_end": "1792203209",
+  "before": {
+    "workflow_task_schedule_to_start_p99_ms": 17.352941176470637,
+    "activity_schedule_to_start_p99_ms": 9.98898678414097,
+    "workflow_end_to_end_p95_ms": 49.381443298969074,
+    "persistence_latency_p99_ms": 8.55361772727273,
+    "service_error_rate": 0,
+    "frontend_request_p99_ms": 11.297614904574658,
+    "workflows_completed": 1200,
+    "counter_resets": 0,
+    "window_seconds": 60
+  },
+  "during": {
+    "workflow_task_schedule_to_start_p99_ms": null,
+    "activity_schedule_to_start_p99_ms": null,
+    "workflow_end_to_end_p95_ms": null,
+    "persistence_latency_p99_ms": 9910.14496945451,
+    "service_error_rate": 0.2191640570918407,
+    "frontend_request_p99_ms": 98533.78498903099,
+    "workflows_completed": 0,
+    "counter_resets": 0,
+    "window_seconds": 110
+  },
+  "drain": {
+    "workflow_task_schedule_to_start_p99_ms": 18.95631067961165,
+    "activity_schedule_to_start_p99_ms": 9.974450261780106,
+    "workflow_end_to_end_p95_ms": 49.61711281070747,
+    "persistence_latency_p99_ms": 8.621016949152516,
+    "service_error_rate": 0.034231121765493894,
+    "frontend_request_p99_ms": 397.4961832061077,
+    "workflows_completed": 1091,
+    "counter_resets": 0,
+    "window_seconds": 60
+  },
+  "after": {
+    "workflow_task_schedule_to_start_p99_ms": 18.383233532934124,
+    "activity_schedule_to_start_p99_ms": 9.967824967824967,
+    "workflow_end_to_end_p95_ms": 49.11658653846154,
+    "persistence_latency_p99_ms": 8.98149063935004,
+    "service_error_rate": 0,
+    "frontend_request_p99_ms": 9.972510654784967,
+    "workflows_completed": 1800,
+    "counter_resets": 0,
+    "window_seconds": 90
+  },
+  "iterations_failed": {
+    "before": 0,
+    "during": 542,
+    "drain": 41,
+    "after": 0,
+    "late": 0,
+    "unplaced": 0,
+    "not_found": 0,
+    "total": 583
+  },
+  "sweep": {
+    "Completed": 4145
+  },
+  "sweep_cutoff": "2026-10-17T02:12:59Z",
+  "sweep_margin_s": 30,
+  "sweep_error": null,
+  "softasserts": {
+    "before": {
+      "temporal-frontend": 0,
+      "temporal-frontend2": 0,
+      "temporal-history": 0,
+      "temporal-matching": 0,
+      "temporal-worker": 0,
+      "first": []
+    },
+    "during": {
+      "temporal-frontend": 0,
+      "temporal-frontend2": 0,
+      "temporal-history": 0,
+      "temporal-matching": 0,
+      "temporal-worker": 0,
+      "first": []
+    },
+    "drain": {
+      "temporal-frontend": 0,
+      "temporal-frontend2": 0,
+      "temporal-history": 0,
+      "temporal-matching": 0,
+      "temporal-worker": 0,
+      "first": []
+    },
+    "after": {
+      "temporal-frontend": 0,
+      "temporal-frontend2": 0,
+      "temporal-history": 0,
+      "temporal-matching": 0,
+      "temporal-worker": 0,
+      "first": []
+    }
+  },
+  "pool_quiet_wait_s": 0,
+  "pool_quiet_bound_s": 0,
+  "pool_busy": {
+    "before": 0,
+    "during": 0,
+    "drain": 0,
+    "after": 0
+  },
+  "signal_base": null,
+  "recover": "signal",
+  "mechanisms": [],
+  "shards_acquired": null,
+  "cleanup_error": null,
+  "inject_error": null,
+  "remove_error": null,
+  "self_test": null,
+  "result": "ADVANCE",
+  "reason": ""
+}

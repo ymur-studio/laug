@@ -1,0 +1,20 @@
+# The control arm-known-slow: a branch whose one changed file, gate/lib.sh, delays every packet into the release cell's
+# Postgres, so the release reads slower than its incumbent though both run server 1.31.0. Its gates record server_tag
+# and incumbent 1.31.0 on gate/plan.yaml and the same input sha256s as an A/A gate: gate.json cannot tell them from
+# one. On the lab host, an m8i.8xlarge (32 vCPU). Each BLOCKed class regression. _report, the renderer, reads this list.
+# 10 gates.
+# One gate id a line; a line starting with # is a comment. A line "# <file>:<lines>, ..." names the transcript lines
+# that record the ids after it (TestSets).
+# cells/results/2026-10-17-lab-arm-calibration.txt:562-565, k1 to k4: a 1 ms latency toxic at toxicity 1.0 to 0.125
+g20261017-212148
+g20261017-213812
+g20261017-215534
+g20261017-221200
+# cells/results/2026-10-18-lab-arm-validation.txt:404-408, k1, ks2 and ks3: 50 us of netem
+g20261018-063803
+g20261018-065958
+g20261018-072142
+# cells/results/2026-10-18-lab-arm-validation.txt:867-871, ks1 to ks3: 25 us of netem
+g20261018-163914
+g20261018-170110
+g20261018-172301

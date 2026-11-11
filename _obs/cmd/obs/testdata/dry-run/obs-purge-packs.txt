@@ -1,0 +1,6 @@
+# make: make --no-print-directory -n obs-purge FORCE=1
+# obs: bin/obs purge -remove-state -remove-packs
+# lease: absent
+# passes: FORCE=1
+# compare: line obs/obs.sh
+obs/obs.sh purge

@@ -1,0 +1,17 @@
+# The warm-up gates: a gate a batch runs first to warm the box after a start, and a second one when the first BLOCKs
+# class invalid, counted toward no set. gate.json cannot tell one from the gates after it. On the lab host, an
+# m8i.8xlarge (32 vCPU). The stack's session ran w0 as the box's second gate since its start: the first, its second
+# launch's w0, BLOCKed class invalid and was not fetched (the transcript's The three launches). Boot 4 ran W1 as the
+# box's first gate since its start and W2 because W1 BLOCKed class invalid; W2 BLOCKed class invalid too (the
+# transcript's W). Boot 6 ran W1 as the box's first gate since its start, after 9 rauns, a lease and a load on compose
+# cells; it ADVANCEd (the transcript's R11g). _report, the renderer, reads this list.
+# 4 gates.
+# One gate id a line; a line starting with # is a comment. A line "# <file>:<lines>, ..." names the transcript lines
+# that record the ids after it (TestSets).
+# cells/results/2026-10-18-lab-obs.txt:490, w0
+g20261018-225322
+# cells/results/2026-10-24-boot4.txt:58-59, W1 and W2
+g20261024-085719
+g20261024-090728
+# cells/results/2026-10-27-boot6.txt:400, W1
+g20261027-054034

@@ -1,0 +1,6 @@
+# make: make --no-print-directory -n obs-find RUN=base1-100551
+# obs: bin/obs find -run-id base1-100551
+# lease: absent
+# passes: RUN=base1-100551
+# compare: line obs/obs.sh
+obs/obs.sh find

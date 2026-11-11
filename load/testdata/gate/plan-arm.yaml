@@ -1,0 +1,36 @@
+# Test fixture: gate/plan.yaml's incumbent arm as built, for the fake gate's arm cases in make harness-test and
+# the parity matrix (internal/orchestrator/parity_test.go, arm-aa and arm-wrong-tag). Its incumbent and its three items,
+# incumbent, steady and pl, are gate/plan.yaml's, field for field, and its timings are load/testdata/gate/plan.yaml's;
+# each test gives it the short times of load/testdata/gate/plan.yaml's cases and keeps the items, so the fake wave is
+# the tree's. Kept apart so the real plan can change without moving the fake cases.
+incumbent: 1.31.0
+deadline_s: 780
+kill_grace_s: 30
+lease_ttl_s: 1200
+quiet_s: 10
+barrier_timeout_s: 60
+poll_s: 5
+harness_timeout_s: 300
+wave_min_s: 386
+items:
+  - key: incumbent
+    kind: load
+    arm: incumbent
+    pair: steady
+    scenario: workflow_with_single_noop_activity
+    duration: 5m
+    rate: 20
+    max_concurrent: 50
+    expect: ADVANCE
+  - key: steady
+    kind: load
+    scenario: workflow_with_single_noop_activity
+    duration: 5m
+    rate: 20
+    max_concurrent: 50
+    expect: ADVANCE
+  - key: pl
+    kind: fault
+    fault: persistence-latency
+    scenario: workflow_with_single_noop_activity
+    expect: ADVANCE

@@ -1,0 +1,20 @@
+# The control gate5-known-bad: a branch whose one changed file, cells/compose/dynamicconfig/laug.yaml, sets
+# frontend.rps to 5 in the cells' dynamic config. gate.json records that file's own sha256, not what the change is
+# for. On the lab host, an m8i.8xlarge (32 vCPU); the gates before the calibration session record no host type. Each
+# BLOCKed class regression. _report, the renderer, reads this list.
+# 8 gates.
+# One gate id a line; a line starting with # is a comment. A line "# <file>:<lines>, ..." names the transcript lines
+# that record the ids after it (TestSets).
+# cells/results/2026-10-15-lab-gate-5.txt:30-32, the three through gate/run.sh, on the tree of the roles in turn
+g20261015-223429
+g20261015-224343
+g20261015-225308
+# cells/results/2026-10-16-gate6-runs.txt:39-42, bad1 and bad2, the branch rebased, through the workflow
+g20261016-215819
+g20261016-220739
+# cells/results/2026-10-17-lab-arm-calibration.txt:567, bad
+g20261017-223357
+# cells/results/2026-10-18-lab-arm-validation.txt:410, bad
+g20261018-074337
+# cells/results/2026-10-24-boot4.txt:62, G3, the control's diff applied in a clone, through laug gate run
+g20261024-094016

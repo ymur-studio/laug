@@ -1,0 +1,22 @@
+{
+  "deadline_s": 780,
+  "kill_grace_s": 30,
+  "lease_ttl_s": 1200,
+  "quiet_s": 10,
+  "barrier_timeout_s": 60,
+  "poll_s": 5,
+  "harness_timeout_s": 300,
+  "wave_min_s": 334,
+  "items_in_plan": 4,
+  "items": [
+    {
+      "key": "s1",
+      "kind": "load",
+      "scenario": "workflow_with_single_noop_activity",
+      "duration": "5m",
+      "rate": 20,
+      "max_concurrent": 50,
+      "expect": "ADVANCE"
+    }
+  ]
+}

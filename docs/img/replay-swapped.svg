@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400" viewBox="0 0 800 400" role="img"
+    aria-labelledby="replay-swapped-title replay-swapped-desc" font-family="Inter, system-ui, sans-serif">
+<title id="replay-swapped-title">Replay routes results by ID, so the swapped build fails at event 12</title>
+<desc id="replay-swapped-desc">Three rows, a recorded event each, read left to right: the event, what the replay of the
+    swapped build does with it, and the outcome. Event 6 is matched to Sum&#39;s command by ID alone, so the mix-up
+    begins with no error. Event 8 hands Echo&#39;s result, &quot;laug&quot;, to Sum, whose decode fails, so the code
+    returns early. Event 12 finds no command with its ID, and replay fails with TMPRL1100, the outlined box. Sources:
+    docs/img/src/replay-swapped.txt, internal/health/replay_test.go,
+    internal/health/testdata/healthcheck_history.json.</desc>
+<rect x="0" y="0" width="800" height="400" fill="#EEF3F2"/>
+<text x="24" y="30" font-size="14" fill="#163A44"
+    font-weight="600">Replay routes results by ID, so the swapped build fails at event 12</text>
+<text x="24" y="50" font-size="12"
+    fill="#163A44">TestReplayDetectsSwappedActivities, offline: HealthCheck&#39;s recorded history, a build with Echo and Sum swapped</text>
+<text x="24" y="82" font-size="11" fill="#163A44">recorded history</text>
+<text x="282" y="82" font-size="11" fill="#163A44">replay of the build with Echo and Sum swapped</text>
+<text x="580" y="82" font-size="11" fill="#163A44">outcome</text>
+<g aria-label="event 6, ActivityTaskScheduled, id 6">
+  <rect x="24" y="92" width="220" height="64" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="134" y="120.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">event 6</text>
+  <text x="134" y="135.5" font-size="12" fill="#163A44" text-anchor="middle">ActivityTaskScheduled, id 6</text>
+</g>
+<g aria-label="looks up command ID 6, it is Sum&#39;s command;, the type is not compared here">
+  <rect x="282" y="92" width="260" height="64" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="412" y="113" font-size="12" fill="#163A44" text-anchor="middle"
+      font-weight="600">looks up command ID 6</text>
+  <text x="412" y="128" font-size="12" fill="#163A44" text-anchor="middle">it is Sum&#39;s command;</text>
+  <text x="412" y="143" font-size="12" fill="#163A44" text-anchor="middle">the type is not compared here</text>
+</g>
+<g aria-label="matched, the mix-up begins;, no error yet">
+  <rect x="580" y="92" width="196" height="64" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="678" y="113" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">matched</text>
+  <text x="678" y="128" font-size="12" fill="#163A44" text-anchor="middle">the mix-up begins;</text>
+  <text x="678" y="143" font-size="12" fill="#163A44" text-anchor="middle">no error yet</text>
+</g>
+<line x1="244" y1="124" x2="274" y2="124" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="282,124 274,128 274,120" fill="#163A44"/>
+<line x1="542" y1="124" x2="572" y2="124" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="580,124 572,128 572,120" fill="#163A44"/>
+<g aria-label="event 8, Completed for id 6: &quot;laug&quot;">
+  <rect x="24" y="176" width="220" height="64" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="134" y="204.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">event 8</text>
+  <text x="134" y="219.5" font-size="12" fill="#163A44" text-anchor="middle">Completed for id 6: &quot;laug&quot;</text>
+</g>
+<g aria-label="delivers it to Sum&#39;s future, Sum wants an int, so the decode, fails and the code returns early">
+  <rect x="282" y="176" width="260" height="64" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="412" y="197" font-size="12" fill="#163A44" text-anchor="middle"
+      font-weight="600">delivers it to Sum&#39;s future</text>
+  <text x="412" y="212" font-size="12" fill="#163A44" text-anchor="middle">Sum wants an int, so the decode</text>
+  <text x="412" y="227" font-size="12" fill="#163A44" text-anchor="middle">fails and the code returns early</text>
+</g>
+<g aria-label="code returns, no more commands">
+  <rect x="580" y="176" width="196" height="64" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="678" y="204.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">code returns</text>
+  <text x="678" y="219.5" font-size="12" fill="#163A44" text-anchor="middle">no more commands</text>
+</g>
+<line x1="244" y1="208" x2="274" y2="208" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="282,208 274,212 274,204" fill="#163A44"/>
+<line x1="542" y1="208" x2="572" y2="208" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="580,208 572,212 572,204" fill="#163A44"/>
+<g aria-label="event 12, ActivityTaskScheduled, id 12">
+  <rect x="24" y="260" width="220" height="64" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="134" y="288.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">event 12</text>
+  <text x="134" y="303.5" font-size="12" fill="#163A44" text-anchor="middle">ActivityTaskScheduled, id 12</text>
+</g>
+<g aria-label="no command has ID 12, lookup failed for scheduledEventID">
+  <rect x="282" y="260" width="260" height="64" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="412" y="288.5" font-size="12" fill="#163A44" text-anchor="middle"
+      font-weight="600">no command has ID 12</text>
+  <text x="412" y="303.5" font-size="12" fill="#163A44" text-anchor="middle">lookup failed for scheduledEventID</text>
+</g>
+<g aria-label="TMPRL1100, the error surfaces, here: replay fails">
+  <rect x="580" y="260" width="196" height="64" fill="#EEF3F2" stroke="#C44B32"/>
+  <text x="678" y="281" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">TMPRL1100</text>
+  <text x="678" y="296" font-size="12" fill="#163A44" text-anchor="middle">the error surfaces</text>
+  <text x="678" y="311" font-size="12" fill="#163A44" text-anchor="middle">here: replay fails</text>
+</g>
+<line x1="244" y1="292" x2="274" y2="292" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="282,292 274,296 274,288" fill="#163A44"/>
+<line x1="542" y1="292" x2="572" y2="292" fill="none" stroke="#163A44" stroke-width="1.5"/>
+<polygon points="580,292 572,296 572,288" fill="#163A44"/>
+<text x="24" y="358" font-size="11"
+    fill="#163A44">The type check runs only after the whole history replays. Swap two activities whose results both decode,</text>
+<text x="24" y="374" font-size="11"
+    fill="#163A44">and the type check, at the end of the replay, names event 6 instead.</text>
+</svg>

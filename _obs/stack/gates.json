@@ -1,0 +1,2441 @@
+{
+  "uid": "laug-gates",
+  "title": "laug · gates",
+  "description": "Every gate the store holds, and the A/A band over days: which gate to open, how the runs ended, whether an unchanged release drifts, the fault's shape, time to verdict, the host's wave pressure and R7's d per gate. Every number is a record, copied from a gate's own files; the band's gates are a committed list, _obs/aa/<list>.txt. Times are UTC.",
+  "tags": [
+    "laug",
+    "stack"
+  ],
+  "timezone": "utc",
+  "editable": false,
+  "graphTooltip": 1,
+  "refresh": "",
+  "schemaVersion": 39,
+  "version": 1,
+  "fiscalYearStartMonth": 0,
+  "liveNow": false,
+  "weekStart": "",
+  "time": {
+    "from": "now-30d",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "10s",
+      "30s",
+      "1m",
+      "5m"
+    ]
+  },
+  "links": [
+    {
+      "title": "laug",
+      "type": "dashboards",
+      "tags": [
+        "stack"
+      ],
+      "asDropdown": false,
+      "includeVars": false,
+      "keepTime": true,
+      "targetBlank": false,
+      "icon": "external link",
+      "tooltip": "",
+      "url": ""
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "#D99A3A",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "templating": {
+    "list": [
+      {
+        "name": "aa",
+        "type": "query",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "laug-store"
+        },
+        "query": {
+          "query": "query_result(max by (list) (last_over_time(laug_aa[$__range])))",
+          "refId": "v_aa"
+        },
+        "definition": "query_result(max by (list) (last_over_time(laug_aa[$__range])))",
+        "refresh": 2,
+        "regex": "/list=\"([^\"]+)\"/",
+        "multi": false,
+        "includeAll": false,
+        "hide": 0,
+        "sort": 1,
+        "options": [],
+        "current": {},
+        "label": "A/A list",
+        "description": "A committed A/A list, _obs/aa/<list>.txt."
+      },
+      {
+        "name": "host",
+        "type": "query",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "laug-store"
+        },
+        "query": {
+          "query": "query_result(max by (host_type) (last_over_time(laug_gate_info[$__range]) and on(gate_id) last_over_time(laug_aa{list=\"$aa\"}[$__range])))",
+          "refId": "v_host"
+        },
+        "definition": "query_result(max by (host_type) (last_over_time(laug_gate_info[$__range]) and on(gate_id) last_over_time(laug_aa{list=\"$aa\"}[$__range])))",
+        "refresh": 2,
+        "regex": "/host_type=\"([^\"]+)\"/",
+        "multi": false,
+        "includeAll": false,
+        "hide": 0,
+        "sort": 0,
+        "options": [],
+        "current": {},
+        "label": "host type",
+        "description": "The host type of the list's own gates; the other gates drawn beside the list's are of this type."
+      },
+      {
+        "name": "reading",
+        "type": "custom",
+        "label": "readings",
+        "hide": 0,
+        "multi": true,
+        "includeAll": true,
+        "query": "workflow_task_schedule_to_start_p99_ms,activity_schedule_to_start_p99_ms,workflow_end_to_end_p95_ms,persistence_latency_p99_ms,service_error_rate,frontend_request_p99_ms",
+        "options": [],
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
+        "description": "The readings drawn one panel each, as load/steady-state.yaml names them."
+      }
+    ]
+  },
+  "panels": [
+    {
+      "type": "row",
+      "title": "Every gate the store holds, newest first",
+      "collapsed": false,
+      "id": 1,
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 1
+      },
+      "panels": []
+    },
+    {
+      "type": "table",
+      "title": "Gates",
+      "description": "One row a gate, from its records (laug_gate_info, laug_gate_verdict, the clock and the A/A lists), fake gates left out. A gate id opens laug · gate run with the gate's window, t0 less 30 s to its last timeline line (done) plus 30 s. The verdict is copied from verdict.json.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#CFE3E4"
+          },
+          "unit": "none",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#CFE3E4",
+                "value": null
+              }
+            ]
+          },
+          "mappings": [],
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false,
+            "filterable": false
+          },
+          "noValue": "no gate in this range"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "gate"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "laug · gate run",
+                    "url": "/d/laug-gate-run/?var-gate=${__value.raw}&from=${__data.fields.from}&to=${__data.fields.to}&timezone=utc"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "verdict"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "ADVANCE": {
+                        "color": "#5B9B6A",
+                        "index": 0
+                      },
+                      "BLOCK": {
+                        "color": "#C44B32",
+                        "index": 1
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "t0"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "dateTimeAsIso"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "t0 to post"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "s"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "from"
+            },
+            "properties": [
+              {
+                "id": "custom.hidden",
+                "value": true
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "to"
+            },
+            "properties": [
+              {
+                "id": "custom.hidden",
+                "value": true
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false,
+          "reducer": [
+            "sum"
+          ],
+          "countRows": false,
+          "fields": ""
+        },
+        "sortBy": [
+          {
+            "displayName": "t0",
+            "desc": true
+          }
+        ]
+      },
+      "transformations": [
+        {
+          "id": "joinByField",
+          "options": {
+            "byField": "gate_id",
+            "mode": "outer"
+          }
+        },
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "gate_id",
+                "Value #t0",
+                "verdict",
+                "class",
+                "Value #elapsed",
+                "server_tag",
+                "incumbent",
+                "plan",
+                "driver",
+                "host_type",
+                "laug_commit",
+                "tree_dirty",
+                "host_quiet",
+                "list",
+                "Value #from",
+                "Value #to"
+              ]
+            }
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "indexByName": {
+              "gate_id": 0,
+              "Value #t0": 1,
+              "verdict": 2,
+              "class": 3,
+              "Value #elapsed": 4,
+              "server_tag": 5,
+              "incumbent": 6,
+              "plan": 7,
+              "driver": 8,
+              "host_type": 9,
+              "laug_commit": 10,
+              "tree_dirty": 11,
+              "host_quiet": 12,
+              "list": 13,
+              "Value #from": 14,
+              "Value #to": 15
+            },
+            "renameByName": {
+              "gate_id": "gate",
+              "Value #t0": "t0",
+              "Value #elapsed": "t0 to post",
+              "server_tag": "server",
+              "host_type": "host type",
+              "laug_commit": "laug commit",
+              "tree_dirty": "tree dirty",
+              "host_quiet": "host quiet",
+              "list": "A/A list",
+              "Value #from": "from",
+              "Value #to": "to"
+            }
+          }
+        }
+      ],
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "info",
+          "expr": "last_over_time(laug_gate_info{fake=\"false\"}[$__range])",
+          "legendFormat": "__auto",
+          "range": false,
+          "instant": true,
+          "editorMode": "code",
+          "format": "table"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "verdict",
+          "expr": "max by (gate_id, verdict, class, host_quiet) (last_over_time(laug_gate_verdict{fake!=\"true\"}[$__range]))",
+          "legendFormat": "__auto",
+          "range": false,
+          "instant": true,
+          "editorMode": "code",
+          "format": "table"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "elapsed",
+          "expr": "max by (gate_id) (last_over_time(laug_gate_elapsed_seconds{fake!=\"true\"}[$__range]))",
+          "legendFormat": "__auto",
+          "range": false,
+          "instant": true,
+          "editorMode": "code",
+          "format": "table"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "t0",
+          "expr": "max by (gate_id) (last_over_time(laug_gate_clock_seconds{fake!=\"true\", mark=\"t0\"}[$__range])) * 1000",
+          "legendFormat": "__auto",
+          "range": false,
+          "instant": true,
+          "editorMode": "code",
+          "format": "table"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "from",
+          "expr": "max by (gate_id) (last_over_time(laug_gate_clock_seconds{fake!=\"true\", mark=\"t0\"}[$__range])) * 1000 - 30000",
+          "legendFormat": "__auto",
+          "range": false,
+          "instant": true,
+          "editorMode": "code",
+          "format": "table"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "to",
+          "expr": "max by (gate_id) (last_over_time(laug_gate_step_seconds{fake!=\"true\"}[$__range])) * 1000 + 30000",
+          "legendFormat": "__auto",
+          "range": false,
+          "instant": true,
+          "editorMode": "code",
+          "format": "table"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "aa",
+          "expr": "max by (gate_id, list) (last_over_time(laug_aa[$__range]))",
+          "legendFormat": "__auto",
+          "range": false,
+          "instant": true,
+          "editorMode": "code",
+          "format": "table"
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 1,
+        "w": 24,
+        "h": 10
+      },
+      "id": 2,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    },
+    {
+      "type": "row",
+      "title": "How many runs a day, and how they ended",
+      "collapsed": false,
+      "id": 3,
+      "gridPos": {
+        "x": 0,
+        "y": 11,
+        "w": 24,
+        "h": 1
+      },
+      "panels": []
+    },
+    {
+      "type": "timeseries",
+      "title": "Gates a day, by verdict (verdict.json)",
+      "description": "Each bar counts the gates whose verdict.json the store holds in the 24 h ending at the bar's right edge, 00:00 UTC.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#5FB3BF"
+          },
+          "custom": {
+            "drawStyle": "bars",
+            "lineInterpolation": "linear",
+            "barAlignment": -1,
+            "lineWidth": 1,
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "insertNulls": false,
+            "showPoints": "never",
+            "pointSize": 4,
+            "stacking": {
+              "mode": "normal",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisSoftMin": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5FB3BF",
+                "value": null
+              }
+            ]
+          },
+          "mappings": [],
+          "decimals": 0
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "ADVANCE"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#5B9B6A"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "BLOCK"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#C44B32"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "A",
+          "expr": "count by (verdict) (last_over_time(laug_gate_verdict{fake!=\"true\"}[1d]))",
+          "legendFormat": "{{verdict}}",
+          "range": true,
+          "instant": false,
+          "editorMode": "code",
+          "interval": "1d"
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 12,
+        "w": 16,
+        "h": 7
+      },
+      "id": 4,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    },
+    {
+      "type": "table",
+      "title": "BLOCKs by class (verdict.json)",
+      "description": "The BLOCKed gates in the range, by their verdict.json class.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#CFE3E4"
+          },
+          "unit": "none",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#CFE3E4",
+                "value": null
+              }
+            ]
+          },
+          "mappings": [],
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false,
+            "filterable": false
+          },
+          "noValue": "no BLOCK in this range",
+          "decimals": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false,
+          "reducer": [
+            "sum"
+          ],
+          "countRows": false,
+          "fields": ""
+        }
+      },
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "renameByName": {
+              "Value": "gates BLOCKed"
+            }
+          }
+        }
+      ],
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "A",
+          "expr": "count by (class) (last_over_time(laug_gate_verdict{verdict=\"BLOCK\", fake!=\"true\"}[$__range]))",
+          "legendFormat": "__auto",
+          "range": false,
+          "instant": true,
+          "editorMode": "code",
+          "format": "table"
+        }
+      ],
+      "gridPos": {
+        "x": 16,
+        "y": 12,
+        "w": 8,
+        "h": 7
+      },
+      "id": 5,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    },
+    {
+      "type": "row",
+      "title": "The A/A band: an unchanged release across days, from the committed list",
+      "collapsed": false,
+      "id": 6,
+      "gridPos": {
+        "x": 0,
+        "y": 19,
+        "w": 24,
+        "h": 1
+      },
+      "panels": []
+    },
+    {
+      "type": "table",
+      "title": "The A/A band per reading, over the chosen list (record)",
+      "description": "The steady item's whole-window readings of the list's gates (their verdict JSONs), and the fault item pl's before and after windows (raun JSONs): lowest, highest and how many gates. The list is a committed file, _obs/aa/<list>.txt, never a filter on verdicts. Units: ms, but the error rate (a share) and completions (workflows).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#CFE3E4"
+          },
+          "unit": "none",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#CFE3E4",
+                "value": null
+              }
+            ]
+          },
+          "mappings": [],
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false,
+            "filterable": false
+          },
+          "noValue": "no gate of this list in the range",
+          "decimals": 3
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "gates"
+            },
+            "properties": [
+              {
+                "id": "decimals",
+                "value": 0
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false,
+          "reducer": [
+            "sum"
+          ],
+          "countRows": false,
+          "fields": ""
+        },
+        "sortBy": [
+          {
+            "displayName": "item",
+            "desc": true
+          }
+        ]
+      },
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "indexByName": {
+              "item": 0,
+              "window": 1,
+              "reading": 2,
+              "Value #lo": 3,
+              "Value #hi": 4,
+              "Value #n": 5
+            },
+            "renameByName": {
+              "Value #lo": "lowest",
+              "Value #hi": "highest",
+              "Value #n": "gates"
+            }
+          }
+        }
+      ],
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "lo",
+          "expr": "min by (item, window, reading) ((last_over_time(laug_item_reading{item=\"steady\", window=\"whole\", reading=~\"workflow_task_schedule_to_start_p99_ms|activity_schedule_to_start_p99_ms|workflow_end_to_end_p95_ms|persistence_latency_p99_ms|service_error_rate|frontend_request_p99_ms|workflows_completed\"}[$__range]) or last_over_time(laug_item_reading{item=\"pl\", window=~\"before|after\", reading=~\"workflow_task_schedule_to_start_p99_ms|activity_schedule_to_start_p99_ms|workflow_end_to_end_p95_ms|persistence_latency_p99_ms|service_error_rate|frontend_request_p99_ms\"}[$__range])) and on(gate_id) last_over_time(laug_aa{list=\"$aa\"}[$__range]))",
+          "legendFormat": "__auto",
+          "range": false,
+          "instant": true,
+          "editorMode": "code",
+          "format": "table"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "hi",
+          "expr": "max by (item, window, reading) ((last_over_time(laug_item_reading{item=\"steady\", window=\"whole\", reading=~\"workflow_task_schedule_to_start_p99_ms|activity_schedule_to_start_p99_ms|workflow_end_to_end_p95_ms|persistence_latency_p99_ms|service_error_rate|frontend_request_p99_ms|workflows_completed\"}[$__range]) or last_over_time(laug_item_reading{item=\"pl\", window=~\"before|after\", reading=~\"workflow_task_schedule_to_start_p99_ms|activity_schedule_to_start_p99_ms|workflow_end_to_end_p95_ms|persistence_latency_p99_ms|service_error_rate|frontend_request_p99_ms\"}[$__range])) and on(gate_id) last_over_time(laug_aa{list=\"$aa\"}[$__range]))",
+          "legendFormat": "__auto",
+          "range": false,
+          "instant": true,
+          "editorMode": "code",
+          "format": "table"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "n",
+          "expr": "count by (item, window, reading) ((last_over_time(laug_item_reading{item=\"steady\", window=\"whole\", reading=~\"workflow_task_schedule_to_start_p99_ms|activity_schedule_to_start_p99_ms|workflow_end_to_end_p95_ms|persistence_latency_p99_ms|service_error_rate|frontend_request_p99_ms|workflows_completed\"}[$__range]) or last_over_time(laug_item_reading{item=\"pl\", window=~\"before|after\", reading=~\"workflow_task_schedule_to_start_p99_ms|activity_schedule_to_start_p99_ms|workflow_end_to_end_p95_ms|persistence_latency_p99_ms|service_error_rate|frontend_request_p99_ms\"}[$__range])) and on(gate_id) last_over_time(laug_aa{list=\"$aa\"}[$__range]))",
+          "legendFormat": "__auto",
+          "range": false,
+          "instant": true,
+          "editorMode": "code",
+          "format": "table"
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 20,
+        "w": 12,
+        "h": 9
+      },
+      "id": 7,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    },
+    {
+      "type": "table",
+      "title": "The A/A list (record)",
+      "description": "Per committed list: its gates in the range, the BLOCKs among them, and with 0 BLOCKs of n the 95% upper bound on the rate at which an unchanged release BLOCKs, 1 - 0.05^(1/n). The list was chosen once and is never rebuilt from verdicts, so the panel lists BLOCKs and calls none false.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#CFE3E4"
+          },
+          "unit": "none",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#CFE3E4",
+                "value": null
+              }
+            ]
+          },
+          "mappings": [],
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false,
+            "filterable": false
+          },
+          "noValue": "no list's gate in this range",
+          "decimals": 0
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "95% bound, 0 BLOCKs"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percentunit"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false,
+          "reducer": [
+            "sum"
+          ],
+          "countRows": false,
+          "fields": ""
+        }
+      },
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "renameByName": {
+              "Value #n": "gates",
+              "Value #blocks": "BLOCKs",
+              "Value #bound": "95% bound, 0 BLOCKs"
+            }
+          }
+        }
+      ],
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "n",
+          "expr": "count by (list) (last_over_time(laug_aa[$__range]))",
+          "legendFormat": "__auto",
+          "range": false,
+          "instant": true,
+          "editorMode": "code",
+          "format": "table"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "blocks",
+          "expr": "count by (list) (last_over_time(laug_gate_verdict{verdict=\"BLOCK\"}[$__range]) and on(gate_id) last_over_time(laug_aa[$__range])) or 0 * count by (list) (last_over_time(laug_aa[$__range]))",
+          "legendFormat": "__auto",
+          "range": false,
+          "instant": true,
+          "editorMode": "code",
+          "format": "table"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "bound",
+          "expr": "(1 - 0.05 ^ (1 / count by (list) (last_over_time(laug_aa[$__range])))) unless on (list) count by (list) (last_over_time(laug_gate_verdict{verdict=\"BLOCK\"}[$__range]) and on(gate_id) last_over_time(laug_aa[$__range]))",
+          "legendFormat": "__auto",
+          "range": false,
+          "instant": true,
+          "editorMode": "code",
+          "format": "table"
+        }
+      ],
+      "gridPos": {
+        "x": 12,
+        "y": 20,
+        "w": 12,
+        "h": 9
+      },
+      "id": 8,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "$reading, the steady item, one point a gate (record)",
+      "description": "Each gate's steady reading from its verdict JSON, one point a gate at its own time: water, the gates of the chosen A/A list; silica, the other gates on the chosen host type. Ember points: each gate's own max from its thresholds.json. Has an unchanged release drifted across days, hosts or trees.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#5FB3BF"
+          },
+          "custom": {
+            "drawStyle": "points",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "insertNulls": false,
+            "showPoints": "never",
+            "pointSize": 4,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisSoftMin": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "unit": "none",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5FB3BF",
+                "value": null
+              }
+            ]
+          },
+          "mappings": []
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "aa"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 7
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "always"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "other"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 6
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "always"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#CFE3E4"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "max"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 4
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "always"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#C44B32"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "aa",
+          "expr": "max(laug_item_reading{item=\"steady\", window=\"whole\", reading=\"$reading\"} and on(gate_id) laug_aa{list=\"$aa\"})",
+          "legendFormat": "the A/A list's gates",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "other",
+          "expr": "max(laug_item_reading{item=\"steady\", window=\"whole\", reading=\"$reading\"} unless on(gate_id) laug_aa{list=\"$aa\"} and on(gate_id) laug_gate_info{host_type=\"$host\", fake=\"false\"})",
+          "legendFormat": "other gates on $host",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "max",
+          "expr": "max(laug_threshold{reading=\"$reading\"} and on(gate_id) laug_item_reading{item=\"steady\", window=\"whole\", reading=\"$reading\"})",
+          "legendFormat": "each gate's own max",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 29,
+        "w": 12,
+        "h": 7
+      },
+      "id": 9,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      },
+      "repeat": "reading",
+      "repeatDirection": "h",
+      "maxPerRow": 2
+    },
+    {
+      "type": "row",
+      "title": "Per gate: completions, the fault's shape, time to verdict, the host, R7",
+      "collapsed": false,
+      "id": 10,
+      "gridPos": {
+        "x": 0,
+        "y": 36,
+        "w": 24,
+        "h": 1
+      },
+      "panels": []
+    },
+    {
+      "type": "timeseries",
+      "title": "Workflows completed, the steady item, one point a gate (record)",
+      "description": "Each gate's steady completions. The verdict's floor is 0.95 x the plan's rate x its duration (load/verdict.sh): 5 700 for steady at 20/s for 5 m; follow copies no duration, so the board draws no floor.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#5FB3BF"
+          },
+          "custom": {
+            "drawStyle": "points",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "insertNulls": false,
+            "showPoints": "never",
+            "pointSize": 4,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisSoftMin": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5FB3BF",
+                "value": null
+              }
+            ]
+          },
+          "mappings": [],
+          "decimals": 0
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "aa"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 7
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "always"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "other"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 6
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "always"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#CFE3E4"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "aa",
+          "expr": "max(laug_item_reading{item=\"steady\", window=\"whole\", reading=\"workflows_completed\"} and on(gate_id) laug_aa{list=\"$aa\"})",
+          "legendFormat": "the A/A list's gates",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "other",
+          "expr": "max(laug_item_reading{item=\"steady\", window=\"whole\", reading=\"workflows_completed\"} unless on(gate_id) laug_aa{list=\"$aa\"})",
+          "legendFormat": "other gates",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 37,
+        "w": 8,
+        "h": 7
+      },
+      "id": 11,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "The fault's shape: inject to landed, remove to recovered (record, s)",
+      "description": "Each gate's fault item, from its four marks (raun JSON): does persistence-latency keep its shape.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#5FB3BF"
+          },
+          "custom": {
+            "drawStyle": "points",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "insertNulls": false,
+            "showPoints": "never",
+            "pointSize": 4,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisSoftMin": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "unit": "s",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5FB3BF",
+                "value": null
+              }
+            ]
+          },
+          "mappings": []
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "l"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 7
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "always"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "r"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 7
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "always"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#CFE3E4"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "l",
+          "expr": "max by (item) (laug_fault_mark_seconds{mark=\"landed\", fake!=\"true\"} - ignoring (mark) laug_fault_mark_seconds{mark=\"inject\", fake!=\"true\"})",
+          "legendFormat": "{{item}}: landed after inject",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "r",
+          "expr": "max by (item) (laug_fault_mark_seconds{mark=\"recovered\", fake!=\"true\"} - ignoring (mark) laug_fault_mark_seconds{mark=\"remove\", fake!=\"true\"})",
+          "legendFormat": "{{item}}: recovered after remove",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        }
+      ],
+      "gridPos": {
+        "x": 8,
+        "y": 37,
+        "w": 8,
+        "h": 7
+      },
+      "id": 12,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "The fault's failed iterations in its during window (record)",
+      "description": "Work the clients lost while the fault held, per gate (raun JSON).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#5FB3BF"
+          },
+          "custom": {
+            "drawStyle": "points",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "insertNulls": false,
+            "showPoints": "never",
+            "pointSize": 4,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisSoftMin": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5FB3BF",
+                "value": null
+              }
+            ]
+          },
+          "mappings": [],
+          "decimals": 0
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "A"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 7
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "always"
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "A",
+          "expr": "max by (item) (laug_item_failed_iterations{window=\"during\", fake!=\"true\"})",
+          "legendFormat": "{{item}}: failed during",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        }
+      ],
+      "gridPos": {
+        "x": 16,
+        "y": 37,
+        "w": 8,
+        "h": 7
+      },
+      "id": 13,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Time to verdict and harness-test's share (record, s)",
+      "description": "verdict.json's elapsed_s, t0 to post, and harness.json's seconds, per gate. Dashed: 900 s, the 15 min a gate was built to finish in.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#5FB3BF"
+          },
+          "custom": {
+            "drawStyle": "points",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "insertNulls": false,
+            "showPoints": "never",
+            "pointSize": 4,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisSoftMin": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "dashed"
+            }
+          },
+          "unit": "s",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5FB3BF",
+                "value": null
+              },
+              {
+                "color": "#EEF3F2",
+                "value": 900
+              }
+            ]
+          },
+          "mappings": []
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "e"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 7
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "always"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "h"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 6
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "always"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#CFE3E4"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "e",
+          "expr": "max(laug_gate_elapsed_seconds{fake!=\"true\"})",
+          "legendFormat": "t0 to post",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "h",
+          "expr": "max(laug_gate_harness{field=\"seconds\", fake!=\"true\"})",
+          "legendFormat": "harness-test",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 44,
+        "w": 8,
+        "h": 7
+      },
+      "id": 14,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    },
+    {
+      "type": "barchart",
+      "title": "Wave pressure per gate: the mean of its polls' io some (record, %)",
+      "description": "The mean over each gate's poll.jsonl lines of io some avg10, as recorded. Water: the chosen A/A list's gates; silica: the others.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#5FB3BF"
+          },
+          "unit": "percent",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5FB3BF",
+                "value": null
+              }
+            ]
+          },
+          "mappings": [],
+          "custom": {
+            "lineWidth": 1,
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisSoftMin": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "noValue": "no poll in this range"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "the A/A list's gates"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#5FB3BF"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "other gates"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#CFE3E4"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "orientation": "vertical",
+        "xField": "gate_id",
+        "xTickLabelRotation": -45,
+        "xTickLabelSpacing": 0,
+        "showValue": "never",
+        "stacking": "none",
+        "groupWidth": 0.7,
+        "barWidth": 0.9,
+        "barRadius": 0,
+        "fullHighlight": false,
+        "legend": {
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "renameByName": {
+              "Value #aa": "the A/A list's gates",
+              "Value #other": "other gates"
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "gate_id",
+                "desc": false
+              }
+            ]
+          }
+        }
+      ],
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "aa",
+          "expr": "max by (gate_id) (avg_over_time(laug_gate_poll_pressure{resource=\"io\", kind=\"some\", fake!=\"true\"}[$__range])) and on(gate_id) last_over_time(laug_aa{list=\"$aa\"}[$__range])",
+          "legendFormat": "__auto",
+          "range": false,
+          "instant": true,
+          "editorMode": "code",
+          "format": "table"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "other",
+          "expr": "max by (gate_id) (avg_over_time(laug_gate_poll_pressure{resource=\"io\", kind=\"some\", fake!=\"true\"}[$__range])) unless on(gate_id) last_over_time(laug_aa{list=\"$aa\"}[$__range])",
+          "legendFormat": "__auto",
+          "range": false,
+          "instant": true,
+          "editorMode": "code",
+          "format": "table"
+        }
+      ],
+      "gridPos": {
+        "x": 8,
+        "y": 44,
+        "w": 16,
+        "h": 8
+      },
+      "id": 15,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "R7 per gate: d per compared reading in ms (verdict.json)",
+      "description": "Each gate's comparison rows' d, release minus incumbent, for the readings in ms; dashed ember: the tolerances in the gate's thresholds.json (absent in recording mode).",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#5FB3BF"
+          },
+          "custom": {
+            "drawStyle": "points",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "insertNulls": false,
+            "showPoints": "never",
+            "pointSize": 4,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisSoftMin": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "unit": "ms",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5FB3BF",
+                "value": null
+              }
+            ]
+          },
+          "mappings": [],
+          "noValue": "no gate with an incumbent in this range"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "d"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 7
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "always"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "tol"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 4
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "always"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#C44B32"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "d",
+          "expr": "max by (reading) (laug_compare_row{field=\"d\", reading=~\".*_ms\", fake!=\"true\"})",
+          "legendFormat": "{{reading}}: d",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "tol",
+          "expr": "max by (reading) (laug_threshold_tolerance{reading=~\".*_ms\", fake!=\"true\"})",
+          "legendFormat": "{{reading}}: tolerance",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 52,
+        "w": 12,
+        "h": 7
+      },
+      "id": 16,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "R7 per gate: d per compared share (verdict.json)",
+      "description": "The same for the three shares.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#5FB3BF"
+          },
+          "custom": {
+            "drawStyle": "points",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "insertNulls": false,
+            "showPoints": "never",
+            "pointSize": 4,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisSoftMin": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "unit": "percentunit",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#5FB3BF",
+                "value": null
+              }
+            ]
+          },
+          "mappings": [],
+          "noValue": "no gate with an incumbent in this range"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "d"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 7
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "always"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "tol"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "points"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 4
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "always"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#C44B32"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "d",
+          "expr": "max by (reading) (laug_compare_row{field=\"d\", reading=~\".*_over_.*\", fake!=\"true\"})",
+          "legendFormat": "{{reading}}: d",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "tol",
+          "expr": "max by (reading) (laug_threshold_tolerance{reading=~\".*_over_.*\", fake!=\"true\"})",
+          "legendFormat": "{{reading}}: tolerance",
+          "range": true,
+          "instant": false,
+          "editorMode": "code"
+        }
+      ],
+      "gridPos": {
+        "x": 12,
+        "y": 52,
+        "w": 12,
+        "h": 7
+      },
+      "id": 17,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    },
+    {
+      "type": "row",
+      "title": "Outside the gates, and how far back the store reaches",
+      "collapsed": false,
+      "id": 18,
+      "gridPos": {
+        "x": 0,
+        "y": 59,
+        "w": 24,
+        "h": 1
+      },
+      "panels": []
+    },
+    {
+      "type": "table",
+      "title": "Hand runs: leases outside a gate (live only)",
+      "description": "laug_lease_info with no gate_id: each cell follow federated for a laug lease run, its server and its life (leased_at, Unix seconds). follow reads gate directories only, so a hand run has no records.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#CFE3E4"
+          },
+          "unit": "none",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#CFE3E4",
+                "value": null
+              }
+            ]
+          },
+          "mappings": [],
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false,
+            "filterable": false
+          },
+          "noValue": "no hand lease in this range"
+        },
+        "overrides": []
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false,
+          "reducer": [
+            "sum"
+          ],
+          "countRows": false,
+          "fields": ""
+        }
+      },
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "Value": true,
+              "__name__": true,
+              "instance": true,
+              "job": true
+            },
+            "renameByName": {
+              "server_tag": "server"
+            }
+          }
+        }
+      ],
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "A",
+          "expr": "last_over_time(laug_lease_info{gate_id=\"\"}[$__range])",
+          "legendFormat": "__auto",
+          "range": false,
+          "instant": true,
+          "editorMode": "code",
+          "format": "table"
+        }
+      ],
+      "gridPos": {
+        "x": 0,
+        "y": 60,
+        "w": 14,
+        "h": 6
+      },
+      "id": 19,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    },
+    {
+      "type": "stat",
+      "title": "The store's oldest sample",
+      "description": "prometheus_tsdb_lowest_timestamp_seconds: a gate older than this has no series left. The store keeps 90 d (--storage.tsdb.retention.time) and 20 GB.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "#CFE3E4"
+          },
+          "unit": "dateTimeAsIso",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#CFE3E4",
+                "value": null
+              }
+            ]
+          },
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "none",
+        "graphMode": "none",
+        "textMode": "value_and_name",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "wideLayout": true,
+        "showPercentChange": false,
+        "text": {
+          "valueSize": 20,
+          "titleSize": 13
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "laug-store"
+          },
+          "refId": "A",
+          "expr": "max(prometheus_tsdb_lowest_timestamp_seconds{job=\"laug-stack\"}) * 1000",
+          "legendFormat": "oldest sample",
+          "range": false,
+          "instant": true,
+          "editorMode": "code"
+        }
+      ],
+      "gridPos": {
+        "x": 14,
+        "y": 60,
+        "w": 10,
+        "h": 6
+      },
+      "id": 20,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "laug-store"
+      }
+    }
+  ]
+}

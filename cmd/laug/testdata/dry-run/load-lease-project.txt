@@ -1,0 +1,11 @@
+# make: make --no-print-directory -n load DURATION=5m PROJECT=laug-c0ffee02
+# laug: laug load -duration 5m -project laug-c0ffee02
+# lease: present
+# passes: DURATION=5m
+# compare: line load/run-omes.sh
+[ "file" = file ] || [ "file" != file ] || [ -z 'http://127.0.0.1:9100' ] \
+  || { echo "laug · CELL_ADDRESS was given and PROM_URL was not, so the run would record the leased cell's Prometheus; pass PROM_URL for "'127.0.0.1:7233' >&2; exit 2; }
+:
+[[ 'laug-c0ffee02' =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || { echo "laug · make load: PROJECT="'laug-c0ffee02'" is not one word of letters, digits, ., _ and -, from a letter or digit" >&2; exit 2; };                 
+OMES_DIR='.upstream/omes' CELL_ADDRESS='127.0.0.1:7243' PROM_URL='http://127.0.0.1:9100' PROJECT=laug-c0ffee02 NAMESPACE=default RUN_ID=20261022-120000 \
+  SERVER_TAG=1.32.1 load/run-omes.sh workflow_with_single_noop_activity

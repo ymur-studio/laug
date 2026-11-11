@@ -1,0 +1,10 @@
+# The committed runs in gate/results that the Go judge does not give back byte for byte as a clone holds them, each
+# with the kind that explains it (internal/rejudge/expected.go). TestEveryCommittedRun proves each line, and fails
+# on a line a run no longer needs.
+#
+# empty-dirs <keys>: the run held these empty item directories, which git does not carry. Judged with them made
+#   again in memory, it gives both files.
+# trap <form>: verdict.json is the gate's trap verdict, not a judge's. Re-rendered by its form from the run's own
+#   step and reason, it gives both files.
+g20261017-014142  trap        T2
+g20261017-014632  trap        T2

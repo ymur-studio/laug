@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="360" viewBox="0 0 800 360" role="img"
+    aria-labelledby="replay-compared-title replay-compared-desc" font-family="Inter, system-ui, sans-serif">
+<title id="replay-compared-title">Replay checks which commands, in which order, never their values</title>
+<desc id="replay-compared-desc">Left, what replay compares: the command type, the activity ID and the timer ID, command
+    by command, and the activity type once the whole history has replayed; under it, changes that fail replay. Right,
+    what it never compares: durations, inputs, options and results; under it, changes that replay clean. Of the nine
+    changes, five replay clean and four fail with TMPRL1100. Sources: docs/img/src/replay-compared.txt,
+    internal/health/changes_test.go, internal/health/replay_test.go.</desc>
+<rect x="0" y="0" width="800" height="360" fill="#EEF3F2"/>
+<text x="24" y="30" font-size="14" fill="#163A44"
+    font-weight="600">Replay checks which commands, in which order, never their values</text>
+<text x="24" y="50" font-size="12"
+    fill="#163A44">Go SDK 1.49.0, as HealthCheck&#39;s replay tests show it: nine changes, each replayed against a recorded history</text>
+<g
+    aria-label="compared on replay, command type, command by command, activity ID and timer ID, activity type, once the whole history has replayed">
+  <rect x="24" y="76" width="364" height="106" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="206" y="110.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">compared on replay</text>
+  <text x="206" y="125.5" font-size="12" fill="#163A44" text-anchor="middle">command type, command by command</text>
+  <text x="206" y="140.5" font-size="12" fill="#163A44" text-anchor="middle">activity ID and timer ID</text>
+  <text x="206" y="155.5" font-size="12" fill="#163A44"
+      text-anchor="middle">activity type, once the whole history has replayed</text>
+</g>
+<g aria-label="not compared, durations, inputs and options, results">
+  <rect x="412" y="76" width="364" height="106" fill="#CFE3E4" stroke="#163A44"/>
+  <text x="594" y="110.5" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">not compared</text>
+  <text x="594" y="125.5" font-size="12" fill="#163A44" text-anchor="middle">durations</text>
+  <text x="594" y="140.5" font-size="12" fill="#163A44" text-anchor="middle">inputs and options</text>
+  <text x="594" y="155.5" font-size="12" fill="#163A44" text-anchor="middle">results</text>
+</g>
+<g aria-label="fails replay, TMPRL1100, remove a Sleep, drop a timer,, or swap two activities">
+  <rect x="24" y="200" width="364" height="64" fill="#EEF3F2" stroke="#C44B32"/>
+  <text x="206" y="221" font-size="12" fill="#163A44" text-anchor="middle"
+      font-weight="600">fails replay, TMPRL1100</text>
+  <text x="206" y="236" font-size="12" fill="#163A44" text-anchor="middle">remove a Sleep, drop a timer,</text>
+  <text x="206" y="251" font-size="12" fill="#163A44" text-anchor="middle">or swap two activities</text>
+</g>
+<g aria-label="replays clean, Sleep 1 s to 5 s, or Sum(19, 23) to Sum(1, 2):, the replay still gets 42">
+  <rect x="412" y="200" width="364" height="64" fill="#EEF3F2" stroke="#163A44"/>
+  <text x="594" y="221" font-size="12" fill="#163A44" text-anchor="middle" font-weight="600">replays clean</text>
+  <text x="594" y="236" font-size="12" fill="#163A44"
+      text-anchor="middle">Sleep 1 s to 5 s, or Sum(19, 23) to Sum(1, 2):</text>
+  <text x="594" y="251" font-size="12" fill="#163A44" text-anchor="middle">the replay still gets 42</text>
+</g>
+<text x="24" y="298" font-size="12"
+    fill="#163A44">Of nine changes to HealthCheck, five replay clean and four fail with TMPRL1100.</text>
+<text x="24" y="318" font-size="11"
+    fill="#163A44">Values already in a running workflow&#39;s history stay: a 30 s timer already started stays 30 s.</text>
+<text x="24" y="340" font-size="10"
+    fill="#163A44">The tests: TestReplayChanges in internal/health/changes_test.go; the type check: replay-swapped.</text>
+</svg>

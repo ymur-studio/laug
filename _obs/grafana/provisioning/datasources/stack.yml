@@ -1,0 +1,20 @@
+# The stack's two datasources. The uid is laug-store, not the cells' laug-prometheus, so a cell's board, whose queries
+# name no cell, never loads against the store, where every cell's series sit together.
+apiVersion: 1
+datasources:
+  - name: laug-store
+    uid: laug-store
+    type: prometheus
+    access: proxy
+    url: http://127.0.0.1:7730
+    isDefault: true
+    editable: false
+    jsonData:
+      timeInterval: 5s     # the scrape interval, so $__rate_interval spans at least 4 samples
+      httpMethod: POST
+  - name: laug-traces
+    uid: laug-traces
+    type: jaeger
+    access: proxy
+    url: http://127.0.0.1:7761
+    editable: false

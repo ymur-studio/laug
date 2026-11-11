@@ -1,0 +1,62 @@
+{
+  "workflow_task_schedule_to_start_p99_ms": 19.292099745969626,
+  "activity_schedule_to_start_p99_ms": null,
+  "workflow_end_to_end_p95_ms": 48.86214783306174,
+  "persistence_latency_p99_ms": 9.308898128539965,
+  "service_error_rate": 0,
+  "frontend_request_p99_ms": 12.93235412336994,
+  "workflow_task_schedule_to_start_over_20ms": 0.0030951210756066105,
+  "activity_schedule_to_start_over_10ms": null,
+  "persistence_latency_over_10ms": 0.0005717572076823219,
+  "frontend_request_over_10ms": 0.013565160435354717,
+  "workflow_end_to_end_over_50ms": 0.012547501147745499,
+  "workflows_completed": 5966,
+  "counter_resets": 0,
+  "window_seconds": 301,
+  "services": {
+    "grafana": {
+      "cpu_percent": 0.06,
+      "mem_mib": 47
+    },
+    "postgresql": {
+      "cpu_percent": 19.07,
+      "mem_mib": 278
+    },
+    "prometheus": {
+      "cpu_percent": 0.12,
+      "mem_mib": 72
+    },
+    "temporal-frontend": {
+      "cpu_percent": 2.06,
+      "mem_mib": 64
+    },
+    "temporal-frontend2": {
+      "cpu_percent": 2.08,
+      "mem_mib": 66
+    },
+    "temporal-history": {
+      "cpu_percent": 8.00,
+      "mem_mib": 555
+    },
+    "temporal-matching": {
+      "cpu_percent": 0.57,
+      "mem_mib": 73
+    },
+    "temporal-nginx": {
+      "cpu_percent": 0.00,
+      "mem_mib": 3
+    },
+    "temporal-ui": {
+      "cpu_percent": 0.00,
+      "mem_mib": 8
+    },
+    "temporal-worker": {
+      "cpu_percent": 0.36,
+      "mem_mib": 57
+    },
+    "toxiproxy": {
+      "cpu_percent": 3.19,
+      "mem_mib": 27
+    }
+  }
+}
